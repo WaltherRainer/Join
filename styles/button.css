@@ -1,12 +1,4 @@
 
-:root {
-    --background-color: #fff;
-    --text-color: #000;
-    --blue: #2A3647;
-    --dark-blue: #091931;
-    --light-blue: #29ABE2;
-}
-
 button {
     font-family: 'Inter';
     background-color: var(--blue);
@@ -15,11 +7,31 @@ button {
     font-weight: 700;
     padding: 15px 24px;
     border-radius: 8px;
-
+    cursor: pointer;
 }
 
-.second-button {
+.default-button:hover {
+    background-color: var(--light-blue);
+}
+
+.default-button:active {
+    background-color: var(--dark-blue);
+}
+
+.secondary-button {
     background-color: var(--background-color);
     color: var(--blue);
     border: 2px solid var(--blue);
+}
+
+.secondary-button:hover {
+    background-color: var(--background-color);
+    color: var(--light-blue);
+    border: 2px solid var(--light-blue);
+}
+
+.secondary-button:active {
+    background-color: var(--background-color);
+    color: var(--dark-blue);
+    border: 2px solid var(--dark-blue);
 }
