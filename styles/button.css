@@ -1,4 +1,12 @@
 
+:root {
+    --background-color: #fff;
+    --text-color: #000;
+    --blue: #2A3647;
+    --dark-blue: #091931;
+    --light-blue: #29ABE2;
+}
+
 button {
     background-color: var(--blue);
     color: var(--background-color);
