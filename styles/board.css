@@ -1,0 +1,110 @@
+
+.board_page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--secondary-background-color);
+    min-height: 100vh;
+}
+.board_head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-color);
+    margin-top: 79.5px;
+    margin-left: 64px;
+    margin-bottom: 72px;
+    width: 1056px;
+}
+
+.board_title {
+    font-size: 61px;
+    font-weight: 700;
+}
+
+.board_head_btns {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 8px;
+    width: 504px;
+    gap: 32px;
+}
+
+.search_task_area {
+    display: flex;
+    justify-content: space-between;
+    vertical-align: middle;
+    border: 1px solid var(--border_color);
+    background-color: var(--background-color);
+    width: 312px;
+    padding: 8px 16px;
+    border-radius: 10px;
+}
+
+.search_task {
+    font-size: 20px;
+    width: 200px;
+    color: var(--text-color);
+    border: none;
+    outline: none;
+}
+
+.search_task::placeholder {
+    color: var(--border_color)
+}
+
+.search_task_area:focus-within {
+    border-color: var(--light-blue);
+}
+
+.search_task_area img {
+    padding-left: 16px;
+    border-left: 1px solid var(--border_color);
+}
+
+
+
+button.add_task_button {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    vertical-align: bottom;
+    padding: 8px 16px;
+    border-radius: 10px;
+    width: 160px;
+}
+
+button.add_task_button img {
+    width: 18px;
+    height: 18px;
+}
+
+section.task_section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 1208px;
+    gap: 64px;
+}
+
+.task_list_head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 244px;
+}
+
+.task_list_head button img {
+    filter: brightness(0);
+    width: 8px;
+}
+.task_list_head button {
+    border: 2px solid var(--text-color);
+    border-radius: 8px;
+    width: 24px;
+}
+.task_list_head h2 {
+    color: var(--text_color_grey);
+}

@@ -1,7 +1,9 @@
 
 :root {
     --background-color: #fff;
+    --secondary-background-color: #F6F7F8;
     --text-color: #000;
+    --text_color_grey: #42526E;
     --blue: #2A3647;
     --dark-blue: #091931;
     --light-blue: #29ABE2;
@@ -34,7 +36,6 @@
     scroll-behavior: smooth;
     font-family: Inter, sans-serif;
     text-decoration: none;
-    
 }
 
 body {
