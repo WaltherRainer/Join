@@ -3,6 +3,48 @@ let users = {};
 let activeUserKey = "";
 let tasks = {};
 
+const signInContainer = document.getElementById("sign_up_form");
+const logInContainer = document.getElementById("login_form");
+const indexHeader = document.getElementById("index_header"); 
+// const passwordInput = document.getElementById("password");
+// const passwordSVG = document.getElementById("password_svg");
+
+// toggleButton.addEventListener("click", () => {
+//     const isPassword = passwordInput.type === "password";
+//     passwordInput.type = isPassword ? "text" : "password";
+//     toggleButton .setAttribute(
+//         "aria-label",
+//         isPassword ? "Passwort verbergen" : "Passwort anzeigen"
+//     );
+// });
+
+window.addEventListener("load", () => {
+    const indexBody = document.getElementById("index_body");
+    const logoContainer = document.getElementById("logo_container");
+    const pageContent = document.querySelector(".page_content");
+
+setTimeout(() => {
+    indexBody.classList.add("is_loaded");
+    logoContainer.classList.add("is_in_corner");
+    
+    pageContent.classList.add("is_visible");
+}, 1000);
+});
+
+function activateSignIn() {
+    signInContainer.classList.add("enable")
+    logInContainer.classList.add("disable")
+    indexHeader.classList.add("disable")
+}
+
+function activateLogIn() {
+    signInContainer.classList.remove("enable")
+    logInContainer.classList.remove("disable")
+    indexHeader.classList.remove("disable")
+}
+
+
+
 async function renderUsers() {
     users = await loadData("/users") || {};
     document.getElementById('user_cards').innerHTML = "";
@@ -104,16 +146,14 @@ async function onloadFunc() {
  *  
 */
 async function addUser() {
-    let email = document.getElementById('email');
+    let email = document.getElementById('email_sign_up');
     if (!userExists(email.value)) {
         let password = document.getElementById('password');
-        let firstName = document.getElementById('f_name');
-        let lastName = document.getElementById('l_name');
+        let givenName = document.getElementById('given_name');
         let dataObj = {
             "email": email.value, 
-            "firstname": firstName.value, 
+            "givenName": givenName.value, 
             "password": password.value, 
-            "lastname": lastName.value
         };
         let result = await uploadData("/users", dataObj);
         window.location.href = 'login.html?msg=Du hast dich erfolgreich registriert';
@@ -163,3 +203,5 @@ async function loadData(path="") {
         return null; 
     }
 };
+
+

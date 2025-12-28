@@ -1,0 +1,247 @@
+.sign_up_size{
+    width: 598px;
+    height: 630px;
+}
+
+
+.login_size {
+    width: 652px;
+    height: 449px;
+}
+
+.login_wrapper {
+    position: relative;
+    background: transparent;
+    box-shadow: 0 0 25px var(--shadow-color);
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.login_wrapper .form_box {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login_wrapper .form_box.login {
+    left: 0;
+    padding: 0 115px 0 115px;
+}
+
+.form_box h2 {
+    font-size: 61px;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.form_box .input_box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 25px 0;
+}
+
+.input_box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: 2px solid var(--border_color);
+    border-radius: 10px;
+    font-size: 16px;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: .25s;
+    padding: 8px 60px 8px 16px;
+}
+
+.input_box input:focus,
+.input_box input:valid {
+    border-color: var(--border_color);
+}
+
+.input_box label {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-40%);
+    font-size: 16px;
+    color: var(--border_color);
+    pointer-events: none;
+    transition: .25s;
+    background-color: var(--background-color);
+}
+
+.input_box input:focus~label,
+.input_box input:valid~label {
+    top: -5px;
+}
+
+.input_box svg {
+    position: absolute;
+    top: 50%;
+    right: 24px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--text-color);
+    transition: .25s;
+}
+
+.btn_div {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 12px;
+}
+
+.underline_login {
+    height: 3px;
+    background-color: #29ABE2;
+    width: 140px;
+    left: 0;
+    transform: translateX(100%);
+    margin-top: 12px;
+    border-radius: 3px;
+}
+
+.underline_sign_up {
+    height: 3px;
+    background-color: #29ABE2;
+    width: 180px;
+    left: 0;
+    transform: translateX(53%);
+    margin-top: 12px;
+    border-radius: 3px;
+}
+
+/* ---------- Logo ---------- */
+
+.logo_container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: top left;
+  z-index: 1000;
+
+  color: white; /* steuert SVG-Farbe */
+
+  transition:
+    top 0.8s ease,
+    left 0.8s ease,
+    transform 0.8s ease,
+    color 0.8s ease;
+}
+
+.logo_container.is_in_corner {
+  top: var(--corner_offset);
+  left: var(--corner_offset);
+  transform: translate(0, 0) scale(var(--logo_corner_scale));
+  color: var(--logo-light-blue);
+}
+
+.logo_svg {
+  width: var(--logo_start_width);
+  height: auto;
+  display: block;
+}
+
+.logo_svg path {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+}
+
+/* ---------- Content ---------- */
+
+.page_content {
+  opacity: 0;
+  padding: 120px 24px;
+  transition: opacity 0.4s ease;
+}
+
+.page_content.is_visible {
+  opacity: 1;
+}
+
+/* ---------- Nach Transition ---------- */
+
+body.is_loaded {
+  background-color: var(--background-color);
+}
+
+.index_header {
+    position: fixed;
+    top: 65px;
+    right: 65px;
+}
+
+.sign_up_box span {
+    color: var(--text-color);
+    padding-right: 16px;
+    font-size: 20px;
+}
+
+.index_footer a {
+    color: var(--border_color);
+}
+
+.index_footer {
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    bottom: 32px;
+    min-width: 246px;
+}
+
+.index_body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.check_box {
+    height: 16px;
+    width: 16px;
+    margin-right: 16px;
+}
+
+.terms_div {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.terms_div a {
+    color: var(--light-blue);
+}
+
+.login_header {
+    position: relative;
+}
+
+.login_header a {
+    position: absolute;
+    transform: translateY(100%) translateX(-150%);
+    cursor: pointer;
+}
+
+.sign_up_form {
+    display: none;
+}
+
+.sign_up_form.enable {
+    display: block;
+}
+
+.login_form.disable {
+    display: none;
+}
+
+.index_header.disable {
+    display: none;
+    transition: 1s;
+}
