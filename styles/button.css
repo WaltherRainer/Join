@@ -8,6 +8,7 @@ button {
     padding: 15px 24px;
     border-radius: 8px;
     cursor: pointer;
+    border-width: 0;
 }
 
 .default-button:hover {
