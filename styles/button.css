@@ -1,5 +1,5 @@
 
-button {
+.deault-button {
     font-family: 'Inter';
     background-color: var(--blue);
     color: var(--background-color);
@@ -20,9 +20,16 @@ button {
 }
 
 .secondary-button {
+    font-family: 'Inter';
     background-color: var(--background-color);
     color: var(--blue);
     border: 2px solid var(--blue);
+    font-size: 21px;
+    font-weight: 700;
+    padding: 15px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    border-width: 0;
 }
 
 .secondary-button:hover {
