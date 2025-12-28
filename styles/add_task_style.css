@@ -1,0 +1,152 @@
+body {
+    background-color: #F6F7F8;
+    width: 1208px;
+    height: 928px;
+}
+
+label {
+    font-size: 20px;
+    font-weight: 400;
+    color: #000000;
+}
+
+input {
+    border-radius: 10px;
+    border: 1px solid #D1D1D1;
+    height: 48px;
+    width: 440px;
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 400;
+    padding-left: 21px;
+    color: #D1D1D1;
+}
+
+textarea {
+    border-radius: 10px;
+    border: 1px solid #D1D1D1;
+    height: 120px;
+    width: 440px;
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 400;
+    padding-left: 21px;
+    padding-top: 18px;
+    color: #D1D1D1;
+    margin-bottom: 32px;   
+}
+
+.add_task_title{
+    font-size: 61px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0px;
+}
+
+.add_task_form {
+    display: flex;
+    margin-top: 48px;
+}
+
+.line {
+    border: 1px solid #E0E0E0;
+    margin-left: 48px;
+    margin-right: 48px;
+    height: 424px;
+}
+
+.add_task_form_left input {
+    margin-bottom: 32px;
+}
+
+.add_task_form_right input{
+    margin-bottom: 24px;
+}
+
+.priority_buttons_container {
+    display: flex;
+    margin-top: 4px;
+    margin-bottom: 24px;
+}
+
+.priority_buttons_container button {
+    background-color: #FFFFFF;
+    color: black;
+    border: none;
+    box-shadow: 0px 0px 4px 0px #0000001A;
+    height: 56px;
+    width: 136px;
+    margin-right: 8px;
+    font-size: 20px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+}
+
+.priority_buttons_container button svg {
+    margin-left: 8px;
+    width: 20px !important;
+}
+
+.priority_medium_button_active {
+    background-color: #FFB800 !important;
+    color: white !important;
+    font-weight: 700 !important;
+}
+
+.red_star {
+    color: #FF8190;
+}
+
+.position_relative {
+    position: relative;
+}  
+
+.calendar_svg {
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    pointer-events: none;
+}
+
+.clear_create_buttons {
+    position: absolute;
+    bottom: -138px;
+    right: 136px;
+    display: flex;
+    height: 56px;
+}
+
+.clear_button{
+    width: 110px;
+    padding: 0px 16px;
+    margin-right: 16px;
+    color: #2A3647;
+    font-size: 20px;
+    font-weight: 400;
+    background-color: transparent;
+    border: 1px solid #2A3647;
+    display: flex;
+    align-items: center;  
+}
+
+.clear_button svg {
+    margin-left: 4px;
+}
+
+.create_button {
+    display: flex;
+    align-items: center;  
+}
+
+.input_subtasks {
+    margin-bottom: 0px;
+}
+
+.input_due_date {
+    margin-bottom: 0px;
+}
