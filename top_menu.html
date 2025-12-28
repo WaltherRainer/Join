@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .d_none {
+            display: none;
+        }
+
+
+        .top_menu {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 40px 10px 348px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user_info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .help_icon {
+            text-decoration: none;
+            color: gray;
+            border: 2px solid gray;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: transform 0s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .help_icon:hover {
+            transform: scale(1.1);
+        }
+
+        .user_avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 3px solid #1e2a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a90e2;
+            background-color: #fff;
+            overflow: hidden;
+            transition: filter 0.2s;
+            cursor: pointer;
+        }
+
+        .user_avatar:hover {
+            filter: brightness(0.9);
+        }
+
+        .user_avatar_wrapper {
+            position: relative;
+        }
+
+        /* Dropdown selbst */
+        .user_menu {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background-color: #1e2a3a;
+            border-radius: 16px 0 16px 16px;
+            min-width: 200px;
+            flex-direction: column;
+        }
+
+
+        .user_menu a {
+            display: block;
+            width: 100%;
+            padding: 6px 20px;
+            color: white;
+            text-decoration: none;
+            background: none;
+            border: none;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.4;
+            cursor: pointer;
+            white-space: nowrap;
+
+        }
+
+        .user_menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top_menu">
+        <div>Kanban Project Management Tool</div>
+        <div class="user_info">
+            <a href="#" class="help_icon">?</a>
+            <div class="user_avatar_wrapper">
+                <div class="user_avatar" onclick="toggleUserMenu()">MK</div>
+
+                <div class="user_menu d_none" id="user_menu">
+                    <a href="#">Legal Notice</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Log out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleUserMenu() {
+            let userMenu = document.getElementById('user_menu');
+            userMenu.classList.toggle('d_none');
+        }
+    </script>
+
+
+</body>
+
+</html>
