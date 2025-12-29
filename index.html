@@ -58,7 +58,7 @@
                     <div class="underline_login"></div>
                     <form onsubmit="userLogin(event); return false">
                         <div class="input_box">
-                            <input id="email" type="text" required>
+                            <input id="email" type="text" required placeholder=" ">
                             <label for="email">Email</label>
                             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2 16C1.45 16 0.979167 15.8042 0.5875 15.4125C0.195833 15.0208 0 14.55 0 14V2C0 1.45 
@@ -71,7 +71,7 @@
                         </div>
                         <div class="input_box">
 
-                            <input type="password" required data-password>
+                            <input type="password" required data-password placeholder=" ">
 
                             <label for="password">Password</label>
 
@@ -171,7 +171,7 @@
                             </button>
                         </div>
                         <div class="input_box">
-                            <input type="password" required placeholder=" " data-password>
+                            <input type="password" required placeholder=" " data-password id="confirm_user_password">
                             <label for="password_confirm">Confirm Password</label>
                                 <button type="button" class="password_svg" data-password-toggle>
                                 <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">

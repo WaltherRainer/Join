@@ -119,8 +119,6 @@ function userLogin(e) {
   }
 }
 
-
-
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
  * @param {string} email -Email address for login
@@ -163,8 +161,7 @@ function activateSignIn() {
     signInContainer.classList.add("enable")
     logInContainer.classList.add("disable")
     indexHeader.classList.add("disable")
-    // const signupForm = document.querySelector(".signup_form form");
-    // enableFormErrorReset(signupForm);
+
 }
 /** Activates Log In Form */
 function activateLogIn() {
@@ -195,17 +192,42 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function addUser() {
-    let email = document.getElementById('email_sign_up');
-    if (!userExists(email.value)) {
-        let password = document.getElementById('new_user_password');
-        let givenName = document.getElementById('given_name');
-        let dataObj = {
-            "email": email.value, 
-            "givenName": givenName.value, 
-            "password": password.value, 
-        };
-        let result = await uploadData("/users", dataObj);
-        window.location.href = 'index.html?msg=Du hast dich erfolgreich registriert';
-        console.log("Firebase Key:", result?.name);
+    if (passwordsMatch()) {
+        let email = document.getElementById('email_sign_up');
+        if (!userExists(email.value)) {
+            let password = document.getElementById('new_user_password');
+            let givenName = document.getElementById('given_name');
+            let dataObj = {
+                "email": email.value, 
+                "givenName": givenName.value, 
+                "password": password.value, 
+            };
+            let result = await uploadData("/users", dataObj);
+            window.location.href = 'index.html?msg=Du hast dich erfolgreich registriert';
+            window.location.replace("start.html");
+            console.log("Firebase Key:", result?.name);
+        }
     }
+    else {
+        showSignupPasswordError();
+    }
+}
+
+function passwordsMatch() {
+  const passwordInput = document.getElementById("new_user_password");
+  const confirmInput = document.getElementById("confirm_user_password");
+  if (!passwordInput || !confirmInput) return false;
+  return passwordInput.value === confirmInput.value;
+}
+
+function showSignupPasswordError() {
+  const passwordInput = document.getElementById("new_user_password");
+  const confirmInput = document.getElementById("confirm_user_password");
+  const warningSignup = document.getElementById("warning_signup_failed");
+  if (!passwordInput || !confirmInput) return;
+  const passwordBox = passwordInput.closest(".input_box");
+  const confirmBox = confirmInput.closest(".input_box");
+  passwordBox?.classList.add("has_error");
+  confirmBox?.classList.add("has_error");
+  warningSignup?.classList.add("visible");
 }
