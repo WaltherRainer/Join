@@ -9,7 +9,7 @@
     <title>Join Board</title>
 </head>
 <body>
-    <main class="board_page">
+    <main class="board">
         <section id="board_head" class="board_head">
             <h1 class="board_title">Board</h1>
             <div class="board_head_btns">
@@ -22,31 +22,127 @@
 
         </section>
         <section id="task_section" class="task_section">
-            <div class="to_do">
+            <div class="to_do task_list_div">
                 <div class="task_list_head">
                     <h2>To do</h2>
                     <button><img src="./assets/img/add.svg" alt="add"></button>
                 </div>
-                <div id="task_list_container" class="task_list"></div>
+                <div id="task_to_do" class="task_list">
+                    <div class="no_task">
+                        <p>No task To do</p>
+                    </div>
+                </div>
             </div>
-            <div class="in_progress">
+            <div class="in_progress task_list_div">
                 <div class="task_list_head">
                     <h2>In progress</h2>
                     <button><img src="./assets/img/add.svg" alt="add"></button>
                 </div>
-                <div id="task_list_container" class="task_list"></div>
+                <div id="task_progress" class="task_list">
+                    <div class="task">
+                        <div class="t_category"><p>User Story</p></div>
+                        <div class="t_title_description">
+                            <p class="t_title">Kochwelt Page & Description</p>
+                            <p class="t_description">build start page with recipe recommendation...</p>
+                        </div>
+                        <div class="t_sub_tasks">
+                            <div class="t_sub_task"></div>
+                            <div class="t_sub_task_count">1/2 Subtasks</div>
+                        </div>
+                        <div class="t_assigned_priotity">
+                            <div class="t_assigned_to">
+                                <p>AM</p>
+                                <p>ME</p>
+                            </div>
+                            <div class="t_priority"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div id="task_progress" class="task_list">
+                    <div class="task">
+                        <div class="category"></div>
+                        <div class="title_description">
+                            <p class="title"></p>
+                            <p class="description"></p>
+                        </div>
+                        <div class="sub_tasks">
+                            <div class="sub_task"></div>
+                            <div class="sub_task_count"></div>
+                        </div>
+                        <div class="assigned_priotity">
+                            <div class="assignet_to"></div>
+                            <div class="priority"></div>
+                        </div>
+                    </div>
+                </div> -->
             </div>
-            <div class="await_feedback">
+            <div class="await_feedback task_list_div">
                 <div class="task_list_head">
                     <h2>Await feedback</h2>
                     <button><img src="./assets/img/add.svg" alt="add"></button>
-                <div id="task_list_container" class="task_list"></div>
+                </div>
+                <div id="task_await" class="task_list">
+                    <div class="task">
+                        <div class="t_category"><p>User Story</p></div>
+                        <div class="t_title_description">
+                            <p class="t_title">Kochwelt Page & Description</p>
+                            <p class="t_description">build start page with recipe recommendation...</p>
+                        </div>
+                        <div class="t_sub_tasks">
+                            <div class="t_sub_task"></div>
+                            <div class="t_sub_task_count">1/2 Subtasks</div>
+                        </div>
+                        <div class="t_assigned_priotity">
+                            <div class="t_assigned_to">
+                                <p>AM</p>
+                                <p>ME</p>
+                            </div>
+                            <div class="t_priority"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="done">
+            <div class="done task_list_div">
                 <div class="task_list_head">
                     <h2>Done</h2>
-                <div id="task_list_container" class="task_list"></div>
+                </div>
+                <div id="task_done" class="task_list">
+                    <div class="task">
+                        <div class="t_category"><p>User Story</p></div>
+                        <div class="t_title_description">
+                            <p class="t_title">Kochwelt Page & Description</p>
+                            <p class="t_description">build start page with recipe recommendation...</p>
+                        </div>
+                        <div class="t_sub_tasks">
+                            <div class="t_sub_task"></div>
+                            <div class="t_sub_task_count">1/2 Subtasks</div>
+                        </div>
+                        <div class="t_assigned_priotity">
+                            <div class="t_assigned_to">
+                                <p>AM</p>
+                                <p>ME</p>
+                            </div>
+                            <div class="t_priority"></div>
+                        </div>
+                    </div>
+                    <div class="task">
+                        <div class="t_category"><p>User Story</p></div>
+                        <div class="t_title_description">
+                            <p class="t_title">Kochwelt Page & Description</p>
+                            <p class="t_description">build start page with recipe recommendation...</p>
+                        </div>
+                        <div class="t_sub_tasks">
+                            <div class="t_sub_task"></div>
+                            <div class="t_sub_task_count">1/2 Subtasks</div>
+                        </div>
+                        <div class="t_assigned_priotity">
+                            <div class="t_assigned_to">
+                                <p>AM</p>
+                                <p>ME</p>
+                            </div>
+                            <div class="t_priority"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
