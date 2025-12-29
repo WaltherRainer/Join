@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles/board.css">
+    <link rel="stylesheet" href="styles/button.css">
+    <title>Join Board</title>
+</head>
+<body>
+    <main class="board_page">
+        <section id="board_head" class="board_head">
+            <h1 class="board_title">Board</h1>
+            <div class="board_head_btns">
+                <div class="search_task_area">
+                    <input type="text" class="search_task" placeholder="Find Task">
+                    <img src="./assets/img/search_lens.svg" alt="search">
+                </div>
+                <button class="default-button add_task_button">Add task <img src="./assets/img/add.svg" alt="add"></button>
+            </div>
+
+        </section>
+        <section id="task_section" class="task_section">
+            <div class="to_do">
+                <div class="task_list_head">
+                    <h2>To do</h2>
+                    <button><img src="./assets/img/add.svg" alt="add"></button>
+                </div>
+                <div id="task_list_container" class="task_list"></div>
+            </div>
+            <div class="in_progress">
+                <div class="task_list_head">
+                    <h2>In progress</h2>
+                    <button><img src="./assets/img/add.svg" alt="add"></button>
+                </div>
+                <div id="task_list_container" class="task_list"></div>
+            </div>
+            <div class="await_feedback">
+                <div class="task_list_head">
+                    <h2>Await feedback</h2>
+                    <button><img src="./assets/img/add.svg" alt="add"></button>
+                <div id="task_list_container" class="task_list"></div>
+                </div>
+            </div>
+            <div class="done">
+                <div class="task_list_head">
+                    <h2>Done</h2>
+                <div id="task_list_container" class="task_list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
