@@ -1,13 +1,17 @@
-body {
+/* body {
     background-color: #F6F7F8;
     width: 1208px;
     height: 928px;
-}
+} */
 
 label {
     font-size: 20px;
     font-weight: 400;
     color: #000000;
+}
+
+.add_task_main {
+    height: calc(100dvh - 96px);
 }
 
 input {

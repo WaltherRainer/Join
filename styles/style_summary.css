@@ -1,9 +1,10 @@
-.main {
+.summary_main {
   display: flex;
   flex-direction: column;
   padding: 60px;
   background-color: #f6f7f8;
   font-size: 16px;
+  height: calc(100dvh - 96px);
 }
 
 .title_box {
