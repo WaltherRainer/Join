@@ -93,7 +93,7 @@
                         <span class="warning_login_failed" id="warning_login_failed">Check your Email and password. Please try again.</span>
                         <div class="btn_div">
                             <button class="default-button">Log in</button>
-                            <button class="secondary-button">Guest Log in</button>
+                            <button onclick="guestLogin()" class="secondary-button">Guest Log in</button>
                         </div>
                     </form>
                 </div>
@@ -209,6 +209,13 @@
 <script src="./script.js"></script>
 <script src="./JS/login.js"></script>
 <script src="./JS/templates.js"></script>
+
+    <!-- Signup Success Toast -->
+    <div class="signup_success_overlay" id="signup_success_overlay" aria-hidden="true">
+    <div class="signup_success_box" role="status" aria-live="polite">
+        You Signed Up successfully
+    </div>
+    </div>
 
 </body>
 

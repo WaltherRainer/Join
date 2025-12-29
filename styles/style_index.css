@@ -322,3 +322,66 @@ body.is_loaded {
     display: block;
 }
 
+:root {
+  --signup_success_bg: #2a3647;
+  --signup_success_text: #ffffff;
+  --signup_success_width: 312px;
+  --signup_success_height: 74px;
+  --signup_success_radius: 16px;
+  --signup_success_slide_duration: 600ms;
+  --signup_success_hold_duration: 1000ms;
+}
+
+/* overlay sitzt über allem und zentriert */
+.signup_success_overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none; /* blockiert keine Klicks */
+  z-index: 2000;
+
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.signup_success_overlay.is_visible {
+  opacity: 1;
+}
+
+.signup_success_box {
+  width: var(--signup_success_width);
+  height: var(--signup_success_height);
+  background: var(--signup_success_bg);
+  color: var(--signup_success_text);
+  border-radius: var(--signup_success_radius);
+
+  display: grid;
+  place-items: center;
+
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  /* Start: unten außerhalb */
+  transform: translateY(60vh);
+  opacity: 0;
+}
+
+/* Animation: von unten in die Mitte */
+.signup_success_overlay.is_animating .signup_success_box {
+  animation: signup_success_slide_in var(--signup_success_slide_duration) ease forwards;
+}
+
+@keyframes signup_success_slide_in {
+  from {
+    transform: translateY(60vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+

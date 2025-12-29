@@ -4,6 +4,10 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
+function guestLogin() {
+    window.location.replace("start.html");
+}
+
 function setAriaLabel(input, btn) {
   const hasValue = input.value.length > 0;
   if (!hasValue) btn.setAttribute("aria-label", "Passwortfeld ist leer");
@@ -203,8 +207,8 @@ async function addUser() {
                 "password": password.value, 
             };
             let result = await uploadData("/users", dataObj);
-            window.location.href = 'index.html?msg=Du hast dich erfolgreich registriert';
-            window.location.replace("start.html");
+            showSignupSuccessToast();
+            
             console.log("Firebase Key:", result?.name);
         }
     }
@@ -231,3 +235,32 @@ function showSignupPasswordError() {
   confirmBox?.classList.add("has_error");
   warningSignup?.classList.add("visible");
 }
+
+function showSignupSuccessToast() {
+  const overlay = document.getElementById("signup_success_overlay");
+  if (!overlay) return;
+
+  // sichtbar + animieren
+  overlay.classList.add("is_visible", "is_animating");
+  overlay.setAttribute("aria-hidden", "false");
+
+  // nach "slide in" + 1s Pause Login aktivieren
+  const slideMs = parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue("--signup_success_slide_duration"), 10) || 600;
+  const holdMs = parseInt(getComputedStyle(document.documentElement)
+    .getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
+
+  window.setTimeout(() => {
+    // optional: Toast wieder ausblenden
+    overlay.classList.remove("is_animating", "is_visible");
+    overlay.setAttribute("aria-hidden", "true");
+
+    // Login anzeigen
+    if (typeof activateLogIn === "function") {
+      activateLogIn();
+    } else {
+      console.warn("activateLogIn() ist nicht definiert.");
+    }
+  }, slideMs + holdMs);
+}
+
