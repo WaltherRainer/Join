@@ -1,0 +1,41 @@
+.contacts_main {
+  display: flex;
+}
+
+.container_adresslist {
+  width: 456px;
+  height: 100vh;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+}
+
+.container_contactpage {
+  width: calc(100% - 456px);
+  background-color: #f6f7f8;
+  height: 100vh;
+  border: 1px solid red;
+}
+
+.title_box {
+  display: flex;
+  align-items: center;
+  margin-top: 110px;
+  margin-left: 55px;
+}
+
+.summary_title {
+  font-size: 61px;
+  font-weight: 700;
+  color: hsla(0, 0%, 0%, 1);
+  padding-right: 30px;
+  border-width: 3px;
+  border-right-style: solid;
+  border-right-color: hsla(198, 76%, 52%, 1);
+}
+
+.summary_subtitle {
+  font-size: 27px;
+  font-weight: 400;
+  color: hsla(215, 26%, 22%, 1);
+  padding-left: 30px;
+}
