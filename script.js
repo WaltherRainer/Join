@@ -7,6 +7,10 @@ const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header"); 
 
+// document.addEventListener("DOMContentLoaded", () => {
+//   w3.includeHTML();
+// });
+
 async function renderUsers() {
     users = await loadData("/users") || {};
     document.getElementById('user_cards').innerHTML = "";

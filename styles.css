@@ -50,14 +50,29 @@ body {
 .display_grid {
     display: grid;
     grid-template-columns: 232px 1fr;
-    grid-template-rows: 100vh;
+    grid-template-rows: 96px 1fr;
+    grid-template-areas: 
+    "nav header"
+    "nav main";
 }
 
 .navbar {
-    background-color: aqua;
     display: flex;
     flex-direction: column;
     background-color: #2A3647;
+    grid-area: nav;
+}
+
+.d_none {
+    display: none;
+}
+
+.main_content {
+    grid-area: main;
+}
+
+.header_join {
+    grid-area: header;
 }
 
 .nav_logo {
@@ -79,6 +94,7 @@ body {
     padding-top: 8px;
     padding-bottom: 8px;
     color: var(--white-text-color);
+    cursor: pointer;
 }
 
 .nav_link svg {
