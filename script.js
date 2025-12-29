@@ -6,44 +6,6 @@ let tasks = {};
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header"); 
-// const passwordInput = document.getElementById("password");
-// const passwordSVG = document.getElementById("password_svg");
-
-// toggleButton.addEventListener("click", () => {
-//     const isPassword = passwordInput.type === "password";
-//     passwordInput.type = isPassword ? "text" : "password";
-//     toggleButton .setAttribute(
-//         "aria-label",
-//         isPassword ? "Passwort verbergen" : "Passwort anzeigen"
-//     );
-// });
-
-window.addEventListener("load", () => {
-    const indexBody = document.getElementById("index_body");
-    const logoContainer = document.getElementById("logo_container");
-    const pageContent = document.querySelector(".page_content");
-
-setTimeout(() => {
-    indexBody.classList.add("is_loaded");
-    logoContainer.classList.add("is_in_corner");
-    
-    pageContent.classList.add("is_visible");
-}, 1000);
-});
-
-function activateSignIn() {
-    signInContainer.classList.add("enable")
-    logInContainer.classList.add("disable")
-    indexHeader.classList.add("disable")
-}
-
-function activateLogIn() {
-    signInContainer.classList.remove("enable")
-    logInContainer.classList.remove("disable")
-    indexHeader.classList.remove("disable")
-}
-
-
 
 async function renderUsers() {
     users = await loadData("/users") || {};
@@ -78,19 +40,10 @@ function userExists(email) {
     }
 }
 
-async function userLogin() {
-    let email = document.getElementById('email');
-    let password = document.getElementById('password');
-    if (accessGranted(email.value, password.value)) {
-        window.location.replace("index.html");
-    }
-}
-
 async function loadTasks() {
     tasks = await loadData('/tasks');
     console.log(tasks);
 }
-
 
 async function addTask() {
     let taskName = document.getElementById('task_name');
@@ -112,26 +65,6 @@ async function addTask() {
     let result = await uploadData('/tasks', newTaskObj)
      console.log("Firebase Key:", result?.name);
      loadTasks();
-}
-
-/**
- * Function to check if user and password matches, sets the user id and returns true when a match was found
- * @param {string} email -Email address for login
- * @param {string} password -user password
- * @returns {boolean} -True when access is granted, false if not
- */
-function accessGranted(email, password) {
-    let UserKeys = Object.keys(users);
-    for (let index = 0; index < UserKeys.length; index++) {
-        const element = UserKeys[index];
-        const tmpEmail = users[element].email;
-        const tmpPassword = users[element].password;
-        if (email === tmpEmail && password === tmpPassword) {
-            activeUserKey = element;
-            return true;
-        };
-    }
-    return false;
 }
 
 async function onloadFunc() {

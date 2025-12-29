@@ -42,7 +42,7 @@
     position: relative;
     width: 100%;
     height: 50px;
-    margin: 25px 0;
+    margin: 25px 0 6px 0;
 }
 
 .input_box input {
@@ -62,6 +62,18 @@
 .input_box input:focus,
 .input_box input:valid {
     border-color: var(--border_color);
+}
+
+.input_box input:focus {
+    border-color: var(--light-blue);
+}
+
+.input_box.has_error input {
+  border: 1.5px solid var(--warning_red);
+}
+
+.input_box.has_error label {
+  color: var(--warning_red);
 }
 
 .input_box label {
@@ -91,10 +103,48 @@
     transition: .25s;
 }
 
+/* der Icon-Button soll NICHT am Layout teilnehmen */
+.input_box .password_svg {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+
+}
+
+/* SVG im Button nicht nochmal absolut setzen */
+.input_box .password_svg svg {
+  position: static;     /* überschreibt .input_box svg */
+  transform: none;
+  display: block;
+}
+
+.input_box .password_svg {
+  opacity: 0;
+  cursor: default;
+  transition: opacity 0.15s ease;
+}
+
+.input_box .password_svg.pointer {
+  opacity: 1;
+  cursor: pointer;
+}
+
 .btn_div {
     display: flex;
     justify-content: space-around;
-    padding-top: 12px;
+    padding-top: 36px;
 }
 
 .underline_login {
@@ -246,6 +296,33 @@ body.is_loaded {
     transition: 1s;
 }
 
-.password_svg {
-    cursor: pointer;
+
+
+.warning_login_failed {
+  display: block;
+  min-height: 18px;      /* reserviert Platz, auch wenn leer */
+  margin-top: 6px;
+  color: var(--warning_red);
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity .2s ease;
 }
+
+.warning_login_failed.visible {
+  opacity: 1;
+}
+
+.warning_login_failed.visible {
+    display: block;
+}
+
+.warning_signup_failed {
+    font-size: 16px;
+    color: var(--warning_red);
+    display: none;
+}
+
+.warning_signup_failed.visible {
+    display: block;
+}
+

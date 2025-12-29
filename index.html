@@ -20,14 +20,11 @@
   }
 }
 
-
-
 </style>
 
 </head>
 
-<!-- onload="onloadFunc(); return false" NOCH EINBAUEN!!!-->
-<body class="index_body" id="index_body">
+<body onload="onloadFunc(); return false" class="index_body" id="index_body">
     <div id="logo_container" class="logo_container">
         <svg width="274" height="335" viewBox="0 0 274 335" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M196.314 0H135.623V69.8251H196.314V0Z" fill="#2A3647"/>
@@ -94,6 +91,7 @@
                                 </svg>
                             </button>
                         </div>
+                        <span class="warning_login_failed" id="warning_login_failed">Check your Email and password. Please try again.</span>
                         <div class="btn_div">
                             <button class="default-button">Log in</button>
                             <button class="secondary-button">Guest Log in</button>
@@ -187,6 +185,7 @@
                             8 2C7.16667 2 6.45833 2.29167 5.875 2.875C5.29167 3.45833 5 4.16667 5 5V7Z" fill="#A8A8A8"/>
                             </svg>
                         </div>
+                        <span class="warning_signup_failed" id="warning_signup_failed">Your passwords don't match. Please try again.</span>
                         <div class="btn_div">
                             <button class="default-button">Sign up</button>
                         </div>

@@ -12,6 +12,11 @@ function initPasswordToggle() {
         EYE_OPEN: "eye_open",
     };
 
+    iconButton.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    });
+
+
     let currentIcon = ICON.LOCK;
 
     // --- Deine SVG-Factory-Funktionen ---
@@ -56,13 +61,8 @@ function initPasswordToggle() {
     function renderIcon(nextIcon) {
     currentIcon = nextIcon;
     iconButton.innerHTML = getSvg(nextIcon);
-
     const hasValue = passwordInput.value.length > 0;
 
-    // Optional: Button disabled, solange LOCK
-    iconButton.disabled = !hasValue;
-
-    // Optional: a11y Label
     if (!hasValue) {
             iconButton.setAttribute("aria-label", "Passwortfeld ist leer");
         } else if (passwordInput.type === "password") {
@@ -79,7 +79,11 @@ function initPasswordToggle() {
     if (!hasValue) {
         passwordInput.type = "password";          // reset
         renderIcon(ICON.LOCK);
+        iconButton.classList.remove("pointer");
         return;
+    }
+    else {
+        iconButton.classList.add("pointer");
     }
 
     // wenn Wert vorhanden:
@@ -88,18 +92,29 @@ function initPasswordToggle() {
     }
 
     // --- Klick: nur togglen, wenn etwas eingegeben wurde ---
+    const start = passwordInput.selectionStart;
+    const end = passwordInput.selectionEnd;
+
     iconButton.addEventListener("click", () => {
-    if (passwordInput.value.length === 0) return;
+        if (passwordInput.value.length === 0) return;
 
-    const nowPasswordHidden = passwordInput.type === "password";
-    passwordInput.type = nowPasswordHidden ? "text" : "password";
+        // Cursorposition VOR dem type-Wechsel merken
+        const pos = passwordInput.selectionStart ?? passwordInput.value.length;
 
-    renderIcon(nowPasswordHidden ? ICON.EYE_OPEN : ICON.EYE_CLOSED);
+        const nowHidden = passwordInput.type === "password";
+        passwordInput.type = nowHidden ? "text" : "password";
 
-    // optional: Cursor bleibt am Ende (bei manchen Browsern angenehmer)
-    passwordInput.focus();
-    passwordInput.setSelectionRange(passwordInput.value.length, passwordInput.value.length);
+        renderIcon(nowHidden ? ICON.EYE_OPEN : ICON.EYE_CLOSED);
+
+        // Cursor wieder setzen (am Ende oder an alter Position)
+        requestAnimationFrame(() => {
+            passwordInput.focus();
+            const len = passwordInput.value.length;
+            const safePos = Math.min(pos, len); // falls sich was ändert
+            passwordInput.setSelectionRange(safePos, safePos);
+        });
     });
+
 
     // --- Events: tippen / löschen / autofill ---
     passwordInput.addEventListener("input", syncStateFromValue);
@@ -107,4 +122,102 @@ function initPasswordToggle() {
 
     // Initial render
     renderIcon(ICON.LOCK);
+};
+
+function userLogin() {
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const emailBox = emailInput.closest(".input_box");
+    const passwordBox = passwordInput.closest(".input_box");
+    const warningLogin = document.getElementById("warning_login_failed");
+    // Reset Fehlerzustände
+    emailBox.classList.remove("has_error");
+    passwordBox.classList.remove("has_error");
+    const emailValue = emailInput.value.trim();
+    const passwordValue = passwordInput.value.trim();
+
+  // optional: normale Validierung
+  if (emailValue === "" || passwordValue === "") {
+    if (emailValue === "") emailBox.classList.add("has_error");
+    if (passwordValue === "") passwordBox.classList.add("has_error");
+    return;
+  }
+
+    if (accessGranted(emailValue, passwordValue)) {
+        window.location.replace("start.html");
+        warningLogin.classList.remove("visible");
+    }
+    else {
+        emailBox.classList.add("has_error");
+        passwordBox.classList.add("has_error");
+        warningLogin.classList.add("visible");
+    }
+};
+
+
+/**
+ * Function to check if user and password matches, sets the user id and returns true when a match was found
+ * @param {string} email -Email address for login
+ * @param {string} password -user password
+ * @returns {boolean} -True when access is granted, false if not
+ */
+function accessGranted(email, password) {
+    let UserKeys = Object.keys(users);
+    for (let index = 0; index < UserKeys.length; index++) {
+        const element = UserKeys[index];
+        const tmpEmail = users[element].email;
+        const tmpPassword = users[element].password;
+        if (email === tmpEmail && password === tmpPassword) {
+            activeUserKey = element;
+            return true;
+        };
+    }
+    return false;
+};
+
+/** resets the error when user is typing in something the input box */
+function enableFormErrorReset(formElement) {
+  const inputBoxes = formElement.querySelectorAll(".input_box");
+
+  inputBoxes.forEach(box => {
+    const input = box.querySelector("input, textarea, select");
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+      inputBoxes.forEach(b => b.classList.remove("has_error"));
+    });
+  });
 }
+
+const loginForm = document.querySelector(".login_form form");
+enableFormErrorReset(loginForm);
+
+/** Activates Sign In Form */
+function activateSignIn() {
+    signInContainer.classList.add("enable")
+    logInContainer.classList.add("disable")
+    indexHeader.classList.add("disable")
+    // const signupForm = document.querySelector(".signup_form form");
+    // enableFormErrorReset(signupForm);
+}
+/** Activates Log In Form */
+function activateLogIn() {
+    signInContainer.classList.remove("enable")
+    logInContainer.classList.remove("disable")
+    indexHeader.classList.remove("disable")
+    const loginForm = document.querySelector(".login_form form");
+    enableFormErrorReset(loginForm);
+}
+
+window.addEventListener("load", () => {
+    const indexBody = document.getElementById("index_body");
+    const logoContainer = document.getElementById("logo_container");
+    const pageContent = document.querySelector(".page_content");
+
+setTimeout(() => {
+    indexBody.classList.add("is_loaded");
+    logoContainer.classList.add("is_in_corner");
+    
+    pageContent.classList.add("is_visible");
+}, 1000);
+});
