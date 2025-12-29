@@ -130,16 +130,10 @@
   display: block;
 }
 
-.input_box .password_svg {
-  opacity: 0;
-  cursor: default;
-  transition: opacity 0.15s ease;
+.password_svg.pointer {
+    cursor: pointer;
 }
 
-.input_box .password_svg.pointer {
-  opacity: 1;
-  cursor: pointer;
-}
 
 .btn_div {
     display: flex;
