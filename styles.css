@@ -50,7 +50,10 @@ body {
 .display_grid {
     display: grid;
     grid-template-columns: 232px 1fr;
-    grid-template-rows: 100vh;
+    grid-template-rows: 96px 1fr;
+    grid-template-areas: 
+    "nav header"
+    "nav main";
 }
 
 .navbar {
@@ -58,6 +61,15 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #2A3647;
+    grid-area: nav;
+}
+
+.main_content {
+    grid-area: main;
+}
+
+.header_join {
+    grid-area: header;
 }
 
 .nav_logo {

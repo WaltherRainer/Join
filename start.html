@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/button.css">
+    <link rel="stylesheet" href="styles/style_top_menu.css">
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+
     <script src="./JS/templates.js"></script>
     <title>Join</title>
 
@@ -15,9 +18,29 @@
 
 </head>
 
+
+
 <body>
     <div class="display_grid">
-        <section class="navbar">
+        <header class="header_join">
+            <div class="top_menu">
+                <div>Kanban Project Management Tool</div>
+                <div class="user_info">
+                    <a href="#" class="help_icon">?</a>
+                    <div class="user_avatar_wrapper">
+                        <div class="user_avatar" onclick="toggleUserMenu()">MK</div>
+
+                        <div class="user_menu d_none" id="user_menu">
+                            <a href="#">Legal Notice</a>
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="navbar" >
             <div class="nav_logo">
                 <a href="./start.html">
                     <svg width="101" height="122" viewBox="0 0 101 122" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,20 +164,26 @@
                 <a href="#">Privacy Policy</a>
                 <a href="#">Legal Notice</a>
             </div>
+        </section>
 
+        <main class="main_content">
+            <div w3-include-html="summary.html"></div> 
+        </main>
+        
     </div>
 
+<script src="./script.js"></script>
+
+<script>
+    w3.includeHTML();
+
+    function toggleUserMenu() {
+        let userMenu = document.getElementById('user_menu');
+        userMenu.classList.toggle('d_none');
+    }
+</script>
 
 
-
-    </section>
-    </div>
-
-    <main>
-
-    </main>
-
-    <script src="./script.js"></script>
 </body>
 
 </html>
