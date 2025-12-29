@@ -77,21 +77,7 @@ async function onloadFunc() {
  * This Function is used to add a User to the path users in the Database
  *  
 */
-async function addUser() {
-    let email = document.getElementById('email_sign_up');
-    if (!userExists(email.value)) {
-        let password = document.getElementById('password');
-        let givenName = document.getElementById('given_name');
-        let dataObj = {
-            "email": email.value, 
-            "givenName": givenName.value, 
-            "password": password.value, 
-        };
-        let result = await uploadData("/users", dataObj);
-        window.location.href = 'login.html?msg=Du hast dich erfolgreich registriert';
-        console.log("Firebase Key:", result?.name);
-    }
-}
+
 
 /** 
  * This Function is used to upload Data to the path of the BASE_URL
