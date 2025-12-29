@@ -245,3 +245,7 @@ body.is_loaded {
     display: none;
     transition: 1s;
 }
+
+.password_svg {
+    cursor: pointer;
+}

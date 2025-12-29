@@ -134,7 +134,6 @@ function accessGranted(email, password) {
     return false;
 }
 
-
 async function onloadFunc() {
     users = await loadData("/users") || {};  
     console.log(users);
