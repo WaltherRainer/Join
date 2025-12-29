@@ -57,11 +57,14 @@ body {
 }
 
 .navbar {
-    background-color: aqua;
     display: flex;
     flex-direction: column;
     background-color: #2A3647;
     grid-area: nav;
+}
+
+.d_none {
+    display: none;
 }
 
 .main_content {
@@ -91,6 +94,7 @@ body {
     padding-top: 8px;
     padding-bottom: 8px;
     color: var(--white-text-color);
+    cursor: pointer;
 }
 
 .nav_link svg {
