@@ -56,7 +56,7 @@
     color: var(--text-color);
     font-weight: 500;
     transition: .25s;
-    padding: 8px 60px 8px 16px;
+    padding: 2px 60px 2px 16px;
 }
 
 .input_box input:focus,
@@ -93,6 +93,15 @@
     top: -5px;
 }
 
+.input_box input:focus ~ label,
+.input_box input:not(:placeholder-shown) ~ label {
+  top: -5px;
+}
+
+.input_box input:-webkit-autofill ~ label {
+  top: -5px;
+}
+
 .input_box svg {
     position: absolute;
     top: 50%;
@@ -103,29 +112,23 @@
     transition: .25s;
 }
 
-/* der Icon-Button soll NICHT am Layout teilnehmen */
 .input_box .password_svg {
   position: absolute;
   top: 50%;
   right: 24px;
   transform: translateY(-50%);
-
   padding: 0;
   margin: 0;
   border: 0;
   background: transparent;
-
   width: 24px;
   height: 24px;
-
   display: grid;
   place-items: center;
-
 }
 
-/* SVG im Button nicht nochmal absolut setzen */
 .input_box .password_svg svg {
-  position: static;     /* überschreibt .input_box svg */
+  position: static;
   transform: none;
   display: block;
 }
@@ -133,7 +136,6 @@
 .password_svg.pointer {
     cursor: pointer;
 }
-
 
 .btn_div {
     display: flex;
@@ -171,7 +173,7 @@
   transform-origin: top left;
   z-index: 1000;
 
-  color: white; /* steuert SVG-Farbe */
+  color: var(--background-color); /* steuert SVG-Farbe */
 
   transition:
     top 0.8s ease,
