@@ -52,43 +52,7 @@ function getUserCardTempl(index, email, lastName, firstName) {
     `
 }
 
-function userExists(email) {
-    let UserKeys = Object.keys(users);
-    for (let index = 0; index < UserKeys.length; index++) {
-        const element = UserKeys[index];
-        const tmpEmail = users[element].email
-        if (email === tmpEmail) {
-            return true
-        };
-    }
-}
 
-async function loadTasks() {
-    tasks = await loadData('/tasks');
-    console.log(tasks);
-}
-
-async function addTask() {
-    let taskTitel = document.getElementById('task_titel');
-    let taskDescr = document.getElementById('task_descr');
-    let taskCat = document.getElementById('task_cat');
-    let taskPrio = document.getElementById('task_prio');
-    let taskDueDate = document.getElementById('task_due_date');
-    let subTask = document.getElementById('task_due_date');
-
-    let newTaskObj = {
-        'titel' : taskTitel.value,
-        'description' : taskDescr.value,
-        'category' : taskCat.value,
-        'priority' : taskPrio.checked,
-        'finishDate' : taskDueDate.value,
-        'assignedTo' : {'userId' : ""},
-        'subTasks' : {'subtask' : subTask.value}, 
-    };
-    let result = await uploadData('/tasks', newTaskObj)
-     console.log("Firebase Key:", result?.name);
-     loadTasks();
-}
 
 async function onloadFunc() {
     users = await loadData("/users") || {};  

@@ -1,5 +1,33 @@
 let parkedHost = null;
 
+
+async function loadTasks() {
+    tasks = await loadData('/tasks');
+    console.log(tasks);
+}
+
+async function addTask() {
+    let taskTitel = document.getElementById('task_titel');
+    let taskDescr = document.getElementById('task_descr');
+    let taskCat = document.getElementById('task_cat');
+    let taskPrio = document.querySelector('input[name="priority"]:checked');
+    let taskDueDate = document.getElementById('task_due_date');
+    let subTask = document.getElementById('subtasks');
+
+    let newTaskObj = {
+        'titel' : taskTitel.value,
+        'description' : taskDescr.value,
+        'category' : taskCat.value,
+        'priority' : taskPrio.checked,
+        'finishDate' : taskDueDate.value,
+        'assignedTo' : {'userId' : ""},
+        'subTasks' : {'subtask' : subTask.value}, 
+    };
+    let result = await uploadData('/tasks', newTaskObj)
+     console.log("Firebase Key:", result?.name);
+     loadTasks();
+}
+
 function ensureParkedHost() {
   if (!parkedHost) {
     parkedHost = document.createElement("div");
@@ -42,7 +70,6 @@ function openAddTaskModal() {
     modal.showModal();
   });
 }
-
 
 function closeAddTaskModal() {
   const { modal, host } = getModalEls();

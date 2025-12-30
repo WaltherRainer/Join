@@ -221,6 +221,17 @@ async function addUser() {
     }
 }
 
+function userExists(email) {
+    let UserKeys = Object.keys(users);
+    for (let index = 0; index < UserKeys.length; index++) {
+        const element = UserKeys[index];
+        const tmpEmail = users[element].email
+        if (email === tmpEmail) {
+            return true
+        };
+    }
+}
+
 function passwordsMatch() {
   const passwordInput = document.getElementById("new_user_password");
   const confirmInput = document.getElementById("confirm_user_password");

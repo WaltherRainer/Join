@@ -75,6 +75,7 @@ label {
     flex-direction: column;
     background-color: #2A3647;
     grid-area: nav;
+    min-height: 100dvh;
 }
 
 .d_none {
