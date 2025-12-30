@@ -150,3 +150,107 @@ label {
 .policy_links a {
     color: var(--white-text-color);
 }
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.modal_content {
+  background: var(--background-color);
+  border-radius: 16px;
+  padding: 24px;
+  width: min(1064px, 92vw);
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  position: relative;
+  outline: none;
+  border: none;
+}
+
+.modal_close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.modal {
+  border: none;
+  padding: 0;
+  background: transparent;
+
+  /* Startposition: komplett rechts außerhalb */
+  transform: translateX(100vw);
+  opacity: 0;
+}
+
+/* Backdrop */
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Inhalt = die eigentliche "Modal-Box" */
+.modal_content {
+  width: 1116px;
+  height: 870px;
+
+  background: var(--background-color);
+  border-radius: 30px;
+
+  /* kein Rand / kein schwarzer Rahmen */
+  border: none;
+  outline: none;
+
+  /* Schatten (optional) */
+  box-shadow: 0 8px 24px var(--shadow-color);
+
+  /* Zentrierung: dialog sorgt i.d.R. schon fürs Zentrieren,
+     aber so ist es stabil in allen Layouts */
+  position: relative;
+  overflow: auto;
+}
+
+/* Close Button bleibt oben rechts */
+.modal_close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.modal[open] {
+  margin: auto;
+  animation: slideInFromRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============ Slide-in Animation (1s von rechts in die Mitte) ============ */
+/* Keyframes */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Optional: auf kleineren Screens skalieren, damit’s nicht überläuft */
+@media (max-width: 1200px) {
+  .modal_content {
+    width: min(1116px, 92vw);
+    height: min(870px, 90vh);
+  }
+}

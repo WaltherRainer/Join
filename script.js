@@ -15,10 +15,21 @@ function toggleUserMenu() {
 }
 
 function showNav(page = "summary") {
-    const mainCont = document.getElementById('main_content')
-    mainCont.innerHTML  = `<div w3-include-html="${page}.html"></div>`
-    w3.includeHTML();
+  const mainCont = document.getElementById('main_content');
+  mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
+  w3.includeHTML(() => {
+    onPageLoaded(page);
+  });
 }
+
+function onPageLoaded(page) {
+  // Button exists z.B. nur auf board.html
+  const btn = document.getElementById("openAddTaskModalBtn");
+  if (btn) {
+    btn.addEventListener("click", () => openAddTaskModal());
+  }
+}
+
 
 async function renderUsers() {
     users = await loadData("/users") || {};
@@ -87,6 +98,17 @@ async function onloadFunc() {
     // let UserKeys = Object.keys(users);
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  initAddTaskModalOnce();
+
+  const navAddTask = document.getElementById("navAddTask");
+  if (navAddTask) {
+    navAddTask.addEventListener("click", (e) => {
+      e.preventDefault();
+      openAddTaskModal();
+    });
+  }
+});
 
 
 

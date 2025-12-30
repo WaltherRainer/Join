@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/style_top_menu.css">
     <link rel="stylesheet" href="styles/style_index.css">
     <script src="./script.js"></script>
+    <script src="./JS/tasks.js"></script>
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <script src="./JS/templates.js"></script>
     <script src="./JS/fetch.js"></script>
@@ -172,7 +173,13 @@
 
     </div>
 
-
+    <!-- Persistenter Modal-Layer -->
+    <dialog id="addTaskModal" class="modal">
+    <div class="modal_content">
+        <button type="button" class="modal_close" aria-label="Close">×</button>
+        <div id="addTaskModalHost"></div>
+    </div>
+    </dialog>
 
 <script>w3.includeHTML();</script>
 

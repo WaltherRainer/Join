@@ -1,11 +1,6 @@
-
-
-
 .add_task_main {
   height: calc(100dvh - 96px);
   padding: 60px;
-
-
 }
 
 .add_task_titel {
@@ -24,7 +19,6 @@
   "add_task_titel add_task_titel"
   "add_task_form_left add_task_form_right"
   "form_actions form_actions";
-  /* margin-top: 48px; */
 }
 
 .line {
@@ -266,11 +260,18 @@
   grid-area: form_actions;
 }
 
+/* mobile: untereinander */
+@media (max-width: 600px) {
+  .form_actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
 /* optional: Buttons unter rechter Spalte ausrichten */
 @media (min-width: 900px) {
   .form_actions {
     padding-right: 0;
   }
 }
-
 
