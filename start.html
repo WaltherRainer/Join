@@ -21,7 +21,7 @@
 
 </head>
 
-<body>
+<body onload="loadStart()">
     <div class="display_grid">
         <header class="header_join">
             <div class="top_menu">
@@ -168,9 +168,9 @@
         </section>
 
         <main id="main_content" class="main_content">
-            <div w3-include-html="summary.html"></div> 
+            <!-- <div w3-include-html="summary.html"></div>  -->
         </main>
-
+        <div id="addTaskLoader" style="display:none;"></div>
     </div>
 
     <!-- Persistenter Modal-Layer -->

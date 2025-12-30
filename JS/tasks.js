@@ -21,7 +21,7 @@ function openAddTaskModal() {
   const { modal, host } = getModalEls();
   if (!modal || !host) return;
 
-  // Wenn Form schon existiert: nur umhängen + öffnen
+  // Wenn Form schon existiert: umhängen + öffnen
   const existingForm = document.getElementById("addTaskForm");
   if (existingForm) {
     host.appendChild(existingForm);
@@ -29,9 +29,8 @@ function openAddTaskModal() {
     return;
   }
 
-  // sonst: Add-Task Seite einmalig laden, dann Form greifen
-  const mainCont = document.getElementById("main_content");
-  mainCont.innerHTML = `<div w3-include-html="add_task.html"></div>`;
+  const loader = document.getElementById("addTaskLoader");
+  loader.innerHTML = `<div w3-include-html="add_task.html"></div>`;
 
   w3.includeHTML(() => {
     const loadedForm = document.getElementById("addTaskForm");
@@ -43,6 +42,7 @@ function openAddTaskModal() {
     modal.showModal();
   });
 }
+
 
 function closeAddTaskModal() {
   const { modal, host } = getModalEls();

@@ -30,7 +30,6 @@ function onPageLoaded(page) {
   }
 }
 
-
 async function renderUsers() {
     users = await loadData("/users") || {};
     document.getElementById('user_cards').innerHTML = "";
@@ -96,6 +95,10 @@ async function onloadFunc() {
     loadTasks();
     // console.log(users);
     // let UserKeys = Object.keys(users);
+}
+
+function loadStart() {
+    showNav('summary');
 }
 
 document.addEventListener("DOMContentLoaded", () => {
