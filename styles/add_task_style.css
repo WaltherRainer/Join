@@ -45,12 +45,10 @@
   color: var(--text-color);
 }
 
-/* Beschreibung */
 .task_descr_textarea {
   border-radius: 10px;
   border: 1px solid var(--border_color);
   height: 120px;
-  /* width: 440px; */
   margin-top: 4px;
   font-size: 20px;
   font-weight: 400;
@@ -83,111 +81,6 @@
   margin-bottom: 0;
 }
 
-/* Buttons unten */
-/* .clear_create_buttons {
-  position: absolute;
-  bottom: -138px;
-  right: 136px;
-  display: flex;
-  height: 56px;
-} */
-
-.clear_button {
-  width: 110px;
-  padding: 16px 16px;
-  margin-right: 16px;
-  color: var(--blue);
-  font-size: 20px;
-  font-weight: 400;
-  background-color: transparent;
-  border: 1px solid var(--blue);
-  display: flex;
-  align-items: center;
-}
-
-.clear_button svg {
-  margin-left: 4px;
-}
-
-.create_button {
-  display: flex;
-  align-items: center;
-}
-
-/* =========================
-   PRIORITY (fieldset + radio)
-   ========================= */
-
-/* fieldset als Container */
-.priority_buttons_container {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-  margin-bottom: 24px;
-  border: 0;
-  padding: 0;
-  min-inline-size: 0;
-}
-
-/* legend wie normales Label */
-.priority_buttons_container legend {
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-color);
-  margin-bottom: 4px;
-  padding: 0;
-}
-
-/* Radio selbst unsichtbar, aber weiterhin zugänglich */
-.priority_btn input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Der sichtbare "Button" */
-.priority_btn span {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 0 4px 0 var(--shadow-soft);
-  height: 56px;
-  width: 136px;
-  font-size: 20px;
-  font-weight: 400;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 0;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Hover */
-.priority_btn span:hover {
-  box-shadow: 0 4px 4px 0 var(--shadow-hover);
-}
-
-/* SVG */
-.priority_btn svg {
-  width: 20px;
-  height: auto;
-  display: inline-block;
-}
-
-.priority_btn input:checked + span svg,
-.priority_btn input:checked + span svg path {
-  fill: var(--white-text-color);
-}
-
-
-/* Focus sichtbar (Tastatur) */
-.priority_btn input:focus-visible + span {
-  outline: 2px solid var(--light-blue);
-  outline-offset: 2px;
-}
 
 /* Active/Checked Zustände – keine !important nötig */
 .priority_urgent input:checked + span,
@@ -275,3 +168,112 @@
   }
 }
 
+.multi_select {
+  position: relative;
+  width: 100%;
+}
+
+.multi_select__control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 10px 10px;
+  background: var(--background-color);
+  cursor: text;
+}
+
+.multi_select__placeholder {
+  color: var(--border_color);
+  user-select: none;
+}
+
+.multi_select__value {
+  display: block;
+  user-select: none;
+}
+
+.multi_select__toggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms ease;
+}
+
+.multi_select__toggle:hover {
+  background: var(--border_color); /* grauer Kreis */
+}
+
+.multi_select__dropdown {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  border: 1px solid var(--border_color);
+  border-radius: 10px;
+  background: var(--background-color);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.multi_select__list {
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.multi_select__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.multi_select__item:hover {
+  background: var(--border_color);
+}
+
+.multi_select__item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.multi_select__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user_avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: white; /* Initialen in weiß */
+  flex: 0 0 auto;
+}
+
+.user_name {
+  display: inline-block;
+}
+
+.multi_select__checkbox {
+  flex: 0 0 auto;
+}

@@ -46,3 +46,88 @@
     border: 2px solid var(--dark-blue);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
+
+.clear_button {
+    width: 110px;
+    padding: 16px 16px;
+    margin-right: 16px;
+    color: var(--blue);
+    font-size: 20px;
+    font-weight: 400;
+    background-color: transparent;
+    border: 1px solid var(--blue);
+    display: flex;
+    align-items: center;
+}
+
+.clear_button svg {
+    margin-left: 4px;
+}
+
+.create_button {
+    display: flex;
+    align-items: center;
+}
+
+.priority_buttons_container {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 24px;
+    border: 0;
+    padding: 0;
+    min-inline-size: 0;
+}
+
+.priority_buttons_container legend {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--text-color);
+    margin-bottom: 4px;
+    padding: 0;
+}
+
+.priority_btn input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.priority_btn span {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 4px 0 var(--shadow-soft);
+    height: 56px;
+    width: 136px;
+    font-size: 20px;
+    font-weight: 400;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.priority_btn span:hover {
+    box-shadow: 0 4px 4px 0 var(--shadow-hover);
+}
+
+.priority_btn svg {
+    width: 20px;
+    height: auto;
+    display: inline-block;
+}
+
+.priority_btn input:checked + span svg,
+.priority_btn input:checked + span svg path {
+    fill: var(--white-text-color);
+}
+
+.priority_btn input:focus-visible + span {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}

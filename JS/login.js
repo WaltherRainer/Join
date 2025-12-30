@@ -136,7 +136,7 @@ function accessGranted(email, password) {
         const tmpEmail = users[element].email;
         const tmpPassword = users[element].password;
         if (email === tmpEmail && password === tmpPassword) {
-            activeUserKey = element;
+            activeUserId = element;
             activeUserName = users[element].givenName;
             return true;
         };
