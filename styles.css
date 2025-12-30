@@ -97,6 +97,23 @@ body {
     cursor: pointer;
 }
 
+.standard_input_box {
+    border-radius: 10px;
+    border: 1px solid var(--border_color);
+    height: 48px;
+    width: 440px;
+    margin-top: 4px;
+    font-size: 20px;
+    font-weight: 400;
+    padding-left: 21px;
+    color: var(--border_color);
+    outline: none;
+}
+
+.standard_input_box:focus {
+    border-color: var(--light-blue);
+}
+
 .nav_link svg {
     justify-self: center;
 }

@@ -1,167 +1,267 @@
-/* body {
-    background-color: #F6F7F8;
-    width: 1208px;
-    height: 928px;
-} */
+:root {
+  /* Zusatz-Variablen (damit keine Hex-Werte mehr nötig sind) */
+  --line-color: #E0E0E0;
+  --shadow-soft: rgba(0, 0, 0, 0.10);  /* entspricht ungefähr #0000001A */
+  --shadow-hover: rgba(0, 0, 0, 0.25);
+  --accent-pink: #FF8190;
 
+  --prio-urgent: #FF3D00;
+  --prio-medium: #FFB800;
+  --prio-low: #7AE229;
+}
+
+/* Allgemein */
 label {
-    font-size: 20px;
-    font-weight: 400;
-    color: #000000;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-color);
 }
 
 .add_task_main {
-    height: calc(100dvh - 96px);
+  height: calc(100dvh - 96px);
+  padding: 60px;
 }
 
-input {
-    border-radius: 10px;
-    border: 1px solid #D1D1D1;
-    height: 48px;
-    width: 440px;
-    margin-top: 4px;
-    font-size: 20px;
-    font-weight: 400;
-    padding-left: 21px;
-    color: #D1D1D1;
-}
-
-textarea {
-    border-radius: 10px;
-    border: 1px solid #D1D1D1;
-    height: 120px;
-    width: 440px;
-    margin-top: 4px;
-    font-size: 20px;
-    font-weight: 400;
-    padding-left: 21px;
-    padding-top: 18px;
-    color: #D1D1D1;
-    margin-bottom: 32px;   
-}
-
-.add_task_title{
-    font-size: 61px;
-    font-weight: 700;
-    color: #000000;
-    margin-bottom: 0px;
+.add_task_title {
+  font-size: 61px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0;
 }
 
 .add_task_form {
-    display: flex;
-    margin-top: 48px;
+  display: flex;
+  margin-top: 48px;
 }
 
 .line {
-    border: 1px solid #E0E0E0;
-    margin-left: 48px;
-    margin-right: 48px;
-    height: 424px;
+  border: 1px solid var(--line-color);
+  margin-left: 48px;
+  margin-right: 48px;
+  height: 424px;
 }
 
 .add_task_form_left input {
-    margin-bottom: 32px;
+  margin-bottom: 32px;
 }
 
-.add_task_form_right input{
-    margin-bottom: 24px;
+.add_task_form_right input {
+  margin-bottom: 24px;
 }
 
-.priority_buttons_container {
-    display: flex;
-    margin-top: 4px;
-    margin-bottom: 24px;
+/* Beschreibung */
+.task_descr_textarea {
+  border-radius: 10px;
+  border: 1px solid var(--border_color);
+  height: 120px;
+  width: 440px;
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 400;
+  padding-left: 21px;
+  padding-top: 18px;
+  color: var(--border_color);
+  margin-bottom: 32px;
+  outline: none;
 }
 
-.priority_buttons_container button {
-    background-color: #FFFFFF;
-    color: black;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0px 0px 4px 0px #0000001A;
-    height: 56px;
-    width: 136px;
-    margin-right: 8px;
-    font-size: 20px;
-    font-weight: 400;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0px;
+.task_descr_textarea:focus {
+  border-color: var(--light-blue);
 }
 
-.priority_buttons_container button:hover{
-    cursor: pointer;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
-
-.priority_buttons_container button svg {
-    margin-left: 8px;
-    width: 20px !important;
-}
-
-.priority_medium_button_active {
-    background-color: #FFB800 !important;
-    color: white !important;
-    font-weight: 700 !important;
-}
-
-.priority_medium_button_active:hover{
-    cursor: pointer;
-    box-shadow: none !important;
-}
-
+/* Sonstiges */
 .red_star {
-    color: #FF8190;
+  color: var(--accent-pink);
 }
 
 .position_relative {
-    position: relative;
-}  
+  position: relative;
+}
 
 .calendar_svg {
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    right: 16px;
-    top: 16px;
-    pointer-events: none;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  pointer-events: none;
 }
 
+.input_subtasks,
+.input_due_date {
+  margin-bottom: 0;
+}
+
+/* Buttons unten */
 .clear_create_buttons {
-    position: absolute;
-    bottom: -138px;
-    right: 136px;
-    display: flex;
-    height: 56px;
+  position: absolute;
+  bottom: -138px;
+  right: 136px;
+  display: flex;
+  height: 56px;
 }
 
-.clear_button{
-    width: 110px;
-    padding: 0px 16px;
-    margin-right: 16px;
-    color: #2A3647;
-    font-size: 20px;
-    font-weight: 400;
-    background-color: transparent;
-    border: 1px solid #2A3647;
-    display: flex;
-    align-items: center;  
+.clear_button {
+  width: 110px;
+  padding: 0 16px;
+  margin-right: 16px;
+  color: var(--blue);
+  font-size: 20px;
+  font-weight: 400;
+  background-color: transparent;
+  border: 1px solid var(--blue);
+  display: flex;
+  align-items: center;
 }
 
-.clear_button svg{
-    margin-left: 4px;
+.clear_button svg {
+  margin-left: 4px;
 }
 
 .create_button {
-    display: flex;
-    align-items: center;  
+  display: flex;
+  align-items: center;
 }
 
-.input_subtasks {
-    margin-bottom: 0px;
+/* =========================
+   PRIORITY (fieldset + radio)
+   ========================= */
+
+/* fieldset als Container */
+.priority_buttons_container {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 24px;
+  border: 0;
+  padding: 0;
+  min-inline-size: 0;
 }
 
-.input_due_date {
-    margin-bottom: 0px;
+/* legend wie normales Label */
+.priority_buttons_container legend {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-color);
+  margin-bottom: 4px;
+  padding: 0;
 }
+
+/* Radio selbst unsichtbar, aber weiterhin zugänglich */
+.priority_btn input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Der sichtbare "Button" */
+.priority_btn span {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 4px 0 var(--shadow-soft);
+  height: 56px;
+  width: 136px;
+  font-size: 20px;
+  font-weight: 400;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Hover */
+.priority_btn span:hover {
+  box-shadow: 0 4px 4px 0 var(--shadow-hover);
+}
+
+/* SVG */
+.priority_btn svg {
+  width: 20px;
+  height: auto;
+  display: inline-block;
+}
+
+.priority_btn input:checked + span svg,
+.priority_btn input:checked + span svg path {
+  fill: var(--white-text-color);
+}
+
+
+/* Focus sichtbar (Tastatur) */
+.priority_btn input:focus-visible + span {
+  outline: 2px solid var(--light-blue);
+  outline-offset: 2px;
+}
+
+/* Active/Checked Zustände – keine !important nötig */
+.priority_urgent input:checked + span,
+.priority_medium input:checked + span,
+.priority_low input:checked + span {
+  color: var(--white-text-color);
+  font-weight: 700;
+  box-shadow: none;
+}
+
+/* Wenn du beim aktiven Button keinen Hover-Schatten willst */
+.priority_btn input:checked + span:hover {
+  box-shadow: none;
+}
+
+.priority_urgent input:checked + span {
+  background-color: var(--prio-urgent);
+}
+
+.priority_medium input:checked + span {
+  background-color: var(--prio-medium);
+}
+
+.priority_low input:checked + span {
+  background-color: var(--prio-low);
+}
+
+.form_row{
+  display: grid;
+  grid-template-columns: 448px; /* Label fix, Feld flexibel */
+  grid-template-rows: 30px;
+  row-gap: 0px;                /* fester Abstand */
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* textarea oben ausrichten */
+.form_row:has(textarea){
+  align-items: start;
+}
+
+.form_row label{
+  margin: 0;
+  white-space: nowrap; /* verhindert Umbruch im Label */
+}
+
+.form_row input,
+.form_row textarea,
+.form_row select{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add_task_form {
+  display: flex;
+}
+
+.add_task_form_left {
+  padding-right: 48px;
+  border-right: 1px solid var(--line-color);
+}
+
+.add_task_form_right {
+  padding-left: 48px;
+}
+
+
+

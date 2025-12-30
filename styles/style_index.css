@@ -292,9 +292,7 @@ body.is_loaded {
     transition: 1s;
 }
 
-
-
-.warning_login_failed {
+.warning_text {
   display: block;
   min-height: 18px;      /* reserviert Platz, auch wenn leer */
   margin-top: 6px;
@@ -304,15 +302,12 @@ body.is_loaded {
   transition: opacity .2s ease;
 }
 
-.warning_login_failed.visible {
+.warning_text.visible {
   opacity: 1;
+  display: block;
 }
 
-.warning_login_failed.visible {
-    display: block;
-}
-
-.warning_signup_failed {
+/* .warning_signup_failed {
     font-size: 16px;
     color: var(--warning_red);
     display: none;
@@ -320,7 +315,7 @@ body.is_loaded {
 
 .warning_signup_failed.visible {
     display: block;
-}
+} */
 
 :root {
   --signup_success_bg: #2a3647;

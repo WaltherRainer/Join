@@ -137,6 +137,7 @@ function accessGranted(email, password) {
         const tmpPassword = users[element].password;
         if (email === tmpEmail && password === tmpPassword) {
             activeUserKey = element;
+            activeUserName = users[element].givenName;
             return true;
         };
     }
@@ -195,6 +196,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+/** 
+ * This Function is used to add a User to the path users in the Database
+ *  
+*/
 async function addUser() {
     if (passwordsMatch()) {
         let email = document.getElementById('email_sign_up');
@@ -208,7 +213,6 @@ async function addUser() {
             };
             let result = await uploadData("/users", dataObj);
             showSignupSuccessToast();
-            
             console.log("Firebase Key:", result?.name);
         }
     }

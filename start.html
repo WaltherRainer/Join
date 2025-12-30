@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_top_menu.css">
+    <link rel="stylesheet" href="styles/style_index.css">
+    <script src="./script.js"></script>
     <script src="https://www.w3schools.com/lib/w3.js"></script>
-
     <script src="./JS/templates.js"></script>
+    <script src="./JS/fetch.js"></script>
     <title>Join</title>
 
     <style>
@@ -17,8 +19,6 @@
     </style>
 
 </head>
-
-
 
 <body>
     <div class="display_grid">
@@ -172,24 +172,9 @@
 
     </div>
 
-<script src="./script.js"></script>
 
-<script>
-    w3.includeHTML();
 
-    function toggleUserMenu() {
-        let userMenu = document.getElementById('user_menu');
-        userMenu.classList.toggle('d_none');
-    }
-
-    function showNav(page = "summary") {
-        const mainCont = document.getElementById('main_content')
-        mainCont.innerHTML  = `<div w3-include-html="${page}.html"></div>`
-        w3.includeHTML();
-    }
-
-</script>
-
+<script>w3.includeHTML();</script>
 
 </body>
 

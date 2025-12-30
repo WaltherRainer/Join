@@ -2,14 +2,23 @@ const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatab
 let users = {};
 let activeUserKey = "";
 let tasks = {};
+let activeUserName = "";
+let localSubtasks = {};
 
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header"); 
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   w3.includeHTML();
-// });
+function toggleUserMenu() {
+    let userMenu = document.getElementById('user_menu');
+    userMenu.classList.toggle('d_none');
+}
+
+function showNav(page = "summary") {
+    const mainCont = document.getElementById('main_content')
+    mainCont.innerHTML  = `<div w3-include-html="${page}.html"></div>`
+    w3.includeHTML();
+}
 
 async function renderUsers() {
     users = await loadData("/users") || {};
@@ -50,21 +59,21 @@ async function loadTasks() {
 }
 
 async function addTask() {
-    let taskName = document.getElementById('task_name');
+    let taskTitel = document.getElementById('task_titel');
     let taskDescr = document.getElementById('task_descr');
     let taskCat = document.getElementById('task_cat');
-    let taskDur = document.getElementById('task_duration');
-    let taskUrgent = document.getElementById('task_urgent');
-    let taskFinishDate = document.getElementById('task_finish_date');
+    let taskPrio = document.getElementById('task_prio');
+    let taskDueDate = document.getElementById('task_due_date');
+    let subTask = document.getElementById('task_due_date');
 
     let newTaskObj = {
-        'name' : taskName.value,
+        'titel' : taskTitel.value,
         'description' : taskDescr.value,
         'category' : taskCat.value,
-        'duration' : taskDur.value,
-        'urgent' : taskUrgent.checked,
-        'finishDate' : taskFinishDate.value,
-        'assignedTo' : {'userId' : ""}
+        'priority' : taskPrio.checked,
+        'finishDate' : taskDueDate.value,
+        'assignedTo' : {'userId' : ""},
+        'subTasks' : {'subtask' : subTask.value}, 
     };
     let result = await uploadData('/tasks', newTaskObj)
      console.log("Firebase Key:", result?.name);
@@ -73,57 +82,13 @@ async function addTask() {
 
 async function onloadFunc() {
     users = await loadData("/users") || {};  
-    console.log(users);
-    let UserKeys = Object.keys(users);
+    loadTasks();
+    // console.log(users);
+    // let UserKeys = Object.keys(users);
 }
 
-/** 
- * This Function is used to add a User to the path users in the Database
- *  
-*/
 
 
-/** 
- * This Function is used to upload Data to the path of the BASE_URL
- * 
- * @param {string} path - This is the Pathname of the Realtime Database Object
- * @param {object} dataObj - This is the Data Object to Post to the Database
-*/
-async function uploadData(path="", dataObj) {
-        try {
-        let response = await fetch(BASE_URL + path + ".json", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataObj)
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${BASE_URL + path}`);
-        }
-        return await response.json(); 
-    } catch (error) {
-        console.error("Fehler beim Senden der Daten:", error);
-        return null; 
-    }
-};
 
-/** 
- * This Function is used to load Data from the path of the BASE_URL
- * 
- * @param {string} path - This is the Pathname of the Realtime Database Object
-*/
-async function loadData(path="") {
-    try {
-        let response = await fetch(BASE_URL + path + ".json");
-        if (!response.ok) {
-            throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${BASE_URL + path}`);
-        }
-        return await response.json(); 
-    } catch (error) {
-        console.error("Fehler beim Abrufen der Daten:", error);
-        return null; 
-    }
-};
 
 
