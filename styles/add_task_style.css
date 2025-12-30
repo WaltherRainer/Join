@@ -1,37 +1,30 @@
-:root {
-  /* Zusatz-Variablen (damit keine Hex-Werte mehr nötig sind) */
-  --line-color: #E0E0E0;
-  --shadow-soft: rgba(0, 0, 0, 0.10);  /* entspricht ungefähr #0000001A */
-  --shadow-hover: rgba(0, 0, 0, 0.25);
-  --accent-pink: #FF8190;
 
-  --prio-urgent: #FF3D00;
-  --prio-medium: #FFB800;
-  --prio-low: #7AE229;
-}
 
-/* Allgemein */
-label {
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-color);
-}
 
 .add_task_main {
   height: calc(100dvh - 96px);
   padding: 60px;
+
+
 }
 
-.add_task_title {
+.add_task_titel {
   font-size: 61px;
   font-weight: 700;
   color: var(--text-color);
   margin-bottom: 0;
+  grid-area: add_task_titel;
 }
 
 .add_task_form {
-  display: flex;
-  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 500px 500px;
+  grid-template-rows: 80px 1fr 80px;
+  grid-template-areas: 
+  "add_task_titel add_task_titel"
+  "add_task_form_left add_task_form_right"
+  "form_actions form_actions";
+  /* margin-top: 48px; */
 }
 
 .line {
@@ -43,10 +36,19 @@ label {
 
 .add_task_form_left input {
   margin-bottom: 32px;
+  
 }
 
 .add_task_form_right input {
   margin-bottom: 24px;
+}
+
+.standard_input_box {
+    color: var(--border_color);
+}
+
+.standard_input_box:valid {
+  color: var(--text-color);
 }
 
 /* Beschreibung */
@@ -54,13 +56,12 @@ label {
   border-radius: 10px;
   border: 1px solid var(--border_color);
   height: 120px;
-  width: 440px;
+  /* width: 440px; */
   margin-top: 4px;
   font-size: 20px;
   font-weight: 400;
   padding-left: 21px;
   padding-top: 18px;
-  color: var(--border_color);
   margin-bottom: 32px;
   outline: none;
 }
@@ -72,10 +73,6 @@ label {
 /* Sonstiges */
 .red_star {
   color: var(--accent-pink);
-}
-
-.position_relative {
-  position: relative;
 }
 
 .calendar_svg {
@@ -93,17 +90,17 @@ label {
 }
 
 /* Buttons unten */
-.clear_create_buttons {
+/* .clear_create_buttons {
   position: absolute;
   bottom: -138px;
   right: 136px;
   display: flex;
   height: 56px;
-}
+} */
 
 .clear_button {
   width: 110px;
-  padding: 0 16px;
+  padding: 16px 16px;
   margin-right: 16px;
   color: var(--blue);
   font-size: 20px;
@@ -250,18 +247,30 @@ label {
   box-sizing: border-box;
 }
 
-.add_task_form {
-  display: flex;
-}
-
 .add_task_form_left {
   padding-right: 48px;
   border-right: 1px solid var(--line-color);
+  grid-area: add_task_form_left;
 }
 
 .add_task_form_right {
   padding-left: 48px;
+  grid-area: add_task_form_right;
 }
 
+.form_actions {
+  display: flex;
+  justify-content: flex-end; /* rechtsbündig */
+  gap: 16px;
+  margin-top: 32px;
+  grid-area: form_actions;
+}
+
+/* optional: Buttons unter rechter Spalte ausrichten */
+@media (min-width: 900px) {
+  .form_actions {
+    padding-right: 0;
+  }
+}
 
 
