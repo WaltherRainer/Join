@@ -216,6 +216,7 @@ function openAddTaskModal() {
     host.appendChild(loadedForm);
     initAssignedToDropdown(users);
     initTaskTypeDropdown(TASK_CATEGORIES);
+    initSubtasksInput();
     modal.showModal();
   });
 }

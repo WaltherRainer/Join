@@ -1,0 +1,168 @@
+
+.subtasks_input_wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-right: 74px;
+}
+
+.subtasks_input_wrap .input_subtasks {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+}
+
+.subtasks_actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+}
+
+.icon-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+  background: var(--secondary-background-color);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.icon-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.icon-btn svg {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.icon-btn--nohovercircle::before {
+  display: none !important;
+}
+
+.subtasks_divider,
+.subtask_divider {
+  width: 1px;
+  background: var(--border_color);
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.subtasks_divider { height: 22px; background: var(--blue);}
+.subtask_divider  { height: 18px; background: var(--blue);}
+
+.subtasks_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  font-size: 0.9em;
+  color: var(--blue);
+}
+
+.subtasks_list li {
+  position: relative;
+  width: 98%;
+  padding: 6px 92px 6px 16px;
+  margin: 2px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.subtasks_list li:hover {
+  background: var(--border_color);
+}
+
+.subtasks_list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Actions rechts */
+.subtask_actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.subtasks_list li:hover .subtask_actions,
+.subtasks_list li.is-editing .subtask_actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* kleinere Buttons in der Liste */
+.subtask_actions .icon-btn {
+  width: 28px;
+  height: 28px;
+}
+
+/* Edit mode */
+.subtasks_list li.is-editing {
+  background: var(--background-color) !important;
+  border-bottom: 2px solid var(--light-blue);
+  border-radius: 0;
+}
+
+.subtasks_list li .subtask_edit {
+  width: calc(100% - 10px);
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 0.95em;
+  padding: 0 4px;
+}
+
+/* Placeholder (leer) */
+.single_select__placeholder {
+  color: var(--border_color); /* #D1D1D1 */
+  font-size: 20px;
+  font-weight: 400;
+}
+
+/* Ausgewählter Wert */
+.single_select__value {
+  color: var(--text-color);   /* #000000 */
+  font-size: 20px;
+  font-weight: 400;
+}

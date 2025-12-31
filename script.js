@@ -100,7 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
       openAddTaskModal();
     });
   }
+
+  const openBtn = document.getElementById("openAddTaskModalBtn");
+  if (openBtn) {
+    openBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      openAddTaskModal();
+    });
+  }
 });
+
 
 /**
  * Function to generate a deterministic color index for a user based on the user id.
