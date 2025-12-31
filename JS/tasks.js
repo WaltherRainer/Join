@@ -1,4 +1,6 @@
 let parkedHost = null;
+
+
 // const usersData = users || {}; 
 
 function initAssignedToDropdown(usersData) {
@@ -11,6 +13,7 @@ function initAssignedToDropdown(usersData) {
     const toggleBtn = document.getElementById('assigned_to_toggle');
     const dropdown = document.getElementById('assigned_to_dropdown');
     const list = document.getElementById('assigned_to_list');
+    const caret = toggleBtn.querySelector('.caret');
 
     const placeholder = document.getElementById('assigned_to_placeholder');
     const valueEl = document.getElementById('assigned_to_value');
@@ -33,22 +36,37 @@ function initAssignedToDropdown(usersData) {
       li.dataset.userid = userId;
 
     li.innerHTML = `
-        <div class="multi_select__left">
-            <span class="user_avatar" style="background:${bgColor};">${escapeHtml(initials)}</span>
-            <span class="user_name">${escapeHtml(name)}</span>
-        </div>
-        <input class="multi_select__checkbox" type="checkbox" tabindex="-1" />
+    <div class="multi_select__left">
+        <span class="user__avatar" style="background:${bgColor};">
+        ${escapeHtml(initials)}
+        </span>
+        <span class="user_name">${escapeHtml(name)}</span>
+    </div>
+
+    <div class="checkbox_svg" aria-hidden="true">
+        <!-- unchecked -->
+        <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="16" height="16" rx="3"
+                stroke="var(--blue)" stroke-width="2"/>
+        </svg>
+
+        <!-- checked -->
+        <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12"
+                stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M5 9L9 13L17 1.5"
+                stroke="white" stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+    </div>
     `;
 
-    li.addEventListener('click', (e) => {
-    const cb = li.querySelector('.multi_select__checkbox');
-
-    if (e.target !== cb) {
-        cb.checked = !cb.checked;
-    }
-
-    updateSelection(userId, cb.checked);
+    li.addEventListener('click', () => {
+    const isSelected = li.classList.toggle('is-selected');
+    updateSelection(userId, isSelected);
     });
+
       list.appendChild(li);
     });
   }
@@ -78,15 +96,18 @@ function initAssignedToDropdown(usersData) {
   }
 
   // 2) Dropdown open/close
-  function openDropdown() {
+    function openDropdown() {
     dropdown.hidden = false;
     control.setAttribute('aria-expanded', 'true');
-  }
+    caret.classList.add('caret_rotate');
+    }
 
-  function closeDropdown() {
+    function closeDropdown() {
     dropdown.hidden = true;
     control.setAttribute('aria-expanded', 'false');
-  }
+    caret.classList.remove('caret_rotate');
+    }
+
 
   function toggleDropdown() {
     dropdown.hidden ? openDropdown() : closeDropdown();
@@ -99,11 +120,14 @@ function initAssignedToDropdown(usersData) {
   });
 
   // Klick auf Control (Inputfläche) öffnet (aber NICHT toggeln, nur öffnen)
-  control.addEventListener('click', (e) => {
+// Klick auf Control (Inputfläche) toggelt Dropdown (öffnet/schließt)
+    control.addEventListener('click', (e) => {
     // wenn auf Button geklickt: oben schon behandelt
-    if (e.target === toggleBtn) return;
-    openDropdown();
-  });
+    if (e.target === toggleBtn || toggleBtn.contains(e.target)) return;
+
+    toggleDropdown(); // <-- statt openDropdown()
+    });
+
 
   // Klick außerhalb schließt
   document.addEventListener('click', (e) => {
