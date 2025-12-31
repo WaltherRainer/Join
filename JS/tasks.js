@@ -298,4 +298,30 @@ function initTaskTypeDropdown(categories) {
   document.addEventListener('click', (e) => {
     if (!root.contains(e.target)) closeDropdown();
   });
+
+function resetAssignedToDropdown() {
+  document.getElementById('assigned_to_placeholder').hidden = false;
+  document.getElementById('assigned_to_value').hidden = true;
+  document.getElementById('assigned_to_value').textContent = '';
+  document.getElementById('assigned_to_input').value = '';
+
+  document.querySelectorAll('#assigned_to_list .multi_select__checkbox').forEach(checkBox => checkBox.checked = false);
 }
+
+function priorityButtonsReset() {
+  document.querySelector('input[name="priority"][value="urgent"]').checked = false;
+  document.querySelector('input[name="priority"][value="medium"]').checked = true;
+  document.querySelector('input[name="priority"][value="low"]').checked = false;
+}
+
+function clearTaskForm() {
+  document.getElementById('task_titel').value = '';
+  document.getElementById('task_descr').value = '';
+  document.getElementById('task_cat').value = '';
+  document.getElementById('task_due_date').value = '';
+  document.getElementById('subtasks').value = '';
+
+  priorityButtonsReset();
+
+  resetAssignedToDropdown();
+}}
