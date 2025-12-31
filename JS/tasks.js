@@ -1,7 +1,8 @@
 let parkedHost = null;
-
-
-// const usersData = users || {}; 
+const TASK_CATEGORIES = [
+  { value: 'technical_task', label: 'Technical Task' },
+  { value: 'user_story', label: 'User Story' }
+];
 
 function initAssignedToDropdown(usersData) {
     console.log("initAssignedToDropdown called", usersData);
@@ -14,15 +15,12 @@ function initAssignedToDropdown(usersData) {
     const dropdown = document.getElementById('assigned_to_dropdown');
     const list = document.getElementById('assigned_to_list');
     const caret = toggleBtn.querySelector('.caret');
-
     const placeholder = document.getElementById('assigned_to_placeholder');
     const valueEl = document.getElementById('assigned_to_value');
     const hiddenInput = document.getElementById('assigned_to_input');
 
-  // Intern: ausgewählte userIds
   const selected = new Set();
 
-  // 1) Liste befüllen (givenName + Checkbox)
   function renderUserList() {
     list.innerHTML = '';
 
@@ -75,7 +73,6 @@ function initAssignedToDropdown(usersData) {
     if (isChecked) selected.add(userId);
     else selected.delete(userId);
 
-    // UI-Text aktualisieren
     const names = Array.from(selected).map(id => usersData[id]?.givenName).filter(Boolean);
 
     if (names.length === 0) {
@@ -87,15 +84,11 @@ function initAssignedToDropdown(usersData) {
       placeholder.hidden = true;
       valueEl.hidden = false;
       valueEl.textContent = names.join(', ');
-      // Für DB: z.B. JSON-String mit IDs (oder ändere auf Names, je nach Bedarf)
       hiddenInput.value = JSON.stringify(Array.from(selected));
     }
-
-    // required-Feeling: falls du HTML required nutzt, brauchst du etwas, das nicht leer ist
-    // hiddenInput ist required -> sobald value gesetzt, passt es.
+    renderAssignedAvatars(selected, usersData);
   }
 
-  // 2) Dropdown open/close
     function openDropdown() {
     dropdown.hidden = false;
     control.setAttribute('aria-expanded', 'true');
@@ -108,26 +101,21 @@ function initAssignedToDropdown(usersData) {
     caret.classList.remove('caret_rotate');
     }
 
+    function toggleDropdown() {
+        dropdown.hidden ? openDropdown() : closeDropdown();
+    }
 
-  function toggleDropdown() {
-    dropdown.hidden ? openDropdown() : closeDropdown();
-  }
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+    });
 
-  // Carrot toggelt
-  toggleBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleDropdown();
-  });
-
-  // Klick auf Control (Inputfläche) öffnet (aber NICHT toggeln, nur öffnen)
-// Klick auf Control (Inputfläche) toggelt Dropdown (öffnet/schließt)
     control.addEventListener('click', (e) => {
     // wenn auf Button geklickt: oben schon behandelt
     if (e.target === toggleBtn || toggleBtn.contains(e.target)) return;
 
     toggleDropdown(); // <-- statt openDropdown()
     });
-
 
   // Klick außerhalb schließt
   document.addEventListener('click', (e) => {
@@ -151,7 +139,6 @@ function initAssignedToDropdown(usersData) {
 
   renderUserList();
 };
-
 
 async function loadTasks() {
     tasks = await loadData('/tasks');
@@ -201,11 +188,11 @@ function openAddTaskModal() {
   const { modal, host } = getModalEls();
   if (!modal || !host) return;
 
-  // Wenn Form schon existiert: umhängen + öffnen
   const existingForm = document.getElementById("addTaskForm");
   if (existingForm) {
     host.appendChild(existingForm);
     initAssignedToDropdown(users);
+    initTaskTypeDropdown(TASK_CATEGORIES);
     modal.showModal();
     return;
   } 
@@ -220,7 +207,8 @@ function openAddTaskModal() {
       return;
     }
     host.appendChild(loadedForm);
-    initAssignedToDropdown(users);   // ✅ HIER rein (wichtig!)
+    initAssignedToDropdown(users);
+    initTaskTypeDropdown(TASK_CATEGORIES);
     modal.showModal();
   });
 }
@@ -256,5 +244,58 @@ function initAddTaskModalOnce() {
     if (form && modal.contains(form)) {
       (inlineHost || ensureParkedHost()).appendChild(form);
     }
+  });
+}
+
+function initTaskTypeDropdown(categories) {
+  const root = document.getElementById('task_type_select');
+  if (!root || root.dataset.initialized === "1") return;
+  root.dataset.initialized = "1";
+
+  const control = root.querySelector('.single_select__control');
+  const dropdown = root.querySelector('.single_select__dropdown');
+  const list = root.querySelector('.single_select__list');
+  const valueEl = root.querySelector('.single_select__value');
+  const placeholder = root.querySelector('.single_select__placeholder');
+  const hiddenInput = document.getElementById('task_type');
+  const caret = root.querySelector('.caret');
+
+  // Optionen rendern
+  list.innerHTML = '';
+  categories.forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'single_select__item';
+    li.textContent = cat.label;
+
+    li.addEventListener('click', () => {
+      hiddenInput.value = cat.value;
+      valueEl.textContent = cat.label;
+      valueEl.hidden = false;
+      placeholder.hidden = true;
+
+      closeDropdown();
+    });
+
+    list.appendChild(li);
+  });
+
+  function openDropdown() {
+    dropdown.hidden = false;
+    caret.classList.add('caret_rotate');
+  }
+
+  function closeDropdown() {
+    dropdown.hidden = true;
+    caret.classList.remove('caret_rotate');
+  }
+
+  function toggleDropdown() {
+    dropdown.hidden ? openDropdown() : closeDropdown();
+  }
+
+  control.addEventListener('click', toggleDropdown);
+
+  document.addEventListener('click', (e) => {
+    if (!root.contains(e.target)) closeDropdown();
   });
 }

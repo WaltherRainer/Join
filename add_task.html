@@ -151,10 +151,29 @@
                         </div>
                     </div>
 
-                    <div class="form_row">
-                        <label for="task_cat">Category<span class="red_star">*</span></label>
-                        <input class="standard_input_box" type="text" id="task_cat" name="task_cat" required>
-                    </div>
+                    <div class="assigned_avatar" id="assigned_avatar_container"></div>
+
+<div class="form_row">
+  <label for="task_type">Task type</label>
+
+  <div class="single_select" id="task_type_select">
+    <div class="single_select__control" id="task_type_control">
+      <span class="single_select__placeholder">Select task type</span>
+      <span class="single_select__value" hidden></span>
+
+      <button type="button" class="multi_select__toggle" aria-label="Toggle">
+        <div class="caret"></div>
+      </button>
+    </div>
+
+    <div class="single_select__dropdown" hidden>
+      <ul class="single_select__list"></ul>
+    </div>
+
+    <input type="hidden" id="task_type" name="task_type" required>
+  </div>
+</div>
+
                     <div class="form_row">
                         <label for="subtasks">Subtasks</label>
                         <input class="input_subtasks standard_input_box" type="text" id="subtasks" name="subtasks" placeholder="Add new subtasks" required>

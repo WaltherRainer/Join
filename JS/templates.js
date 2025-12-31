@@ -70,3 +70,26 @@ function svgFor(icon) {
       return "";
   }
 }
+
+function renderAssignedAvatars(selectedUserIds, usersData) {
+  const container = document.getElementById('assigned_avatar_container');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  selectedUserIds.forEach(userId => {
+    const user = usersData[userId];
+    if (!user) return;
+
+    const initials = initialsFromGivenName(user.givenName);
+    const bgColor = colorVarFromUserId(userId);
+
+    const avatar = document.createElement('span');
+    avatar.className = 'user__avatar';
+    avatar.style.background = bgColor;
+    avatar.textContent = initials;
+
+    container.appendChild(avatar);
+  });
+}
+

@@ -21,9 +21,9 @@ function showNav(page = "summary") {
 
     w3.includeHTML(() => {
         onPageLoaded(page);
-
         if (page === "add_task") {
-        initAssignedToDropdown(users); // ✅ erst jetzt, weil HTML vorhanden
+        initAssignedToDropdown(users);
+        initTaskTypeDropdown(TASK_CATEGORIES);
         }
     });
 }
