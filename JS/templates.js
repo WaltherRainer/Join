@@ -71,25 +71,29 @@ function svgFor(icon) {
   }
 }
 
-function renderAssignedAvatars(selectedUserIds, usersData) {
-  const container = document.getElementById('assigned_avatar_container');
-  if (!container) return;
+function userListItemTemplate({ bgColor, initials, name }) {
+  return `
+    <div class="multi_select__left">
+      <span class="user__avatar" style="background:${bgColor};">
+        ${initials}
+      </span>
+      <span class="user_name">${name}</span>
+    </div>
 
-  container.innerHTML = '';
+    <div class="checkbox_svg" aria-hidden="true">
+      <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
+      </svg>
 
-  selectedUserIds.forEach(userId => {
-    const user = usersData[userId];
-    if (!user) return;
-
-    const initials = initialsFromGivenName(user.givenName);
-    const bgColor = colorVarFromUserId(userId);
-
-    const avatar = document.createElement('span');
-    avatar.className = 'user__avatar';
-    avatar.style.background = bgColor;
-    avatar.textContent = initials;
-
-    container.appendChild(avatar);
-  });
+      <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12"
+              stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M5 9L9 13L17 1.5"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  `;
+  
 }
 
+window.userListItemTemplate = userListItemTemplate;

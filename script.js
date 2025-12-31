@@ -1,4 +1,3 @@
-const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app/"
 let users = {};
 let activeUserId = "555454";
 let tasks = {};
@@ -146,4 +145,26 @@ const bgColor = colorIndexFromUserId(activeUserId);
   return `
     <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
   `
+}
+
+function renderAssignedAvatars(selectedUserIds, usersData) {
+  const container = document.getElementById('assigned_avatar_container');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  selectedUserIds.forEach(userId => {
+    const user = usersData[userId];
+    if (!user) return;
+
+    const initials = initialsFromGivenName(user.givenName);
+    const bgColor = colorVarFromUserId(userId);
+
+    const avatar = document.createElement('span');
+    avatar.className = 'user__avatar';
+    avatar.style.background = bgColor;
+    avatar.textContent = initials;
+
+    container.appendChild(avatar);
+  });
 }

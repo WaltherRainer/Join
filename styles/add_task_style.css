@@ -296,9 +296,9 @@
   display: inline-block;
 }
 
-.multi_select__checkbox {
+/* .multi_select__checkbox {
   flex: 0 0 auto;
-}
+} */
 
 .caret {
   width: 0;

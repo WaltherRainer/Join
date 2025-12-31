@@ -5,140 +5,144 @@ const TASK_CATEGORIES = [
 ];
 
 function initAssignedToDropdown(usersData) {
-    console.log("initAssignedToDropdown called", usersData);
-    const root = document.getElementById('assigned_to');
-    if (!root) return;
-    if (root.dataset.initialized === "1") return;
-    root.dataset.initialized = "1";
-    const control = root.querySelector('.multi_select__control');
-    const toggleBtn = document.getElementById('assigned_to_toggle');
-    const dropdown = document.getElementById('assigned_to_dropdown');
-    const list = document.getElementById('assigned_to_list');
-    const caret = toggleBtn.querySelector('.caret');
-    const placeholder = document.getElementById('assigned_to_placeholder');
-    const valueEl = document.getElementById('assigned_to_value');
-    const hiddenInput = document.getElementById('assigned_to_input');
+  const ui = getAssignedToUi();
+  if (!ui.root || isInitialized(ui.root)) return;
 
-  const selected = new Set();
+  const state = { selected: new Set(), usersData, ui };
+  wireDropdownEvents(state);
+  renderUserList(state);
+}
 
-  function renderUserList() {
-    list.innerHTML = '';
+function getAssignedToUi() {
+  const root = document.getElementById("assigned_to");
+  if (!root) return { root: null };
 
-    Object.entries(usersData).forEach(([userId, userObj]) => {
-      const name = userObj?.givenName ?? '(no name)';
-      const li = document.createElement('li');
-      const initials = initialsFromGivenName(name);
-      const bgColor = colorVarFromUserId(userId);
-      li.className = 'multi_select__item';
-      li.setAttribute('role', 'option');
-      li.dataset.userid = userId;
+  const toggleBtn = document.getElementById("assigned_to_toggle");
+  return {
+    root,
+    control: root.querySelector(".multi_select__control"),
+    toggleBtn,
+    dropdown: document.getElementById("assigned_to_dropdown"),
+    list: document.getElementById("assigned_to_list"),
+    caret: toggleBtn?.querySelector(".caret"),
+    placeholder: document.getElementById("assigned_to_placeholder"),
+    valueEl: document.getElementById("assigned_to_value"),
+    hiddenInput: document.getElementById("assigned_to_input"),
+  };
+}
 
-    li.innerHTML = `
-    <div class="multi_select__left">
-        <span class="user__avatar" style="background:${bgColor};">
-        ${escapeHtml(initials)}
-        </span>
-        <span class="user_name">${escapeHtml(name)}</span>
-    </div>
+function isInitialized(root) {
+  if (root.dataset.initialized === "1") return true;
+  root.dataset.initialized = "1";
+  return false;
+}
 
-    <div class="checkbox_svg" aria-hidden="true">
-        <!-- unchecked -->
-        <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <rect x="1" y="1" width="16" height="16" rx="3"
-                stroke="var(--blue)" stroke-width="2"/>
-        </svg>
+function renderUserList(state) {
+  const { list } = state.ui;
+  list.innerHTML = "";
 
-        <!-- checked -->
-        <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12"
-                stroke="white" stroke-width="2" stroke-linecap="round"/>
-        <path d="M5 9L9 13L17 1.5"
-                stroke="white" stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"/>
-        </svg>
-    </div>
-    `;
+  for (const [userId, userObj] of Object.entries(state.usersData)) {
+    const li = createUserListItem(state, userId, userObj);
+    list.appendChild(li);
+  }
+}
 
-    li.addEventListener('click', () => {
-    const isSelected = li.classList.toggle('is-selected');
-    updateSelection(userId, isSelected);
-    });
+function createUserListItem(state, userId, userObj) {
+  const nameRaw = userObj?.givenName ?? "(no name)";
+  const name = escapeHtml(nameRaw);
+  const initials = escapeHtml(initialsFromGivenName(nameRaw));
+  const bgColor = colorVarFromUserId(userId);
 
-      list.appendChild(li);
-    });
+  const li = document.createElement("li");
+  li.className = "multi_select__item";
+  li.setAttribute("role", "option");
+  li.dataset.userid = userId;
+  li.innerHTML = userListItemTemplate({ bgColor, initials, name });
+
+  li.addEventListener("click", () => onUserToggle(state, li, userId));
+  return li;
+}
+
+function onUserToggle(state, li, userId) {
+  const isSelected = li.classList.toggle("is-selected");
+  updateSelection(state, userId, isSelected);
+}
+
+function updateSelection(state, userId, isChecked) {
+  const { selected, usersData, ui } = state;
+
+  isChecked ? selected.add(userId) : selected.delete(userId);
+
+  const names = [...selected]
+    .map(id => usersData[id]?.givenName)
+    .filter(Boolean);
+
+  applySelectionUi(ui, names, selected);
+  renderAssignedAvatars(selected, usersData);
+}
+
+function applySelectionUi(ui, names, selected) {
+  if (names.length === 0) {
+    ui.placeholder.hidden = false;
+    ui.valueEl.hidden = true;
+    ui.valueEl.textContent = "";
+    ui.hiddenInput.value = "";
+    return;
   }
 
-  function updateSelection(userId, isChecked) {
-    if (isChecked) selected.add(userId);
-    else selected.delete(userId);
+  ui.placeholder.hidden = true;
+  ui.valueEl.hidden = false;
+  ui.valueEl.textContent = names.join(", ");
+  ui.hiddenInput.value = JSON.stringify([...selected]);
+}
 
-    const names = Array.from(selected).map(id => usersData[id]?.givenName).filter(Boolean);
+function wireDropdownEvents(state) {
+  const { ui } = state;
 
-    if (names.length === 0) {
-      placeholder.hidden = false;
-      valueEl.hidden = true;
-      valueEl.textContent = '';
-      hiddenInput.value = '';
-    } else {
-      placeholder.hidden = true;
-      valueEl.hidden = false;
-      valueEl.textContent = names.join(', ');
-      hiddenInput.value = JSON.stringify(Array.from(selected));
-    }
-    renderAssignedAvatars(selected, usersData);
-  }
-
-    function openDropdown() {
-    dropdown.hidden = false;
-    control.setAttribute('aria-expanded', 'true');
-    caret.classList.add('caret_rotate');
-    }
-
-    function closeDropdown() {
-    dropdown.hidden = true;
-    control.setAttribute('aria-expanded', 'false');
-    caret.classList.remove('caret_rotate');
-    }
-
-    function toggleDropdown() {
-        dropdown.hidden ? openDropdown() : closeDropdown();
-    }
-
-    toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleDropdown();
-    });
-
-    control.addEventListener('click', (e) => {
-    // wenn auf Button geklickt: oben schon behandelt
-    if (e.target === toggleBtn || toggleBtn.contains(e.target)) return;
-
-    toggleDropdown(); // <-- statt openDropdown()
-    });
-
-  // Klick außerhalb schließt
-  document.addEventListener('click', (e) => {
-    if (!root.contains(e.target)) closeDropdown();
+  ui.toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleDropdown(ui);
   });
 
-  // ESC schließt
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeDropdown();
+  ui.control.addEventListener("click", (e) => {
+    if (e.target === ui.toggleBtn || ui.toggleBtn.contains(e.target)) return;
+    toggleDropdown(ui);
   });
 
-  // helper gegen HTML Injection
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-  }
+  document.addEventListener("click", (e) => {
+    if (!ui.root.contains(e.target)) closeDropdown(ui);
+  });
 
-  renderUserList();
-};
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDropdown(ui);
+  });
+}
+
+function toggleDropdown(ui) {
+  ui.dropdown.hidden ? openDropdown(ui) : closeDropdown(ui);
+}
+
+function openDropdown(ui) {
+  ui.dropdown.hidden = false;
+  ui.control.setAttribute("aria-expanded", "true");
+  ui.caret?.classList.add("caret_rotate");
+}
+
+function closeDropdown(ui) {
+  ui.dropdown.hidden = true;
+  ui.control.setAttribute("aria-expanded", "false");
+  ui.caret?.classList.remove("caret_rotate");
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 
 async function loadTasks() {
     tasks = await loadData('/tasks');
@@ -229,15 +233,12 @@ function initAddTaskModalOnce() {
   const { modal, closeBtn } = getModalEls();
   if (!modal || !closeBtn) return;
 
-  // Close button
   closeBtn.addEventListener("click", closeAddTaskModal);
 
-  // Backdrop click
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeAddTaskModal();
   });
 
-  // ESC / close event: Form zurückhängen, falls noch im Modal
   modal.addEventListener("close", () => {
     const form = document.getElementById("addTaskForm");
     const inlineHost = document.getElementById("addTaskInlineHost");
@@ -248,80 +249,134 @@ function initAddTaskModalOnce() {
 }
 
 function initTaskTypeDropdown(categories) {
-  const root = document.getElementById('task_type_select');
-  if (!root || root.dataset.initialized === "1") return;
-  root.dataset.initialized = "1";
+  const root = document.getElementById("task_type_select");
+  if (!root || isInitialized(root)) return;
 
-  const control = root.querySelector('.single_select__control');
-  const dropdown = root.querySelector('.single_select__dropdown');
-  const list = root.querySelector('.single_select__list');
-  const valueEl = root.querySelector('.single_select__value');
-  const placeholder = root.querySelector('.single_select__placeholder');
-  const hiddenInput = document.getElementById('task_type');
-  const caret = root.querySelector('.caret');
-
-  // Optionen rendern
-  list.innerHTML = '';
-  categories.forEach(cat => {
-    const li = document.createElement('li');
-    li.className = 'single_select__item';
-    li.textContent = cat.label;
-
-    li.addEventListener('click', () => {
-      hiddenInput.value = cat.value;
-      valueEl.textContent = cat.label;
-      valueEl.hidden = false;
-      placeholder.hidden = true;
-
-      closeDropdown();
-    });
-
-    list.appendChild(li);
-  });
-
-  function openDropdown() {
-    dropdown.hidden = false;
-    caret.classList.add('caret_rotate');
-  }
-
-  function closeDropdown() {
-    dropdown.hidden = true;
-    caret.classList.remove('caret_rotate');
-  }
-
-  function toggleDropdown() {
-    dropdown.hidden ? openDropdown() : closeDropdown();
-  }
-
-  control.addEventListener('click', toggleDropdown);
-
-  document.addEventListener('click', (e) => {
-    if (!root.contains(e.target)) closeDropdown();
-  });
-
-function resetAssignedToDropdown() {
-  document.getElementById('assigned_to_placeholder').hidden = false;
-  document.getElementById('assigned_to_value').hidden = true;
-  document.getElementById('assigned_to_value').textContent = '';
-  document.getElementById('assigned_to_input').value = '';
-
-  document.querySelectorAll('#assigned_to_list .multi_select__checkbox').forEach(checkBox => checkBox.checked = false);
+  const ui = getTaskTypeUi(root);
+  renderTaskTypeOptions(ui, categories);
+  wireTaskTypeEvents(ui);
 }
 
-function priorityButtonsReset() {
-  document.querySelector('input[name="priority"][value="urgent"]').checked = false;
-  document.querySelector('input[name="priority"][value="medium"]').checked = true;
-  document.querySelector('input[name="priority"][value="low"]').checked = false;
+function isInitialized(root) {
+  if (root.dataset.initialized === "1") return true;
+  root.dataset.initialized = "1";
+  return false;
+}
+
+function getTaskTypeUi(root) {
+  return {
+    root,
+    control: root.querySelector(".single_select__control"),
+    dropdown: root.querySelector(".single_select__dropdown"),
+    list: root.querySelector(".single_select__list"),
+    valueEl: root.querySelector(".single_select__value"),
+    placeholder: root.querySelector(".single_select__placeholder"),
+    hiddenInput: document.getElementById("task_type"),
+    caret: root.querySelector(".caret"),
+  };
+}
+
+function renderTaskTypeOptions(ui, categories) {
+  ui.list.innerHTML = "";
+
+  categories.forEach((cat) => {
+    const li = document.createElement("li");
+    li.className = "single_select__item";
+    li.textContent = cat.label;
+
+    li.addEventListener("click", () => selectTaskType(ui, cat));
+    ui.list.appendChild(li);
+  });
+}
+
+function selectTaskType(ui, cat) {
+  ui.hiddenInput.value = cat.value;
+  ui.valueEl.textContent = cat.label;
+  ui.valueEl.hidden = false;
+  ui.placeholder.hidden = true;
+  closeTaskTypeDropdown(ui);
+}
+
+function wireTaskTypeEvents(ui) {
+  ui.control.addEventListener("click", () => toggleTaskTypeDropdown(ui));
+
+  document.addEventListener("click", (e) => {
+    if (!ui.root.contains(e.target)) closeTaskTypeDropdown(ui);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeTaskTypeDropdown(ui);
+  });
+}
+
+function toggleTaskTypeDropdown(ui) {
+  ui.dropdown.hidden ? openTaskTypeDropdown(ui) : closeTaskTypeDropdown(ui);
+}
+
+function openTaskTypeDropdown(ui) {
+  ui.dropdown.hidden = false;
+  ui.caret.classList.add("caret_rotate");
+}
+
+function closeTaskTypeDropdown(ui) {
+  ui.dropdown.hidden = true;
+  ui.caret.classList.remove("caret_rotate");
 }
 
 function clearTaskForm() {
-  document.getElementById('task_titel').value = '';
-  document.getElementById('task_descr').value = '';
-  document.getElementById('task_cat').value = '';
-  document.getElementById('task_due_date').value = '';
-  document.getElementById('subtasks').value = '';
+  setValueById("task_titel", "");
+  setValueById("task_descr", "");
+  setValueById("task_cat", "");
+  setValueById("task_due_date", "");
+  setValueById("subtasks", "");
 
-  priorityButtonsReset();
-
+  resetPriorityButtons();
   resetAssignedToDropdown();
-}}
+  resetTaskTypeDropdownUi();
+}
+
+function setValueById(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.value = value;
+}
+
+function resetPriorityButtons() {
+  const urgent = document.querySelector('input[name="priority"][value="urgent"]');
+  const medium = document.querySelector('input[name="priority"][value="medium"]');
+  const low = document.querySelector('input[name="priority"][value="low"]');
+
+  if (urgent) urgent.checked = false;
+  if (medium) medium.checked = true;
+  if (low) low.checked = false;
+}
+
+function resetAssignedToDropdown() {
+  const placeholder = document.getElementById("assigned_to_placeholder");
+  const valueEl = document.getElementById("assigned_to_value");
+  const input = document.getElementById("assigned_to_input");
+
+  if (placeholder) placeholder.hidden = false;
+  if (valueEl) {
+    valueEl.hidden = true;
+    valueEl.textContent = "";
+  }
+  if (input) input.value = "";
+}
+
+function resetTaskTypeDropdownUi() {
+  const root = document.getElementById("task_type_select");
+  if (!root) return;
+
+  const valueEl = root.querySelector(".single_select__value");
+  const placeholder = root.querySelector(".single_select__placeholder");
+  const hiddenInput = document.getElementById("task_type");
+
+  if (valueEl) {
+    valueEl.hidden = true;
+    valueEl.textContent = "";
+  }
+  if (placeholder) placeholder.hidden = false;
+  if (hiddenInput) hiddenInput.value = "";
+}
+
+window.initAssignedToDropdown = initAssignedToDropdown;

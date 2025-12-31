@@ -1,3 +1,4 @@
+const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app/"
 /** 
  * This Function is used to upload Data to the path of the BASE_URL
  * 

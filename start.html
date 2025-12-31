@@ -2,24 +2,35 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles/button.css">
-    <link rel="stylesheet" href="styles/style_top_menu.css">
-    <link rel="stylesheet" href="styles/style_index.css">
-    <script src="./script.js"></script>
-    <script src="./JS/tasks.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles/button.css" />
+    <link rel="stylesheet" href="styles/style_top_menu.css" />
+    <link rel="stylesheet" href="styles/style_index.css" />
+
+    <!-- Lib zuerst -->
     <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="./JS/templates.js"></script>
+
+
+    <!-- <script src="./JS/config.js"></script> -->
+
+    <!-- Firebase/Storage Helpers -->
     <script src="./JS/fetch.js"></script>
-    <title>Join</title>
 
-    <style>
+    <!-- Templates (falls tasks.js Templates nutzt) -->
+    <script src="./JS/templates.js"></script>
 
-    </style>
+    <!-- Feature-Code -->
+    <script src="./JS/tasks.js"></script>
 
+    <!-- Hauptsteuerung zuletzt -->
+    <script src="./script.js"></script>
+
+  <title>Join</title>
 </head>
+
 
 <body onload="loadStart()">
     <div class="display_grid">
