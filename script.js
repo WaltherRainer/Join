@@ -14,18 +14,30 @@ function toggleUserMenu() {
     userMenu.classList.toggle('d_none');
 }
 
-function showNav(page = "summary") {
-    const mainCont = document.getElementById('main_content');
-    mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
-
-    w3.includeHTML(() => {
-        onPageLoaded(page);
-        if (page === "add_task") {
-        initAssignedToDropdown(users);
-        initTaskTypeDropdown(TASK_CATEGORIES);
-        }
-    });
+async function ensureUsersLoaded() {
+  if (users && Object.keys(users).length > 0) return users;
+  users = await loadData("/users") || {};
+  return users;
 }
+
+
+function showNav(page = "summary") {
+  const mainCont = document.getElementById("main_content");
+  mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
+
+  w3.includeHTML(async () => {
+    onPageLoaded(page);
+
+    if (page === "add_task") {
+      await ensureUsersLoaded();
+      initAssignedToDropdown(users);
+      initTaskTypeDropdown(TASK_CATEGORIES);
+      initSubtasksInput();
+      
+    }
+  });
+}
+
 
 function onPageLoaded(page) {
   // Button exists z.B. nur auf board.html

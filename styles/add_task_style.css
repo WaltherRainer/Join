@@ -1,79 +1,104 @@
+/* =========================
+   Add Task – Layout
+========================= */
+
 .add_task_main {
   height: calc(100dvh - 96px);
   padding: 60px;
-}
-
-.add_task_titel {
-  font-size: 61px;
-  font-weight: 700;
-  color: var(--text-color);
-  margin-bottom: 0;
-  grid-area: add_task_titel;
 }
 
 .add_task_form {
   display: grid;
   grid-template-columns: 500px 500px;
   grid-template-rows: 80px 1fr 80px;
-  grid-template-areas: 
-  "add_task_titel add_task_titel"
-  "add_task_form_left add_task_form_right"
-  "form_actions form_actions";
+  grid-template-areas:
+    "add_task_titel add_task_titel"
+    "add_task_form_left add_task_form_right"
+    "form_actions form_actions";
 }
 
-.line {
-  border: 1px solid var(--line-color);
-  margin-left: 48px;
-  margin-right: 48px;
-  height: 424px;
+.add_task_titel {
+  grid-area: add_task_titel;
+  margin-bottom: 0;
+  font-size: 61px;
+  font-weight: 700;
+  color: var(--text-color);
 }
+
+.add_task_form_left {
+  grid-area: add_task_form_left;
+  padding-right: 48px;
+  border-right: 1px solid var(--line-color);
+}
+
+.add_task_form_right {
+  grid-area: add_task_form_right;
+  padding-left: 48px;
+}
+
+/* (optional/legacy) Trennlinie – meist redundant wegen border-right oben */
+.line {
+  height: 424px;
+  margin: 0 48px;
+  border: 1px solid var(--line-color);
+}
+
+/* =========================
+   Form rows / inputs
+========================= */
 
 .add_task_form_left input {
   margin-bottom: 32px;
-  
-}
-
-.add_task_form_right input {
-  margin-bottom: 24px;
 }
 
 .standard_input_box {
-    color: var(--border_color);
+  color: var(--border_color);
 }
 
 .standard_input_box:valid {
   color: var(--text-color);
 }
 
+.form_row {
+  display: grid;
+  grid-template-columns: 448px; /* falls 2 Spalten gewünscht: 448px 1fr */
+  grid-template-rows: 30px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.form_row:has(textarea) {
+  align-items: start;
+}
+
+.form_row label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.form_row input,
+.form_row textarea,
+.form_row select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .task_descr_textarea {
-  border-radius: 10px;
-  border: 1px solid var(--border_color);
   height: 120px;
   margin-top: 4px;
+  margin-bottom: 32px;
+  padding: 18px 0 0 21px;
+
+  border: 1px solid var(--border_color);
+  border-radius: 10px;
+  outline: none;
+
   font-size: 20px;
   font-weight: 400;
-  padding-left: 21px;
-  padding-top: 18px;
-  margin-bottom: 32px;
-  outline: none;
 }
 
 .task_descr_textarea:focus {
   border-color: var(--light-blue);
-}
-
-/* Sonstiges */
-.red_star {
-  color: var(--accent-pink);
-}
-
-.calendar_svg {
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  pointer-events: none;
 }
 
 .input_subtasks,
@@ -81,8 +106,23 @@
   margin-bottom: 0;
 }
 
+.calendar_svg {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
 
-/* Active/Checked Zustände – keine !important nötig */
+.red_star {
+  color: var(--accent-pink);
+}
+
+/* =========================
+   Priority buttons (checked)
+========================= */
+
 .priority_urgent input:checked + span,
 .priority_medium input:checked + span,
 .priority_low input:checked + span {
@@ -91,82 +131,29 @@
   box-shadow: none;
 }
 
-/* Wenn du beim aktiven Button keinen Hover-Schatten willst */
 .priority_btn input:checked + span:hover {
   box-shadow: none;
 }
 
-.priority_urgent input:checked + span {
-  background-color: var(--prio-urgent);
-}
+.priority_urgent input:checked + span { background-color: var(--prio-urgent); }
+.priority_medium input:checked + span { background-color: var(--prio-medium); }
+.priority_low input:checked + span { background-color: var(--prio-low); }
 
-.priority_medium input:checked + span {
-  background-color: var(--prio-medium);
-}
-
-.priority_low input:checked + span {
-  background-color: var(--prio-low);
-}
-
-.form_row{
-  display: grid;
-  grid-template-columns: 448px; /* Label fix, Feld flexibel */
-  grid-template-rows: 30px;
-  row-gap: 0px;                /* fester Abstand */
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-/* textarea oben ausrichten */
-.form_row:has(textarea){
-  align-items: start;
-}
-
-.form_row label{
-  margin: 0;
-  white-space: nowrap; /* verhindert Umbruch im Label */
-}
-
-.form_row input,
-.form_row textarea,
-.form_row select{
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.add_task_form_left {
-  padding-right: 48px;
-  border-right: 1px solid var(--line-color);
-  grid-area: add_task_form_left;
-}
-
-.add_task_form_right {
-  padding-left: 48px;
-  grid-area: add_task_form_right;
-}
+/* =========================
+   Form actions
+========================= */
 
 .form_actions {
+  grid-area: form_actions;
   display: flex;
-  justify-content: flex-end; /* rechtsbündig */
+  justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
-  grid-area: form_actions;
 }
 
-/* mobile: untereinander */
-@media (max-width: 600px) {
-  .form_actions {
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-}
-
-/* optional: Buttons unter rechter Spalte ausrichten */
-@media (min-width: 900px) {
-  .form_actions {
-    padding-right: 0;
-  }
-}
+/* =========================
+   Multi select
+========================= */
 
 .multi_select {
   position: relative;
@@ -178,9 +165,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border: 1px solid #d0d0d0;
+
+  padding: 10px;
+  border: 1px solid var(--border_color);
   border-radius: 10px;
-  padding: 10px 10px;
   background: var(--background-color);
   cursor: text;
 }
@@ -196,20 +184,22 @@
 }
 
 .multi_select__toggle {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+
   transition: background 120ms ease;
 }
 
 .multi_select__toggle:hover {
-  background: var(--border_color); /* grauer Kreis */
+  background: var(--border_color);
 }
 
 .multi_select__dropdown {
@@ -218,11 +208,12 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
+
   border: 1px solid var(--border_color);
   border-radius: 10px;
   background: var(--background-color);
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px var(--shadow-soft);
 }
 
 .multi_select__list {
@@ -235,21 +226,20 @@
 
 .multi_select__item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
+
   padding: 8px 12px;
   margin-bottom: 4px;
-  align-items: center;
+
   cursor: pointer;
   background: transparent;
-  transition:
-    background-color 160ms ease,
-    color 160ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
-.multi_select__item:not(.is-selected):hover {
-  background-color: rgba(0, 0, 0, 0.05); /* oder dein bisheriger Hover */
+.multi_select__item:hover {
+  background-color: var(--border_color);
 }
 
 .multi_select__item.is-selected {
@@ -260,10 +250,6 @@
 
 .multi_select__item.is-selected:hover {
   background-color: var(--dark-blue);
-}
-
-.multi_select__item:hover {
-  background: var(--border_color);
 }
 
 .multi_select__item input[type="checkbox"] {
@@ -278,27 +264,26 @@
 }
 
 .user__avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 999px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 12px;
-  color: white; 
-  flex: 0 0 auto;
+
   border: none;
+  border-radius: 999px;
   user-select: none;
+
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--white-text-color);
 }
 
 .user_name {
   display: inline-block;
 }
-
-/* .multi_select__checkbox {
-  flex: 0 0 auto;
-} */
 
 .caret {
   width: 0;
@@ -315,12 +300,6 @@
   transform: rotate(180deg);
 }
 
-.multi_select__toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .checkbox_svg {
   display: flex;
   align-items: center;
@@ -331,19 +310,19 @@
   display: none;
 }
 
-.multi_select__item.is-selected .checkbox_unchecked {
-  display: none;
-}
-
-.multi_select__item.is-selected .checkbox_checked {
-  display: block;
-}
+.multi_select__item.is-selected .checkbox_unchecked { display: none; }
+.multi_select__item.is-selected .checkbox_checked   { display: block; }
 
 .assigned_avatar {
   display: flex;
   gap: 6px;
-  margin-top: 8px;
+  margin: 8px 0;
+  min-height: 50px;
 }
+
+/* =========================
+   Single select
+========================= */
 
 .single_select {
   position: relative;
@@ -355,22 +334,23 @@
   justify-content: space-between;
   gap: 8px;
 
-  border: 1px solid #d0d0d0;
-  border-radius: 10px;
   padding: 10px;
+  border: 1px solid var(--border_color);
+  border-radius: 10px;
+  background: var(--background-color);
   cursor: pointer;
 }
 
 .single_select__dropdown {
   position: absolute;
+  z-index: 20;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
 
-  background: white;
-  border: 1px solid #d0d0d0;
+  background: var(--background-color);
+  border: 1px solid var(--border_color);
   border-radius: 10px;
-  z-index: 20;
 }
 
 .single_select__list {
@@ -385,5 +365,165 @@
 }
 
 .single_select__item:hover {
-  background: rgba(0,0,0,0.05);
+  background: var(--secondary-background-color);
+}
+
+/* =========================
+   Subtasks input + list
+========================= */
+
+.subtasks_input_wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-right: 74px;
+}
+
+.subtasks_input_wrap .input_subtasks {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+}
+
+.subtasks_actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+}
+
+.icon-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+  background: var(--secondary-background-color);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.icon-btn:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.icon-btn svg {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.icon-btn--nohovercircle::before {
+  display: none !important;
+}
+
+.subtasks_divider,
+.subtask_divider {
+  width: 1px;
+  background: var(--border_color);
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.subtasks_divider { height: 22px; }
+.subtask_divider  { height: 18px; }
+
+.subtasks_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  font-size: 0.9em;
+  color: var(--blue);
+}
+
+.subtasks_list li {
+  position: relative;
+  width: 98%;
+
+  padding: 6px 92px 6px 16px;
+  margin: 2px 0;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.subtasks_list li:hover {
+  background: var(--border_color);
+}
+
+.subtasks_list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Actions rechts */
+.subtask_actions {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.subtasks_list li:hover .subtask_actions,
+.subtasks_list li.is-editing .subtask_actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* kleinere Buttons in der Liste */
+.subtask_actions .icon-btn {
+  width: 28px;
+  height: 28px;
+}
+
+/* Edit mode */
+.subtasks_list li.is-editing {
+  background: var(--background-color) !important;
+  border-bottom: 2px solid var(--light-blue);
+  border-radius: 0;
+}
+
+.subtasks_list li .subtask_edit {
+  width: calc(100% - 10px);
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: 0.95em;
+  padding: 0 4px;
 }

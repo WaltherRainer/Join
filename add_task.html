@@ -174,10 +174,44 @@
                         </div>
                     </div>
 
-                    <div class="form_row">
+                    <!-- <div class="form_row">
                         <label for="subtasks">Subtasks</label>
                         <input class="input_subtasks standard_input_box" type="text" id="subtasks" name="subtasks" placeholder="Add new subtasks" required>
+                    </div> -->
+
+                    <div class="form_row">
+                        <label for="subtasks">Subtasks</label>
+
+                        <div class="subtasks_input_wrap standard_input_box">
+                            <input
+                            class="input_subtasks"
+                            type="text"
+                            id="subtasks"
+                            name="subtasks"
+                            placeholder="Add new subtasks"
+                            autocomplete="off"
+                            />
+
+                            <div class="subtasks_actions" >
+                            <button type="button" class="icon-btn subtasks_clear" aria-label="Clear subtask input">
+                                <!-- delCross svg -->
+                            </button>
+
+                            <span class="subtasks_divider" aria-hidden="true"></span>
+
+                            <button type="button" class="icon-btn subtasks_add" aria-label="Add subtask">
+                                <!-- addCross svg -->
+                            </button>
+                            </div>
+                        </div>
+
+                        <ul id="subtasks_list" class="subtasks_list"></ul>
+
+                        <!-- hidden field, optional: falls du subtasks als JSON speichern willst -->
+                        <input type="hidden" id="subtasks_input" name="subtasks_json" value="">
                     </div>
+
+
                 </div>
                 <div class="form_actions">
                     <button  onclick="clearTaskForm() " class="clear_button secondary-button" type="button">Clear <svg width="24" height="24" viewBox="0 0 24 24"
@@ -187,7 +221,7 @@
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </button>
-                    <button class="create_button default-button" type="submit">Create Task
+                    <button onclick="addTask()" class="create_button default-button" type="submit">Create Task
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <mask id="mask0_415283_1199" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                                 width="24" height="24">
