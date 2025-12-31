@@ -116,6 +116,7 @@ function userLogin(e) {
 
   if (accessGranted(emailValue, passwordValue)) {
     window.location.replace("start.html");
+    
   } else {
     emailBox?.classList.add("has_error");
     passwordBox?.classList.add("has_error");
@@ -138,11 +139,14 @@ function accessGranted(email, password) {
         if (email === tmpEmail && password === tmpPassword) {
             activeUserId = element;
             activeUserName = users[element].givenName;
+            
             return true;
         };
     }
     return false;
 };
+
+
 
 /** resets the error when user is typing in something the input box */
 function enableFormErrorReset(formElement) {
@@ -204,7 +208,7 @@ async function addUser() {
     if (passwordsMatch()) {
         let email = document.getElementById('email_sign_up');
         if (!userExists(email.value)) {
-            let password = document.getElementById('new_user_password');
+            let password = String(document.getElementById('new_user_password'));
             let givenName = document.getElementById('given_name');
             let dataObj = {
                 "email": email.value, 

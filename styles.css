@@ -37,6 +37,12 @@
     --user_c_13: #FFE62B;
     --user_c_14: #FF4646;
     --user_c_15: #FFBB2B;
+    --svg_hover_main: #2A3647;
+    --div_hover_main: #fff;
+  --hover-scale: 1.10;
+  --hover-duration: 180ms;
+  --inner_svg_main: #fff;
+
 }
 
 @font-face {

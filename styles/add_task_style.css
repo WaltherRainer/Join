@@ -235,7 +235,7 @@
 
 .multi_select__item {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
   padding: 8px 12px;
@@ -257,7 +257,7 @@
   gap: 10px;
 }
 
-.user_avatar {
+/* .user_avatar {
   width: 28px;
   height: 28px;
   border-radius: 999px;
@@ -266,9 +266,10 @@
   justify-content: center;
   font-weight: 700;
   font-size: 12px;
-  color: white; /* Initialen in weiß */
+  color: white; 
   flex: 0 0 auto;
-}
+  border: none;
+} */
 
 .user_name {
   display: inline-block;

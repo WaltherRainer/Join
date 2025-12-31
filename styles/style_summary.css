@@ -56,7 +56,6 @@
 .todo_done_boxes {
   display: flex;
   align-items: center;
-  background-color: #ffffff;
   width: 264px;
   height: 168px;
   border-radius: 30px;
@@ -109,7 +108,7 @@
 .deadline {
   font-size: 21px;
   font-weight: 700;
-  color: hsla(215, 26%, 22%, 1);
+  /* color: hsla(215, 26%, 22%, 1); */
 }
 
 .task_boxes {
@@ -129,16 +128,53 @@
   width: 168px;
   height: 168px;
   border-radius: 30px;
-  justify-content: center;
   /* gap: 10px; */
   padding-top: 25px;
   padding-bottom: 25px;
 }
 
+.hover_card {
+  
+  transition:
+    transform var(--hover-duration) ease,
+    background-color var(--hover-duration) ease,
+    color var(--hover-duration) ease,
+    box-shadow var(--hover-duration) ease;
+
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.hover_card:hover {
+  transform: scale(var(--hover-scale));
+  background: var(--hover-bg-active);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  --svg_hover_main: #fff;
+  --div_hover_main: #2A3647;
+  --inner_svg_main: #2A3647;
+}
+
+@media (hover: none) {
+  .hover_card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.hover_card {
+  z-index: 1;
+}
+
+.hover_card:hover {
+  z-index: 10;
+}
+
 .big_numbers {
   font-size: 64px;
   font-weight: 600;
-  color: hsla(0, 0%, 0%, 1);
+  /* color: hsla(0, 0%, 0%, 1); */
   line-height: 120%;
 }
 

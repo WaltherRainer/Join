@@ -37,7 +37,6 @@ function initAssignedToDropdown(usersData) {
             <span class="user_avatar" style="background:${bgColor};">${escapeHtml(initials)}</span>
             <span class="user_name">${escapeHtml(name)}</span>
         </div>
-
         <input class="multi_select__checkbox" type="checkbox" tabindex="-1" />
     `;
 
@@ -50,8 +49,6 @@ function initAssignedToDropdown(usersData) {
 
     updateSelection(userId, cb.checked);
     });
-
-
       list.appendChild(li);
     });
   }

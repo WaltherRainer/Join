@@ -1,8 +1,8 @@
 const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app/"
 let users = {};
-let activeUserId = "";
+let activeUserId = "555454";
 let tasks = {};
-let activeUserName = "";
+let activeUserName = "Walther";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
 
@@ -69,8 +69,14 @@ async function loadStart() {
     users = await loadData("/users") || {};  
     loadTasks();
     showNav('summary');
+    showAvatar();
     // console.log(users);
     // let UserKeys = Object.keys(users);
+}
+
+function showAvatar() {
+    const avatar = document.getElementById('user_avatar_wrapper');
+    avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -131,4 +137,13 @@ function initialsFromGivenName(givenName, fallback = "?") {
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
 
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function renderAvatar(activeUserId, activeUserName) {
+const initials = initialsFromGivenName(activeUserName);
+const bgColor = colorIndexFromUserId(activeUserId);
+
+  return `
+    <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
+  `
 }
