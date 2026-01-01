@@ -25,6 +25,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: var(--background-color);
 }
 
 .login_wrapper .form_box.login {
@@ -215,7 +216,7 @@
 /* ---------- Nach Transition ---------- */
 
 body.is_loaded {
-  background-color: var(--background-color);
+  background-color: var(--secondary-background-color);
 }
 
 .index_header {

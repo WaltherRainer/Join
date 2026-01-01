@@ -1,26 +1,9 @@
-.contacts_main {
-  display: flex;
-}
-
-.container_adresslist {
-  width: 456px;
-  height: calc(100dvh - 96px);
-  background-color: #ffffff;
-  border: 1px solid #000000;
-}
-
-.container_contactpage {
-  width: calc(100% - 456px);
-  background-color: #f6f7f8;
-  height: calc(100dvh - 96px);
-  border: 1px solid red;
-}
-
 .title_box {
   display: flex;
   align-items: center;
   margin-top: 110px;
   margin-left: 55px;
+  grid-area: contact_head;
 }
 
 .summary_title {
@@ -31,6 +14,7 @@
   border-width: 3px;
   border-right-style: solid;
   border-right-color: hsla(198, 76%, 52%, 1);
+  
 }
 
 .summary_subtitle {
@@ -38,4 +22,95 @@
   font-weight: 400;
   color: hsla(215, 26%, 22%, 1);
   padding-left: 30px;
+}
+
+.contacts_layout {
+    display: grid;
+    grid-template-columns: 456px 1fr;
+    grid-template-rows: 96px calc(100dvh - 178px);
+    grid-template-areas: 
+    "contact_list contact_head"
+    "contact_list contact_details";
+    background-color: var(--secondary-background-color);
+}
+
+.contact_list_sect {
+  grid-area: contact_list;
+  min-height: calc(100dvh - 90px);
+  background-color: var(--background-color);
+  margin-top: -6px;
+
+  padding-top: 32px;
+}
+
+.contact_details_sect {
+  grid-area: contact_details;
+}
+
+.add_contact_btn {
+  width: 352px;
+  margin-left: 52px;
+  margin-bottom: 32px;
+}
+
+.contact_list_content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 18px;
+}
+
+.first_letter {
+  margin: 16px 52px 8px 52px;
+  padding: 4px 24px 20px 24px;
+  border-bottom: 2px solid var(--border_color);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.user_contact {
+  margin-left: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user_contact span {
+  font-size: 20px;
+}
+
+.user_contact a {
+  color: var(--light-blue);
+}
+
+.user__avatar {
+  width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 999px;
+    user-select: none;
+
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--white-text-color);
+}
+
+.contact_list_card {
+  width: 352px;
+  /* padding: 0px 52px 0px 52px; */
+  margin-left: 52px;
+  /* background-color: var(--border_color); */
+  padding: 8px 0 8px 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.contact_list_card:hover {
+  background-image: linear-gradient(to top, #F9F9F9, #F0F0F0);
 }

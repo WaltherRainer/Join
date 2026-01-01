@@ -5,6 +5,7 @@
 .add_task_main {
   height: calc(100dvh - 96px);
   padding: 60px;
+  background-color: var(--secondary-background-color);
 }
 
 .add_task_form {

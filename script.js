@@ -30,7 +30,6 @@ async function ensureUsersLoaded() {
   return users;
 }
 
-
 function showNav(page = "summary") {
   const mainCont = document.getElementById("main_content");
   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
@@ -45,12 +44,11 @@ function showNav(page = "summary") {
       initSubtasksInput();
       
     }
+    else if (page === "contacts") {
+      renderContacts(users);
+    }
   });
 }
-
-
-
-
 
 function onPageLoaded(page) {
   const btn = document.getElementById("openAddTaskModalBtn");
@@ -88,6 +86,7 @@ function showAvatar() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initUsersLoading();
+  
   loadTasks();
 });
 
@@ -197,3 +196,68 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
     container.appendChild(avatar);
   });
 }
+
+function groupUsersByFirstLetter(usersObj) {
+  const groups = {};
+
+  for (const [id, user] of Object.entries(usersObj)) {
+    if (!user?.givenName) continue;
+
+    const letter = user.givenName
+      .trim()
+      .charAt(0)
+      .toUpperCase();
+
+    if (!groups[letter]) {
+      groups[letter] = [];
+    }
+
+    groups[letter].push({ id, ...user });
+  }
+
+  return groups;
+}
+
+function renderContacts(users) {
+  const container = document.querySelector(".contact_list_sect");
+  if (!container) return;
+
+  // alten Inhalt löschen (Button behalten)
+  container.querySelectorAll(".contact_list_item").forEach(e => e.remove());
+
+  const groups = groupUsersByFirstLetter(users);
+  const sortedLetters = Object.keys(groups).sort();
+
+  for (const letter of sortedLetters) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "contact_list_item";
+
+    const letterDiv = document.createElement("div");
+    letterDiv.className = "first_letter";
+    letterDiv.textContent = letter;
+    wrapper.appendChild(letterDiv);
+
+    groups[letter].forEach(user => {
+      const card = document.createElement("div");
+      card.className = "contact_list_card";
+
+      card.innerHTML = `
+        <div class="contact_list_content">
+          <span class="user__avatar" style="background: ${colorVarFromUserId(user.id)};">
+            ${initialsFromGivenName(user.givenName)}
+          </span>
+          <div class="user_contact">
+            <span>${user.givenName}</span>
+            <p><a href="mailto:${user.email}">${user.email}</a></p>
+          </div>
+        </div>
+      `;
+
+      wrapper.appendChild(card);
+    });
+
+    container.appendChild(wrapper);
+  }
+}
+
+
