@@ -26,12 +26,19 @@
 
 .contacts_layout {
     display: grid;
-    grid-template-columns: 456px 1fr;
+    grid-template-columns: 456px 8px 1fr;
     grid-template-rows: 96px calc(100dvh - 178px);
     grid-template-areas: 
-    "contact_list contact_head"
-    "contact_list contact_details";
+    "contact_list shadow contact_head"
+    "contact_list shadow contact_details";
     background-color: var(--secondary-background-color);
+}
+
+.shadow {
+  grid-area: shadow;
+  background-image: linear-gradient(to left, #F9F9F9, #F0F0F0);
+  min-width: 8px;
+  margin-top: -1px;
 }
 
 .contact_list_sect {
