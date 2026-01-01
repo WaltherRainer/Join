@@ -4,10 +4,20 @@ let tasks = {};
 let activeUserName = "Walther";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
-
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header"); 
+let usersReady = null;
+
+function initUsersLoading() {
+  if (!usersReady) {
+    usersReady = (async () => {
+      users = await loadData("/users") || {};
+      return users;
+    })();
+  }
+  return usersReady;
+}
 
 function toggleUserMenu() {
     let userMenu = document.getElementById('user_menu');
@@ -39,8 +49,10 @@ function showNav(page = "summary") {
 }
 
 
+
+
+
 function onPageLoaded(page) {
-  // Button exists z.B. nur auf board.html
   const btn = document.getElementById("openAddTaskModalBtn");
   if (btn) {
     btn.addEventListener("click", () => openAddTaskModal());
@@ -60,22 +72,6 @@ async function renderUsers() {
     }
 }
 
-function getUserCardTempl(index, email, lastName, firstName) {
-    return `
-        <div class="user_div">
-            <h3 id="user_${index}_name">${firstName} ${lastName}</h3>
-            <p id="user_${index}_email">${email}</p>
-        </div>
-    `
-}
-
-async function onloadFunc() {
-    users = await loadData("/users") || {};  
-    loadTasks();
-    // console.log(users);
-    // let UserKeys = Object.keys(users);
-}
-
 async function loadStart() {
     users = await loadData("/users") || {};  
     loadTasks();
@@ -90,6 +86,11 @@ function showAvatar() {
     avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
 }
 
+document.addEventListener("DOMContentLoaded", async () => {
+  await initUsersLoading();
+  loadTasks();
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   initAddTaskModalOnce();
 
@@ -100,16 +101,23 @@ document.addEventListener("DOMContentLoaded", () => {
       openAddTaskModal();
     });
   }
+  document.addEventListener("submit", async (e) => {
+    const form = e.target;
 
-  const openBtn = document.getElementById("openAddTaskModalBtn");
-  if (openBtn) {
-    openBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      openAddTaskModal();
-    });
-  }
+    if (!(form instanceof HTMLFormElement)) return;
+    if (form.id !== "addTaskForm") return;
+    e.preventDefault();
+    await addTask();
+    }, true);
+
+    const openBtn = document.getElementById("openAddTaskModalBtn");
+    if (openBtn) {
+      openBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openAddTaskModal();
+      });
+    }
 });
-
 
 /**
  * Function to generate a deterministic color index for a user based on the user id.

@@ -14,8 +14,6 @@ function initAssignedToDropdown(usersData) {
   renderUserList(state);
 }
 
-
-
 function getAssignedToUi() {
   const root = document.getElementById("assigned_to");
   if (!root) return { root: null };
@@ -146,32 +144,56 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+function getSubtasksArray() {
+  const hidden = document.getElementById("subtasks_input");
+  if (!hidden || !hidden.value) return [];
+  try {
+    const arr = JSON.parse(hidden.value);
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
 
 async function loadTasks() {
     tasks = await loadData('/tasks');
     console.log(tasks);
 }
 
-async function addTask() {
-    let taskTitel = document.getElementById('task_titel');
-    let taskDescr = document.getElementById('task_descr');
-    let taskCat = document.getElementById('task_cat');
-    let taskPrio = document.querySelector('input[name="priority"]:checked');
-    let taskDueDate = document.getElementById('task_due_date');
-    let subTask = document.getElementById('subtasks');
+function getAssignedToIds() {
+  const hidden = document.getElementById("assigned_to_input");
+  if (!hidden || !hidden.value) return [];
+  try {
+    const arr = JSON.parse(hidden.value);
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
+}
 
-    let newTaskObj = {
-        'titel' : taskTitel.value,
-        'description' : taskDescr.value,
-        'category' : taskCat.value,
-        'priority' : taskPrio.checked,
-        'finishDate' : taskDueDate.value,
-        'assignedTo' : {'userId' : ""},
-        'subTasks' : {'subtask' : subTask.value}, 
-    };
-    let result = await uploadData('/tasks', newTaskObj)
-     console.log("Firebase Key:", result?.name);
-     loadTasks();
+async function addTask() {
+  const taskTitel   = document.getElementById("task_titel");
+  const taskDescr   = document.getElementById("task_descr");
+  const taskCat     = document.getElementById("task_cat");
+  const taskPrio    = document.querySelector('input[name="priority"]:checked');
+  const taskDueDate = document.getElementById("task_due_date");
+
+  const subTasks   = getSubtasksArray();
+  const assignedTo = getAssignedToIds();   // ✅ HIER
+
+  const newTaskObj = {
+    titel: taskTitel?.value?.trim() || "",
+    description: taskDescr?.value?.trim() || "",
+    category: taskCat?.value || "",
+    priority: taskPrio?.value || "",
+    finishDate: taskDueDate?.value || "",
+    assignedTo,            // ✅ Array von userIds
+    subTasks
+  };
+
+  const result = await uploadData("tasks", newTaskObj);
+  console.log("Firebase Key:", result?.name);
+  loadTasks();
 }
 
 function ensureParkedHost() {
@@ -200,6 +222,7 @@ function openAddTaskModal() {
     host.appendChild(existingForm);
     initAssignedToDropdown(users);
     initTaskTypeDropdown(TASK_CATEGORIES);
+    bindAddTaskFormSubmit();
     modal.showModal();
     return;
   } 
@@ -334,10 +357,16 @@ function clearTaskForm() {
   setValueById("task_due_date", "");
   setValueById("subtasks", "");
 
+  // ✅ Subtasks-Liste + hidden JSON reset
+  setValueById("subtasks_input", "[]");
+  const list = document.getElementById("subtasks_list");
+  if (list) list.innerHTML = "";
+
   resetPriorityButtons();
   resetAssignedToDropdown();
   resetTaskTypeDropdownUi();
 }
+
 
 function setValueById(id, value) {
   const el = document.getElementById(id);
@@ -617,7 +646,7 @@ function commitEdit(state) {
   if (!input) return exitEditMode(state);
 
   const txt = input.value.trim();
-  if (!txt) return; // leer -> nix speichern (oder später löschen, wenn du willst)
+  if (!txt) return; 
 
   state.subtasks[state.editingIndex] = txt;
   exitEditMode(state);

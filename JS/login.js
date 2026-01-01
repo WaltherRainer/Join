@@ -84,45 +84,28 @@ function initPasswordToggle(container) {
   syncState(state); // initial
 }
 
-function userLogin(e) {
+async function userLogin(e) {
   e.preventDefault();
 
-  const form = e.currentTarget; // das Login-Form
+  await initUsersLoading(); // ✅ garantiert users geladen
 
-  const emailInput = form.querySelector('input[type="email"], input[name="email"], #email');
-  const passwordInput = form.querySelector('input[data-password]'); // dein neues Pattern
+  const form = e.currentTarget;
+  const emailInput = form.querySelector('#email');
+  const passwordInput = form.querySelector('input[data-password]');
   const warningLogin = form.querySelector("#warning_login_failed");
 
-  if (!emailInput || !passwordInput) {
-    console.warn("Login inputs not found in form");
-    return;
-  }
-
-  const emailBox = emailInput.closest(".input_box");
-  const passwordBox = passwordInput.closest(".input_box");
-
-  // Reset
-  [emailBox, passwordBox].forEach(b => b?.classList.remove("has_error"));
-  warningLogin?.classList.remove("visible");
+  if (!emailInput || !passwordInput) return;
 
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
 
-  if (emailValue === "" || passwordValue === "") {
-    if (emailValue === "") emailBox?.classList.add("has_error");
-    if (passwordValue === "") passwordBox?.classList.add("has_error");
-    return;
-  }
-
   if (accessGranted(emailValue, passwordValue)) {
     window.location.replace("start.html");
-    
   } else {
-    emailBox?.classList.add("has_error");
-    passwordBox?.classList.add("has_error");
     warningLogin?.classList.add("visible");
   }
 }
+
 
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
@@ -208,7 +191,7 @@ async function addUser() {
     if (passwordsMatch()) {
         let email = document.getElementById('email_sign_up');
         if (!userExists(email.value)) {
-            let password = String(document.getElementById('new_user_password'));
+            let password = document.getElementById('new_user_password');
             let givenName = document.getElementById('given_name');
             let dataObj = {
                 "email": email.value, 
@@ -216,8 +199,10 @@ async function addUser() {
                 "password": password.value, 
             };
             let result = await uploadData("/users", dataObj);
+            
             showSignupSuccessToast();
             console.log("Firebase Key:", result?.name);
+            users = result;
         }
     }
     else {
