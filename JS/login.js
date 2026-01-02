@@ -28,7 +28,6 @@ function renderIcon(state, nextIcon) {
   setAriaLabel(state.input, state.button);
 }
 
-
 function setClickable(state, clickable) {
   state.button.classList.toggle("pointer", clickable);
 }
@@ -94,19 +93,14 @@ function initPasswordToggle(container) {
 
 async function userLogin(e) {
   e.preventDefault();
-
-  await initUsersLoading(); // ✅ garantiert users geladen
-
+  await initUsersLoading();
   const form = e.currentTarget;
   const emailInput = form.querySelector('#email');
   const passwordInput = form.querySelector('input[data-password]');
   const warningLogin = form.querySelector("#warning_login_failed");
-
   if (!emailInput || !passwordInput) return;
-
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
-
   if (accessGranted(emailValue, passwordValue)) {
     window.location.replace("start.html");
   } else {
@@ -197,38 +191,23 @@ async function addUser() {
     showSignupPasswordError();
     return;
   }
-
   const emailEl = document.getElementById("email_sign_up");
   const pwEl = document.getElementById("new_user_password");
   const nameEl = document.getElementById("given_name");
-
   const email = emailEl?.value?.trim() || "";
   const password = pwEl?.value || "";
   const givenName = nameEl?.value?.trim() || "";
-
   if (!email || !password || !givenName) return;
-
-  // sicherstellen, dass users geladen ist (für userExists)
   await initUsersLoading();
-
   if (userExists(email)) return;
-
   const dataObj = { email, givenName, password };
-
-  // ✅ 1) User wirklich in Firebase speichern
   const result = await uploadData("/users", dataObj);
   console.log("Firebase Key:", result?.name);
-
-  // ✅ 2) Users cache invalidieren + neu laden
   window.usersReady = null;
   await initUsersLoading();
-
-  // ✅ 3) UI
   showSignupSuccessToast();
   resetSignupForm();
 }
-
-
 
 function userExists(email) {
   if (!window.users || typeof window.users !== "object") return false;
@@ -237,7 +216,6 @@ function userExists(email) {
     user?.email === email
   );
 }
-
 
 function passwordsMatch() {
   const passwordInput = document.getElementById("new_user_password");

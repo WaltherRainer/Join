@@ -13,7 +13,6 @@
   border-width: 3px;
   border-right-style: solid;
   border-right-color: hsla(198, 76%, 52%, 1);
-  
 }
 
 .summary_subtitle {
@@ -46,11 +45,19 @@
   background-color: var(--background-color);
   margin-top: -6px;
   padding-top: 32px;
+  overflow: auto;
 }
 
 .contact_details_sect {
   grid-area: contact_details;
-  margin: 120px 0 0 0;
+  margin: 120px 0 0 30px;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  grid-template-rows: 160px 1fr;
+  grid-template-areas: 
+  "avatar_large contact_detail"
+  "contact_info contact_info";
+
 }
 
 .add_contact_btn {
@@ -85,13 +92,13 @@
   font-size: 20px;
 }
 
-.user_contact a {
+.user_contact p {
   color: var(--light-blue);
 }
 
-.user__avatar {
-  width: 42px;
-    height: 42px;
+.user_avatar_large {
+  width: 120px;
+    height: 120px;
     flex: 0 0 auto;
 
     display: inline-flex;
@@ -102,16 +109,15 @@
     border-radius: 999px;
     user-select: none;
 
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 47px;
     color: var(--white-text-color);
+    grid-area: avatar_large;
 }
 
 .contact_list_card {
   width: 352px;
-  /* padding: 0px 52px 0px 52px; */
   margin-left: 52px;
-  /* background-color: var(--border_color); */
   padding: 8px 0 8px 0;
   border-radius: 10px;
   cursor: pointer;
@@ -154,7 +160,42 @@
   color: var(--blue);
 }
 
+.icon_text_btn.is-edit:hover {
+  color: var(--light-blue);
+}
+
 /* Delete */
 .icon_text_btn.is-delete {
+  color: var(--blue);
+}
+
+.icon_text_btn.is-delete:hover {
   color: var(--warning_red);
+}
+
+.contact_detail {
+  grid-area: contact_detail;
+  margin: 16px 0 0 40px;
+}
+
+.contact_detail h2 {
+  font-size: 47px;
+  font-weight: 500;
+}
+
+.contact_information {
+  grid-area: contact_info;
+  gap: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact_information h3 {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.contact_information h4 {
+  margin: 8px 0 0 0;
 }

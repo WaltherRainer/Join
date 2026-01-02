@@ -177,20 +177,17 @@ async function addTask() {
   const taskCat     = document.getElementById("task_cat");
   const taskPrio    = document.querySelector('input[name="priority"]:checked');
   const taskDueDate = document.getElementById("task_due_date");
-
   const subTasks   = getSubtasksArray();
-  const assignedTo = getAssignedToIds();   // ✅ HIER
-
+  const assignedTo = getAssignedToIds();
   const newTaskObj = {
     titel: taskTitel?.value?.trim() || "",
     description: taskDescr?.value?.trim() || "",
     category: taskCat?.value || "",
     priority: taskPrio?.value || "",
     finishDate: taskDueDate?.value || "",
-    assignedTo,            // ✅ Array von userIds
+    assignedTo,
     subTasks
   };
-
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
   loadTasks();
@@ -356,17 +353,13 @@ function clearTaskForm() {
   setValueById("task_cat", "");
   setValueById("task_due_date", "");
   setValueById("subtasks", "");
-
-  // ✅ Subtasks-Liste + hidden JSON reset
   setValueById("subtasks_input", "[]");
   const list = document.getElementById("subtasks_list");
   if (list) list.innerHTML = "";
-
   resetPriorityButtons();
   resetAssignedToDropdown();
   resetTaskTypeDropdownUi();
 }
-
 
 function setValueById(id, value) {
   const el = document.getElementById(id);
@@ -428,11 +421,9 @@ function initSubtasksInput() {
 
   btnClear.innerHTML = delCross({ width: 18, height: 18 });
   btnAdd.innerHTML = addCross({ width: 18, height: 18 });
-
   btnClear.onclick = () => clearSubtaskInput(state);
   btnAdd.onclick = () => addSubtaskFromInput(state);
   input.onkeydown = (e) => onSubtaskKeydown(state, e);
-
 
   wireSubtaskListEvents(state);
   renderSubtasks(state);
@@ -464,8 +455,6 @@ function syncSubtasksHidden(state) {
   if (state.ui.hidden) state.ui.hidden.value = JSON.stringify(state.subtasks);
 }
 
-/* ---------- UI ---------- */
-
 function getSubtasksUi() {
   return {
     input: document.getElementById("subtasks"),
@@ -473,8 +462,6 @@ function getSubtasksUi() {
     hidden: document.getElementById("subtasks_input"),
   };
 }
-
-/* ---------- Events ---------- */
 
 function wireSubtaskEvents(state) {
   state.ui.listEl.addEventListener("click", (e) => onListClick(state, e));
@@ -498,8 +485,6 @@ function onListKeydown(state, e) {
   if (e.key === "Escape") return exitEditMode(state);
 }
 
-/* ---------- Actions ---------- */
-
 function handleAction(state, idx, action) {
   if (state.editingIndex === idx) return handleEditActions(state, action);
   return handleViewActions(state, idx, action);
@@ -514,8 +499,6 @@ function handleEditActions(state, action) {
   if (action === "clear") return clearEditInput(state);
   if (action === "commit") return commitEdit(state);
 }
-
-/* ---------- State changes ---------- */
 
 function enterEditMode(state, idx) {
   state.editingIndex = idx;
@@ -534,8 +517,6 @@ function deleteSubtask(state, idx) {
   renderSubtasks(state);
   syncHidden(state);
 }
-
-/* ---------- Edit helpers ---------- */
 
 function focusEditInput(state) {
   const el = state.ui.listEl.querySelector('li.is-editing input.subtask_edit');
@@ -558,15 +539,12 @@ function commitEdit(state) {
   syncHidden(state);
 }
 
-/* ---------- Render ---------- */
-
 function renderSubtasks(state) {
   state.ui.listEl.innerHTML = "";
   state.subtasks.forEach((text, idx) => {
     state.ui.listEl.appendChild(makeSubtaskLi(state, text, idx));
   });
 }
-
 
 function makeSubtaskLi(state, text, idx) {
   const li = document.createElement("li");
@@ -592,9 +570,6 @@ function makeSubtaskMain(state, text, idx) {
   input.addEventListener("blur", () => commitEdit(state)); // optional: blur speichert
   return input;
 }
-
-
-/* ---------- Hidden field ---------- */
 
 function syncHidden(state) {
   if (state.ui.hidden) state.ui.hidden.value = JSON.stringify(state.subtasks);
@@ -677,7 +652,6 @@ function makeIconBtn(action, iconFn) {
   btn.innerHTML = iconFn({ width: 18, height: 18 });
   return btn;
 }
-
 
 function makeDivider() {
   const d = document.createElement("span");

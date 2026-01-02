@@ -1,10 +1,8 @@
 function iconSvg({
   width = 18,
   height = 18,
-  viewBox = "0 0 18 18",
-  color = "var(--blue)",          // Default: #2A3647 via Variable
-  paths = [],                     // Array: { d, fillRule?, clipRule? }
-  extraAttrs = "",                // optional: z.B. aria-hidden
+  viewBox = "0 0 18 18",     
+  paths = [],                                
 } = {}) {
     const pathMarkup = paths
     .map(p => {
@@ -36,14 +34,6 @@ function recyBin({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   });
 }
 
-function delCross({ width = 18, height = 18 } = {}) {
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9 11.4L4.1 16.3C3.91667 16.4833 3.68333 16.575 3.4 16.575C3.11667 16.575 2.88333 16.4833 2.7 16.3C2.51667 16.1167 2.425 15.8833 2.425 15.6C2.425 15.3167 2.51667 15.0833 2.7 14.9L7.6 10L2.7 5.1C2.51667 4.91667 2.425 4.68333 2.425 4.4C2.425 4.11667 2.51667 3.88333 2.7 3.7C2.88333 3.51667 3.11667 3.425 3.4 3.425C3.68333 3.425 3.91667 3.51667 4.1 3.7L9 8.6L13.9 3.7C14.0833 3.51667 14.3167 3.425 14.6 3.425C14.8833 3.425 15.1167 3.51667 15.3 3.7C15.4833 3.88333 15.575 4.11667 15.575 4.4C15.575 4.68333 15.4833 4.91667 15.3 5.1L10.4 10L15.3 14.9C15.4833 15.0833 15.575 15.3167 15.575 15.6C15.575 15.8833 15.4833 16.1167 15.3 16.3C15.1167 16.4833 14.8833 16.575 14.6 16.575C14.3167 16.575 14.0833 16.4833 13.9 16.3L9 11.4Z" fill="#2A3647"/>
-    </svg>
-  `;
-}
-
 function delCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   return iconSvg({
     width,
@@ -56,21 +46,28 @@ function delCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   });
 }
 
-function confTick({ width = 18, height = 18 } = {}) {
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M6.5502 11.15L15.0252 2.675C15.2252 2.475 15.4627 2.375 15.7377 2.375C16.0127 2.375 16.2502 2.475 16.4502 2.675C16.6502 2.875 16.7502 3.1125 16.7502 3.3875C16.7502 3.6625 16.6502 3.9 16.4502 4.1L7.2502 13.3C7.0502 13.5 6.81687 13.6 6.5502 13.6C6.28354 13.6 6.0502 13.5 5.8502 13.3L1.5502 9C1.3502 8.8 1.25437 8.5625 1.2627 8.2875C1.27104 8.0125 1.3752 7.775 1.5752 7.575C1.7752 7.375 2.0127 7.275 2.2877 7.275C2.5627 7.275 2.8002 7.375 3.0002 7.575L6.5502 11.15Z" fill="#2A3647"/>
-    </svg>
-  `;
+function confTick({ width = 18, height = 18, color = "var(--blue)" } = {}) {
+  return iconSvg({
+    width,
+    height,
+    viewBox: "0 0 18 18",
+    color,
+    paths: [
+      { d: "M6.5502 11.15L15.0252 2.675C15.2252 2.475 15.4627 2.375 15.7377 2.375C16.0127 2.375 16.2502 2.475 16.4502 2.675C16.6502 2.875 16.7502 3.1125 16.7502 3.3875C16.7502 3.6625 16.6502 3.9 16.4502 4.1L7.2502 13.3C7.0502 13.5 6.81687 13.6 6.5502 13.6C6.28354 13.6 6.0502 13.5 5.8502 13.3L1.5502 9C1.3502 8.8 1.25437 8.5625 1.2627 8.2875C1.27104 8.0125 1.3752 7.775 1.5752 7.575C1.7752 7.375 2.0127 7.275 2.2877 7.275C2.5627 7.275 2.8002 7.375 3.0002 7.575L6.5502 11.15Z" },
+    ],
+  });
 }
 
-function editPencil({ width = 18, height = 18 } = {}) {
-  return `
-    <svg width="${width}" height="${height}" viewBox="0 0 18 19" fill="none"
-         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M2 17H3.4L12.025 8.375L10.625 6.975L2 15.6V17ZM16.3 6.925L12.05 2.725L13.45 1.325C13.8333 0.941667 14.3042 0.75 14.8625 0.75C15.4208 0.75 15.8917 0.941667 16.275 1.325L17.675 2.725C18.0583 3.10833 18.2583 3.57083 18.275 4.1125C18.2917 4.65417 18.1083 5.11667 17.725 5.5L16.3 6.925ZM14.85 8.4L4.25 19H0V14.75L10.6 4.15L14.85 8.4Z" fill="#2A3647"/>
-    </svg>
-  `;
+function editPencil({ width = 18, height = 18, color = "var(--blue)" } = {}) {
+  return iconSvg({
+    width,
+    height,
+    viewBox: "0 0 18 18",
+    color,
+    paths: [
+      { d: "M2 17H3.4L12.025 8.375L10.625 6.975L2 15.6V17ZM16.3 6.925L12.05 2.725L13.45 1.325C13.8333 0.941667 14.3042 0.75 14.8625 0.75C15.4208 0.75 15.8917 0.941667 16.275 1.325L17.675 2.725C18.0583 3.10833 18.2583 3.57083 18.275 4.1125C18.2917 4.65417 18.1083 5.11667 17.725 5.5L16.3 6.925ZM14.85 8.4L4.25 19H0V14.75L10.6 4.15L14.85 8.4Z" },
+    ],
+  });
 }
 
 function addCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
@@ -113,7 +110,6 @@ function lock({ width = 16, height = 21, color = "var(--border_color)" } = {}) {
   });
 }
 
-/* einfache Eye-Icons (wenn du andere Pfade hast, kannst du sie später austauschen) */
 function eye_open({ width = 25, height = 25, color = "var(--border_color)" } = {}) {
   return iconSvg({
     width,
@@ -212,10 +208,10 @@ function nav_contacts({ width = 25, height = 25, color = "var(--nav-icon)" } = {
   });
 }
 
-// ---------- ICON REGISTRY ----------
 const ICONS = {
   recyBin,
   editPencil,
+  confTick,
   addCross,
   delCross,
   mail,
@@ -232,7 +228,6 @@ const ICONS = {
 
 function renderIcons(root = document) {
   if (!root || !root.querySelectorAll) return;
-
   root.querySelectorAll("[data-icon]").forEach(el => {
     const name = el.dataset.icon;
     const fn = ICONS[name];
@@ -240,17 +235,12 @@ function renderIcons(root = document) {
       console.warn("Unknown icon:", name, el);
       return;
     }
-
     const width = Number(el.dataset.w) || undefined;
     const height = Number(el.dataset.h) || undefined;
-
-    // nur übergeben, wenn gesetzt (damit defaults der Icons greifen)
     const args = {};
     if (width) args.width = width;
     if (height) args.height = height;
-
     el.innerHTML = fn(args);
-
     const svg = el.querySelector("svg");
     if (svg) svg.setAttribute("aria-hidden", "true");
   });
