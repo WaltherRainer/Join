@@ -118,7 +118,6 @@ label {
   font-weight: 400;
 }
 
-
 .display_grid {
     display: grid;
     grid-template-columns: 232px 1fr;
@@ -127,14 +126,6 @@ label {
     "nav header"
     "nav main";
 }
-
-/* .navbar {
-    display: flex;
-    flex-direction: column;
-    background-color: #2A3647;
-    grid-area: nav;
-    min-height: 100dvh;
-} */
 
 .d_none {
     display: none;
@@ -305,7 +296,6 @@ label {
   }
 }
 
-
 .navbar {
   display: flex;
   flex-direction: column;
@@ -313,10 +303,6 @@ label {
   grid-area: nav;
   min-height: 100dvh;
 }
-
-/* Icon-Wrapper: sorgt dafür, dass SVG nie "unsichtbar" wegen Layout wird */
-.svg-icon { display: inline-flex; }
-.svg-icon svg { display: block; }
 
 /* Link */
 .nav_link {
@@ -343,11 +329,22 @@ label {
 
 /* Active (wenn du später .active setzt) */
 .nav_link.active {
-  background: rgba(255,255,255,0.14);
+  background-color: var(--dark-blue); /* #091931 */
 }
 
-.nav_link.active .nav_icon {
+.nav_link.active .nav_icon { 
+  color: var(--nav-icon-active); 
+}
+
+/* Logo immer weiß */
+.nav_logo_icon {
   color: var(--white-text-color);
 }
 
-.nav_link.active .nav_icon { color: var(--nav-icon-active); }
+.nav_logo_icon,
+.nav_logo_icon svg {
+  color: var(--white-text-color);
+}
+
+.nav_link.active .nav_icon { color: var(--white-text-color); }
+.nav_link .nav_icon { color: var(--border_color); }

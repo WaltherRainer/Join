@@ -15,15 +15,13 @@ function iconSvg({
     })
     .join("");
 
-  return `
-  <svg width="${width}" height="${height}" viewBox="${viewBox}"
-       fill="none" xmlns="http://www.w3.org/2000/svg"
-       aria-hidden="true"
-       style="color: inherit;">
+    return `
+    <svg width="${width}" height="${height}" viewBox="${viewBox}"
+        fill="none" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        style="color: currentColor;">
     ${pathMarkup}
-  </svg>
-`;
-
+    </svg>`;
 }
 
 function recyBin({ width = 18, height = 18, color = "var(--blue)" } = {}) {
@@ -57,7 +55,6 @@ function delCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
     ],
   });
 }
-
 
 function confTick({ width = 18, height = 18 } = {}) {
   return `

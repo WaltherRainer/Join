@@ -35,12 +35,12 @@ async function ensureUsersLoaded() {
 }
 
 function showNav(page = "summary") {
+  setActiveNav(page); 
   const mainCont = document.getElementById("main_content");
   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
 
   w3.includeHTML(async () => {
-    renderIcons(document); // ✅ nach dem HTML-Include Icons neu rendern
-
+    renderIcons(document);
     onPageLoaded(page);
 
     if (page === "add_task") {
@@ -52,14 +52,20 @@ function showNav(page = "summary") {
       renderContacts(users);
     }
   });
-
 }
+
 
 function onPageLoaded(page) {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
 
   btn.onclick = () => openAddTaskModal(); // ✅ überschreibt statt zu stapeln
+}
+
+function setActiveNav(page) {
+  document.querySelectorAll(".nav_link").forEach(link => {
+    link.classList.toggle("active", link.dataset.page === page);
+  });
 }
 
 async function renderUsers() {

@@ -385,12 +385,7 @@ body.is_loaded {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--blue); /* Default */
 }
-
-.svg-icon.is-muted { color: var(--border_color); }
-.svg-icon.is-danger { color: var(--warning_red); }
-
 
 .input_icon {
   position: absolute;
@@ -406,6 +401,6 @@ body.is_loaded {
 }
 
 /* Farben über currentColor */
-.svg-icon { color: var(--blue); }
-.svg-icon.is-muted { color: var(--border_color); }
+/* .svg-icon { color: var(--blue); }
+.svg-icon.is-muted { color: var(--border_color); } */
 
