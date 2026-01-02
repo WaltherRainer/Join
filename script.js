@@ -10,13 +10,17 @@ const indexHeader = document.getElementById("index_header");
 let usersReady = null;
 
 function initUsersLoading() {
-  if (!usersReady) {
-    usersReady = (async () => {
-      users = await loadData("/users") || {};
-      return users;
-    })();
+  if (!window.usersReady) {
+    window.usersReady = (async () => {
+      const data = await loadData("/users");
+      window.users = data || {};
+      return window.users;
+    })().catch(err => {
+      window.usersReady = null; // ✅ retry möglich
+      throw err;
+    });
   }
-  return usersReady;
+  return window.usersReady;
 }
 
 function toggleUserMenu() {
@@ -86,7 +90,7 @@ function showAvatar() {
 
 document.addEventListener("DOMContentLoaded", async () => {
   await initUsersLoading();
-  
+  if (window.renderIcons) window.renderIcons(document);
   loadTasks();
 });
 
@@ -167,9 +171,8 @@ function initialsFromGivenName(givenName, fallback = "?") {
 }
 
 function renderAvatar(activeUserId, activeUserName) {
-const initials = initialsFromGivenName(activeUserName);
-const bgColor = colorIndexFromUserId(activeUserId);
-
+  const initials = initialsFromGivenName(activeUserName);
+  const bgColor = colorIndexFromUserId(activeUserId);
   return `
     <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
   `
@@ -214,50 +217,33 @@ function groupUsersByFirstLetter(usersObj) {
 
     groups[letter].push({ id, ...user });
   }
-
   return groups;
 }
 
 function renderContacts(users) {
   const container = document.querySelector(".contact_list_sect");
   if (!container) return;
-
-  // alten Inhalt löschen (Button behalten)
   container.querySelectorAll(".contact_list_item").forEach(e => e.remove());
-
   const groups = groupUsersByFirstLetter(users);
   const sortedLetters = Object.keys(groups).sort();
 
   for (const letter of sortedLetters) {
     const wrapper = document.createElement("div");
     wrapper.className = "contact_list_item";
-
     const letterDiv = document.createElement("div");
     letterDiv.className = "first_letter";
     letterDiv.textContent = letter;
     wrapper.appendChild(letterDiv);
-
     groups[letter].forEach(user => {
       const card = document.createElement("div");
       card.className = "contact_list_card";
-
-      card.innerHTML = `
-        <div class="contact_list_content">
-          <span class="user__avatar" style="background: ${colorVarFromUserId(user.id)};">
-            ${initialsFromGivenName(user.givenName)}
-          </span>
-          <div class="user_contact">
-            <span>${user.givenName}</span>
-            <p><a href="mailto:${user.email}">${user.email}</a></p>
-          </div>
-        </div>
-      `;
-
+      card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
       wrapper.appendChild(card);
     });
-
     container.appendChild(wrapper);
   }
 }
 
+window.usersReady = null;
+window.users = window.users || {};
 

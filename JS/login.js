@@ -4,6 +4,13 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
+function setPwIcon(button, iconName) {
+  const holder = button.querySelector("[data-icon]");
+  if (!holder) return;
+  holder.dataset.icon = iconName;
+  if (window.renderIcons) window.renderIcons(button);
+}
+
 function guestLogin() {
     window.location.replace("start.html");
 }
@@ -17,9 +24,10 @@ function setAriaLabel(input, btn) {
 
 function renderIcon(state, nextIcon) {
   state.currentIcon = nextIcon;
-  state.button.innerHTML = svgFor(nextIcon);
+  setPwIcon(state.button, nextIcon);
   setAriaLabel(state.input, state.button);
 }
+
 
 function setClickable(state, clickable) {
   state.button.classList.toggle("pointer", clickable);
@@ -106,7 +114,6 @@ async function userLogin(e) {
   }
 }
 
-
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
  * @param {string} email -Email address for login
@@ -114,22 +121,18 @@ async function userLogin(e) {
  * @returns {boolean} -True when access is granted, false if not
  */
 function accessGranted(email, password) {
-    let UserKeys = Object.keys(users);
-    for (let index = 0; index < UserKeys.length; index++) {
-        const element = UserKeys[index];
-        const tmpEmail = users[element].email;
-        const tmpPassword = users[element].password;
-        if (email === tmpEmail && password === tmpPassword) {
-            activeUserId = element;
-            activeUserName = users[element].givenName;
-            
-            return true;
-        };
+  if (!users || typeof users !== "object") return false;
+
+  for (const [id, u] of Object.entries(users)) {
+    if (!u) continue;
+    if (email === u.email && password === u.password) {
+      activeUserId = id;
+      activeUserName = u.givenName;
+      return true;
     }
-    return false;
-};
-
-
+  }
+  return false;
+}
 
 /** resets the error when user is typing in something the input box */
 function enableFormErrorReset(formElement) {
@@ -178,10 +181,13 @@ setTimeout(() => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.renderIcons) window.renderIcons(document);
+
   document.querySelectorAll(".input_box").forEach(box => {
     initPasswordToggle(box);
   });
 });
+
 
 /** 
  * This Function is used to add a User to the path users in the Database
@@ -198,11 +204,10 @@ async function addUser() {
                 "givenName": givenName.value, 
                 "password": password.value, 
             };
-            let result = await uploadData("/users", dataObj);
-            
-            showSignupSuccessToast();
-            console.log("Firebase Key:", result?.name);
-            users = result;
+        usersReady = null;
+        users = await loadData("/users") || {};
+        showSignupSuccessToast();
+
         }
     }
     else {

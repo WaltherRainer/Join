@@ -15,6 +15,7 @@
     <script src="https://www.w3schools.com/lib/w3.js"></script>
 
     <script src="./JS/fetch.js" defer></script>
+    <script src="./JS/icons.js" defer></script>
     <script src="./JS/templates.js" defer></script>
     <script src="./JS/tasks.js" defer></script>
     <script src="./script.js" defer></script>
@@ -181,7 +182,12 @@
     </div>
     </dialog>
 
-<script>w3.includeHTML();</script>
+<script>
+  w3.includeHTML(() => {
+    if (window.renderIcons) window.renderIcons(document);
+  });
+</script>
+
 
 </body>
 

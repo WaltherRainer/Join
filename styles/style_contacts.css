@@ -1,8 +1,7 @@
 .title_box {
   display: flex;
   align-items: center;
-  margin-top: 110px;
-  margin-left: 55px;
+  margin: 110px 0 0 55px;
   grid-area: contact_head;
 }
 
@@ -46,12 +45,12 @@
   min-height: calc(100dvh - 90px);
   background-color: var(--background-color);
   margin-top: -6px;
-
   padding-top: 32px;
 }
 
 .contact_details_sect {
   grid-area: contact_details;
+  margin: 120px 0 0 0;
 }
 
 .add_contact_btn {

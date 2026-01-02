@@ -37,15 +37,18 @@
 
   display: grid;
   place-items: center;
-
+  color: var(--blue);
   cursor: pointer;
+}
+
+.icon-btn:hover {
+  color: var(--light-blue);
 }
 
 .icon-btn::before {
   content: "";
   position: absolute;
   inset: 0;
-
   border-radius: 50%;
   background: var(--secondary-background-color);
   opacity: 0;

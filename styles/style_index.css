@@ -380,4 +380,32 @@ body.is_loaded {
   }
 }
 
+/* Platzhalter-Element für Icons */
+.svg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue); /* Default */
+}
+
+.svg-icon.is-muted { color: var(--border_color); }
+.svg-icon.is-danger { color: var(--warning_red); }
+
+
+.input_icon {
+  position: absolute;
+  top: 50%;
+  right: 2px; /*mittig unter dem anderem Icon*/
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+}
+
+.svg-icon svg {
+  display: block;
+}
+
+/* Farben über currentColor */
+.svg-icon { color: var(--blue); }
+.svg-icon.is-muted { color: var(--border_color); }
 
