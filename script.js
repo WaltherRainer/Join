@@ -39,6 +39,8 @@ function showNav(page = "summary") {
   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
 
   w3.includeHTML(async () => {
+    renderIcons(document); // ✅ nach dem HTML-Include Icons neu rendern
+
     onPageLoaded(page);
 
     if (page === "add_task") {
@@ -46,19 +48,18 @@ function showNav(page = "summary") {
       initAssignedToDropdown(users);
       initTaskTypeDropdown(TASK_CATEGORIES);
       initSubtasksInput();
-      
-    }
-    else if (page === "contacts") {
+    } else if (page === "contacts") {
       renderContacts(users);
     }
   });
+
 }
 
 function onPageLoaded(page) {
   const btn = document.getElementById("openAddTaskModalBtn");
-  if (btn) {
-    btn.addEventListener("click", () => openAddTaskModal());
-  }
+  if (!btn) return;
+
+  btn.onclick = () => openAddTaskModal(); // ✅ überschreibt statt zu stapeln
 }
 
 async function renderUsers() {

@@ -121,13 +121,13 @@ async function userLogin(e) {
  * @returns {boolean} -True when access is granted, false if not
  */
 function accessGranted(email, password) {
-  if (!users || typeof users !== "object") return false;
+  if (!window.users || typeof users !== "object") return false;
 
-  for (const [id, u] of Object.entries(users)) {
+  for (const [id, u] of Object.entries(window.users)) {
     if (!u) continue;
     if (email === u.email && password === u.password) {
-      activeUserId = id;
-      activeUserName = u.givenName;
+      window.activeUserId = id;
+      window.activeUserName = u.givenName;
       return true;
     }
   }
@@ -188,43 +188,56 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 /** 
  * This Function is used to add a User to the path users in the Database
  *  
 */
 async function addUser() {
-    if (passwordsMatch()) {
-        let email = document.getElementById('email_sign_up');
-        if (!userExists(email.value)) {
-            let password = document.getElementById('new_user_password');
-            let givenName = document.getElementById('given_name');
-            let dataObj = {
-                "email": email.value, 
-                "givenName": givenName.value, 
-                "password": password.value, 
-            };
-        usersReady = null;
-        users = await loadData("/users") || {};
-        showSignupSuccessToast();
+  if (!passwordsMatch()) {
+    showSignupPasswordError();
+    return;
+  }
 
-        }
-    }
-    else {
-        showSignupPasswordError();
-    }
+  const emailEl = document.getElementById("email_sign_up");
+  const pwEl = document.getElementById("new_user_password");
+  const nameEl = document.getElementById("given_name");
+
+  const email = emailEl?.value?.trim() || "";
+  const password = pwEl?.value || "";
+  const givenName = nameEl?.value?.trim() || "";
+
+  if (!email || !password || !givenName) return;
+
+  // sicherstellen, dass users geladen ist (für userExists)
+  await initUsersLoading();
+
+  if (userExists(email)) return;
+
+  const dataObj = { email, givenName, password };
+
+  // ✅ 1) User wirklich in Firebase speichern
+  const result = await uploadData("/users", dataObj);
+  console.log("Firebase Key:", result?.name);
+
+  // ✅ 2) Users cache invalidieren + neu laden
+  window.usersReady = null;
+  await initUsersLoading();
+
+  // ✅ 3) UI
+  showSignupSuccessToast();
+  resetSignupForm();
 }
+
+
 
 function userExists(email) {
-    let UserKeys = Object.keys(users);
-    for (let index = 0; index < UserKeys.length; index++) {
-        const element = UserKeys[index];
-        const tmpEmail = users[element].email
-        if (email === tmpEmail) {
-            return true
-        };
-    }
+  if (!window.users || typeof window.users !== "object") return false;
+
+  return Object.values(window.users).some(user =>
+    user?.email === email
+  );
 }
+
 
 function passwordsMatch() {
   const passwordInput = document.getElementById("new_user_password");
@@ -273,3 +286,25 @@ function showSignupSuccessToast() {
   }, slideMs + holdMs);
 }
 
+function resetSignupForm() {
+  const form = document.querySelector(".sign_up_form form");
+  if (!form) return;
+
+  // Inputs leeren
+  form.querySelectorAll("input").forEach(input => {
+    if (input.type === "checkbox") {
+      input.checked = false;
+    } else {
+      input.value = "";
+    }
+  });
+
+  // Error-Zustände entfernen
+  form.querySelectorAll(".has_error").forEach(el =>
+    el.classList.remove("has_error")
+  );
+
+  // Warning-Text ausblenden
+  const warning = form.querySelector("#warning_signup_failed");
+  warning?.classList.remove("visible");
+}
