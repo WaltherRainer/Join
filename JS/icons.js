@@ -82,7 +82,7 @@ function addCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   });
 }
 
-function mail({ width = 20, height = 16, color = "var(--border_color)" } = {}) {
+function mail({ width = 20, height = 16, color = "var(--nav-icon)" } = {}) {
   return iconSvg({
     width,
     height,
@@ -96,7 +96,7 @@ function mail({ width = 20, height = 16, color = "var(--border_color)" } = {}) {
   });
 }
 
-function lock({ width = 16, height = 21, color = "var(--border_color)" } = {}) {
+function lock({ width = 16, height = 21, color = "var(--nav-icon)" } = {}) {
   return iconSvg({
     width,
     height,
@@ -110,7 +110,7 @@ function lock({ width = 16, height = 21, color = "var(--border_color)" } = {}) {
   });
 }
 
-function eye_open({ width = 25, height = 25, color = "var(--border_color)" } = {}) {
+function eye_open({ width = 25, height = 25, color = "var(--nav-icon)" } = {}) {
   return iconSvg({
     width,
     height,
@@ -122,7 +122,7 @@ function eye_open({ width = 25, height = 25, color = "var(--border_color)" } = {
   });
 }
 
-function eye_closed({ width = 25, height = 25, color = "var(--border_color)" } = {}) {
+function eye_closed({ width = 25, height = 25, color = "var(--nav-icon)" } = {}) {
   return iconSvg({
     width,
     height,
@@ -134,7 +134,7 @@ function eye_closed({ width = 25, height = 25, color = "var(--border_color)" } =
   });
 }
 
-function person({ width = 16, height = 16, color = "var(--border_color)" } = {}) {
+function person({ width = 16, height = 16, color = "var(--nav-icon)" } = {}) {
   return iconSvg({
     width,
     height,

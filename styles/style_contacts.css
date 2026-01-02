@@ -199,3 +199,12 @@
 .contact_information h4 {
   margin: 8px 0 0 0;
 }
+
+.contact_list_card.is-active {
+  background: var(--blue);
+}
+
+.contact_list_card.is-active .user_contact span,
+.contact_list_card.is-active .user_contact a {
+  color: var(--white-text-color);
+}

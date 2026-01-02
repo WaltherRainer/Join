@@ -1,4 +1,4 @@
-const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app/"
+const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app"
 /** 
  * This Function is used to upload Data to the path of the BASE_URL
  * 
@@ -47,6 +47,18 @@ async function loadData(path = "") {
     console.error("Fehler beim Abrufen der Daten:", error);
     return null;
   }
+}
+
+async function deleteData(path = "") {
+  const cleanPath = String(path || "").replace(/^\/+/, "");
+  const url = `${BASE_URL}/${cleanPath}.json`;
+
+  const response = await fetch(url, { method: "DELETE" });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
+  }
+  return true;
 }
 
 

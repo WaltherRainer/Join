@@ -1,22 +1,11 @@
-// function groupUsersByFirstLetter(usersObj) {
-//   const groups = {};
+// console.log("wireContactDeleteOnce called");
 
-//   for (const [id, user] of Object.entries(usersObj)) {
-//     if (!user?.givenName) continue;
+// const details = document.getElementById("contact_details_sect");
+// console.log("details exists?", !!details, details);
 
-//     const letter = user.givenName
-//       .trim()
-//       .charAt(0)
-//       .toUpperCase();
+// console.log("bound?", details?.dataset?.bound, details?.dataset?.deleteBound);
 
-//     if (!groups[letter]) {
-//       groups[letter] = [];
-//     }
 
-//     groups[letter].push({ id, ...user });
-//   }
-//   return groups;
-// }
 
 function groupUsersByFirstLetter(usersObj) {
   const groups = {};
@@ -24,10 +13,9 @@ function groupUsersByFirstLetter(usersObj) {
   for (const [id, u] of Object.entries(usersObj || {})) {
     const name = (u?.givenName || "").trim();
     const letter = name ? name[0].toUpperCase() : "#";
-    (groups[letter] ||= []).push({ id, ...u }); // ✅ id = Firebase Key
+    (groups[letter] ||= []).push({ id, ...u });
   }
 
-  // optional: Namen in jeder Gruppe sortieren
   for (const letter of Object.keys(groups)) {
     groups[letter].sort((a, b) => (a.givenName || "").localeCompare(b.givenName || ""));
   }
@@ -35,59 +23,28 @@ function groupUsersByFirstLetter(usersObj) {
   return groups;
 }
 
-
-// function renderContacts(users) {
-//   const container = document.querySelector(".contact_list_sect");
-//   if (!container) return;
-//   container.querySelectorAll(".contact_list_item").forEach(e => e.remove());
-//   const groups = groupUsersByFirstLetter(users);
-//   const sortedLetters = Object.keys(groups).sort();
-
-//   for (const letter of sortedLetters) {
-//     const wrapper = document.createElement("div");
-//     wrapper.className = "contact_list_item";
-//     const letterDiv = document.createElement("div");
-//     letterDiv.className = "first_letter";
-//     letterDiv.textContent = letter;
-//     wrapper.appendChild(letterDiv);
-//     groups[letter].forEach(user => {
-//       const card = document.createElement("div");
-//       card.className = "contact_list_card";
-//       card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
-//       wrapper.appendChild(card);
-//     });
-//     container.appendChild(wrapper);
-//   }
-// }
-
 function renderContacts(users) {
   const container = document.querySelector(".contact_list_sect");
   if (!container) return;
 
   container.querySelectorAll(".contact_list_item").forEach(e => e.remove());
-
   const groups = groupUsersByFirstLetter(users);
   const sortedLetters = Object.keys(groups).sort();
 
   for (const letter of sortedLetters) {
     const wrapper = document.createElement("div");
     wrapper.className = "contact_list_item";
-
     const letterDiv = document.createElement("div");
     letterDiv.className = "first_letter";
     letterDiv.textContent = letter;
     wrapper.appendChild(letterDiv);
-
     groups[letter].forEach(user => {
     const card = document.createElement("div");
     card.className = "contact_list_card";
-
-    card.dataset.userId = user.id; // ✅ HIER die ID an die Card
-
+    card.dataset.userId = user.id;
     card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
     wrapper.appendChild(card);
     });
-
     container.appendChild(wrapper);
   }
 }
@@ -101,15 +58,15 @@ function renderContactDetails(users, userId) {
 
   const target = document.getElementById("contact_details_sect");
   if (!target) return;
-
+  target.dataset.userId = userId;
   target.innerHTML = getContactDetailsTempl(
     bgColor,
     initials,
     u.givenName,
     u.email,
-    u.phone || "-"
+    u.phone || "-",
+    userId
   );
-
   renderIcons(target);
 }
 
@@ -164,10 +121,8 @@ function initialsFromGivenName(givenName, fallback = "?") {
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
-
-  // ✅ schützt vor doppelten Listenern
-  if (list.dataset.bound === "1") return;
-  list.dataset.bound = "1";
+//   if (list.dataset.bound === "1") return;
+//   list.dataset.bound = "1";
 
   list.addEventListener("click", (e) => {
     const card = e.target.closest(".contact_list_card");
@@ -175,8 +130,41 @@ function initContactsClick(users) {
 
     const userId = card.dataset.userId;
     if (!userId) return;
-
+    setActiveContactCard(card);
     renderContactDetails(users, userId);
   });
+}
+
+function setActiveContactCard(cardEl) {
+  document.querySelectorAll(".contact_list_card.is-active")
+    .forEach(el => el.classList.remove("is-active"));
+  cardEl.classList.add("is-active");
+}
+
+async function deleteContact(userId) {
+  if (!userId) return;
+  try {
+    await deleteData(`/users/${userId}`);
+
+    // users neu laden (Realtime DB)
+    users = await loadData("/users") || {};
+
+    // Liste neu rendern
+    renderContacts(users);
+
+    // Active-Markierung entfernen
+    document.querySelectorAll(".contact_list_card.is-active")
+      .forEach(el => el.classList.remove("is-active"));
+
+    // Details leeren
+    const details = document.getElementById("contact_details_sect");
+    if (details) {
+      details.innerHTML = "";
+    //   delete details.dataset.userId;
+    //   delete details.dataset.bound;
+    }
+  } catch (err) {
+    console.error("Delete failed:", err);
+  }
 }
 

@@ -147,5 +147,27 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
   });
 }
 
+function wireContactActionsGlobalOnce() {
+  if (document.documentElement.dataset.contactsBound === "1") return;
+  document.documentElement.dataset.contactsBound = "1";
+
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest('button[data-action="delete"]');
+    if (!btn) return;
+
+    const userId = btn.dataset.userId;
+    if (!userId) {
+      console.warn("Delete clicked, but no data-user-id on button", btn);
+      return;
+    }
+
+    await deleteContact(userId);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  wireContactActionsGlobalOnce();
+});
+
 window.usersReady = null;
 window.users = window.users || {};

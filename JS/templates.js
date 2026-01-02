@@ -36,7 +36,7 @@ function getContactListTempl(userId, givenName, userEmail) {
   `
 }
 
-function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo) {
+function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo, userId) {
   return `
       <span class="user_avatar_large" style="background-color: var(--user_c_${bgColor});">${initials}</span>
       <div class="contact_detail">
@@ -47,10 +47,14 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
                   <span>Edit</span>
               </button>
 
-              <button type="button" class="icon_text_btn is-delete">
-                  <span class="svg-icon" data-icon="recyBin" data-w="18" data-h="18"></span>
-                  <span>Delete</span>
-              </button>
+            <button type="button"
+                    class="icon_text_btn is-delete"
+                    data-action="delete"
+                    data-user-id="${userId}">
+              <span class="svg-icon" data-icon="recyBin" data-w="18" data-h="18"></span>
+              <span>Delete</span>
+            </button>
+
           </div>
       </div>
       <div class="contact_information">
