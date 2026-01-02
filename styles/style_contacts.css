@@ -120,3 +120,41 @@
 .contact_list_card:hover {
   background-image: linear-gradient(to top, #F9F9F9, #F0F0F0);
 }
+
+.contact_actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.icon_text_btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text_color_grey);
+
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.icon_text_btn:hover {
+  background-color: var(--secondary-background-color);
+}
+
+/* Edit */
+.icon_text_btn.is-edit {
+  color: var(--blue);
+}
+
+/* Delete */
+.icon_text_btn.is-delete {
+  color: var(--warning_red);
+}

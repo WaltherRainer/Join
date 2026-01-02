@@ -256,4 +256,3 @@ function renderIcons(root = document) {
   });
 }
 
-window.renderIcons = renderIcons;
