@@ -10,15 +10,15 @@
     <link rel="stylesheet" href="styles/style_subtask.css" />
     <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/style_index.css" />
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <!-- <script src="https://www.w3schools.com/lib/w3.js"></script> -->
+    <script src="./script.js" defer></script>
     <script src="./JS/summary.js" defer></script>
     <script src="./JS/fetch.js" defer></script>
     <script src="./JS/icons.js" defer></script>
     <script src="./JS/templates.js" defer></script>
     <script src="./JS/tasks.js" defer></script>
     <script src="./JS/contacts.js" defer></script>
-    <script src="./script.js" defer></script>
-  <title>Join</title>
+    <title>Join</title>
 </head>
 
 <body onload="loadStart()">
@@ -28,8 +28,8 @@
                 <div>Kanban Project Management Tool</div>
                 <div class="user_info">
                     <a href="#" class="help_icon">?</a>
-                    <div id="user_avatar_wrapper"  class="user_avatar_wrapper">
-                        <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_1);">WH</div>
+                    <div id="user_avatar_wrapper" class="user_avatar_wrapper">
+                        <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_1);"></div>
                         <div class="user_menu d_none" id="user_menu">
                             <a href="#">Legal Notice</a>
                             <a href="#">Privacy Policy</a>
@@ -40,10 +40,10 @@
             </div>
         </header>
 
-        <section class="navbar" >
+        <section class="navbar">
             <div class="nav_logo">
                 <a href="./start.html">
-                <span class="svg-icon nav_logo_icon" data-icon="join_logo" data-w="101" data-h="122"></span>
+                    <span class="svg-icon nav_logo_icon" data-icon="join_logo" data-w="101" data-h="122"></span>
                 </a>
             </div>
 
@@ -81,13 +81,13 @@
 
     <!-- Persistenter Modal-Layer -->
     <dialog id="addTaskModal" class="modal">
-    <div class="modal_content">
-        <button type="button" class="modal_close" aria-label="Close">×</button>
-        <div id="addTaskModalHost"></div>
-    </div>
+        <div class="modal_content">
+            <button type="button" class="modal_close" aria-label="Close">×</button>
+            <div id="addTaskModalHost"></div>
+        </div>
     </dialog>
 
-<!-- <script>
+    <!-- <script>
   w3.includeHTML(() => {
     if (window.renderIcons) window.renderIcons(document);
   });

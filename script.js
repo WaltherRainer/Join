@@ -1,13 +1,37 @@
 let users = {};
-let activeUserId = "555454";
+let activeUserId = "54321";
 let tasks = {};
-let activeUserName = "Walther";
+let activeUserName = "TestUser";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header");
 let usersReady = null;
+
+function w3includeHTML(cb) {
+  var z, i, elmnt, file, xhttp;
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          elmnt.removeAttribute("w3-include-html");
+          w3includeHTML(cb);
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      return;
+    }
+  }
+  if (cb) cb();
+};
 
 function initUsersLoading() {
   if (!window.usersReady) {
@@ -23,11 +47,6 @@ function initUsersLoading() {
   return window.usersReady;
 }
 
-function toggleUserMenu() {
-  let userMenu = document.getElementById("user_menu");
-  userMenu.classList.toggle("d_none");
-}
-
 async function ensureUsersLoaded() {
   if (users && Object.keys(users).length > 0) return users;
   users = (await loadData("/users")) || {};
@@ -39,7 +58,7 @@ function showNav(page = "summary") {
   const mainCont = document.getElementById("main_content");
   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
 
-  w3.includeHTML(async () => {
+  w3includeHTML(async () => {
     renderIcons(document);
     onPageLoaded(page);
 
@@ -128,6 +147,13 @@ function renderAvatar(activeUserId, activeUserName) {
   return `
     <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
   `;
+}
+
+function toggleUserMenu() {
+  let userMenu = document.getElementById('user_menu');
+  console.log(userMenu);
+  if (!userMenu) return;
+  userMenu.classList.toggle("d_none");
 }
 
 function renderAssignedAvatars(selectedUserIds, usersData) {

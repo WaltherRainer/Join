@@ -69,6 +69,18 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 
 window.userListItemTemplate = userListItemTemplate;
 
+/**
+ * Generates the HTML content for the personalized name greeting.
+ *
+ * This function returns the currently active user's name as a string.
+ * The value is typically injected into the DOM by {@link writeGreetingName}.
+ *
+ * It relies on the existence of the external variable `activeUserName`,
+ * which is expected to contain the display name of the active user.
+ *
+ * @function writeGreetingNameTemplate
+ * @returns {string} A string containing the active user's name.
+ */
 function writeGreetingNameTemplate() {
   return `${activeUserName}`;
 }
