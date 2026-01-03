@@ -171,3 +171,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.usersReady = null;
 window.users = window.users || {};
+
+function editContactOverlayToggle() {
+            const overlay = document.getElementById("editContactOverlay");
+            overlay.classList.toggle("d_none");
+        }
