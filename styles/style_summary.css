@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   padding: 60px;
-  background-color: #f6f7f8;
+  background-color: var(--secondary-background-color);
   font-size: 16px;
   height: calc(100dvh - 96px);
 }
@@ -16,18 +16,18 @@
 .summary_title {
   font-size: 61px;
   font-weight: 700;
-  color: hsla(0, 0%, 0%, 1);
+  color: var(--text-color);
   padding-right: 30px;
   border-width: 3px;
   border-right-style: solid;
-  border-right-color: hsla(198, 76%, 52%, 1);
+  border-right-color: var(--summary-divider);
   line-height: 120%;
 }
 
 .summary_subtitle {
   font-size: 27px;
   font-weight: 400;
-  color: hsla(215, 26%, 22%, 1);
+  color: var(--blue);
   padding-left: 30px;
   line-height: 120%;
 }
@@ -41,7 +41,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  color: hsla(215, 26%, 22%, 1);
+  color: var(--blue);
 }
 
 .todo_done_box {
@@ -50,7 +50,7 @@
   gap: 32px;
   font-size: 20px;
   font-weight: 400;
-  color: hsla(215, 26%, 22%, 1);
+  color: var(--blue);
 }
 
 .todo_done_boxes {
@@ -72,7 +72,7 @@
 .urgent_box_main {
   display: flex;
   align-items: center;
-  background-color: hsla(0, 0%, 100%, 1);
+  background-color: var(--background-color);
   width: 560px;
   height: 168px;
   border-radius: 30px;
@@ -86,7 +86,7 @@
   padding-right: 40px;
   border-width: 2px;
   border-right-style: solid;
-  border-right-color: hsla(0, 0%, 82%, 1);
+  border-right-color: var(--border_color);
   gap: 18px;
 }
 
@@ -108,7 +108,6 @@
 .deadline {
   font-size: 21px;
   font-weight: 700;
-  /* color: hsla(215, 26%, 22%, 1); */
 }
 
 .task_boxes {
@@ -124,23 +123,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: hsla(0, 0%, 100%, 1);
+  background-color: var(--background-color);
   width: 168px;
   height: 168px;
   border-radius: 30px;
-  /* gap: 10px; */
   padding-top: 25px;
   padding-bottom: 25px;
 }
 
 .hover_card {
-  
-  transition:
-    transform var(--hover-duration) ease,
-    background-color var(--hover-duration) ease,
-    color var(--hover-duration) ease,
+  transition: transform var(--hover-duration) ease, background-color var(--hover-duration) ease, color var(--hover-duration) ease,
     box-shadow var(--hover-duration) ease;
-
   transform-origin: center center;
   will-change: transform;
 }
@@ -150,10 +143,10 @@
   background: var(--hover-bg-active);
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   --svg_hover_main: #fff;
-  --div_hover_main: #2A3647;
-  --inner_svg_main: #2A3647;
+  --div_hover_main: #2a3647;
+  --inner_svg_main: #2a3647;
 }
 
 @media (hover: none) {
@@ -174,7 +167,6 @@
 .big_numbers {
   font-size: 64px;
   font-weight: 600;
-  /* color: hsla(0, 0%, 0%, 1); */
   line-height: 120%;
 }
 
@@ -183,12 +175,12 @@
   flex-direction: column;
   font-size: 47px;
   font-weight: 500;
-  color: hsla(215, 26%, 22%, 1);
+  color: var(--blue);
   margin-left: 80px;
 }
 
 .greeting_name {
   font-size: 64px;
   font-weight: 700;
-  color: hsla(198, 76%, 52%, 1);
+  color: var(--summary-divider);
 }

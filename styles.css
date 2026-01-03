@@ -45,6 +45,7 @@
     --text-light: #ffffff;
     --nav-icon: var(--border_color);
     --nav-icon-active: var(--white-text-color);
+    --summary-divider: #28aae2
 }
 
 @font-face {

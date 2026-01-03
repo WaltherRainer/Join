@@ -68,3 +68,7 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 }
 
 window.userListItemTemplate = userListItemTemplate;
+
+function writeGreetingNameTemplate() {
+  return `${activeUserName}`;
+}

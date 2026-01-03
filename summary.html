@@ -4,14 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles/button.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <!-- <link rel="stylesheet" href="styles/button.css"> -->
     <link rel="stylesheet" href="styles/style_summary.css">
     <script src="./JS/templates.js"></script>
+    <script src="./JS/summary.js" defer></script>
     <title>Join Summary</title>
 </head>
 
-<body>
+<body onload="initSummary()">
     <main class="summary_main">
         <div class="title_box">
             <div class="summary_title">Join 360</div>
@@ -117,14 +118,14 @@
                     </div>
                 </div>
             </div>
+
             <div class="greeting">
-                <p>Good morning,</p>
-                <p class="greeting_name">Sofia Müller</p>
+                <p id="greetingDay">Good morning,</p>
+                <p class="greeting_name" id="greetingName"></p>
             </div>
+
         </div>
     </main>
 </body>
-
-<!-- <script src="./script.js"></script> -->
 
 </html>
