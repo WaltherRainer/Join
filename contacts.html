@@ -13,9 +13,162 @@
     <script src="./script.js" defer></script>
 
     <title>Join - Contacts</title>
+
+    <style>
+        .edit_contact_overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: gray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            width: 80%;
+            height: 592px;
+            border-radius: 30px;
+        }
+
+        .overlay_left {
+            width: 453px;
+            height: 100%;
+            background-color: var(--blue);
+            color: var(--white-text-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            border-radius: 30px 0 0 30px;
+            padding: 0 46px;
+        }
+
+        .overlay_left h2 {
+            font-size: 61px;
+        }
+
+        .divider {
+            width: 90px;
+            height: 4px;
+            background-color: var(--light-blue);
+        }
+
+        .overlay_right {
+            height: 100%;
+            flex: 1;
+            border-radius: 0 30px 30px 0;
+            display: flex;
+            /* justify-content: space-around; */
+            align-items: center;
+            background-color: var(--white-text-color);
+        }
+
+        .edit_contact_fields {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .assigned_avatar {
+            padding: 0 80px;
+        }
+
+        .user__avatar {
+            width: 120px;
+            height: 120px;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 999px;
+            user-select: none;
+            font-weight: 700;
+            font-size: 47px;
+            color: var(--white-text-color);
+            background-color: orange;
+        }
+
+        .d_none {
+            display: none;
+        }
+
+        .edit_contact_btn {
+            display: flex;
+            /* gap: 16px; */
+        }
+
+        .clear_button {
+            width: 110px;
+            padding: 16px 16px;
+            color: var(--blue);
+            font-size: 20px;
+            font-weight: 400;
+            background-color: transparent;
+            border: 1px solid var(--blue);
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .default_button {
+            font-family: 'Inter';
+            background-color: var(--blue);
+            color: var(--background-color);
+            font-size: 21px;
+            font-weight: 700;
+            padding: 15px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            border-width: 0;
+        }
+
+        .close_button {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="edit_contact_overlay d_none" id="editContactOverlay">
+        <div class="overlay_left">
+            <svg width="54" height="67" viewBox="0 0 54 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M38.6416 0H26.6953V13.8957H38.6416V0Z" fill="white" />
+                <path
+                    d="M26.6953 25.197H38.6416V44.7947C38.6962 49.5105 37.3687 54.1362 34.828 58.0839C32.3192 61.9194 27.4764 66.4829 18.5167 66.4829C8.75753 66.4829 3.06927 61.8167 0 59.2597L7.53534 49.8621C10.5311 52.3352 13.4166 54.3696 18.5627 54.3696C22.459 54.3696 24.012 52.7645 24.9218 51.3646C26.1585 49.4203 26.7983 47.1465 26.7596 44.8321L26.6953 25.197Z"
+                    fill="white" />
+                <path d="M20.6028 16.4248H8.65649V28.5567H20.6028V16.4248Z" fill="#29ABE2" />
+                <path
+                    d="M44.8996 60.7904C44.8996 63.3754 43.6039 64.7659 41.7936 64.7659C39.9833 64.7659 38.7979 63.1141 38.7979 60.9211C38.7979 58.728 40.02 56.9922 41.8947 56.9922C43.7693 56.9922 44.8996 58.7 44.8996 60.7904ZM40.1855 60.8931C40.1855 62.4516 40.8011 63.5994 41.8579 63.5994C42.9147 63.5994 43.512 62.3862 43.512 60.7997C43.512 59.4092 42.9607 58.1027 41.8579 58.1027C40.7552 58.1027 40.1855 59.3626 40.1855 60.8931Z"
+                    fill="white" />
+                <path d="M47.2703 57.104V64.6445H45.947V57.104H47.2703Z" fill="white" />
+                <path
+                    d="M48.7041 64.6445V57.104H50.1744L51.755 60.2116C52.1619 61.0242 52.5239 61.8592 52.8393 62.7127C52.7566 61.7795 52.7199 60.7063 52.7199 59.5117V57.104H53.9329V64.6445H52.5637L50.9647 61.4715C50.5414 60.638 50.164 59.7812 49.8344 58.9051C49.8344 59.8384 49.8987 60.8929 49.8987 62.1901V64.6351L48.7041 64.6445Z"
+                    fill="white" />
+            </svg>
+            <h2>Edit Contact</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="overlay_right">
+            <div class="close_button" onclick="editContactOverlayToggle()">X</div>
+            <div class="assigned_avatar">
+                <span class="user__avatar">AM</span>
+            </div>
+            <div class="edit_contact_fields">
+                <input type="text">
+                <input type="text">
+                <input type="text">
+                <div class="edit_contact_btn">
+                    <button class="clear_button">Delete</button>
+                    <button class="default_button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <main class="contacts_layout">
 
         <div class="title_box">
@@ -27,7 +180,7 @@
         <section class="contact_list_sect">
             <button class="default-button add_contact_btn">Add new contact
                 <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M23.9961 12.9111C23.6802 12.9111 23.4167 12.8046 23.2056 12.5917C22.9945 12.3787 22.8889 
+                    <path d="M23.9961 12.9111C23.6802 12.9111 23.4167 12.8046 23.2056 12.5917C22.9945 12.3787 22.8889 
                 12.1148 22.8889 11.8V8.68887H19.7778C19.463 8.68887 19.1991 8.58201 18.9861 8.3683C18.7731 8.15459 
                 18.6667 7.88978 18.6667 7.57387C18.6667 7.25796 18.7731 6.99444 18.9861 6.78333C19.1991 6.57222 
                 19.463 6.46667 19.7778 6.46667H22.8889V3.35553C22.8889 3.04073 22.9958 2.77684 23.2095 2.56387C23.4232 
@@ -52,23 +205,23 @@
                 2.2222 17.5778V18.6889ZM10.6667 8C11.4889 8 12.1759 7.72408 12.7278 7.17223C13.2796 6.62037 13.5556 
                 5.93332 13.5556 5.1111C13.5556 4.28888 13.2796 3.60184 12.7278 3.05C12.1759 2.49813 11.4889 2.2222 
                 10.6667 2.2222C9.84445 2.2222 9.15741 2.49813 8.60557 3.05C8.0537 3.60184 7.77777 4.28888 7.77777 
-                5.1111C7.77777 5.93332 8.0537 6.62037 8.60557 7.17223C9.15741 7.72408 9.84445 8 10.6667 8Z" 
-                fill="white"/>
+                5.1111C7.77777 5.93332 8.0537 6.62037 8.60557 7.17223C9.15741 7.72408 9.84445 8 10.6667 8Z"
+                        fill="white" />
                 </svg>
             </button>
 
             <div id="contact_list_item" class="contact_list_item">
-            <div class="first_letter">A</div>
+                <div class="first_letter">A</div>
 
-            <div class="contact_list_card">
-                <div class="contact_list_content">
-                <span class="user__avatar">AM</span>
-                <div class="user_contact">
-                    <span>Anton Mayer</span>
-                    <p><a href="mailto:anonm@gmail.com">anton@gmail.com</a></p>
+                <div class="contact_list_card d_none">
+                    <div class="contact_list_content">
+                        <span class="user__avatar">AM</span>
+                        <div class="user_contact">
+                            <span>Anton Mayer</span>
+                            <p><a href="mailto:anonm@gmail.com">anton@gmail.com</a></p>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
             <div class="shadow"></div>
         </section>
@@ -78,7 +231,7 @@
             <div class="contact_detail">
                 <h2>Anton Mayer</h2>
                 <div class="contact_actions">
-                    <button type="button" class="icon_text_btn is-edit">
+                    <button type="button" class="icon_text_btn is-edit" onclick="editContactOverlayToggle()">
                         <span class="svg-icon" data-icon="editPencil" data-w="18" data-h="18"></span>
                         <span>Edit</span>
                     </button>
@@ -99,10 +252,10 @@
         </section>
     </main>
     <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    window.renderIcons?.(document);
-  });
-</script>
+        document.addEventListener("DOMContentLoaded", () => {
+            window.renderIcons?.(document);
+        });
+    </script>
 
 </body>
 
