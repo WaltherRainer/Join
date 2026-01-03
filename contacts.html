@@ -15,19 +15,38 @@
     <title>Join - Contacts</title>
 
     <style>
+        .overlay_backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 300ms ease;
+        }
+
+        .overlay_backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .edit_contact_overlay {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(150%, -50%);
+            transition: transform 400ms ease;
+
             background-color: gray;
             display: flex;
-            justify-content: center;
-            align-items: center;
             z-index: 1000;
-            width: 80%;
+            max-width: 1212px;
+            width: 100%;
             height: 592px;
             border-radius: 30px;
+        }
+
+        .overlay_backdrop.active .edit_contact_overlay {
+            transform: translate(-50%, -50%);
         }
 
         .overlay_left {
@@ -58,7 +77,6 @@
             flex: 1;
             border-radius: 0 30px 30px 0;
             display: flex;
-            /* justify-content: space-around; */
             align-items: center;
             background-color: var(--white-text-color);
         }
@@ -66,7 +84,27 @@
         .edit_contact_fields {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 32px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            width: 422px;
+            padding: 12px 44px 12px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
         }
 
         .assigned_avatar {
@@ -89,27 +127,30 @@
             background-color: orange;
         }
 
-        .d_none {
-            display: none;
-        }
-
         .edit_contact_btn {
             display: flex;
             /* gap: 16px; */
         }
 
         .clear_button {
-            width: 110px;
-            padding: 16px 16px;
+            width: 113px;
+            padding: 15px 15px;
             color: var(--blue);
-            font-size: 20px;
+            font-size: 21px;
             font-weight: 400;
             background-color: transparent;
             border: 1px solid var(--blue);
             display: flex;
+            justify-content: center;
             align-items: center;
             border-radius: 8px;
             cursor: pointer;
+        }
+
+        .clear_button:hover {
+            border: 1px solid var(--light-blue);
+            color: var(--light-blue);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
 
         .default_button {
@@ -118,53 +159,137 @@
             color: var(--background-color);
             font-size: 21px;
             font-weight: 700;
-            padding: 15px 24px;
+            padding: 15px 0;
+            width: 113px;
             border-radius: 8px;
             cursor: pointer;
             border-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .default_button:hover {
+            background-color: var(--light-blue);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .default_button svg {
+            margin-left: 8px;
         }
 
         .close_button {
             position: absolute;
             top: 30px;
             right: 30px;
+            font-size: 30px;
             cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <div class="edit_contact_overlay d_none" id="editContactOverlay">
-        <div class="overlay_left">
-            <svg width="54" height="67" viewBox="0 0 54 67" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M38.6416 0H26.6953V13.8957H38.6416V0Z" fill="white" />
-                <path
-                    d="M26.6953 25.197H38.6416V44.7947C38.6962 49.5105 37.3687 54.1362 34.828 58.0839C32.3192 61.9194 27.4764 66.4829 18.5167 66.4829C8.75753 66.4829 3.06927 61.8167 0 59.2597L7.53534 49.8621C10.5311 52.3352 13.4166 54.3696 18.5627 54.3696C22.459 54.3696 24.012 52.7645 24.9218 51.3646C26.1585 49.4203 26.7983 47.1465 26.7596 44.8321L26.6953 25.197Z"
-                    fill="white" />
-                <path d="M20.6028 16.4248H8.65649V28.5567H20.6028V16.4248Z" fill="#29ABE2" />
-                <path
-                    d="M44.8996 60.7904C44.8996 63.3754 43.6039 64.7659 41.7936 64.7659C39.9833 64.7659 38.7979 63.1141 38.7979 60.9211C38.7979 58.728 40.02 56.9922 41.8947 56.9922C43.7693 56.9922 44.8996 58.7 44.8996 60.7904ZM40.1855 60.8931C40.1855 62.4516 40.8011 63.5994 41.8579 63.5994C42.9147 63.5994 43.512 62.3862 43.512 60.7997C43.512 59.4092 42.9607 58.1027 41.8579 58.1027C40.7552 58.1027 40.1855 59.3626 40.1855 60.8931Z"
-                    fill="white" />
-                <path d="M47.2703 57.104V64.6445H45.947V57.104H47.2703Z" fill="white" />
-                <path
-                    d="M48.7041 64.6445V57.104H50.1744L51.755 60.2116C52.1619 61.0242 52.5239 61.8592 52.8393 62.7127C52.7566 61.7795 52.7199 60.7063 52.7199 59.5117V57.104H53.9329V64.6445H52.5637L50.9647 61.4715C50.5414 60.638 50.164 59.7812 49.8344 58.9051C49.8344 59.8384 49.8987 60.8929 49.8987 62.1901V64.6351L48.7041 64.6445Z"
-                    fill="white" />
-            </svg>
-            <h2>Edit Contact</h2>
-            <div class="divider"></div>
-        </div>
-        <div class="overlay_right">
-            <div class="close_button" onclick="editContactOverlayToggle()">X</div>
-            <div class="assigned_avatar">
-                <span class="user__avatar">AM</span>
+    <div class="overlay_backdrop" id="editContactOverlay">
+        <div class="edit_contact_overlay">
+            <div class="overlay_left">
+                <svg width="54" height="67" viewBox="0 0 54 67" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M38.6416 0H26.6953V13.8957H38.6416V0Z" fill="white" />
+                    <path
+                        d="M26.6953 25.197H38.6416V44.7947C38.6962 49.5105 37.3687 54.1362 34.828 58.0839C32.3192 61.9194 27.4764 66.4829 18.5167 66.4829C8.75753 66.4829 3.06927 61.8167 0 59.2597L7.53534 49.8621C10.5311 52.3352 13.4166 54.3696 18.5627 54.3696C22.459 54.3696 24.012 52.7645 24.9218 51.3646C26.1585 49.4203 26.7983 47.1465 26.7596 44.8321L26.6953 25.197Z"
+                        fill="white" />
+                    <path d="M20.6028 16.4248H8.65649V28.5567H20.6028V16.4248Z" fill="#29ABE2" />
+                    <path
+                        d="M44.8996 60.7904C44.8996 63.3754 43.6039 64.7659 41.7936 64.7659C39.9833 64.7659 38.7979 63.1141 38.7979 60.9211C38.7979 58.728 40.02 56.9922 41.8947 56.9922C43.7693 56.9922 44.8996 58.7 44.8996 60.7904ZM40.1855 60.8931C40.1855 62.4516 40.8011 63.5994 41.8579 63.5994C42.9147 63.5994 43.512 62.3862 43.512 60.7997C43.512 59.4092 42.9607 58.1027 41.8579 58.1027C40.7552 58.1027 40.1855 59.3626 40.1855 60.8931Z"
+                        fill="white" />
+                    <path d="M47.2703 57.104V64.6445H45.947V57.104H47.2703Z" fill="white" />
+                    <path
+                        d="M48.7041 64.6445V57.104H50.1744L51.755 60.2116C52.1619 61.0242 52.5239 61.8592 52.8393 62.7127C52.7566 61.7795 52.7199 60.7063 52.7199 59.5117V57.104H53.9329V64.6445H52.5637L50.9647 61.4715C50.5414 60.638 50.164 59.7812 49.8344 58.9051C49.8344 59.8384 49.8987 60.8929 49.8987 62.1901V64.6351L48.7041 64.6445Z"
+                        fill="white" />
+                </svg>
+                <h2>Edit Contact</h2>
+                <div class="divider"></div>
             </div>
-            <div class="edit_contact_fields">
-                <input type="text">
-                <input type="text">
-                <input type="text">
-                <div class="edit_contact_btn">
-                    <button class="clear_button">Delete</button>
-                    <button class="default_button">Save</button>
+            <div class="overlay_right">
+                <div class="close_button" onclick="editContactOverlayToggle()">X</div>
+                <div class="assigned_avatar">
+                    <span class="user__avatar">AM</span>
+                </div>
+                <div class="edit_contact_fields">
+                    <!-- 1. Input – Name -->
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="Name">
+                        <span class="input-icon">
+                            <!-- USER ICON -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask_user" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9" />
+                                </mask>
+                                <g mask="url(#mask_user)">
+                                    <path
+                                        d="M12 12C10.9 12 9.95833 11.6083 9.175 10.825C8.39167 10.0417 8 9.1 8 8C8 6.9 8.39167 5.95833 9.175 5.175C9.95833 4.39167 10.9 4 12 4C13.1 4 14.0417 4.39167 14.825 5.175C15.6083 5.95833 16 6.9 16 8C16 9.1 15.6083 10.0417 14.825 10.825C14.0417 11.6083 13.1 12 12 12ZM18 20H6C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V17.2C4 16.6333 4.14583 16.1125 4.4375 15.6375C4.72917 15.1625 5.11667 14.8 5.6 14.55C6.63333 14.0333 7.68333 13.6458 8.75 13.3875C9.81667 13.1292 10.9 13 12 13C13.1 13 14.1833 13.1292 15.25 13.3875C16.3167 13.6458 17.3667 14.0333 18.4 14.55Z"
+                                        fill="#A8A8A8" />
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- 2. Input – Email -->
+                    <div class="input-wrapper">
+                        <input type="email" placeholder="Email">
+                        <span class="input-icon">
+                            <!-- EMAIL ICON -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask_mail" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9" />
+                                </mask>
+                                <g mask="url(#mask_mail)">
+                                    <path
+                                        d="M4 20C3.45 20 2.97917 19.8042 2.5875 19.4125C2.19583 19.0208 2 18.55 2 18V6C2 5.45 2.19583 4.97917 2.5875 4.5875C2.97917 4.19583 3.45 4 4 4H20C20.55 4 21.0208 4.19583 21.4125 4.5875C21.8042 4.97917 22 5.45 22 6V18C22 18.55 21.8042 19.0208 21.4125 19.4125C21.0208 19.8042 20.55 20 20 20H4ZM20 8L12 12.825L4 8V18H20V8ZM12 11L20 6H4L12 11Z"
+                                        fill="#A8A8A8" />
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <!-- 3. Input – Phone -->
+                    <div class="input-wrapper">
+                        <input type="tel" placeholder="Phone">
+                        <span class="input-icon">
+                            <!-- PHONE ICON -->
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask_phone" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9" />
+                                </mask>
+                                <g mask="url(#mask_phone)">
+                                    <path
+                                        d="M19.95 21C17.8667 21 15.8083 20.5458 13.775 19.6375C11.7417 18.7292 9.89167 17.4417 8.225 15.775C6.55833 14.1083 5.27083 12.2583 4.3625 10.225C3.45417 8.19167 3 6.13333 3 4.05C3 3.75 3.1 3.5 3.3 3.3C3.5 3.1 3.75 3 4.05 3H8.1L9.7 7.3L6.975 10.9C7.30833 11.5167 7.70417 12.1125 8.1625 12.6875C8.62083 13.2625 9.125 13.8167 9.675 14.35L13.1 17L15.45 14.65L20.2 14.95V19.95C20.2 20.25 20.1 20.5 19.95 21Z"
+                                        fill="#A8A8A8" />
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="edit_contact_btn">
+                        <button class="clear_button">Delete</button>
+                        <button class="default_button">
+                            Save
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <mask id="mask0_416991_4411" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
+                                    y="0" width="24" height="24">
+                                    <rect width="24" height="24" fill="#D9D9D9" />
+                                </mask>
+                                <g mask="url(#mask0_416991_4411)">
+                                    <path
+                                        d="M9.55057 15.15L18.0256 6.675C18.2256 6.475 18.4631 6.375 18.7381 6.375C19.0131 6.375 19.2506 6.475 19.4506 6.675C19.6506 6.875 19.7506 7.1125 19.7506 7.3875C19.7506 7.6625 19.6506 7.9 19.4506 8.1L10.2506 17.3C10.0506 17.5 9.81724 17.6 9.55057 17.6C9.28391 17.6 9.05057 17.5 8.85057 17.3L4.55057 13C4.35057 12.8 4.25474 12.5625 4.26307 12.2875C4.27141 12.0125 4.37557 11.775 4.57557 11.575C4.77557 11.375 5.01307 11.275 5.28807 11.275C5.56307 11.275 5.80057 11.375 6.00057 11.575L9.55057 15.15Z"
+                                        fill="white" />
+                                </g>
+                            </svg>
+                        </button>
+
+                    </div>
                 </div>
             </div>
         </div>
