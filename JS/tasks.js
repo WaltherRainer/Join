@@ -219,7 +219,6 @@ function openAddTaskModal() {
     host.appendChild(existingForm);
     initAssignedToDropdown(users);
     initTaskTypeDropdown(TASK_CATEGORIES);
-    bindAddTaskFormSubmit();
     modal.showModal();
     return;
   } 
@@ -281,11 +280,7 @@ function initTaskTypeDropdown(categories) {
   wireTaskTypeEvents(ui);
 }
 
-function isInitialized(root) {
-  if (root.dataset.initialized === "1") return true;
-  root.dataset.initialized = "1";
-  return false;
-}
+
 
 function getTaskTypeUi(root) {
   return {
@@ -463,33 +458,6 @@ function getSubtasksUi() {
   };
 }
 
-function wireSubtaskEvents(state) {
-  state.ui.listEl.addEventListener("click", (e) => onListClick(state, e));
-  state.ui.listEl.addEventListener("keydown", (e) => onListKeydown(state, e));
-}
-
-function onListClick(state, e) {
-  const li = e.target.closest("li[data-index]");
-  if (!li) return;
-
-  const actionBtn = e.target.closest("button[data-action]");
-  const idx = Number(li.dataset.index);
-
-  if (actionBtn) return handleAction(state, idx, actionBtn.dataset.action);
-  enterEditMode(state, idx);
-}
-
-function onListKeydown(state, e) {
-  if (state.editingIndex === null) return;
-  if (e.key === "Enter") return commitEdit(state);
-  if (e.key === "Escape") return exitEditMode(state);
-}
-
-function handleAction(state, idx, action) {
-  if (state.editingIndex === idx) return handleEditActions(state, action);
-  return handleViewActions(state, idx, action);
-}
-
 function handleViewActions(state, idx, action) {
   if (action === "edit") return enterEditMode(state, idx);
   if (action === "delete") return deleteSubtask(state, idx);
@@ -498,24 +466,6 @@ function handleViewActions(state, idx, action) {
 function handleEditActions(state, action) {
   if (action === "clear") return clearEditInput(state);
   if (action === "commit") return commitEdit(state);
-}
-
-function enterEditMode(state, idx) {
-  state.editingIndex = idx;
-  renderSubtasks(state);
-  focusEditInput(state);
-}
-
-function exitEditMode(state) {
-  state.editingIndex = null;
-  renderSubtasks(state);
-}
-
-function deleteSubtask(state, idx) {
-  state.subtasks.splice(idx, 1);
-  if (state.editingIndex === idx) state.editingIndex = null;
-  renderSubtasks(state);
-  syncHidden(state);
 }
 
 function focusEditInput(state) {
@@ -527,16 +477,6 @@ function clearEditInput(state) {
   const el = state.ui.listEl.querySelector('li.is-editing input.subtask_edit');
   if (el) el.value = "";
   if (el) el.focus();
-}
-
-function commitEdit(state) {
-  const el = state.ui.listEl.querySelector('li.is-editing input.subtask_edit');
-  if (!el) return exitEditMode(state);
-
-  const text = el.value.trim();
-  state.subtasks[state.editingIndex] = text;
-  exitEditMode(state);
-  syncHidden(state);
 }
 
 function renderSubtasks(state) {
@@ -571,9 +511,6 @@ function makeSubtaskMain(state, text, idx) {
   return input;
 }
 
-function syncHidden(state) {
-  if (state.ui.hidden) state.ui.hidden.value = JSON.stringify(state.subtasks);
-}
 
 function wireSubtaskListEvents(state) {
   state.ui.listEl.addEventListener("click", (e) => onSubtaskListClick(state, e));
