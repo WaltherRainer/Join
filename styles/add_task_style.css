@@ -6,7 +6,7 @@
   height: calc(100dvh - 96px);
   padding: 60px;
   background-color: var(--secondary-background-color);
-      margin-left: 300px;
+  grid-area: main;
 }
 
 .add_task_form {
@@ -55,7 +55,7 @@
 
 .form_row {
   display: grid;
-  grid-template-columns: 448px; /* falls 2 Spalten gewünscht: 448px 1fr */
+  grid-template-columns: 448px;
   grid-template-rows: 30px;
   align-items: center;
   margin-bottom: 24px;
@@ -76,29 +76,15 @@
   width: 100%;
   box-sizing: border-box;
 }
-/* 
-.subtasks_input_wrap {
-  display: flex;
-}
-
-.subtasks_actions {
-  display: flex;
-}
-
-.subtasks_clear, .subtasks_add {
-  border: none;
-} */
 
 .task_descr_textarea {
   height: 120px;
   margin-top: 4px;
   margin-bottom: 32px;
   padding: 18px 0 0 21px;
-
   border: 1px solid var(--border_color);
   border-radius: 10px;
   outline: none;
-
   font-size: 20px;
   font-weight: 400;
 }
@@ -110,7 +96,6 @@
 .input_subtasks,
 .input_due_date {
   margin-bottom: 0;
-  /* border: none; */
 }
 
 .calendar_svg {
@@ -173,7 +158,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-
   padding: 10px;
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -197,14 +181,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 28px;
   height: 28px;
   border: none;
   border-radius: 999px;
   background: transparent;
   cursor: pointer;
-
   transition: background 120ms ease;
 }
 
@@ -218,7 +200,6 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-
   border: 1px solid var(--border_color);
   border-radius: 10px;
   background: var(--background-color);
@@ -239,10 +220,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-
   padding: 8px 12px;
   margin-bottom: 4px;
-
   cursor: pointer;
   background: transparent;
   transition: background-color 160ms ease, color 160ms ease;
@@ -277,15 +256,12 @@
   width: 42px;
   height: 42px;
   flex: 0 0 auto;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   border-radius: 999px;
   user-select: none;
-
   font-weight: 700;
   font-size: 16px;
   color: var(--white-text-color);
@@ -298,11 +274,9 @@
 .caret {
   width: 0;
   height: 0;
-
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 6px solid var(--blue);
-
   transition: transform 160ms ease;
 }
 
@@ -343,7 +317,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-
   padding: 10px;
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -357,7 +330,6 @@
   top: calc(100% + 6px);
   left: 0;
   right: 0;
-
   background: var(--background-color);
   border: 1px solid var(--border_color);
   border-radius: 10px;

@@ -1,12 +1,3 @@
-// console.log("wireContactDeleteOnce called");
-
-// const details = document.getElementById("contact_details_sect");
-// console.log("details exists?", !!details, details);
-
-// console.log("bound?", details?.dataset?.bound, details?.dataset?.deleteBound);
-
-
-
 function groupUsersByFirstLetter(usersObj) {
   const groups = {};
 
@@ -70,15 +61,9 @@ function renderContactDetails(users, userId) {
   renderIcons(target);
 }
 
-
-
-
-
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
-//   if (list.dataset.bound === "1") return;
-//   list.dataset.bound = "1";
 
   list.addEventListener("click", (e) => {
     const card = e.target.closest(".contact_list_card");
@@ -101,23 +86,13 @@ async function deleteContact(userId) {
   if (!userId) return;
   try {
     await deleteData(`/users/${userId}`);
-
-    // users neu laden (Realtime DB)
     users = await loadData("/users") || {};
-
-    // Liste neu rendern
     renderContacts(users);
-
-    // Active-Markierung entfernen
     document.querySelectorAll(".contact_list_card.is-active")
       .forEach(el => el.classList.remove("is-active"));
-
-    // Details leeren
     const details = document.getElementById("contact_details_sect");
     if (details) {
       details.innerHTML = "";
-    //   delete details.dataset.userId;
-    //   delete details.dataset.bound;
     }
   } catch (err) {
     console.error("Delete failed:", err);

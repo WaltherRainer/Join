@@ -399,8 +399,3 @@ body.is_loaded {
 .svg-icon svg {
   display: block;
 }
-
-/* Farben über currentColor */
-/* .svg-icon { color: var(--blue); }
-.svg-icon.is-muted { color: var(--border_color); } */
-

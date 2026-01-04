@@ -99,15 +99,12 @@
   width: 120px;
   height: 120px;
   flex: 0 0 auto;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   border: none;
   border-radius: 999px;
   user-select: none;
-
   font-weight: 500;
   font-size: 47px;
   color: var(--white-text-color);
@@ -136,17 +133,14 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   background: transparent;
   border: none;
   padding: 6px 8px;
   border-radius: 6px;
-
   cursor: pointer;
   font-size: 16px;
   font-weight: 400;
   color: var(--text_color_grey);
-
   transition: background-color 120ms ease, color 120ms ease;
 }
 
@@ -154,7 +148,6 @@
   background-color: var(--secondary-background-color);
 }
 
-/* Edit */
 .icon_text_btn.is-edit {
   color: var(--blue);
 }
@@ -163,7 +156,6 @@
   color: var(--light-blue);
 }
 
-/* Delete */
 .icon_text_btn.is-delete {
   color: var(--blue);
 }

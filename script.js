@@ -94,8 +94,6 @@ async function loadStart() {
   loadTasks();
   showNav("summary");
   showAvatar();
-  console.log(users);
-  // let UserKeys = Object.keys(users);
 }
 
 function showAvatar() {
@@ -121,21 +119,16 @@ function toggleUserMenu() {
 function renderAssignedAvatars(selectedUserIds, usersData) {
   const container = document.getElementById("assigned_avatar_container");
   if (!container) return;
-
   container.innerHTML = "";
-
   selectedUserIds.forEach((userId) => {
     const user = usersData[userId];
     if (!user) return;
-
     const initials = initialsFromGivenName(user.givenName);
     const bgColor = colorVarFromUserId(userId);
-
     const avatar = document.createElement("span");
     avatar.className = "user__avatar";
     avatar.style.background = bgColor;
     avatar.textContent = initials;
-
     container.appendChild(avatar);
   });
 }
@@ -147,14 +140,10 @@ function wireContactActionsGlobalOnce() {
   document.addEventListener("click", async (e) => {
     const btn = e.target.closest('button[data-action="delete"][data-user-id]');
     if (!btn) return;
-
-    // ✅ Nur reagieren, wenn der Button in der Contacts-Sektion sitzt
     const inContacts = btn.closest(".contact_detail");
     if (!inContacts) return;
-
     const userId = btn.dataset.userId;
     if (!userId) return;
-
     await deleteContact(userId);
   });
 }
@@ -166,9 +155,6 @@ function editContactOverlayToggle() {
 
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
-
-  // immer: Icons nach Include (optional, wenn du es überall willst)
-  // renderIcons wird bei dir eh nach includeHTML gerufen, daher hier nicht zwingend.
 
   if (page === "contacts") {
     if (typeof ensureUsersLoaded === "function") {
