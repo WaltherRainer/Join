@@ -12,7 +12,7 @@ function setPwIcon(button, iconName) {
 }
 
 function guestLogin() {
-    window.location.replace("start.html");
+    window.location.replace("summary.html");
 }
 
 function setAriaLabel(input, btn) {

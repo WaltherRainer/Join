@@ -177,6 +177,7 @@ async function addTask() {
   };
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
+  clearTaskForm();
   loadTasks();
 }
 
@@ -217,6 +218,7 @@ function openAddTaskModal() {
     if (typeof initTaskTypeDropdown === "function") initTaskTypeDropdown(TASK_CATEGORIES);
     if (typeof initSubtasksInput === "function") initSubtasksInput();
     if (typeof bindAddTaskFormSubmitOnce === "function") bindAddTaskFormSubmitOnce();
+    renderIcons(modal); // oder dein Modal-Root
     modal.showModal();
   });
 }
@@ -321,12 +323,19 @@ function clearTaskForm() {
   setValueById("task_due_date", "");
   setValueById("subtasks", "");
   setValueById("subtasks_input", "[]");
+
   const list = document.getElementById("subtasks_list");
   if (list) list.innerHTML = "";
+
   resetPriorityButtons();
   resetAssignedToDropdown();
+
+  const avatarContainer = document.getElementById("assigned_avatar_container");
+  if (avatarContainer) avatarContainer.innerHTML = "";
+
   resetTaskTypeDropdownUi();
 }
+
 
 function setValueById(id, value) {
   const el = document.getElementById(id);
