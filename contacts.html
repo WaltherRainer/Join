@@ -4,13 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
     <link rel="stylesheet" href="styles/add_task_style.css">
+    <script src="./JS/utils.js" defer></script>
+    <script src="./JS/fetch.js" defer></script>
     <script src="./JS/icons.js" defer></script>
     <script src="./JS/templates.js" defer></script>
+
+    <!-- Feature-Helper / Utils -->
+    <script src="./JS/contacts.js" defer></script>
+
+    <!-- Feature-Code -->
+    <script src="./JS/tasks.js" defer></script>
+
+    <!-- Seiten-Orchestrierung -->
     <script src="./script.js" defer></script>
+
 
     <title>Join - Contacts</title>
 
@@ -111,7 +123,7 @@
             padding: 0 80px;
         }
 
-        .user__avatar {
+        /* .user__avatar {
             width: 120px;
             height: 120px;
             flex: 0 0 auto;
@@ -125,7 +137,7 @@
             font-size: 47px;
             color: var(--white-text-color);
             background-color: orange;
-        }
+        } */
 
         .edit_contact_btn {
             display: flex;
@@ -188,7 +200,21 @@
     </style>
 </head>
 
-<body>
+
+
+
+
+
+
+
+<body data-page="contacts">
+  <div class="display_grid">
+    <header class="header_join">
+      <div w3-include-html="partials/top_menu.html"></div>
+    </header>
+
+    <div w3-include-html="partials/navbar.html"></div>
+
     <div class="overlay_backdrop" id="editContactOverlay">
         <div class="edit_contact_overlay">
             <div class="overlay_left">
@@ -294,8 +320,8 @@
             </div>
         </div>
     </div>
-    <main class="contacts_layout">
 
+    <main class="main_content contacts_layout">
         <div class="title_box">
             <div class="summary_title">Contacts</div>
 
@@ -376,11 +402,16 @@
             </div>
         </section>
     </main>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            window.renderIcons?.(document);
-        });
-    </script>
+    </div>
+
+<div id="contacts_list"></div>
+
+<script>
+  w3.includeHTML(() => {
+    if (window.renderIcons) window.renderIcons(document);
+    if (window.initPage) window.initPage();
+  });
+</script>
 
 </body>
 

@@ -103,44 +103,6 @@ function showAvatar() {
   avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  await initUsersLoading();
-  if (window.renderIcons) window.renderIcons(document);
-  loadTasks();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  initAddTaskModalOnce();
-
-  const navAddTask = document.getElementById("navAddTask");
-  if (navAddTask) {
-    navAddTask.addEventListener("click", (e) => {
-      e.preventDefault();
-      openAddTaskModal();
-    });
-  }
-  document.addEventListener(
-    "submit",
-    async (e) => {
-      const form = e.target;
-
-      if (!(form instanceof HTMLFormElement)) return;
-      if (form.id !== "addTaskForm") return;
-      e.preventDefault();
-      await addTask();
-    },
-    true
-  );
-
-  const openBtn = document.getElementById("openAddTaskModalBtn");
-  if (openBtn) {
-    openBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      openAddTaskModal();
-    });
-  }
-});
-
 function renderAvatar(activeUserId, activeUserName) {
   const initials = initialsFromGivenName(activeUserName);
   const bgColor = colorIndexFromUserId(activeUserId);
@@ -183,27 +145,67 @@ function wireContactActionsGlobalOnce() {
   document.documentElement.dataset.contactsBound = "1";
 
   document.addEventListener("click", async (e) => {
-    const btn = e.target.closest('button[data-action="delete"]');
+    const btn = e.target.closest('button[data-action="delete"][data-user-id]');
     if (!btn) return;
 
+    // ✅ Nur reagieren, wenn der Button in der Contacts-Sektion sitzt
+    const inContacts = btn.closest(".contact_detail");
+    if (!inContacts) return;
+
     const userId = btn.dataset.userId;
-    if (!userId) {
-      console.warn("Delete clicked, but no data-user-id on button", btn);
-      return;
-    }
+    if (!userId) return;
 
     await deleteContact(userId);
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  wireContactActionsGlobalOnce();
-});
-
-window.usersReady = null;
-window.users = window.users || {};
-
 function editContactOverlayToggle() {
     const overlay = document.getElementById('editContactOverlay');
     overlay.classList.toggle('active');
 }
+
+window.initPage = async function initPage() {
+  const page = document.body?.dataset?.page;
+
+  // immer: Icons nach Include (optional, wenn du es überall willst)
+  // renderIcons wird bei dir eh nach includeHTML gerufen, daher hier nicht zwingend.
+
+  if (page === "contacts") {
+    if (typeof ensureUsersLoaded === "function") {
+      await ensureUsersLoaded();
+    }
+    if (typeof renderContacts === "function") renderContacts(users);
+    if (typeof initContactsClick === "function") initContactsClick(users);
+    return;
+  }
+
+  if (page === "add_task") {
+    if (typeof ensureUsersLoaded === "function") {
+      await ensureUsersLoaded();
+    }
+    if (typeof initAssignedToDropdown === "function") initAssignedToDropdown(users);
+    if (typeof initTaskTypeDropdown === "function") initTaskTypeDropdown(TASK_CATEGORIES);
+    if (typeof initSubtasksInput === "function") initSubtasksInput();
+    if (typeof bindAddTaskFormSubmitOnce === "function") bindAddTaskFormSubmitOnce();
+
+    return;
+  }
+
+  if (page === "summary") {
+    // falls du später Summary init hast
+    if (typeof loadSummary === "function") loadSummary();  
+    if (typeof loadTasks === "function") await loadTasks();
+    if (typeof renderSummary === "function") renderSummary();
+    return;
+  }
+
+if (page === "board") {
+  if (typeof loadTasks === "function") await loadTasks();
+  if (typeof renderBoard === "function") renderBoard();
+
+  if (typeof initAddTaskModalOnce === "function") initAddTaskModalOnce();
+  if (typeof initBoardModalButton === "function") initBoardModalButton();
+  return;
+}
+
+};

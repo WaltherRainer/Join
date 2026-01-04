@@ -5,6 +5,7 @@
   background-color: var(--secondary-background-color);
   font-size: 16px;
   height: calc(100dvh - 96px);
+  grid-area: main;
 }
 
 .title_box {

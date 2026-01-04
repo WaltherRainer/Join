@@ -80,18 +80,19 @@
     </div>
 
     <!-- Persistenter Modal-Layer -->
-    <dialog id="addTaskModal" class="modal">
+    <!-- <dialog id="addTaskModal" class="modal">
         <div class="modal_content">
             <button type="button" class="modal_close" aria-label="Close">×</button>
             <div id="addTaskModalHost"></div>
         </div>
-    </dialog>
+    </dialog> -->
 
-    <!-- <script>
-  w3.includeHTML(() => {
-    if (window.renderIcons) window.renderIcons(document);
-  });
-</script> -->
+    <script>
+    w3.includeHTML(() => {
+        if (window.renderIcons) window.renderIcons(document);
+        if (window.initPage) window.initPage();
+    });
+    </script>
 
 
 </body>

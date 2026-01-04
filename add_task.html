@@ -4,17 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_index.css">
     <link rel="stylesheet" href="styles/add_task_style.css">
+    <link rel="stylesheet" href="styles/style_subtask.css">
     <link rel="stylesheet" href="styles/style_index.css">
-    <script src="./JS/tasks.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./JS/utils.js" defer></script>
+    <script src="./JS/fetch.js" defer></script>
+    <script src="./JS/icons.js" defer></script>
+    <script src="./JS/templates.js" defer></script>
+
+    <!-- Feature-Code -->
+    <script src="./JS/tasks.js" defer></script>
+
+    <!-- Seiten-Orchestrierung -->
+    <script src="./script.js" defer></script>
+
     <title>Document</title>
     <style></style>
 </head>
 
-<body>
+<body data-page="add_task">
+  <div class="display_grid">
+    <header class="header_join">
+      <div w3-include-html="partials/top_menu.html"></div>
+    </header>
+
+    <div w3-include-html="partials/navbar.html"></div>
+
     <main class="add_task_main">
         <!-- Inline Host -->
         <div id="addTaskInlineHost">
@@ -242,9 +262,14 @@
             </form>
         </div>
     </main>
-        
+  </div>
 
-    </main>
+    <script>
+    w3.includeHTML(() => {
+        if (window.renderIcons) window.renderIcons(document);
+        if (window.initPage) window.initPage();
+    });
+    </script>
 </body>
 
 </html>

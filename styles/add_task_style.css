@@ -6,6 +6,7 @@
   height: calc(100dvh - 96px);
   padding: 60px;
   background-color: var(--secondary-background-color);
+      margin-left: 300px;
 }
 
 .add_task_form {
@@ -75,6 +76,18 @@
   width: 100%;
   box-sizing: border-box;
 }
+/* 
+.subtasks_input_wrap {
+  display: flex;
+}
+
+.subtasks_actions {
+  display: flex;
+}
+
+.subtasks_clear, .subtasks_add {
+  border: none;
+} */
 
 .task_descr_textarea {
   height: 120px;
@@ -97,6 +110,7 @@
 .input_subtasks,
 .input_due_date {
   margin-bottom: 0;
+  /* border: none; */
 }
 
 .calendar_svg {

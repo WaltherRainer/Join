@@ -172,6 +172,8 @@ function getAssignedToIds() {
 }
 
 async function addTask() {
+  console.log("addTask() called");
+
   const taskTitel   = document.getElementById("task_titel");
   const taskDescr   = document.getElementById("task_descr");
   const taskCat     = document.getElementById("task_cat");
@@ -210,35 +212,97 @@ function getModalEls() {
   return { modal, host, closeBtn };
 }
 
-function openAddTaskModal() {
-  const { modal, host } = getModalEls();
-  if (!modal || !host) return;
+// function ensureAddTaskFormLoaded(cb) {
+//   const existing = document.getElementById("addTaskForm");
+//   if (existing) return cb(existing);
 
-  const existingForm = document.getElementById("addTaskForm");
-  if (existingForm) {
-    host.appendChild(existingForm);
-    initAssignedToDropdown(users);
-    initTaskTypeDropdown(TASK_CATEGORIES);
-    modal.showModal();
-    return;
-  } 
+//   const loader = document.getElementById("addTaskLoader");
+//   if (!loader) {
+//     console.error("addTaskLoader fehlt auf dieser Seite.");
+//     return;
+//   }
+
+//   loader.innerHTML = `<div w3-include-html="add_task_form.html"></div>`;
+
+//   w3.includeHTML(() => {
+//     const form = document.getElementById("addTaskForm");
+//     if (!form) {
+//       console.error("addTaskForm fehlt in add_task_form.html");
+//       return;
+//     }
+//     cb(form);
+//   });
+// }
+
+function ensureAddTaskFormLoaded(cb) {
+  const existing = document.getElementById("addTaskForm");
+  if (existing) return cb(existing);
 
   const loader = document.getElementById("addTaskLoader");
-  loader.innerHTML = `<div w3-include-html="add_task.html"></div>`;
+  if (!loader) {
+    console.error("addTaskLoader fehlt auf dieser Seite.");
+    return;
+  }
 
+  loader.innerHTML = `<div w3-include-html="add_task.html"></div>`;
   w3.includeHTML(() => {
-    const loadedForm = document.getElementById("addTaskForm");
-    if (!loadedForm) {
-      console.error("Form nicht gefunden. Bitte id='addTaskForm' im add_task.html setzen.");
+    const form = document.getElementById("addTaskForm");
+    if (!form) {
+      console.error("Form nicht gefunden. Prüfe add_task.html (id='addTaskForm').");
       return;
     }
-    host.appendChild(loadedForm);
-    initAssignedToDropdown(users);
-    initTaskTypeDropdown(TASK_CATEGORIES);
-    initSubtasksInput();
+    cb(form);
+  });
+}
+
+function openAddTaskModal() {
+  const modal = document.getElementById("addTaskModal");
+  const host = document.getElementById("addTaskModalHost");
+  if (!modal || !host) return;
+
+  ensureAddTaskFormLoaded(async (form) => {
+    host.appendChild(form);
+
+    if (typeof ensureUsersLoaded === "function") await ensureUsersLoaded();
+    if (typeof initAssignedToDropdown === "function") initAssignedToDropdown(users);
+    if (typeof initTaskTypeDropdown === "function") initTaskTypeDropdown(TASK_CATEGORIES);
+    if (typeof initSubtasksInput === "function") initSubtasksInput();
+    if (typeof bindAddTaskFormSubmitOnce === "function") bindAddTaskFormSubmitOnce();
+
+
     modal.showModal();
   });
 }
+
+// function openAddTaskModal() {
+//   const { modal, host } = getModalEls();
+//   if (!modal || !host) return;
+
+//   const existingForm = document.getElementById("addTaskForm");
+//   if (existingForm) {
+//     host.appendChild(existingForm);
+//     initAssignedToDropdown(users);
+//     initTaskTypeDropdown(TASK_CATEGORIES);
+//     modal.showModal();
+//     return;
+//   } 
+
+  // const loader = document.getElementById("addTaskLoader");
+  // loader.innerHTML = `<div w3-include-html="add_task.html"></div>`;
+
+  // w3.includeHTML(() => {
+  //   const loadedForm = document.getElementById("addTaskForm");
+  //   if (!loadedForm) {
+  //     console.error("Form nicht gefunden. Bitte id='addTaskForm' im add_task.html setzen.");
+  //     return;
+  //   }
+  //   host.appendChild(loadedForm);
+  //   initAssignedToDropdown(users);
+  //   initTaskTypeDropdown(TASK_CATEGORIES);
+  //   initSubtasksInput();
+  //   modal.showModal();
+  // });
+
 
 function closeAddTaskModal() {
   const { modal, host } = getModalEls();
@@ -596,5 +660,22 @@ function makeDivider() {
   d.setAttribute("aria-hidden", "true");
   return d;
 }
+
+function bindAddTaskFormSubmitOnce() {
+  const form = document.getElementById("addTaskForm");
+  if (!form) return;
+  if (form.dataset.submitBound === "1") return;
+  form.dataset.submitBound = "1";
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+      await addTask(); // deine bestehende Funktion
+    } catch (err) {
+      console.error("addTask failed", err);
+    }
+  });
+}
+
 
 window.initAssignedToDropdown = initAssignedToDropdown;

@@ -179,3 +179,7 @@ section.task_section {
     height: 32px;
     width: 32px;
 }
+
+.board_help_div {
+    grid-area: main;
+}
