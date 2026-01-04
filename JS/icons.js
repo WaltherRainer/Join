@@ -28,6 +28,68 @@ function iconSvg({
   `;
 }
 
+function iconCircleWrapper({
+  size = 69,
+  viewBox = `0 0 ${size} ${size}`,
+  circleFill = "var(--svg_hover_main)",
+  defs = "",
+  content = "",
+} = {}) {
+  return iconSvg({
+    width: size,
+    height: size,
+    viewBox,
+    defs,
+    content: `
+      <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="${circleFill}" />
+      ${content}
+    `,
+  });
+}
+
+function editPencilBig({ size = 69 } = {}) {
+  const maskId = `mask-editPencil-${Math.random().toString(36).slice(2, 9)}`;
+
+  return iconCircleWrapper({
+    size,
+    circleFill: "var(--svg_hover_main)",
+    defs: `
+      <mask id="${maskId}" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="18" y="18" width="33" height="33">
+        <rect x="18.5" y="18.5" width="32" height="32" fill="#D9D9D9" />
+      </mask>
+    `,
+    content: `
+      <g mask="url(#${maskId})">
+        <path
+          d="M25.1667 43.8332H27.0333L38.5333 32.3332L36.6667 30.4665L25.1667 41.9665V43.8332ZM44.2333 30.3998L38.5667 24.7998L40.4333 22.9332C40.9444 22.4221 41.5722 22.1665 42.3167 22.1665C43.0611 22.1665 43.6889 22.4221 44.2 22.9332L46.0667 24.7998C46.5778 25.3109 46.8444 25.9276 46.8667 26.6498C46.8889 27.3721 46.6444 27.9887 46.1333 28.4998L44.2333 30.3998ZM42.3 32.3665L28.1667 46.4998H22.5V40.8332L36.6333 26.6998L42.3 32.3665Z"
+          fill="var(--inner_svg_main)"
+        />
+      </g>
+    `,
+  });
+}
+
+function prioUrgentBig({ size = 60 } = {}) {
+  const clipId = `clip-prioUrgentBig-${Math.random().toString(36).slice(2, 9)}`;
+
+  return iconCircleWrapper({
+    size,
+    circleFill: "#FF3D00", // bei dir fix
+    defs: `
+      <clipPath id="${clipId}">
+        <rect width="34.186" height="25.1163" fill="white" transform="translate(12.5581 16.0464)" />
+      </clipPath>
+    `,
+    content: `
+      <g clip-path="url(#${clipId})">
+        <path d="M44.8709 41.1626C44.4699 41.1633 44.0792 41.0337 43.7563 40.7929L29.6511 30.263L15.5458 40.7929C15.3478 40.941 15.1229 41.0482 14.8839 41.1084C14.645 41.1685 14.3966 41.1805 14.1531 41.1435C13.9096 41.1066 13.6757 41.0214 13.4647 40.893C13.2536 40.7645 13.0697 40.5953 12.9233 40.3949C12.777 40.1945 12.6711 39.9669 12.6116 39.7251C12.5522 39.4832 12.5404 39.2319 12.5769 38.9855C12.6507 38.4878 12.9168 38.0402 13.3167 37.7411L28.5365 26.3677C28.8591 26.126 29.2498 25.9956 29.6511 25.9956C30.0524 25.9956 30.4431 26.126 30.7657 26.3677L45.9855 37.7411C46.3033 37.9781 46.5389 38.3106 46.6588 38.6912C46.7788 39.0718 46.7768 39.481 46.6532 39.8604C46.5296 40.2398 46.2907 40.57 45.9706 40.8039C45.6506 41.0377 45.2657 41.1633 44.8709 41.1626Z" fill="white" />
+        <path d="M44.8708 31.2109C44.4697 31.2116 44.0791 31.082 43.7562 30.8413L29.651 20.3114L15.5457 30.8413C15.1458 31.1404 14.6448 31.2665 14.153 31.1919C13.6612 31.1172 13.2188 30.8479 12.9232 30.4432C12.6276 30.0385 12.503 29.5315 12.5768 29.0339C12.6506 28.5362 12.9167 28.0885 13.3166 27.7894L28.5364 16.416C28.859 16.1744 29.2497 16.0439 29.651 16.0439C30.0523 16.0439 30.443 16.1744 30.7655 16.416L45.9854 27.7894C46.3031 28.0264 46.5388 28.359 46.6587 28.7396C46.7786 29.1202 46.7767 29.5294 46.6531 29.9088C46.5295 30.2882 46.2906 30.6184 45.9705 30.8522C45.6505 31.0861 45.2656 31.2116 44.8708 31.2109Z" fill="white" />
+      </g>
+    `,
+  });
+}
+
+
 
 function recyBin({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   return iconSvg({
@@ -77,6 +139,23 @@ function editPencil({ width = 20, height = 20, color = "var(--blue)" } = {}) {
   });
 }
 
+function confTickBig({ size = 69 } = {}) {
+  return iconCircleWrapper({
+    size,
+    circleFill: "var(--svg_hover_main)",
+    content: `
+      <path
+        d="M19.5283 34.5001L30.7571 45.5662L49.4717 23.4341"
+        stroke="var(--inner_svg_main)"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    `,
+  });
+}
+
+
 function uniqueId(prefix = "id") {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 }
@@ -103,11 +182,11 @@ function prioUrgent({ width = 20, height = 15, color = "#FF3D00" } = {}) {
 }
 
 
-function prioMedium({ width = 20, height = 20, color = "var(--prio-medium)" } = {}) {
+function prioMedium({ width = 20, height = 15, color = "var(--prio-medium)" } = {}) {
   return iconSvg({
     width,
     height,
-    viewBox: "0 0 20 20",
+    viewBox: "0 0 20 15",
     color,
     paths: [
       { d: "M18.9041 7.45086H1.09589C0.805242 7.45086 0.526498 7.33456 0.320979 7.12755C0.11546 6.92054 0 6.63977 0 6.34701C0 6.05425 0.11546 5.77349 0.320979 5.56647C0.526498 5.35946 0.805242 5.24316 1.09589 5.24316H18.9041C19.1948 5.24316 19.4735 5.35946 19.679 5.56647C19.8845 5.77349 20 6.05425 20 6.34701C20 6.63977 19.8845 6.92054 19.679 7.12755C19.4735 7.33456 19.1948 7.45086 18.9041 7.45086Z" },
@@ -116,11 +195,11 @@ function prioMedium({ width = 20, height = 20, color = "var(--prio-medium)" } = 
   });
 }
 
-function prioLow({ width = 20, height = 20, color = "var(--prio-low)" } = {}) {
+function prioLow({ width = 20, height = 15, color = "var(--prio-low)" } = {}) {
   return iconSvg({
     width,
     height,
-    viewBox: "0 0 20 20",
+    viewBox: "0 0 20 15",
     color,
     paths: [
       { d: "M10 8.76077C9.7654 8.76118 9.53687 8.68634 9.34802 8.54726L0.444913 1.97752C0.329075 1.89197 0.231235 1.78445 0.15698 1.66111C0.0827245 1.53777 0.033508 1.40102 0.0121402 1.25868C-0.031014 0.971193 0.0418855 0.678356 0.214802 0.444584C0.387718 0.210811 0.646486 0.0552534 0.934181 0.0121312C1.22188 -0.0309911 1.51493 0.0418545 1.74888 0.214643L10 6.29712L18.2511 0.214643C18.367 0.129087 18.4985 0.0671675 18.6383 0.0324205C18.7781 -0.00232646 18.9234 -0.00922079 19.0658 0.0121312C19.2083 0.0334832 19.3451 0.0826633 19.4685 0.156864C19.592 0.231064 19.6996 0.328831 19.7852 0.444584C19.8708 0.560336 19.9328 0.691806 19.9676 0.831488C20.0023 0.97117 20.0092 1.11633 19.9879 1.25868C19.9665 1.40102 19.9173 1.53777 19.843 1.66111C19.7688 1.78445 19.6709 1.89197 19.5551 1.97752L10.652 8.54726C10.4631 8.68634 10.2346 8.76118 10 8.76077Z" },
@@ -286,10 +365,14 @@ const ICONS = {
   prioUrgent,
   prioMedium,
   prioLow,
+  editPencilBig,
+  prioUrgentBig,
+  confTickBig,
 };
 
 function renderIcons(root = document) {
   if (!root || !root.querySelectorAll) return;
+
   root.querySelectorAll("[data-icon]").forEach(el => {
     const name = el.dataset.icon;
     const fn = ICONS[name];
@@ -297,14 +380,22 @@ function renderIcons(root = document) {
       console.warn("Unknown icon:", name, el);
       return;
     }
+
     const width = Number(el.dataset.w) || undefined;
     const height = Number(el.dataset.h) || undefined;
     const args = {};
     if (width) args.width = width;
     if (height) args.height = height;
-    el.innerHTML = fn(args);
+
+    // wenn schon ein svg drin ist, nicht doppelt rendern
+    if (el.querySelector("svg")) return;
+
+    // NICHT überschreiben:
+    el.insertAdjacentHTML("beforeend", fn(args));
+
     const svg = el.querySelector("svg");
     if (svg) svg.setAttribute("aria-hidden", "true");
   });
 }
+
 

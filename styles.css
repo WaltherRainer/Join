@@ -104,6 +104,14 @@ label {
   opacity: 1; /* wichtig für Firefox */
 }
 
+.navbar_shell{
+  grid-area: nav;
+  background-color: var(--blue);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Firefox Fallback */
 ::-moz-placeholder {
   color: var(--border_color);

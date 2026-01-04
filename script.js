@@ -185,13 +185,25 @@ window.initPage = async function initPage() {
     return;
   }
 
-if (page === "board") {
-  if (typeof loadTasks === "function") await loadTasks();
-  if (typeof renderBoard === "function") renderBoard();
+  if (page === "board") {
+    if (typeof loadTasks === "function") await loadTasks();
+    if (typeof renderBoard === "function") renderBoard();
 
-  if (typeof initAddTaskModalOnce === "function") initAddTaskModalOnce();
-  if (typeof initBoardModalButton === "function") initBoardModalButton();
-  return;
+    if (typeof initAddTaskModalOnce === "function") initAddTaskModalOnce();
+    if (typeof initBoardModalButton === "function") initBoardModalButton();
+    return;
+  }
+
 }
 
-};
+function setActiveNavLink() {
+  const page = location.pathname.split("/").pop().replace(".html", "");
+
+  document.querySelectorAll(".nav_link").forEach(link => {
+    link.classList.toggle(
+      "active",
+      link.dataset.page === page
+    );
+  });
+}
+
