@@ -160,8 +160,8 @@ window.initPage = async function initPage() {
     if (typeof ensureUsersLoaded === "function") {
       await ensureUsersLoaded();
     }
-    if (typeof renderContacts === "function") renderContacts(users);
-    if (typeof initContactsClick === "function") initContactsClick(users);
+    renderContacts(users);
+    initContactsClick(users);
     return;
   }
 
@@ -169,10 +169,10 @@ window.initPage = async function initPage() {
     if (typeof ensureUsersLoaded === "function") {
       await ensureUsersLoaded();
     }
-    if (typeof initAssignedToDropdown === "function") initAssignedToDropdown(users);
-    if (typeof initTaskTypeDropdown === "function") initTaskTypeDropdown(TASK_CATEGORIES);
-    if (typeof initSubtasksInput === "function") initSubtasksInput();
-    if (typeof bindAddTaskFormSubmitOnce === "function") bindAddTaskFormSubmitOnce();
+    initAssignedToDropdown(users);
+    initTaskTypeDropdown(TASK_CATEGORIES);
+    initSubtasksInput();
+    bindAddTaskFormSubmitOnce();
 
     return;
   }
