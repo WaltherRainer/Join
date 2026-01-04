@@ -42,7 +42,7 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
       <div class="contact_detail">
           <h2>${givenName}</h2>
           <div class="contact_actions">
-              <button type="button" class="icon_text_btn is-edit">
+              <button type="button" class="icon_text_btn is-edit" onclick="editContactOverlayToggle()">
                   <span class="svg-icon" data-icon="editPencil" data-w="18" data-h="18"></span>
                   <span>Edit</span>
               </button>
