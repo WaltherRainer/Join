@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles/style_top_menu.css"/>
+    <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
     <link rel="stylesheet" href="styles/add_task_style.css">
@@ -112,7 +112,7 @@
             border: 1px solid #ccc;
         }
 
-        .input-icon {
+        .input_icon {
             position: absolute;
             right: 12px;
             top: 50%;
@@ -172,23 +172,24 @@
             color: var(--background-color);
             font-size: 21px;
             font-weight: 700;
-            padding: 15px 0;
+            /* padding: 15px 0; */
             width: 113px;
             border-radius: 8px;
             cursor: pointer;
             border-width: 0;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+        }
+
+        .button_icon {
+            display: inline-flex;
         }
 
         .default_button:hover {
             background-color: var(--light-blue);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-
-        .default_button svg {
-            margin-left: 8px;
         }
 
         .close_button {
@@ -202,169 +203,104 @@
 </head>
 
 <body data-page="contacts">
-  <div class="display_grid">
-    <header class="header_join">
-      <div w3-include-html="partials/top_menu.html"></div>
-    </header>
+    <div class="display_grid">
+        <header class="header_join">
+            <div w3-include-html="partials/top_menu.html"></div>
+        </header>
 
-    <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
+        <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
 
 
-    <div class="overlay_backdrop" id="editContactOverlay">
-        <div class="edit_contact_overlay">
-            <div class="overlay_left">
-                <svg width="54" height="67" viewBox="0 0 54 67" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M38.6416 0H26.6953V13.8957H38.6416V0Z" fill="white" />
-                    <path
-                        d="M26.6953 25.197H38.6416V44.7947C38.6962 49.5105 37.3687 54.1362 34.828 58.0839C32.3192 61.9194 27.4764 66.4829 18.5167 66.4829C8.75753 66.4829 3.06927 61.8167 0 59.2597L7.53534 49.8621C10.5311 52.3352 13.4166 54.3696 18.5627 54.3696C22.459 54.3696 24.012 52.7645 24.9218 51.3646C26.1585 49.4203 26.7983 47.1465 26.7596 44.8321L26.6953 25.197Z"
-                        fill="white" />
-                    <path d="M20.6028 16.4248H8.65649V28.5567H20.6028V16.4248Z" fill="#29ABE2" />
-                    <path
-                        d="M44.8996 60.7904C44.8996 63.3754 43.6039 64.7659 41.7936 64.7659C39.9833 64.7659 38.7979 63.1141 38.7979 60.9211C38.7979 58.728 40.02 56.9922 41.8947 56.9922C43.7693 56.9922 44.8996 58.7 44.8996 60.7904ZM40.1855 60.8931C40.1855 62.4516 40.8011 63.5994 41.8579 63.5994C42.9147 63.5994 43.512 62.3862 43.512 60.7997C43.512 59.4092 42.9607 58.1027 41.8579 58.1027C40.7552 58.1027 40.1855 59.3626 40.1855 60.8931Z"
-                        fill="white" />
-                    <path d="M47.2703 57.104V64.6445H45.947V57.104H47.2703Z" fill="white" />
-                    <path
-                        d="M48.7041 64.6445V57.104H50.1744L51.755 60.2116C52.1619 61.0242 52.5239 61.8592 52.8393 62.7127C52.7566 61.7795 52.7199 60.7063 52.7199 59.5117V57.104H53.9329V64.6445H52.5637L50.9647 61.4715C50.5414 60.638 50.164 59.7812 49.8344 58.9051C49.8344 59.8384 49.8987 60.8929 49.8987 62.1901V64.6351L48.7041 64.6445Z"
-                        fill="white" />
-                </svg>
-                <h2>Edit Contact</h2>
-                <div class="divider"></div>
-            </div>
-            <div class="overlay_right">
-                <div class="close_button" onclick="editContactOverlayToggle()">X</div>
-                <div class="assigned_avatar">
-                    <span class="user__avatar">AM</span>
+        <div class="overlay_backdrop" id="editContactOverlay">
+            <div class="edit_contact_overlay">
+                <div class="overlay_left">
+                    <span class="svg-icon is-muted" data-icon="join_logo" data-w="54" data-h="66"></span>
+                    <h2>Edit Contact</h2>
+                    <div class="divider"></div>
                 </div>
-                <div class="edit_contact_fields">
-                    <!-- 1. Input – Name -->
-                    <div class="input-wrapper">
-                        <input type="text" placeholder="Name">
-                        <span class="input-icon">
-                            <!-- USER ICON -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask_user" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                                    <rect width="24" height="24" fill="#D9D9D9" />
-                                </mask>
-                                <g mask="url(#mask_user)">
-                                    <path
-                                        d="M12 12C10.9 12 9.95833 11.6083 9.175 10.825C8.39167 10.0417 8 9.1 8 8C8 6.9 8.39167 5.95833 9.175 5.175C9.95833 4.39167 10.9 4 12 4C13.1 4 14.0417 4.39167 14.825 5.175C15.6083 5.95833 16 6.9 16 8C16 9.1 15.6083 10.0417 14.825 10.825C14.0417 11.6083 13.1 12 12 12ZM18 20H6C5.45 20 4.97917 19.8042 4.5875 19.4125C4.19583 19.0208 4 18.55 4 18V17.2C4 16.6333 4.14583 16.1125 4.4375 15.6375C4.72917 15.1625 5.11667 14.8 5.6 14.55C6.63333 14.0333 7.68333 13.6458 8.75 13.3875C9.81667 13.1292 10.9 13 12 13C13.1 13 14.1833 13.1292 15.25 13.3875C16.3167 13.6458 17.3667 14.0333 18.4 14.55Z"
-                                        fill="#A8A8A8" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- 2. Input – Email -->
-                    <div class="input-wrapper">
-                        <input type="email" placeholder="Email">
-                        <span class="input-icon">
-                            <!-- EMAIL ICON -->
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask_mail" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                                    <rect width="24" height="24" fill="#D9D9D9" />
-                                </mask>
-                                <g mask="url(#mask_mail)">
-                                    <path
-                                        d="M4 20C3.45 20 2.97917 19.8042 2.5875 19.4125C2.19583 19.0208 2 18.55 2 18V6C2 5.45 2.19583 4.97917 2.5875 4.5875C2.97917 4.19583 3.45 4 4 4H20C20.55 4 21.0208 4.19583 21.4125 4.5875C21.8042 4.97917 22 5.45 22 6V18C22 18.55 21.8042 19.0208 21.4125 19.4125C21.0208 19.8042 20.55 20 20 20H4ZM20 8L12 12.825L4 8V18H20V8ZM12 11L20 6H4L12 11Z"
-                                        fill="#A8A8A8" />
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <!-- 3. Input – Phone -->
-                    <div class="input-wrapper">
-                        <input type="tel" placeholder="Phone">
-                        <span class="svg-icon is-muted input_icon" data-icon="phone" data-w="24" data-h="24"></span>
-
-<!-- 
-                        <span class="input-icon">
-                            
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask_phone" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                                    <rect width="24" height="24" fill="#D9D9D9" />
-                                </mask>
-                                <g mask="url(#mask_phone)">
-                                    <path
-                                        d="M19.95 21C17.8667 21 15.8083 20.5458 13.775 19.6375C11.7417 18.7292 9.89167 17.4417 8.225 15.775C6.55833 14.1083 5.27083 12.2583 4.3625 10.225C3.45417 8.19167 3 6.13333 3 4.05C3 3.75 3.1 3.5 3.3 3.3C3.5 3.1 3.75 3 4.05 3H8.1L9.7 7.3L6.975 10.9C7.30833 11.5167 7.70417 12.1125 8.1625 12.6875C8.62083 13.2625 9.125 13.8167 9.675 14.35L13.1 17L15.45 14.65L20.2 14.95V19.95C20.2 20.25 20.1 20.5 19.95 21Z"
-                                        fill="#A8A8A8" />
-                                </g>
-                            </svg>
-                        </span> -->
-                    </div>
-                    <div class="edit_contact_btn">
-                        <button class="clear_button">Delete</button>
-                        <button class="default_button">
-                            Save
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <mask id="mask0_416991_4411" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
-                                    y="0" width="24" height="24">
-                                    <rect width="24" height="24" fill="#D9D9D9" />
-                                </mask>
-                                <g mask="url(#mask0_416991_4411)">
-                                    <path
-                                        d="M9.55057 15.15L18.0256 6.675C18.2256 6.475 18.4631 6.375 18.7381 6.375C19.0131 6.375 19.2506 6.475 19.4506 6.675C19.6506 6.875 19.7506 7.1125 19.7506 7.3875C19.7506 7.6625 19.6506 7.9 19.4506 8.1L10.2506 17.3C10.0506 17.5 9.81724 17.6 9.55057 17.6C9.28391 17.6 9.05057 17.5 8.85057 17.3L4.55057 13C4.35057 12.8 4.25474 12.5625 4.26307 12.2875C4.27141 12.0125 4.37557 11.775 4.57557 11.575C4.77557 11.375 5.01307 11.275 5.28807 11.275C5.56307 11.275 5.80057 11.375 6.00057 11.575L9.55057 15.15Z"
-                                        fill="white" />
-                                </g>
-                            </svg>
-                        </button>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <main class="main_content contacts_layout">
-        <div class="title_box">
-            <div class="summary_title">Contacts</div>
-
-            <div class="summary_subtitle">Better with a team</div>
-        </div>
-        <!-- Adress list / left side -->
-         <div class="shadow"></div>
-        <section class="contact_list_sect">
-            <button class="default-button add_contact_btn">Add new contact
-                <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M23.9961 12.9111C23.6802 12.9111 23.4167 12.8046 23.2056 12.5917C22.9945 12.3787 22.8889 12.1148 22.8889 11.8V8.68887H19.7778C19.463 8.68887 19.1991 8.58201 18.9861 8.3683C18.7731 8.15459 18.6667 7.88978 18.6667 7.57387C18.6667 7.25796 18.7731 6.99444 18.9861 6.78333C19.1991 6.57222 19.463 6.46667 19.7778 6.46667H22.8889V3.35553C22.8889 3.04073 22.9958 2.77684 23.2095 2.56387C23.4232 2.35091 23.688 2.24443 24.0039 2.24443C24.3198 2.24443 24.5833 2.35091 24.7944 2.56387C25.0055 2.77684 25.1111 3.04073 25.1111 3.35553V6.46667H28.2222C28.537 6.46667 28.8009 6.57352 29.0139 6.78723C29.2269 7.00095 29.3333 7.26576 29.3333 7.58167C29.3333 7.89758 29.2269 8.16109 29.0139 8.3722C28.8009 8.58331 28.537 8.68887 28.2222 8.68887H25.1111V11.8C25.1111 12.1148 25.0042 12.3787 24.7905 12.5917C24.5768 12.8046 24.312 12.9111 23.9961 12.9111ZM10.6667 10.2222C9.2 10.2222 7.98148 9.73702 7.0111 8.76667C6.04074 7.79629 5.55557 6.57777 5.55557 5.1111C5.55557 3.64443 6.04074 2.42592 7.0111 1.45557C7.98148 0.485189 9.2 0 10.6667 0C12.1333 0 13.3519 0.485189 14.3222 1.45557C15.2926 2.42592 15.7778 3.64443 15.7778 5.1111C15.7778 6.57777 15.2926 7.79629 14.3222 8.76667C13.3519 9.73702 12.1333 10.2222 10.6667 10.2222ZM1.1111 20.9111C0.7963 20.9111 0.532411 20.8046 0.319433 20.5917C0.106478 20.3787 0 20.1148 0 19.8V17.5778C0 16.8074 0.198144 16.1056 0.594433 15.4722C0.990745 14.8389 1.53334 14.363 2.22223 14.0444C3.79261 13.3259 5.24697 12.8093 6.5853 12.4944C7.92366 12.1796 9.28291 12.0222 10.6631 12.0222C12.0432 12.0222 13.4037 12.1796 14.7444 12.4944C16.0852 12.8093 17.5333 13.3259 19.0889 14.0444C19.7778 14.3778 20.3241 14.8574 20.7278 15.4833C21.1315 16.1093 21.3333 16.8074 21.3333 17.5778V19.8C21.3333 20.1148 21.2269 20.3787 21.0139 20.5917C20.8009 20.8046 20.537 20.9111 20.2222 20.9111H1.1111ZM2.2222 18.6889H19.1111V17.5778C19.1111 17.2593 19.0315 16.9593 18.8722 16.6778C18.713 16.3963 18.4741 16.1852 18.1556 16.0444C16.7185 15.3407 15.4296 14.8648 14.2889 14.6167C13.1481 14.3685 11.9407 14.2444 10.6667 14.2444C9.3926 14.2444 8.18519 14.3722 7.04443 14.6278C5.9037 14.8833 4.60741 15.3555 3.15557 16.0444C2.86666 16.1852 2.63887 16.3963 2.4722 16.6778C2.30553 16.9593 2.2222 17.2593 2.2222 17.5778V18.6889ZM10.6667 8C11.4889 8 12.1759 7.72408 12.7278 7.17223C13.2796 6.62037 13.5556 5.93332 13.5556 5.1111C13.5556 4.28888 13.2796 3.60184 12.7278 3.05C12.1759 2.49813 11.4889 2.2222 10.6667 2.2222C9.84445 2.2222 9.15741 2.49813 8.60557 3.05C8.0537 3.60184 7.77777 4.28888 7.77777 5.1111C7.77777 5.93332 8.0537 6.62037 8.60557 7.17223C9.15741 7.72408 9.84445 8 10.6667 8Z"
-                        fill="white" />
-                </svg>
-            </button>
-
-            <div id="contact_list_item" class="contact_list_item">
-                <div class="first_letter">A</div>
-
-                <div class="contact_list_card d_none">
-                    <div class="contact_list_content">
+                <div class="overlay_right">
+                    <div class="close_button" onclick="editContactOverlayToggle()">x</div>
+                    <div class="assigned_avatar">
                         <span class="user__avatar">AM</span>
-                        <div class="user_contact">
-                            <span>Anton Mayer</span>
-                            <p><a href="mailto:anonm@gmail.com">anton@gmail.com</a></p>
+                    </div>
+                    <div class="edit_contact_fields">
+                        <!-- 1. Input – Name -->
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="Name">
+                            <span class="svg-icon is-muted input_icon" data-icon="person" data-w="16"
+                                data-h="16"></span>
+                        </div>
+
+                        <!-- 2. Input – Email -->
+                        <div class="input-wrapper">
+                            <input type="email" placeholder="Email">
+                            <span class="svg-icon is-muted input_icon" data-icon="mail" data-w="20" data-h="16"></span>
+                        </div>
+
+                        <!-- 3. Input – Phone -->
+                        <div class="input-wrapper">
+                            <input type="tel" placeholder="Phone">
+                            <span class="svg-icon is-muted input_icon" data-icon="phone" data-w="18" data-h="18"></span>
+                        </div>
+                        <div class="edit_contact_btn">
+                            <button class="clear_button">Delete</button>
+                            <button class="default_button">
+                                Save
+                                <span class="button_icon" data-icon="checkMark" data-w="15" data-h="11"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-            
-        </section>
+        </div>
 
-        <section class="contact_details_sect" id="contact_details_sect"></section>
+        <main class="main_content contacts_layout">
+            <div class="title_box">
+                <div class="summary_title">Contacts</div>
 
-    </main>
+                <div class="summary_subtitle">Better with a team</div>
+            </div>
+            <!-- Adress list / left side -->
+            <div class="shadow"></div>
+            <section class="contact_list_sect">
+                <button class="default-button add_contact_btn">Add new contact
+                    <svg width="30" height="21" viewBox="0 0 30 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M23.9961 12.9111C23.6802 12.9111 23.4167 12.8046 23.2056 12.5917C22.9945 12.3787 22.8889 12.1148 22.8889 11.8V8.68887H19.7778C19.463 8.68887 19.1991 8.58201 18.9861 8.3683C18.7731 8.15459 18.6667 7.88978 18.6667 7.57387C18.6667 7.25796 18.7731 6.99444 18.9861 6.78333C19.1991 6.57222 19.463 6.46667 19.7778 6.46667H22.8889V3.35553C22.8889 3.04073 22.9958 2.77684 23.2095 2.56387C23.4232 2.35091 23.688 2.24443 24.0039 2.24443C24.3198 2.24443 24.5833 2.35091 24.7944 2.56387C25.0055 2.77684 25.1111 3.04073 25.1111 3.35553V6.46667H28.2222C28.537 6.46667 28.8009 6.57352 29.0139 6.78723C29.2269 7.00095 29.3333 7.26576 29.3333 7.58167C29.3333 7.89758 29.2269 8.16109 29.0139 8.3722C28.8009 8.58331 28.537 8.68887 28.2222 8.68887H25.1111V11.8C25.1111 12.1148 25.0042 12.3787 24.7905 12.5917C24.5768 12.8046 24.312 12.9111 23.9961 12.9111ZM10.6667 10.2222C9.2 10.2222 7.98148 9.73702 7.0111 8.76667C6.04074 7.79629 5.55557 6.57777 5.55557 5.1111C5.55557 3.64443 6.04074 2.42592 7.0111 1.45557C7.98148 0.485189 9.2 0 10.6667 0C12.1333 0 13.3519 0.485189 14.3222 1.45557C15.2926 2.42592 15.7778 3.64443 15.7778 5.1111C15.7778 6.57777 15.2926 7.79629 14.3222 8.76667C13.3519 9.73702 12.1333 10.2222 10.6667 10.2222ZM1.1111 20.9111C0.7963 20.9111 0.532411 20.8046 0.319433 20.5917C0.106478 20.3787 0 20.1148 0 19.8V17.5778C0 16.8074 0.198144 16.1056 0.594433 15.4722C0.990745 14.8389 1.53334 14.363 2.22223 14.0444C3.79261 13.3259 5.24697 12.8093 6.5853 12.4944C7.92366 12.1796 9.28291 12.0222 10.6631 12.0222C12.0432 12.0222 13.4037 12.1796 14.7444 12.4944C16.0852 12.8093 17.5333 13.3259 19.0889 14.0444C19.7778 14.3778 20.3241 14.8574 20.7278 15.4833C21.1315 16.1093 21.3333 16.8074 21.3333 17.5778V19.8C21.3333 20.1148 21.2269 20.3787 21.0139 20.5917C20.8009 20.8046 20.537 20.9111 20.2222 20.9111H1.1111ZM2.2222 18.6889H19.1111V17.5778C19.1111 17.2593 19.0315 16.9593 18.8722 16.6778C18.713 16.3963 18.4741 16.1852 18.1556 16.0444C16.7185 15.3407 15.4296 14.8648 14.2889 14.6167C13.1481 14.3685 11.9407 14.2444 10.6667 14.2444C9.3926 14.2444 8.18519 14.3722 7.04443 14.6278C5.9037 14.8833 4.60741 15.3555 3.15557 16.0444C2.86666 16.1852 2.63887 16.3963 2.4722 16.6778C2.30553 16.9593 2.2222 17.2593 2.2222 17.5778V18.6889ZM10.6667 8C11.4889 8 12.1759 7.72408 12.7278 7.17223C13.2796 6.62037 13.5556 5.93332 13.5556 5.1111C13.5556 4.28888 13.2796 3.60184 12.7278 3.05C12.1759 2.49813 11.4889 2.2222 10.6667 2.2222C9.84445 2.2222 9.15741 2.49813 8.60557 3.05C8.0537 3.60184 7.77777 4.28888 7.77777 5.1111C7.77777 5.93332 8.0537 6.62037 8.60557 7.17223C9.15741 7.72408 9.84445 8 10.6667 8Z"
+                            fill="white" />
+                    </svg>
+                </button>
+
+                <div id="contact_list_item" class="contact_list_item">
+                    <div class="first_letter">A</div>
+
+                    <div class="contact_list_card d_none">
+                        <div class="contact_list_content">
+                            <span class="user__avatar">AM</span>
+                            <div class="user_contact">
+                                <span>Anton Mayer</span>
+                                <p><a href="mailto:anonm@gmail.com">anton@gmail.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="contact_details_sect" id="contact_details_sect"></section>
+
+        </main>
     </div>
 
-<div id="contacts_list"></div>
+    <div id="contacts_list"></div>
 
-<script>
-  w3.includeHTML(() => {
-    if (window.renderIcons) window.renderIcons(document);
-    if (window.initPage) window.initPage();
-    if (window.setActiveNavLink) window.setActiveNavLink();
-  });
-</script>
+    <script>
+        w3.includeHTML(() => {
+            if (window.renderIcons) window.renderIcons(document);
+            if (window.initPage) window.initPage();
+            if (window.setActiveNavLink) window.setActiveNavLink();
+        });
+    </script>
 
 </body>
 
