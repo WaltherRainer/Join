@@ -12,7 +12,7 @@ function setPwIcon(button, iconName) {
 }
 
 function guestLogin() {
-    window.location.replace("summary.html");
+  window.location.replace("summary.html");
 }
 
 function setAriaLabel(input, btn) {
@@ -78,8 +78,8 @@ function wireEvents(state) {
 }
 
 function createPwToggleState(container) {
-  const input = container.querySelector('[data-password]');
-  const button = container.querySelector('[data-password-toggle]');
+  const input = container.querySelector("[data-password]");
+  const button = container.querySelector("[data-password-toggle]");
   if (!input || !button) return null;
   return { container, input, button, currentIcon: ICON.LOCK };
 }
@@ -91,12 +91,28 @@ function initPasswordToggle(container) {
   syncState(state); // initial
 }
 
+/**
+ * Handles the user login process triggered by a form submission.
+ *
+ * Prevents the default submit behavior, initializes the user data,
+ * reads and sanitizes the email and password inputs, and validates
+ * the credentials. On successful authentication, the user is
+ * redirected to the start page; otherwise, a warning message is shown.
+ *
+ * @async
+ * @function userLogin
+ * @param {SubmitEvent} e - The submit event emitted by the login form.
+ * @returns {Promise<void>} Resolves when the login process has completed.
+ *
+ * @throws {Error} Propagates errors thrown by {@link initUsersLoading}
+ * if the user data cannot be initialized.
+ */
 async function userLogin(e) {
   e.preventDefault();
   await initUsersLoading();
   const form = e.currentTarget;
-  const emailInput = form.querySelector('#email');
-  const passwordInput = form.querySelector('input[data-password]');
+  const emailInput = form.querySelector("#email");
+  const passwordInput = form.querySelector("input[data-password]");
   const warningLogin = form.querySelector("#warning_login_failed");
   if (!emailInput || !passwordInput) return;
   const emailValue = emailInput.value.trim();
@@ -132,12 +148,12 @@ function accessGranted(email, password) {
 function enableFormErrorReset(formElement) {
   const inputBoxes = formElement.querySelectorAll(".input_box");
 
-  inputBoxes.forEach(box => {
+  inputBoxes.forEach((box) => {
     const input = box.querySelector("input, textarea, select");
     if (!input) return;
 
     input.addEventListener("input", () => {
-      inputBoxes.forEach(b => b.classList.remove("has_error"));
+      inputBoxes.forEach((b) => b.classList.remove("has_error"));
     });
   });
 }
@@ -147,45 +163,44 @@ enableFormErrorReset(loginForm);
 
 /** Activates Sign In Form */
 function activateSignIn() {
-    signInContainer.classList.add("enable")
-    logInContainer.classList.add("disable")
-    indexHeader.classList.add("disable")
-
+  signInContainer.classList.add("enable");
+  logInContainer.classList.add("disable");
+  indexHeader.classList.add("disable");
 }
 /** Activates Log In Form */
 function activateLogIn() {
-    signInContainer.classList.remove("enable")
-    logInContainer.classList.remove("disable")
-    indexHeader.classList.remove("disable")
-    const loginForm = document.querySelector(".login_form form");
-    enableFormErrorReset(loginForm);
+  signInContainer.classList.remove("enable");
+  logInContainer.classList.remove("disable");
+  indexHeader.classList.remove("disable");
+  const loginForm = document.querySelector(".login_form form");
+  enableFormErrorReset(loginForm);
 }
 
 window.addEventListener("load", () => {
-    const indexBody = document.getElementById("index_body");
-    const logoContainer = document.getElementById("logo_container");
-    const pageContent = document.querySelector(".page_content");
+  const indexBody = document.getElementById("index_body");
+  const logoContainer = document.getElementById("logo_container");
+  const pageContent = document.querySelector(".page_content");
 
-setTimeout(() => {
+  setTimeout(() => {
     indexBody.classList.add("is_loaded");
     logoContainer.classList.add("is_in_corner");
-    
+
     pageContent.classList.add("is_visible");
-}, 1000);
+  }, 1000);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.renderIcons) window.renderIcons(document);
 
-  document.querySelectorAll(".input_box").forEach(box => {
+  document.querySelectorAll(".input_box").forEach((box) => {
     initPasswordToggle(box);
   });
 });
 
-/** 
+/**
  * This Function is used to add a User to the path users in the Database
- *  
-*/
+ *
+ */
 async function addUser() {
   if (!passwordsMatch()) {
     showSignupPasswordError();
@@ -212,9 +227,7 @@ async function addUser() {
 function userExists(email) {
   if (!window.users || typeof window.users !== "object") return false;
 
-  return Object.values(window.users).some(user =>
-    user?.email === email
-  );
+  return Object.values(window.users).some((user) => user?.email === email);
 }
 
 function passwordsMatch() {
@@ -245,10 +258,8 @@ function showSignupSuccessToast() {
   overlay.setAttribute("aria-hidden", "false");
 
   // nach "slide in" + 1s Pause Login aktivieren
-  const slideMs = parseInt(getComputedStyle(document.documentElement)
-    .getPropertyValue("--signup_success_slide_duration"), 10) || 600;
-  const holdMs = parseInt(getComputedStyle(document.documentElement)
-    .getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
+  const slideMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
+  const holdMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
 
   window.setTimeout(() => {
     // optional: Toast wieder ausblenden
@@ -269,7 +280,7 @@ function resetSignupForm() {
   if (!form) return;
 
   // Inputs leeren
-  form.querySelectorAll("input").forEach(input => {
+  form.querySelectorAll("input").forEach((input) => {
     if (input.type === "checkbox") {
       input.checked = false;
     } else {
@@ -278,9 +289,7 @@ function resetSignupForm() {
   });
 
   // Error-Zustände entfernen
-  form.querySelectorAll(".has_error").forEach(el =>
-    el.classList.remove("has_error")
-  );
+  form.querySelectorAll(".has_error").forEach((el) => el.classList.remove("has_error"));
 
   // Warning-Text ausblenden
   const warning = form.querySelector("#warning_signup_failed");

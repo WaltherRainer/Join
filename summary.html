@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles/style_top_menu.css"/>
+    <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_summary.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
@@ -26,93 +26,103 @@
 </head>
 
 <body data-page="summary" onload="initSummary()">
-  <div class="display_grid">
-    <header class="header_join">
-      <div w3-include-html="partials/top_menu.html"></div>
-    </header>
+    <div class="display_grid">
+        <header class="header_join">
+            <div w3-include-html="partials/top_menu.html"></div>
+        </header>
 
-    <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
+        <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
 
 
 
-    <main class="summary_main">
-        <div class="title_box">
-            <div class="summary_title">Join 360</div>
-            <div class="summary_subtitle">Key Metrics at a glance</div>
-        </div>
-
-        <div class="container_of_a_lot_boxes">
-            <!-- linker teil -->
-            <div class="summary_left_part">
-                <!-- to do & done -->
-                <div class="todo_done_box">
-                    <!-- To-do box -->
-                    <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
-                        <span class="svg-icon" data-icon="editPencilBig" data-w="69" data-h="69"></span>
-                        <div class="todo_box">
-                            <p class="big_numbers">1</p>
-                            <p>To-do</p>
-                        </div>
-                    </div>
-                    <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
-
-                        <span class="svg-icon" data-icon="confTickBig" data-w="69" data-h="69"></span>
-
-                        <div class="todo_box">
-                            <p class="big_numbers">1</p>
-                            <p>Done</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Urgent box -->
-                <div class="urgent_box_main hover_card " style="background-color: var(--div_hover_main);">
-                    <div class="urgent_box_left">
-                        <span class="svg-icon" data-icon="prioUrgentBig" data-w="60" data-h="60"></span>
-                        <div class="urgent_box">
-                            <p class="big_numbers">1</p>
-                            <p>Urgent</p>
-                        </div>
-                    </div>
-                    <div class="urgent_box_right">
-                        <p class="deadline">October 16, 2022</p>
-                        <p>Upcoming Deadline</p>
-                    </div>
-                </div>
-                <!-- 3 Tasks boxes -->
-                <div class="task_boxes">
-                    <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                        <p class="big_numbers">5</p>
-                        <p>Tasks in</p>
-                        <p>Board</p>
-                    </div>
-                    <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                        <p class="big_numbers">2</p>
-                        <p>Tasks in</p>
-                        <p>Progress</p>
-                    </div>
-                    <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                        <p class="big_numbers">2</p>
-                        <p>Awaiting</p>
-                        <p>feedback</p>
-                    </div>
-                </div>
+        <main class="summary_main">
+            <div class="title_box">
+                <div class="summary_title">Join 360</div>
+                <div class="summary_subtitle">Key Metrics at a glance</div>
             </div>
 
-            <div class="greeting">
-                <p id="greetingDay">Good morning,</p>
-                <p class="greeting_name" id="greetingName"></p>
-            </div>
+            <div class="container_of_a_lot_boxes">
+                <!-- linker teil -->
+                <div class="summary_left_part">
+                    <!-- to do & done -->
+                    <div class="todo_done_box">
+                        <!-- To-do box -->
+                        <a href="./board.html">
+                            <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
+                                <span class="svg-icon" data-icon="editPencilBig" data-w="69" data-h="69"></span>
+                                <div class="todo_box">
+                                    <p class="big_numbers">1</p>
+                                    <p>To-do</p>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="./board.html">
+                            <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
+                                <span class="svg-icon" data-icon="confTickBig" data-w="69" data-h="69"></span>
+                                <div class="todo_box">
+                                    <p class="big_numbers">1</p>
+                                    <p>Done</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
 
-        </div>
-    </main>
-    <script>
-    w3.includeHTML(() => {
-        if (window.renderIcons) window.renderIcons(document);
-        if (window.initPage) window.initPage();
-        if (window.setActiveNavLink) window.setActiveNavLink();
-    });
-    </script>
+                    <!-- Urgent box -->
+                    <a href="./board.html">
+                        <div class="urgent_box_main hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="urgent_box_left">
+                                <span class="svg-icon" data-icon="prioUrgentBig" data-w="60" data-h="60"></span>
+                                <div class="urgent_box">
+                                    <p class="big_numbers">1</p>
+                                    <p>Urgent</p>
+                                </div>
+                            </div>
+                            <div class="urgent_box_right">
+                                <p class="deadline">October 16, 2022</p>
+                                <p>Upcoming Deadline</p>
+                            </div>
+                        </div>
+                    </a>
+                    <!-- 3 Tasks boxes -->
+                    <div class="task_boxes">
+                        <a href="./board.html">
+                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                                <p class="big_numbers">5</p>
+                                <p>Tasks in</p>
+                                <p>Board</p>
+                            </div>
+                        </a>
+                        <a href="./board.html">
+                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                                <p class="big_numbers">2</p>
+                                <p>Tasks in</p>
+                                <p>Progress</p>
+                            </div>
+                        </a>
+                        <a href="./board.html">
+                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                                <p class="big_numbers">2</p>
+                                <p>Awaiting</p>
+                                <p>feedback</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="greeting">
+                    <p id="greetingDay">Good morning,</p>
+                    <p class="greeting_name" id="greetingName"></p>
+                </div>
+
+            </div>
+        </main>
+        <script>
+            w3.includeHTML(() => {
+                if (window.renderIcons) window.renderIcons(document);
+                if (window.initPage) window.initPage();
+                if (window.setActiveNavLink) window.setActiveNavLink();
+            });
+        </script>
 
 </body>
 

@@ -17,22 +17,43 @@ function w3includeHTML(cb) {
     file = elmnt.getAttribute("w3-include-html");
     if (file) {
       xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
+      xhttp.onreadystatechange = function () {
         if (this.readyState == 4) {
-          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          if (this.status == 200) {
+            elmnt.innerHTML = this.responseText;
+          }
+          if (this.status == 404) {
+            elmnt.innerHTML = "Page not found.";
+          }
           elmnt.removeAttribute("w3-include-html");
           w3includeHTML(cb);
         }
-      }      
+      };
       xhttp.open("GET", file, true);
       xhttp.send();
       return;
     }
   }
   if (cb) cb();
-};
+}
 
+/**
+ * Initializes the global user data exactly once and returns a shared promise.
+ *
+ * If the user data has not yet been loaded, this function triggers an
+ * asynchronous request to fetch it and stores both the resulting data
+ * and the associated promise on the global `window` object. Subsequent
+ * calls return the same promise to prevent duplicate loading.
+ *
+ * In case the loading process fails, the cached promise is reset so that
+ * a future call can retry the initialization.
+ *
+ * @function initUsersLoading
+ * @returns {Promise<Object>} A promise that resolves to the loaded users object.
+ *
+ * @throws {Error} Propagates any error thrown by {@link loadData} during
+ * the loading process.
+ */
 function initUsersLoading() {
   if (!window.usersReady) {
     window.usersReady = (async () => {
@@ -110,7 +131,7 @@ function renderAvatar(activeUserId, activeUserName) {
 }
 
 function toggleUserMenu() {
-  let userMenu = document.getElementById('user_menu');
+  let userMenu = document.getElementById("user_menu");
   console.log(userMenu);
   if (!userMenu) return;
   userMenu.classList.toggle("d_none");
@@ -149,8 +170,8 @@ function wireContactActionsGlobalOnce() {
 }
 
 function editContactOverlayToggle() {
-    const overlay = document.getElementById('editContactOverlay');
-    overlay.classList.toggle('active');
+  const overlay = document.getElementById("editContactOverlay");
+  overlay.classList.toggle("active");
 }
 
 window.initPage = async function initPage() {
@@ -179,7 +200,7 @@ window.initPage = async function initPage() {
 
   if (page === "summary") {
     // falls du später Summary init hast
-    if (typeof loadSummary === "function") loadSummary();  
+    if (typeof loadSummary === "function") loadSummary();
     if (typeof loadTasks === "function") await loadTasks();
     if (typeof renderSummary === "function") renderSummary();
     return;
@@ -193,17 +214,12 @@ window.initPage = async function initPage() {
     if (typeof initBoardModalButton === "function") initBoardModalButton();
     return;
   }
-
-}
+};
 
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");
 
-  document.querySelectorAll(".nav_link").forEach(link => {
-    link.classList.toggle(
-      "active",
-      link.dataset.page === page
-    );
+  document.querySelectorAll(".nav_link").forEach((link) => {
+    link.classList.toggle("active", link.dataset.page === page);
   });
 }
-

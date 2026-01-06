@@ -45,6 +45,10 @@
   color: var(--blue);
 }
 
+.summary_left_part a {  
+  color: var(--blue);
+}
+
 .todo_done_box {
   display: flex;
   align-items: center;
