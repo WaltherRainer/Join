@@ -67,7 +67,7 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
   `
 }
 
-function taskItemTemplate(task) {
+function taskItemTemplate(task, users) {
   return `
     <div class="t_task" draggable="true" ondragstart="dragStart(event)" data-task-id="${task.id}">
           <div class="t_category">${task.category}</div>
@@ -80,7 +80,7 @@ function taskItemTemplate(task) {
               <div class="t_sub_task_count">${task.subTasks} Subtasks</div>
           </div>
           <div class="t_assigned_priotity">
-              <div class="t_assigned_to"></div>
+              <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
               <div class="t_priority">${task.priority}</div>
           </div>
       </div>
@@ -92,7 +92,7 @@ function noTaskTemplate(text) {
   <div class="no_task"><p>${text}</p></div>
   `; 
 }
-// ${fillSubTasksBar(task.subTasks)} ${mapAssingnedTo(task.assignedTo)}
+// ${fillSubTasksBar(task.subTasks)} 
 
 window.userListItemTemplate = userListItemTemplate;
 

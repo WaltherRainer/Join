@@ -1,5 +1,12 @@
 
 
+async function loadTasks() {
+    tasks = await loadData('/tasks');
+    const users = await ensureUsersLoaded();
+    console.log(users);
+    loadTaskBoard(tasks, users);
+}
+
 function initBoardModalButton() {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
@@ -28,13 +35,13 @@ function statusContainerFor(status, containers) {
   return containers.toDoDiv; // fallback
 }
 
-function renderItems(items, containers) {
+function renderItems(items, containers, users) {
   containers.toDoDiv.innerHTML = "";
   containers.inProgressDiv.innerHTML = "";
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
   items.forEach(task => {
-    const taskHTML = taskItemTemplate(task);
+    const taskHTML = taskItemTemplate(task, users);
     const target = statusContainerFor(task.status, containers);
     target.insertAdjacentHTML('beforeend', taskHTML);
   });
@@ -48,11 +55,11 @@ function renderEmptyStates(containers) {
   if (isEmpty(containers.doneDiv)) containers.doneDiv.insertAdjacentHTML('beforeend', noTaskTemplate("No task Done"));
 }
 
-function loadTaskBoard(tasks) {
+function loadTaskBoard(tasks, users) {
   const containers = getBoardContainers();
   if (!containers) return;
   const items = returnArrayOfTasks(tasks);
-  renderItems(items, containers);
+  renderItems(items, containers, users);
   renderEmptyStates(containers);
 }
 
@@ -64,4 +71,55 @@ const returnArrayOfTasks = (tasks) => {
   } else {
     return [];
   }
+}
+
+function findUserDataNameAndColor(item, users = window.users || {}) {
+  if (!item) return null;
+
+  // item can be a userId (string) or an object with userId/id/givenName/name
+  if (typeof item === 'string') {
+    const user = users?.[item];
+    if (!user) return null; // skip undefined user ids
+    const givenName = user.givenName || user.name;
+    if (!givenName) return null; // no displayable name
+    return { initials: initialsFromGivenName(givenName, ''), bgColor: colorIndexFromUserId(item) };
+  }
+
+  if (typeof item === 'object') {
+    const userId = item.userId || item.id;
+    const givenName = item.givenName || item.name;
+    if (givenName) {
+      return { initials: initialsFromGivenName(givenName, ''), bgColor: colorIndexFromUserId(userId || '') };
+    }
+    if (userId && users?.[userId]) {
+      const user = users[userId];
+      const name = user.givenName || user.name;
+      if (name) return { initials: initialsFromGivenName(name, ''), bgColor: colorIndexFromUserId(userId) };
+    }
+  }
+
+  return null; // nothing usable
+}
+
+function mapAssignedTo(assignedTo, users = window.users || {}) {
+  if (!assignedTo || !Array.isArray(assignedTo)) return "";
+  const entries = assignedTo
+    .map(item => findUserDataNameAndColor(item, users))
+    .filter(Boolean);
+
+  if (entries.length === 0) return "";
+
+  const maxVisible = 3;
+  const visible = entries.slice(0, maxVisible)
+    .map(({ initials, bgColor }) => `
+      <span class="user_avatar_small" style="background-color: var(--user_c_${bgColor});">${escapeHtml(initials)}</span>
+    `)
+    .join("");
+
+  if (entries.length > maxVisible) {
+    const remaining = entries.length - maxVisible;
+    return visible + `\n      <span class="user_avatar_more">+${remaining}</span>`;
+  }
+
+  return visible;
 }

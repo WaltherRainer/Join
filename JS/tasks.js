@@ -142,11 +142,6 @@ function getSubtasksArray() {
   }
 }
 
-async function loadTasks() {
-    tasks = await loadData('/tasks');
-    console.log(tasks);
-    loadTaskBoard(tasks);
-}
 
 function getAssignedToIds() {
   const hidden = document.getElementById("assigned_to_input");
