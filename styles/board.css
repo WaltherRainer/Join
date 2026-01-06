@@ -125,7 +125,7 @@ section.task_section {
     color: #a8a8a8;
     font-weight: 400;
 }
-.task {
+.t_task {
     display: flex;
     flex-direction: column;
     background-color: var(--background-color);
@@ -156,7 +156,7 @@ section.task_section {
     align-items: center;
     width: 100%;
 }
-.t_sub_task {
+.t_sub_task_bar {
     background-color: var(--logo-light-blue);
     border-radius: 16px;
     margin-right: 10px;

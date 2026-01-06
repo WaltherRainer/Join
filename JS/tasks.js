@@ -145,6 +145,7 @@ function getSubtasksArray() {
 async function loadTasks() {
     tasks = await loadData('/tasks');
     console.log(tasks);
+    loadTaskBoard(tasks);
 }
 
 function getAssignedToIds() {
