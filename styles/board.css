@@ -125,7 +125,7 @@ section.task_section {
     color: #a8a8a8;
     font-weight: 400;
 }
-.task {
+.t_task {
     display: flex;
     flex-direction: column;
     background-color: var(--background-color);
@@ -156,7 +156,7 @@ section.task_section {
     align-items: center;
     width: 100%;
 }
-.t_sub_task {
+.t_sub_task_bar {
     background-color: var(--logo-light-blue);
     border-radius: 16px;
     margin-right: 10px;
@@ -167,7 +167,7 @@ section.task_section {
     display: flex;
     flex-direction: row;
 }
-.t_assigned_to p{
+.t_assigned_to p, .t_assigned_to span{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -178,6 +178,21 @@ section.task_section {
     margin-left: -8px;
     height: 32px;
     width: 32px;
+    font-weight: 600;
+}
+
+.t_assigned_to .user_avatar_more{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--border_color);
+    color: var(--text-color);
+    border: 1px solid var(--border_color);
+    border-radius: 20px;
+    margin-left: -8px;
+    height: 32px;
+    width: 32px;
+    font-weight: 600;
 }
 
 .board_help_div {

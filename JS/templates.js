@@ -67,6 +67,33 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
   `
 }
 
+function taskItemTemplate(task, users) {
+  return `
+    <div class="t_task" draggable="true" ondragstart="dragStart(event)" data-task-id="${task.id}">
+          <div class="t_category">${task.category}</div>
+          <div class="t_title_description">
+              <p class="t_title">${task.titel}</p>
+              <p class="t_description">${task.description}</p>
+          </div>
+           <div class="t_sub_tasks">
+              <div class="t_sub_task_bar"></div>
+              <div class="t_sub_task_count">${task.subTasks} Subtasks</div>
+          </div>
+          <div class="t_assigned_priotity">
+              <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
+              <div class="t_priority">${task.priority}</div>
+          </div>
+      </div>
+  `
+}
+
+function noTaskTemplate(text) { 
+  return `
+  <div class="no_task"><p>${text}</p></div>
+  `; 
+}
+// ${fillSubTasksBar(task.subTasks)} 
+
 window.userListItemTemplate = userListItemTemplate;
 
 /**
