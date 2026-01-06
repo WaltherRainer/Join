@@ -213,12 +213,12 @@ function openAddTaskModal() {
   if (!modal || !host) return;
   ensureAddTaskFormLoaded(async (form) => {
     host.appendChild(form);
-    if (typeof ensureUsersLoaded === "function") await ensureUsersLoaded();
-    if (typeof initAssignedToDropdown === "function") initAssignedToDropdown(users);
-    if (typeof initTaskTypeDropdown === "function") initTaskTypeDropdown(TASK_CATEGORIES);
-    if (typeof initSubtasksInput === "function") initSubtasksInput();
-    if (typeof bindAddTaskFormSubmitOnce === "function") bindAddTaskFormSubmitOnce();
-    renderIcons(modal); // oder dein Modal-Root
+    await ensureUsersLoaded();
+    initAssignedToDropdown(users);
+    initTaskTypeDropdown(TASK_CATEGORIES);
+    initSubtasksInput();
+    bindAddTaskFormSubmitOnce();
+    renderIcons(modal);
     modal.showModal();
   });
 }

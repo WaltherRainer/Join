@@ -89,7 +89,7 @@ function prioUrgentBig({ size = 60 } = {}) {
   });
 }
 
-function addUserIcon({ width = 18, height = 18, color } = {}) {
+function addUserIcon({ width = 20, height = 18, color } = {}) {
   return iconSvg({
     width,
     height,
@@ -400,9 +400,7 @@ const ICONS = {
   prioLow,
   editPencilBig,
   prioUrgentBig,
-  confTickBig,
-  phone,
-  checkMark,
+  confTickBig, phone, checkMark,
 };
 
 function renderIcons(root = document) {
