@@ -9,34 +9,6 @@ const logInContainer = document.getElementById("login_form");
 const indexHeader = document.getElementById("index_header");
 let usersReady = null;
 
-function w3includeHTML(cb) {
-  var z, i, elmnt, file, xhttp;
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            elmnt.innerHTML = this.responseText;
-          }
-          if (this.status == 404) {
-            elmnt.innerHTML = "Page not found.";
-          }
-          elmnt.removeAttribute("w3-include-html");
-          w3includeHTML(cb);
-        }
-      };
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      return;
-    }
-  }
-  if (cb) cb();
-}
-
 /**
  * Initializes the global user data exactly once and returns a shared promise.
  *
@@ -174,6 +146,23 @@ function editContactOverlayToggle() {
   overlay.classList.toggle("active");
 }
 
+/**
+ * Initializes page-specific logic based on the current page identifier.
+ *
+ * Determines the active page via the `data-page` attribute on the `<body>`
+ * element and conditionally executes the corresponding initialization
+ * routines. Each page branch is isolated and returns early to avoid
+ * unintended fall-through execution.
+ *
+ * The function defensively checks for the existence of optional initializer
+ * functions before calling them, allowing flexible module loading and
+ * partial feature availability.
+ *
+ * @async
+ * @function initPage
+ * @returns {Promise<void>} Resolves once all required initialization steps
+ * for the current page have completed.
+ */
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
 
@@ -194,12 +183,10 @@ window.initPage = async function initPage() {
     initTaskTypeDropdown(TASK_CATEGORIES);
     initSubtasksInput();
     bindAddTaskFormSubmitOnce();
-
     return;
   }
 
   if (page === "summary") {
-    // falls du später Summary init hast
     if (typeof loadSummary === "function") loadSummary();
     if (typeof loadTasks === "function") await loadTasks();
     if (typeof renderSummary === "function") renderSummary();
@@ -223,7 +210,6 @@ function setActiveNavLink() {
     link.classList.toggle("active", link.dataset.page === page);
   });
 }
-
 
 /**
  * Universeller Overlay-Toast: visible -> slide-in animation -> hold -> hide -> callback
@@ -249,8 +235,7 @@ function showToastOverlay(overlayId, opts = {}) {
 
   const visibleClass = opts.visibleClass || "is_visible";
   const animateClass = opts.animateClass || "is_animating";
-  const boxSelector =
-    opts.boxSelector || "[data-toast-box], .signup_success_box, .task_success_box";
+  const boxSelector = opts.boxSelector || "[data-toast-box], .signup_success_box, .task_success_box";
 
   const box = overlay.querySelector(boxSelector);
   if (!box) {
@@ -259,10 +244,7 @@ function showToastOverlay(overlayId, opts = {}) {
   }
 
   // Hold: Options -> data-attr -> default
-  const holdMs =
-    Number.isFinite(opts.holdMs)
-      ? opts.holdMs
-      : parseInt(overlay.dataset.holdMs, 10) || 1000;
+  const holdMs = Number.isFinite(opts.holdMs) ? opts.holdMs : parseInt(overlay.dataset.holdMs, 10) || 1000;
 
   // laufende Timer/Listener sauber weg
   if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);
@@ -306,4 +288,32 @@ function showToastOverlay(overlayId, opts = {}) {
   overlay._toastCleanup = () => {
     box.removeEventListener("animationend", onAnimEnd);
   };
+}
+
+function w3includeHTML(cb) {
+  var z, i, elmnt, file, xhttp;
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+          if (this.status == 200) {
+            elmnt.innerHTML = this.responseText;
+          }
+          if (this.status == 404) {
+            elmnt.innerHTML = "Page not found.";
+          }
+          elmnt.removeAttribute("w3-include-html");
+          w3includeHTML(cb);
+        }
+      };
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      return;
+    }
+  }
+  if (cb) cb();
 }

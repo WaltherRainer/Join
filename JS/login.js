@@ -4,7 +4,6 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
-
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
   if (!holder) return;
@@ -125,7 +124,6 @@ async function userLogin(e) {
     warningLogin?.classList.add("visible");
   }
 }
-
 
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
@@ -301,6 +299,6 @@ function resetSignupForm() {
   warning?.classList.remove("visible");
 }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("login_form")?.addEventListener("submit", userLogin);
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("login_form")?.addEventListener("submit", userLogin);
 });
