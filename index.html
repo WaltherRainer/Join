@@ -59,7 +59,7 @@
                 <div class="form_box login">
                     <h2>Log in</h2>
                     <div class="underline_login"></div>
-                    <form onsubmit="userLogin(event); return false">
+                    <form id="login_form">
                         <div class="input_box">
                             <input id="email" type="text" required placeholder=" ">
                             <label for="email">Email</label>
@@ -78,7 +78,7 @@
                         <span class="warning_text" id="warning_login_failed">Check your Email and password. Please try again.</span>
                         <div class="btn_div">
                             <button class="default-button">Log in</button>
-                            <button onclick="guestLogin()" class="secondary-button">Guest Log in</button>
+                            <button type="button" onclick="guestLogin()" class="secondary-button">Guest Log in</button>
                         </div>
                     </form>
                 </div>

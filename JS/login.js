@@ -4,6 +4,14 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("loginForm");
+  if (!form) return;
+
+  form.addEventListener("submit", userLogin);
+});
+
+
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
   if (!holder) return;
@@ -109,20 +117,27 @@ function initPasswordToggle(container) {
  */
 async function userLogin(e) {
   e.preventDefault();
+
+  const form = e.currentTarget; // jetzt zuverlässig, weil Listener am Form hängt
+  if (!form) return;
+
   await initUsersLoading();
-  const form = e.currentTarget;
+
   const emailInput = form.querySelector("#email");
   const passwordInput = form.querySelector("input[data-password]");
   const warningLogin = form.querySelector("#warning_login_failed");
   if (!emailInput || !passwordInput) return;
+
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
+
   if (accessGranted(emailValue, passwordValue)) {
-    window.location.replace("start.html");
+    window.location.replace("summary.html");
   } else {
     warningLogin?.classList.add("visible");
   }
 }
+
 
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
