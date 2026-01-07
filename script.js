@@ -146,6 +146,20 @@ function editContactOverlayToggle() {
   overlay.classList.toggle("active");
 }
 
+document.getElementById("editContactOverlay").addEventListener("click", () => {
+  editContactOverlayToggle();
+});
+
+document.querySelector(".edit_contact_overlay").addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    document.getElementById("editContactOverlay").classList.remove("active");
+  }
+});
+
 /**
  * Initializes page-specific logic based on the current page identifier.
  *
