@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="styles/style_subtask.css" />
     <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/style_index.css" />
+    <link rel="stylesheet" href="styles/add_task_style.css" />
     <link rel="stylesheet" href="./styles/board.css">
     <script src="./JS/utils.js" defer></script>
     <script src="./JS/board.js" defer></script>
@@ -166,15 +167,24 @@
             </div>
         </section>
     </main>
-    </div>
+</div>
 
-    <dialog id="addTaskModal" class="modal">
-        <div class="modal_content">
-            <button type="button" class="modal_close" aria-label="Close">×</button>
-            <div id="addTaskModalHost"></div>
-        </div>
-    </dialog>
-    <div id="addTaskLoader" style="display:none;"></div>
+<dialog id="addTaskModal" class="modal">
+  <div class="modal_content">
+    <button type="button" class="modal_close" aria-label="Close">×</button>
+    <div id="addTaskModalHost"></div>
+  </div>
+
+  <!-- ✅ Task added Success Toast (inside dialog / top-layer) -->
+  <div class="task_success_overlay" id="task_modal_success_overlay" aria-hidden="true" data-hold-ms="900">
+    <div class="task_success_box" data-toast-box role="status" aria-live="polite">
+      Task added to Board
+    </div>
+  </div>
+</dialog>
+
+<div id="addTaskLoader" style="display:none;"></div>
+
 
     <script>
         w3.includeHTML(() => {

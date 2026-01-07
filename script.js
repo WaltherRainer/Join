@@ -262,7 +262,7 @@ function showToastOverlay(overlayId, opts = {}) {
   const holdMs =
     Number.isFinite(opts.holdMs)
       ? opts.holdMs
-      : parseInt(overlay.dataset.holdMs, 10) || 1000;
+      : parseInt(overlay.dataset.holdMs, 10) || 10000;
 
   // laufende Timer/Listener sauber weg
   if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);

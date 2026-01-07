@@ -1,4 +1,12 @@
 let parkedHost = null;
+const statusTypes = {
+  0 : "To Do",
+  1 : "In Progress",
+  2 : "Await Feedback",
+  3 : "Done",
+  4 : "Cancelled"
+};
+
 const TASK_CATEGORIES = [
   { value: 'technical_task', label: 'Technical Task' },
   { value: 'user_story', label: 'User Story' }
@@ -9,9 +17,11 @@ function initAssignedToDropdown(usersData) {
   if (!ui.root || isInitialized(ui.root)) return;
   if (!usersData || typeof usersData !== "object") return;
   const state = { usersData, selected: new Set(), ui };
+  ui.root._assignedState = state;
   wireDropdownEvents(state);
   renderUserList(state);
 }
+
 
 function getAssignedToUi() {
   const root = document.getElementById("assigned_to");
@@ -131,12 +141,27 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+// function getSubtasksArray() {
+//   const hidden = document.getElementById("subtasks_input");
+//   if (!hidden || !hidden.value) return [];
+//   try {
+//     const arr = JSON.parse(hidden.value);
+//     return Array.isArray(arr) ? arr : [];
+//   } catch {
+//     return [];
+//   }
+// }
+
 function getSubtasksArray() {
   const hidden = document.getElementById("subtasks_input");
   if (!hidden || !hidden.value) return [];
   try {
     const arr = JSON.parse(hidden.value);
-    return Array.isArray(arr) ? arr : [];
+    if (!Array.isArray(arr)) return [];
+    return arr
+      .filter(x => x && typeof x === "object")
+      .map(x => ({ title: String(x.title ?? "").trim(), done: Boolean(x.done) }))
+      .filter(x => x.title.length > 0);
   } catch {
     return [];
   }
@@ -154,28 +179,72 @@ function getAssignedToIds() {
   }
 }
 
-async function addTask() {
+async function addTask({ toastId = "task_success_overlay", taskStatus = 0, afterDone, refreshAfter = false } = {}) {
   const taskTitel   = document.getElementById("task_titel");
   const taskDescr   = document.getElementById("task_descr");
-  const taskCat     = document.getElementById("task_cat");
+  const taskType     = document.getElementById("task_type");
   const taskPrio    = document.querySelector('input[name="priority"]:checked');
   const taskDueDate = document.getElementById("task_due_date");
+
   const subTasks   = getSubtasksArray();
   const assignedTo = getAssignedToIds();
+
   const newTaskObj = {
     titel: taskTitel?.value?.trim() || "",
     description: taskDescr?.value?.trim() || "",
-    category: taskCat?.value || "",
+    type: taskType?.value || "",
+    status: taskStatus, // Status 0 = ToDo, Status 1 = In Progress, Status 2 = Await Feedback, Status 3 = Done, Status 4 = Cancelled
     priority: taskPrio?.value || "",
     finishDate: taskDueDate?.value || "",
     assignedTo,
     subTasks
   };
+
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
-  showToastOverlay("task_success_overlay");
+
+  showToastOverlay(toastId, {
+    onDone: () => {
+      if (typeof afterDone === "function") afterDone();
+      if (refreshAfter) loadTasks();
+    }
+  });
+
   clearTaskForm();
+}
+
+function activateBoard() {
+  window.location.replace("board.html");
+}
+
+async function addTaskFromAddTaskPage() {
+  await addTask({
+    toastId: "task_success_overlay",
+    afterDone: activateBoard,
+    refreshAfter: false,
+  });
+}
+
+function afterTaskAddedInModal() {
+  const modal = document.querySelector(".add_task_modal");
+  modal?.classList.remove("is_background");
+
+  closeAddTaskModal(); // dein bestehender Close
   loadTasks();
+}
+
+async function addTaskFromBoardModal() {
+  bringModalToBackground();
+
+  await addTask({
+    toastId: "task_modal_success_overlay",
+    afterDone: afterTaskAddedInModal,
+  });
+}
+
+function bringModalToBackground() {
+  const modal = document.querySelector(".add_task_modal");
+  modal?.classList.add("is_background");
 }
 
 function getModalEls() {
@@ -212,6 +281,7 @@ function openAddTaskModal() {
     host.appendChild(form);
     await ensureUsersLoaded();
     initAssignedToDropdown(users);
+    resetAssignedToDropdown();
     initTaskTypeDropdown(TASK_CATEGORIES);
     initSubtasksInput();
     bindAddTaskFormSubmitOnce();
@@ -349,16 +419,41 @@ function resetPriorityButtons() {
 }
 
 function resetAssignedToDropdown() {
-  const placeholder = document.getElementById("assigned_to_placeholder");
-  const valueEl = document.getElementById("assigned_to_value");
-  const input = document.getElementById("assigned_to_input");
-  if (placeholder) placeholder.hidden = false;
-  if (valueEl) {
-    valueEl.hidden = true;
-    valueEl.textContent = "";
+  const ui = getAssignedToUi();
+  if (!ui.root) return;
+
+  const state = ui.root._assignedState;
+
+  // ✅ Wenn wir State haben: vollständig resetten
+  if (state) {
+    state.selected.clear();
+
+    // visuell: alle LIs deselektieren
+    state.ui.list?.querySelectorAll(".is-selected").forEach(li => {
+      li.classList.remove("is-selected");
+    });
+
+    // UI + hiddenInput korrekt zurücksetzen
+    applySelectionUi(state.ui, [], state.selected);
+
+    // Avatare leeren über vorhandene Funktion
+    renderAssignedAvatars(state.selected, state.usersData);
+
+    return;
   }
-  if (input) input.value = "";
+
+  // Fallback (falls init noch nicht gelaufen ist)
+  if (ui.placeholder) ui.placeholder.hidden = false;
+  if (ui.valueEl) {
+    ui.valueEl.hidden = true;
+    ui.valueEl.textContent = "";
+  }
+  if (ui.hiddenInput) ui.hiddenInput.value = "";
+
+  const avatarContainer = document.getElementById("assigned_avatar_container");
+  if (avatarContainer) avatarContainer.innerHTML = "";
 }
+
 
 function resetTaskTypeDropdownUi() {
   const root = document.getElementById("task_type_select");
@@ -385,14 +480,22 @@ function bindAddTaskFormSubmitOnce() {
   if (!form) return;
   if (form.dataset.submitBound === "1") return;
   form.dataset.submitBound = "1";
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-      await addTask();
+      const page = document.body.dataset.page;
+
+      if (page === "board") {
+        await addTaskFromBoardModal();
+      } else {
+        await addTaskFromAddTaskPage();
+      }
     } catch (err) {
       console.error("addTask failed", err);
     }
   });
 }
+
 
 window.initAssignedToDropdown = initAssignedToDropdown;

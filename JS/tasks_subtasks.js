@@ -1,30 +1,54 @@
 function initSubtasksInput() {
-    const form = document.getElementById("addTaskForm");
-    if (form?.dataset.subtasksInit === "1") return;
-    form.dataset.subtasksInit = "1";
+  const form = document.getElementById("addTaskForm");
+  if (form?.dataset.subtasksInit === "1") return;
+  form.dataset.subtasksInit = "1";
 
-    const input = document.getElementById("subtasks");
-    const listEl = document.getElementById("subtasks_list");
-    const hidden = document.getElementById("subtasks_input");
-    if (!input || !listEl) return;
+  const input = document.getElementById("subtasks");
+  const listEl = document.getElementById("subtasks_list");
+  const hidden = document.getElementById("subtasks_input");
+  if (!input || !listEl || !hidden) return;
 
-    const root = input.closest(".form_row") || document;
-    const btnClear = root.querySelector(".subtasks_clear");
-    const btnAdd = root.querySelector(".subtasks_add");
-    if (!btnClear || !btnAdd) return;
+  const root = input.closest(".form_row") || document;
+  const btnClear = root.querySelector(".subtasks_clear");
+  const btnAdd = root.querySelector(".subtasks_add");
+  if (!btnClear || !btnAdd) return;
 
-    const ui = { input, listEl, hidden };
-    const state = { subtasks: [], editingIndex: null, ui };
+  const ui = { input, listEl, hidden };
 
-    btnClear.innerHTML = delCross({ width: 18, height: 18 });
-    btnAdd.innerHTML = addCross({ width: 18, height: 18 });
-    btnClear.onclick = () => clearSubtaskInput(state);
-    btnAdd.onclick = () => addSubtaskFromInput(state);
-    input.onkeydown = (e) => onSubtaskKeydown(state, e);
+  // ✅ subtasks sind jetzt Objekte
+  const state = { subtasks: [], editingIndex: null, ui };
 
-    wireSubtaskListEvents(state);
-    renderSubtasks(state);
-    syncSubtasksHidden(state);
+  btnClear.innerHTML = delCross({ width: 18, height: 18 });
+  btnAdd.innerHTML = addCross({ width: 18, height: 18 });
+  btnClear.onclick = () => clearSubtaskInput(state);
+  btnAdd.onclick = () => addSubtaskFromInput(state);
+  input.onkeydown = (e) => onSubtaskKeydown(state, e);
+
+  wireSubtaskListEvents(state);
+
+  // ✅ falls hidden schon was enthält (z.B. beim Re-Open), laden
+  state.subtasks = readSubtasksHidden(state) || [];
+  renderSubtasks(state);
+  syncSubtasksHidden(state);
+}
+
+function readSubtasksHidden(state) {
+  const hidden = state.ui.hidden;
+  if (!hidden?.value) return [];
+  try {
+    const arr = JSON.parse(hidden.value);
+    if (!Array.isArray(arr)) return [];
+    // ✅ strikt: nur {title, done}
+    return arr
+      .filter(x => x && typeof x === "object")
+      .map(x => ({
+        title: String(x.title ?? "").trim(),
+        done: Boolean(x.done),
+      }))
+      .filter(x => x.title.length > 0);
+  } catch {
+    return [];
+  }
 }
 
 function clearSubtaskInput(state) {
@@ -39,10 +63,12 @@ function onSubtaskKeydown(state, e) {
 }
 
 function addSubtaskFromInput(state) {
-  const text = state.ui.input.value.trim();
-  if (!text) return;
+  const title = state.ui.input.value.trim();
+  if (!title) return;
 
-  state.subtasks.push(text);
+  // ✅ Objekt statt String
+  state.subtasks.push({ title, done: false });
+
   state.ui.input.value = "";
   renderSubtasks(state);
   syncSubtasksHidden(state);
@@ -77,33 +103,36 @@ function onSubtaskListKeydown(state, e) {
 
 function renderSubtasks(state) {
   state.ui.listEl.innerHTML = "";
-  state.subtasks.forEach((text, idx) => {
-    state.ui.listEl.appendChild(makeSubtaskLi(state, text, idx));
+
+  // ✅ subtask ist Objekt
+  state.subtasks.forEach((subtask, idx) => {
+    state.ui.listEl.appendChild(makeSubtaskLi(state, subtask, idx));
   });
 }
 
-function makeSubtaskLi(state, text, idx) {
+function makeSubtaskLi(state, subtask, idx) {
   const li = document.createElement("li");
   li.dataset.index = String(idx);
   if (state.editingIndex === idx) li.classList.add("is-editing");
 
-  li.appendChild(makeSubtaskMain(state, text, idx));
+  li.appendChild(makeSubtaskMain(state, subtask, idx));
   li.appendChild(makeSubtaskActions());
   return li;
 }
 
-function makeSubtaskMain(state, text, idx) {
+function makeSubtaskMain(state, subtask, idx) {
   if (state.editingIndex !== idx) {
     const span = document.createElement("span");
-    span.textContent = text;
+    span.textContent = subtask.title; // ✅
     return span;
   }
+
   const input = document.createElement("input");
   input.className = "subtask_edit";
   input.type = "text";
-  input.value = text;
+  input.value = subtask.title; // ✅
   input.addEventListener("click", (e) => e.stopPropagation());
-  input.addEventListener("blur", () => commitEdit(state)); // optional: blur speichert
+  input.addEventListener("blur", () => commitEdit(state));
   return input;
 }
 
@@ -143,17 +172,42 @@ function exitEditMode(state) {
   renderSubtasks(state);
 }
 
+// function commitEdit(state) {
+//     console.log("commitEdit", { editingIndex: state.editingIndex, len: state.subtasks.length });
+
+//   const input = state.ui.listEl.querySelector("li.is-editing input.subtask_edit");
+//   if (!input) return exitEditMode(state);
+
+//   const title = input.value.trim();
+//   if (!title) return;
+
+//   // ✅ Objekt aktualisieren
+//   state.subtasks[state.editingIndex].title = title;
+
+//   exitEditMode(state);
+//   syncSubtasksHidden(state);
+// }
+
 function commitEdit(state) {
+  // ✅ wenn kein gültiger Index: raus
+  const idx = state.editingIndex;
+  if (typeof idx !== "number" || idx < 0 || idx >= state.subtasks.length) {
+    return exitEditMode(state);
+  }
+
   const input = state.ui.listEl.querySelector("li.is-editing input.subtask_edit");
   if (!input) return exitEditMode(state);
 
-  const txt = input.value.trim();
-  if (!txt) return; 
+  const title = input.value.trim();
+  if (!title) return; // optional: leere nicht speichern
 
-  state.subtasks[state.editingIndex] = txt;
+  // ✅ Objekt existiert garantiert
+  state.subtasks[idx].title = title;
+
   exitEditMode(state);
   syncSubtasksHidden(state);
 }
+
 
 function deleteSubtask(state, idx) {
   state.subtasks.splice(idx, 1);

@@ -4,7 +4,9 @@
     flex-direction: column;
     align-items: center;
     background-color: var(--secondary-background-color);
-    height: calc(100dvh - 96px);
+    max-height: calc(100dvh - 96px);
+    overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
 }
 .board_head {

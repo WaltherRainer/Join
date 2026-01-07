@@ -238,6 +238,7 @@ label {
   /* Startposition: komplett rechts außerhalb */
   transform: translateX(100vw);
   opacity: 0;
+  overflow: hidden;
 }
 
 /* Backdrop */
