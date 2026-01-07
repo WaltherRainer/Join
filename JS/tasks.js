@@ -173,6 +173,7 @@ async function addTask() {
   };
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
+  showToastOverlay("task_success_overlay");
   clearTaskForm();
   loadTasks();
 }

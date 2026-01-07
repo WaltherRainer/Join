@@ -223,3 +223,87 @@ function setActiveNavLink() {
     link.classList.toggle("active", link.dataset.page === page);
   });
 }
+
+
+/**
+ * Universeller Overlay-Toast: visible -> slide-in animation -> hold -> hide -> callback
+ *
+ * Erwartet:
+ * - overlay bekommt Klassen: is_visible, is_animating
+ * - "box" im Overlay animiert per CSS, wenn overlay.is_animating gesetzt ist
+ *
+ * @param {string} overlayId
+ * @param {object} [opts]
+ * @param {string} [opts.boxSelector]   - CSS selector für die Box im Overlay (default: "[data-toast-box], .signup_success_box, .task_success_box")
+ * @param {number} [opts.holdMs]        - Standzeit nach Slide-In (default: data-hold-ms am Overlay oder 1000)
+ * @param {Function} [opts.onDone]      - Callback nach dem Ausblenden (z.B. activateLogIn)
+ * @param {string} [opts.visibleClass]  - default "is_visible"
+ * @param {string} [opts.animateClass]  - default "is_animating"
+ */
+function showToastOverlay(overlayId, opts = {}) {
+  const overlay = document.getElementById(overlayId);
+  if (!overlay) {
+    console.warn("Overlay nicht gefunden:", overlayId);
+    return;
+  }
+
+  const visibleClass = opts.visibleClass || "is_visible";
+  const animateClass = opts.animateClass || "is_animating";
+  const boxSelector =
+    opts.boxSelector || "[data-toast-box], .signup_success_box, .task_success_box";
+
+  const box = overlay.querySelector(boxSelector);
+  if (!box) {
+    console.warn("Toast-Box nicht gefunden in:", overlayId, "Selector:", boxSelector);
+    return;
+  }
+
+  // Hold: Options -> data-attr -> default
+  const holdMs =
+    Number.isFinite(opts.holdMs)
+      ? opts.holdMs
+      : parseInt(overlay.dataset.holdMs, 10) || 1000;
+
+  // laufende Timer/Listener sauber weg
+  if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);
+  if (overlay._toastCleanup) overlay._toastCleanup();
+
+  overlay.setAttribute("aria-hidden", "false");
+  overlay.classList.add(visibleClass);
+
+  // Reflow erzwingen, damit animation zuverlässig neu startet
+  // (wichtig wenn man denselben Toast schnell hintereinander zeigt)
+  void box.offsetWidth;
+
+  overlay.classList.add(animateClass);
+
+  const onAnimEnd = (ev) => {
+    // Nur reagieren, wenn die Box-Animation fertig ist (nicht ggf. child animations)
+    if (ev.target !== box) return;
+
+    box.removeEventListener("animationend", onAnimEnd);
+
+    overlay._toastTimer = window.setTimeout(() => {
+      overlay.classList.remove(animateClass, visibleClass);
+      overlay.setAttribute("aria-hidden", "true");
+
+      if (typeof opts.onDone === "function") {
+        opts.onDone();
+        return;
+      }
+
+      // Optionaler Fallback: data-on-done="activateLogIn"
+      const fnName = overlay.dataset.onDone;
+      if (fnName && typeof window[fnName] === "function") {
+        window[fnName]();
+      }
+    }, holdMs);
+  };
+
+  box.addEventListener("animationend", onAnimEnd);
+
+  // Cleanup merken (falls Toast während Animation neu getriggert wird)
+  overlay._toastCleanup = () => {
+    box.removeEventListener("animationend", onAnimEnd);
+  };
+}

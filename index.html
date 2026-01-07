@@ -55,7 +55,7 @@
             </div>
         </header>
         <main>
-            <div class="login_wrapper login_size login_form" id="login_form">
+            <div class="login_wrapper login_size login_form" id="login_wrapper">
                 <div class="form_box login">
                     <h2>Log in</h2>
                     <div class="underline_login"></div>
@@ -77,7 +77,7 @@
                         </div>
                         <span class="warning_text" id="warning_login_failed">Check your Email and password. Please try again.</span>
                         <div class="btn_div">
-                            <button class="default-button">Log in</button>
+                            <button type="submit" class="default-button">Log in</button>
                             <button type="button" onclick="guestLogin()" class="secondary-button">Guest Log in</button>
                         </div>
                     </form>
@@ -151,11 +151,16 @@
 <script src="./JS/templates.js"></script>
 
     <!-- Signup Success Toast -->
-    <div class="signup_success_overlay" id="signup_success_overlay" aria-hidden="true">
-    <div class="signup_success_box" role="status" aria-live="polite">
-        You Signed Up successfully
-    </div>
-    </div>
+<div class="signup_success_overlay"
+     id="signup_success_overlay"
+     aria-hidden="true"
+     data-hold-ms="1000"
+     data-on-done="activateLogIn">
+  <div class="signup_success_box" data-toast-box role="status" aria-live="polite">
+    Signup successful
+  </div>
+</div>
+
 
 </body>
 

@@ -349,3 +349,45 @@
 .single_select__item:hover {
   background: var(--secondary-background-color);
 }
+
+.task_success_overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 2000;
+
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.task_success_overlay.is_visible {
+  opacity: 1;
+}
+
+.task_success_box {
+  width: 260px;               /* oder var(--task_success_width) */
+  height: 56px;               /* oder var(--task_success_height) */
+  background: var(--dark-blue);
+  color: white;
+  border-radius: 12px;
+
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+
+  transform: translateY(60vh);
+  opacity: 0;
+}
+
+.task_success_overlay.is_animating .task_success_box {
+  animation: task_success_slide_in 600ms ease forwards;
+}
+
+@keyframes task_success_slide_in {
+  from { transform: translateY(60vh); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+

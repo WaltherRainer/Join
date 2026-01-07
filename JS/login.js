@@ -4,13 +4,6 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("loginForm");
-  if (!form) return;
-
-  form.addEventListener("submit", userLogin);
-});
-
 
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
@@ -117,20 +110,15 @@ function initPasswordToggle(container) {
  */
 async function userLogin(e) {
   e.preventDefault();
-
-  const form = e.currentTarget; // jetzt zuverlässig, weil Listener am Form hängt
+  const form = e.currentTarget;
   if (!form) return;
-
   await initUsersLoading();
-
   const emailInput = form.querySelector("#email");
   const passwordInput = form.querySelector("input[data-password]");
   const warningLogin = form.querySelector("#warning_login_failed");
   if (!emailInput || !passwordInput) return;
-
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
-
   if (accessGranted(emailValue, passwordValue)) {
     window.location.replace("summary.html");
   } else {
@@ -235,7 +223,9 @@ async function addUser() {
   console.log("Firebase Key:", result?.name);
   window.usersReady = null;
   await initUsersLoading();
-  showSignupSuccessToast();
+
+  showToastOverlay("signup_success_overlay", { onDone: activateLogIn });
+  // showSignupSuccessToast();
   resetSignupForm();
 }
 
@@ -310,3 +300,7 @@ function resetSignupForm() {
   const warning = form.querySelector("#warning_signup_failed");
   warning?.classList.remove("visible");
 }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("login_form")?.addEventListener("submit", userLogin);
+});

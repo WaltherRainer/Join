@@ -31,12 +31,8 @@
     <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
 
     <main class="add_task_main">
-        <!-- Inline Host -->
         <div id="addTaskInlineHost">
-
-            <!-- Das Formular existiert nur EINMAL -->
             <form id="addTaskForm" class="add_task_form" action="/add_task" method="post">
-                <!-- dein kompletter Form-Inhalt (so wie gepostet) -->
                 <h1 class="add_task_titel">Add Task</h1>
                 <div class="add_task_form_left">
                     <div class="form_row">
@@ -75,7 +71,6 @@
                         <label for="assigned_to_input">Assigned to</label>
 
                         <div class="multi_select" id="assigned_to">
-                            <!-- "Input"-Fläche -->
                             <div class="multi_select__control" aria-haspopup="listbox" aria-expanded="false">
                                 <div class="multi_select__placeholder" id="assigned_to_placeholder">
                                     Select contacts to assign
@@ -132,8 +127,6 @@
                         </div>
 
                         <ul id="subtasks_list" class="subtasks_list"></ul>
-
-                        <!-- hidden field, optional: falls du subtasks als JSON speichern willst -->
                         <input type="hidden" id="subtasks_input" name="subtasks_json" value="">
                     </div>
 
@@ -170,12 +163,16 @@
     </main>
   </div>
 
+    <!-- Task added Success Toast -->
+<div class="task_success_overlay" id="task_success_overlay" aria-hidden="true" data-hold-ms="900">
+  <div class="task_success_box" data-toast-box role="status" aria-live="polite">
+    Task added to Board
+  </div>
+</div>
+
+
     <script>
     w3.includeHTML(() => {
-
-    
-    // renderIcons();
-
         if (window.renderIcons) window.renderIcons(document);
         if (window.initPage) window.initPage();
         if (window.setActiveNavLink) window.setActiveNavLink();
