@@ -142,7 +142,7 @@ function escapeHtml(str) {
 }
 
 // function getSubtasksArray() {
-//   const hidden = document.getElementById("subtasks_input");
+//   const hidden = document.getElementById("subtasks_list_input");
 //   if (!hidden || !hidden.value) return [];
 //   try {
 //     const arr = JSON.parse(hidden.value);
@@ -153,7 +153,7 @@ function escapeHtml(str) {
 // }
 
 function getSubtasksArray() {
-  const hidden = document.getElementById("subtasks_input");
+  const hidden = document.getElementById("subtasks_list_input");
   if (!hidden || !hidden.value) return [];
   try {
     const arr = JSON.parse(hidden.value);
@@ -388,8 +388,8 @@ function clearTaskForm() {
   setValueById("task_descr", "");
   setValueById("task_cat", "");
   setValueById("task_due_date", "");
-  setValueById("subtasks", "");
-  setValueById("subtasks_input", "[]");
+  setValueById("input_subtasks", "");
+  setValueById("subtasks_list_input", "[]");
 
   const list = document.getElementById("subtasks_list");
   if (list) list.innerHTML = "";
@@ -424,21 +424,15 @@ function resetAssignedToDropdown() {
 
   const state = ui.root._assignedState;
 
-  // ✅ Wenn wir State haben: vollständig resetten
   if (state) {
     state.selected.clear();
 
-    // visuell: alle LIs deselektieren
     state.ui.list?.querySelectorAll(".is-selected").forEach(li => {
       li.classList.remove("is-selected");
     });
 
-    // UI + hiddenInput korrekt zurücksetzen
     applySelectionUi(state.ui, [], state.selected);
-
-    // Avatare leeren über vorhandene Funktion
     renderAssignedAvatars(state.selected, state.usersData);
-
     return;
   }
 

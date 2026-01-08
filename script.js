@@ -146,13 +146,13 @@ function editContactOverlayToggle() {
   overlay.classList.toggle("active");
 }
 
-document.getElementById("editContactOverlay").addEventListener("click", () => {
-  editContactOverlayToggle();
-});
+// document.getElementById("editContactOverlay").addEventListener("click", () => {
+//   editContactOverlayToggle();
+// });
 
-document.querySelector(".edit_contact_overlay").addEventListener("click", (event) => {
-  event.stopPropagation();
-});
+// document.querySelector(".edit_contact_overlay").addEventListener("click", (event) => {
+//   event.stopPropagation();
+// });
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
