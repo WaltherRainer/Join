@@ -1,7 +1,16 @@
+const signInContainer = document.getElementById("sign_up_form");
+const logInContainer = document.getElementById("login_wrapper");
+const indexHeader = document.getElementById("index_header");
 const ICON = Object.freeze({
   LOCK: "lock",
   EYE_CLOSED: "eye_closed",
   EYE_OPEN: "eye_open",
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+document.getElementById("login_form")?.addEventListener("submit", userLogin);
+document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
 });
 
 function setPwIcon(button, iconName) {
@@ -70,7 +79,7 @@ function preventBlurOnMouseDown(btn) {
   btn.addEventListener("mousedown", (e) => e.preventDefault());
 }
 
-function wireEvents(state) {
+function wirePWEvents(state) {
   preventBlurOnMouseDown(state.button);
   state.button.addEventListener("click", () => toggleVisibility(state));
   state.input.addEventListener("input", () => syncState(state));
@@ -87,7 +96,7 @@ function createPwToggleState(container) {
 function initPasswordToggle(container) {
   const state = createPwToggleState(container);
   if (!state) return;
-  wireEvents(state);
+  wirePWEvents(state);
   syncState(state); // initial
 }
 
@@ -299,6 +308,3 @@ function resetSignupForm() {
   warning?.classList.remove("visible");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("login_form")?.addEventListener("submit", userLogin);
-});

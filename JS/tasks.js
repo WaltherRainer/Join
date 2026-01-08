@@ -7,10 +7,12 @@ const statusTypes = {
   4 : "Cancelled"
 };
 
+
 const TASK_CATEGORIES = [
   { value: 'technical_task', label: 'Technical Task' },
   { value: 'user_story', label: 'User Story' }
 ];
+
 
 function initAssignedToDropdown(usersData) {
   const ui = getAssignedToUi();
@@ -141,17 +143,6 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
-// function getSubtasksArray() {
-//   const hidden = document.getElementById("subtasks_list_input");
-//   if (!hidden || !hidden.value) return [];
-//   try {
-//     const arr = JSON.parse(hidden.value);
-//     return Array.isArray(arr) ? arr : [];
-//   } catch {
-//     return [];
-//   }
-// }
-
 function getSubtasksArray() {
   const hidden = document.getElementById("subtasks_list_input");
   if (!hidden || !hidden.value) return [];
@@ -229,7 +220,7 @@ function afterTaskAddedInModal() {
   const modal = document.querySelector(".add_task_modal");
   modal?.classList.remove("is_background");
 
-  closeAddTaskModal(); // dein bestehender Close
+  closeAddTaskModal();
   loadTasks();
 }
 
@@ -247,7 +238,7 @@ function bringModalToBackground() {
   modal?.classList.add("is_background");
 }
 
-function getModalEls() {
+function getModalElements() {
   const modal = document.getElementById("addTaskModal");
   const host = document.getElementById("addTaskModalHost");
   const closeBtn = modal?.querySelector(".modal_close");
@@ -291,7 +282,7 @@ function openAddTaskModal() {
 }
 
 function closeAddTaskModal() {
-  const { modal, host } = getModalEls();
+  const { modal, host } = getModalElements();
   if (!modal || !host) return;
   const form = document.getElementById("addTaskForm");
   if (form) {
@@ -302,7 +293,7 @@ function closeAddTaskModal() {
 }
 
 function initAddTaskModalOnce() {
-  const { modal, closeBtn } = getModalEls();
+  const { modal, closeBtn } = getModalElements();
   if (!modal || !closeBtn) return;
   closeBtn.addEventListener("click", closeAddTaskModal);
   modal.addEventListener("click", (e) => {

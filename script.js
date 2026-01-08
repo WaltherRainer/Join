@@ -4,9 +4,7 @@ let tasks = {};
 let activeUserName = "TestUser";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
-const signInContainer = document.getElementById("sign_up_form");
-const logInContainer = document.getElementById("login_form");
-const indexHeader = document.getElementById("index_header");
+
 let usersReady = null;
 
 /**
@@ -38,6 +36,13 @@ function initUsersLoading() {
     });
   }
   return window.usersReady;
+}
+
+async function loadTasks() {
+    tasks = await loadData('/tasks');
+    const users = await ensureUsersLoaded();
+    console.log(users);
+    // loadTaskBoard(tasks, users);
 }
 
 async function ensureUsersLoaded() {
@@ -82,12 +87,12 @@ function setActiveNav(page) {
   });
 }
 
-async function loadStart() {
-  users = (await loadData("/users")) || {};
-  loadTasks();
-  showNav("summary");
-  showAvatar();
-}
+// async function loadStart() {
+//   users = (await loadData("/users")) || {};
+//   await loadTasks();
+//   showNav("summary");
+//   showAvatar();
+// }
 
 function showAvatar() {
   const avatar = document.getElementById("user_avatar_wrapper");
@@ -160,62 +165,57 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+
 /**
  * Initializes page-specific logic based on the current page identifier.
  *
- * Determines the active page via the `data-page` attribute on the `<body>`
- * element and conditionally executes the corresponding initialization
- * routines. Each page branch is isolated and returns early to avoid
- * unintended fall-through execution.
- *
- * The function defensively checks for the existence of optional initializer
- * functions before calling them, allowing flexible module loading and
- * partial feature availability.
- *
  * @async
  * @function initPage
- * @returns {Promise<void>} Resolves once all required initialization steps
- * for the current page have completed.
+ * @returns {Promise<void>}
  */
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
 
-  if (page === "contacts") {
-    if (typeof ensureUsersLoaded === "function") {
-      await ensureUsersLoaded();
-    }
-    renderContacts(users);
-    initContactsClick(users);
-    return;
-  }
+  switch (page) {
+    case "contacts":
+      if (typeof ensureUsersLoaded === "function") {
+        await ensureUsersLoaded();
+      }
+      renderContacts(users);
+      initContactsClick(users);
+      break;
 
-  if (page === "add_task") {
-    if (typeof ensureUsersLoaded === "function") {
-      await ensureUsersLoaded();
-    }
-    initAssignedToDropdown(users);
-    initTaskTypeDropdown(TASK_CATEGORIES);
-    initSubtasksInput();
-    bindAddTaskFormSubmitOnce();
-    return;
-  }
+    case "add_task":
+      if (typeof ensureUsersLoaded === "function") {
+        await ensureUsersLoaded();
+      }
+      initAssignedToDropdown(users);
+      initTaskTypeDropdown(TASK_CATEGORIES);
+      initSubtasksInput();
+      bindAddTaskFormSubmitOnce();
+      break;
 
-  if (page === "summary") {
-    if (typeof loadSummary === "function") loadSummary();
-    if (typeof loadTasks === "function") await loadTasks();
-    if (typeof renderSummary === "function") renderSummary();
-    return;
-  }
+    case "summary":
+      // loadSummary();
+      await loadTasks();
+      // renderSummary();
+      break;
 
-  if (page === "board") {
-    if (typeof loadTasks === "function") await loadTasks();
-    if (typeof renderBoard === "function") renderBoard();
+    case "board":
+      await loadTasks();
+      
+      loadTaskBoard(tasks, users)
+      // renderBoard();
+      initAddTaskModalOnce();
+      initBoardModalButton();
+      break;
 
-    if (typeof initAddTaskModalOnce === "function") initAddTaskModalOnce();
-    if (typeof initBoardModalButton === "function") initBoardModalButton();
-    return;
+    default:
+      // optional: console.warn(`No initPage handler for page: ${page}`);
+      break;
   }
 };
+
 
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");

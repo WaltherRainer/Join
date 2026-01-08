@@ -1,11 +1,5 @@
 
 
-async function loadTasks() {
-    tasks = await loadData('/tasks');
-    const users = await ensureUsersLoaded();
-    console.log(users);
-    loadTaskBoard(tasks, users);
-}
 
 function initBoardModalButton() {
   const btn = document.getElementById("openAddTaskModalBtn");
