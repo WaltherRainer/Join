@@ -4,25 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_summary.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
-    <script src="./JS/utils.js" defer></script>
-    <script src="./JS/summary.js" defer></script>
+
+    <script src="./script.js" defer></script>
     <script src="./JS/fetch.js" defer></script>
     <script src="./JS/icons.js" defer></script>
+    <script src="./JS/summary.js" defer></script>
+    <script src="./JS/utils.js" defer></script>
     <script src="./JS/templates.js" defer></script>
-    <script src="./JS/tasks.js" defer></script>
+    <!-- <script src="./JS/tasks.js" defer></script> -->
+    <!-- <script src="./JS/contacts.js" defer></script> -->
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
 
-    <!-- Feature-Helper / Utils -->
-    <script src="./JS/contacts.js" defer></script>
-
-    <!-- Seiten-Orchestrierung -->
-    <script src="./script.js" defer></script>
-    <title>Join Summary</title>
+    <title>Join - Summary</title>
 </head>
 
 <body data-page="summary" onload="initSummary()">
@@ -110,7 +109,7 @@
                 </div>
 
                 <div class="greeting">
-                    <p id="greetingDay">Good morning,</p>
+                    <p id="greetingDay"></p>
                     <p class="greeting_name" id="greetingName"></p>
                 </div>
 

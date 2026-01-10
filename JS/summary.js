@@ -21,6 +21,7 @@
  * initSummary();
  */
 function initSummary() {
+  loadLocalStorage();
   writeGreetingDay();
   writeGreetingName();
 }

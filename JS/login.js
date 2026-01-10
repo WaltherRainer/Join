@@ -7,10 +7,9 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
-document.getElementById("login_form")?.addEventListener("submit", userLogin);
-document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
+  document.getElementById("login_form")?.addEventListener("submit", userLogin);
+  document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
 });
 
 function setPwIcon(button, iconName) {
@@ -21,6 +20,7 @@ function setPwIcon(button, iconName) {
 }
 
 function guestLogin() {
+  saveLocalStorage("userIsGuest", true);
   window.location.replace("summary.html");
 }
 
@@ -227,7 +227,7 @@ async function addUser() {
   if (userExists(email)) return;
   const dataObj = { email, givenName, password };
   const result = await uploadData("/users", dataObj);
-  console.log("Firebase Key:", result?.name);
+  // console.log("Firebase Key:", result?.name);
   window.usersReady = null;
   await initUsersLoading();
 
@@ -235,8 +235,6 @@ async function addUser() {
   // showSignupSuccessToast();
   resetSignupForm();
 }
-
-
 
 function passwordsMatch() {
   const passwordInput = document.getElementById("new_user_password");
@@ -303,4 +301,3 @@ function resetSignupForm() {
   const warning = form.querySelector("#warning_signup_failed");
   warning?.classList.remove("visible");
 }
-

@@ -5,7 +5,36 @@ let activeUserName = "TestUser";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
 
+let joinLocalStorageObject = {}; // erzeugt object für localStorage
+
 let usersReady = null;
+
+function indexInit() {
+  initLocalStorage();
+}
+
+function initLocalStorage() {
+  localStorage.removeItem("joinLocalStorageObject"); // Löscht zum Start von Join die alten Daten im localStorage
+  joinLocalStorageObject.userIsGuest = false; // Wenn User ein Gast (nicht eingeloggt) ist, dann 'true'
+  joinLocalStorageObject.activeUserId = activeUserId;
+  joinLocalStorageObject.activeUserName = activeUserName;
+  localStorage.setItem("joinLocalStorageObject", JSON.stringify(joinLocalStorageObject));
+}
+
+function saveLocalStorage(key, value) {
+  joinLocalStorageObject[key] = value;
+  localStorage.setItem("joinLocalStorageObject", JSON.stringify(joinLocalStorageObject));
+}
+
+function loadLocalStorage() {
+  const tempArr = JSON.parse(localStorage.getItem("joinLocalStorageObject"));
+
+  if (tempArr != null) {
+    joinLocalStorageObject = tempArr;
+  } else {
+    console.error("Error loading data from localstorage");
+  }
+}
 
 /**
  * Initializes the global user data exactly once and returns a shared promise.
@@ -39,10 +68,10 @@ function initUsersLoading() {
 }
 
 async function loadTasks() {
-    tasks = await loadData('/tasks');
-    const users = await ensureUsersLoaded();
-    console.log(users);
-    // loadTaskBoard(tasks, users);
+  tasks = await loadData("/tasks");
+  const users = await ensureUsersLoaded();
+  // console.log(users);
+  // loadTaskBoard(tasks, users);
 }
 
 async function ensureUsersLoaded() {
@@ -109,7 +138,7 @@ function renderAvatar(activeUserId, activeUserName) {
 
 function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
-  console.log(userMenu);
+  // console.log(userMenu);
   if (!userMenu) return;
   userMenu.classList.toggle("d_none");
 }
@@ -159,15 +188,13 @@ function wireContactActionsGlobalOnce() {
 //   event.stopPropagation();
 // });
 
-
 function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
-    document.addEventListener("keydown", (event) => {
+  document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       document.getElementById(modalDOMId).classList.remove("active");
     }
   });
 }
-
 
 /**
  * Initializes page-specific logic based on the current page identifier.
@@ -206,8 +233,8 @@ window.initPage = async function initPage() {
 
     case "board":
       await loadTasks();
-      
-      loadTaskBoard(tasks, users)
+
+      loadTaskBoard(tasks, users);
       // renderBoard();
       initAddTaskModalOnce();
       initBoardModalButton();
@@ -218,7 +245,6 @@ window.initPage = async function initPage() {
       break;
   }
 };
-
 
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");
@@ -261,10 +287,7 @@ function showToastOverlay(overlayId, opts = {}) {
   }
 
   // Hold: Options -> data-attr -> default
-  const holdMs =
-    Number.isFinite(opts.holdMs)
-      ? opts.holdMs
-      : parseInt(overlay.dataset.holdMs, 10) || 1000;
+  const holdMs = Number.isFinite(opts.holdMs) ? opts.holdMs : parseInt(overlay.dataset.holdMs, 10) || 1000;
 
   // laufende Timer/Listener sauber weg
   if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);

@@ -57,7 +57,7 @@ async function uploadData(path = "", dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}.json`;
 
-  console.log("UPLOAD url:", url);
+  // console.log("UPLOAD url:", url);
 
   const response = await fetch(url, {
     method: "POST",
@@ -66,8 +66,8 @@ async function uploadData(path = "", dataObj) {
     redirect: "follow",
   });
 
-  console.log("FINAL response.url:", response.url);
-  console.log("STATUS:", response.status);
+  // console.log("FINAL response.url:", response.url);
+  // console.log("STATUS:", response.status);
 
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);

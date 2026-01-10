@@ -158,7 +158,7 @@ async function addNewUser() {
   if (userExists(email)) return;
   const dataObj = { email, userName, userPhone };
   const result = await uploadData("/users", dataObj);
-  console.log("Firebase Key:", result?.name);
+  // console.log("Firebase Key:", result?.name);
 
   await initUsersLoading();
 
