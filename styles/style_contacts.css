@@ -147,6 +147,10 @@
   background-color: var(--secondary-background-color);
 }
 
+.icon_hover:hover {
+  background-color: var(--secondary-background-color);
+}
+
 .icon_text_btn.is-edit {
   color: var(--blue);
 

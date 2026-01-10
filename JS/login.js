@@ -236,11 +236,7 @@ async function addUser() {
   resetSignupForm();
 }
 
-function userExists(email) {
-  if (!window.users || typeof window.users !== "object") return false;
 
-  return Object.values(window.users).some((user) => user?.email === email);
-}
 
 function passwordsMatch() {
   const passwordInput = document.getElementById("new_user_password");

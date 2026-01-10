@@ -100,7 +100,6 @@ async function deleteContact(userId) {
 }
 
 
-
 function openContactModal() {
   const modal = document.getElementById("contact_modal");
   const host = document.getElementById("contact_modal_host");
@@ -109,7 +108,8 @@ function openContactModal() {
   modal.showModal();
 
   listenEscapeFromModal("contact_modal");
-
+  bindContactFormSubmitOnce();
+  
   document.getElementById("modal_close").addEventListener("click", () => {
     closeContactModal();
   });
@@ -127,4 +127,42 @@ function contactEventList() {
   });
 }
 
+function bindContactFormSubmitOnce() {
+  const form = document.getElementById("contact_form");
+  if (!form) return;
+  // if (form.dataset.submitBound === "1") return;
+  // form.dataset.submitBound = "1";
 
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        await addNewUser();
+    } 
+    catch (err) {
+      console.error("addTask failed", err);
+    }
+  });
+}
+
+async function addNewUser() {
+  const userNameInp = document.getElementById("user_name");
+  const emailInp = document.getElementById("user_email");
+  const userPhoneInp = document.getElementById("user_phone");
+  const email = emailInp?.value?.trim() || "";
+  const userName = userNameInp?.value?.trim() || "";
+  const userPhone = userPhoneInp?.value?.trim() || "";
+
+  if (!email || !userName || !userPhone) return;
+
+  await initUsersLoading();
+  if (userExists(email)) return;
+  const dataObj = { email, userName, userPhone };
+  const result = await uploadData("/users", dataObj);
+  console.log("Firebase Key:", result?.name);
+
+  await initUsersLoading();
+
+  // showToastOverlay("signup_success_overlay", { onDone: activateLogIn });
+  // showSignupSuccessToast();
+  // resetSignupForm();
+}

@@ -358,3 +358,23 @@ label {
 
 .nav_link.active .nav_icon { color: var(--white-text-color); }
 .nav_link .nav_icon { color: var(--border_color); }
+
+/* Platzhalter-Element für Icons */
+.svg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input_icon {
+  position: absolute;
+  top: 50%;
+  right: 15px; 
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+}
+
+.svg-icon svg {
+  display: block;
+}
