@@ -21,6 +21,8 @@ function setPwIcon(button, iconName) {
 
 function guestLogin() {
   saveLocalStorage("userIsGuest", true);
+  saveUserToSessionStorage("guest", "Guest");
+  initUsersLoading();
   window.location.replace("summary.html");
 }
 

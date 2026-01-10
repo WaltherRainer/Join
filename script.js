@@ -235,10 +235,7 @@ function InitGlobalEventListener() {
  */
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
-  const color = colorVarFromUserId(sessionStorage.userId)
-  document.documentElement.style.setProperty('--user_c_active', color);
-  const initials = initialsFromGivenName(sessionStorage.userName);
-  document.getElementById("active_user_avatar").innerHTML = initials;
+  renderActiveUserAvatar();
 
   switch (page) {
     case "contacts":
@@ -281,6 +278,13 @@ window.initPage = async function initPage() {
 
   InitGlobalEventListener();
 };
+
+function renderActiveUserAvatar() {
+    const color = colorVarFromUserId(sessionStorage.userId)
+    document.documentElement.style.setProperty('--user_c_active', color);
+    const initials = initialsFromGivenName(sessionStorage.userName);
+    document.getElementById("active_user_avatar").innerHTML = initials;
+}
 
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");
