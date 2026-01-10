@@ -1,3 +1,136 @@
+h4 {
+    font-size: 27px;
+    font-weight: 400;
+}
+
+
+/* #region OVERLAY */
+.overlay_backdrop {
+    border-radius: 30px;
+}
+
+.edit_contact_overlay {
+    transition: transform 400ms ease;
+    display: flex;
+    z-index: 1000;
+}
+
+.overlay_left {
+    height: 100%;
+    background-color: var(--blue);
+    color: var(--white-text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 46px;
+    margin-right: 50px;
+}
+
+.overlay_left h2 {
+    font-size: 61px;
+}
+/* #endregion */
+
+.divider {
+    width: 90px;
+    height: 4px;
+    background-color: var(--light-blue);
+}
+
+.overlay_right {
+    height: 100%;
+    flex: 1;
+    border-radius: 0 30px 30px 0;
+    display: flex;
+    align-items: center;
+    background-color: var(--white-text-color);
+    gap: 50px;
+    
+}
+
+.input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-wrapper input {
+    width: 422px;
+    padding: 12px 44px 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.input_icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+
+.edit_contact_btn {
+    display: flex;
+    
+}
+
+.clear_button {
+    padding: 16px 16px;
+    color: var(--blue);
+    font-size: 21px;
+    font-weight: 400;
+    background-color: transparent;
+    border: 1px solid var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.clear_button:hover {
+    border: 1px solid var(--light-blue);
+    color: var(--light-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.default_button {
+    font-family: 'Inter';
+    background-color: var(--blue);
+    color: var(--background-color);
+    font-size: 21px;
+    font-weight: 700;
+    
+    border-radius: 8px;
+    cursor: pointer;
+    border-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px 0 16px;
+}
+
+.button_icon {
+    display: inline-flex;
+}
+
+.default_button:hover {
+    background-color: var(--light-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.close_button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+
 .title_box {
   display: flex;
   align-items: center;
@@ -32,6 +165,7 @@
   background-color: var(--secondary-background-color);
 }
 
+
 .shadow {
   grid-area: shadow;
   background-image: linear-gradient(to left, #f9f9f9, #f0f0f0);
@@ -41,7 +175,7 @@
 
 .contact_list_sect {
   grid-area: contact_list;
-  min-height: calc(100dvh - 90px);
+  min-height: calc(100dvh - 178px);
   background-color: var(--background-color);
   margin-top: -6px;
   padding-top: 32px;
@@ -60,11 +194,32 @@
 }
 
 .add_contact_btn {
-  width: 352px;
-  margin-left: 52px;
-  margin-bottom: 32px;
+    width: 445px;
+    position: fixed;
+    height: 100px;
+    top: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
+.add_contact_btn::before{
+  content: "";
+  position: absolute;
+  inset: 0; 
+  pointer-events: none;
+  z-index: 0;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
+
+.add_contact_btn > button{
+  position: relative;
+  z-index: 1;
+}
 .contact_list_content {
   display: flex;
   align-items: center;
@@ -238,4 +393,46 @@
     line-height: 1;
     cursor: pointer;
     color: var(--text-color);
+}
+
+.toast_overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+
+
+}
+
+.toast_box {
+  width: 260px;               /* oder var(--task_success_width) */
+  height: 56px;               /* oder var(--task_success_height) */
+  background: var(--dark-blue);
+  color: white;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position: fixed;
+  bottom: 120px;
+  transform: translateX(50vw);
+  opacity: 0;
+}
+
+.toast_overlay.is_visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.toast_overlay.is_animating .toast_box {
+  animation: toastIn 3000ms ease-out;
+}
+
+@keyframes toastIn {
+  from { transform: translateX(50vw); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
 }

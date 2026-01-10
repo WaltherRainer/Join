@@ -128,11 +128,16 @@ async function userLogin(e) {
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
   if (accessGranted(emailValue, passwordValue)) {
+    saveLocalStorage("userIsGuest", false);
+    
     window.location.replace("summary.html");
+    
   } else {
     warningLogin?.classList.add("visible");
   }
 }
+
+
 
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
@@ -148,10 +153,16 @@ function accessGranted(email, password) {
     if (email === u.email && password === u.password) {
       window.activeUserId = id;
       window.activeUserName = u.givenName;
+      saveUserToSessionStorage(id, u.givenName);
       return true;
     }
   }
   return false;
+}
+
+function userLogout() {
+  sessionStorage.clear();
+  window.location.replace("index.html");
 }
 
 /** resets the error when user is typing in something the input box */

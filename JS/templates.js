@@ -50,7 +50,8 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
             <button type="button"
                     class="icon_text_btn is-delete"
                     data-action="delete"
-                    data-user-id="${userId}">
+                    data-user-id="${userId}"
+                    id="btn_delete_user">
               <span class="svg-icon" data-icon="recyBin" data-w="18" data-h="18"></span>
               <span>Delete</span>
             </button>

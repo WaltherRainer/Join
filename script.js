@@ -14,7 +14,7 @@ function indexInit() {
 }
 
 function initLocalStorage() {
-  localStorage.removeItem("joinLocalStorageObject"); // Löscht zum Start von Join die alten Daten im localStorage
+  localStorage.removeItem("joinLocalStorageObject"); // Löscht zum Start von Join die alten Daten im localStorage  Evtl geht auch localStorage.clear();
   joinLocalStorageObject.userIsGuest = false; // Wenn User ein Gast (nicht eingeloggt) ist, dann 'true'
   joinLocalStorageObject.activeUserId = activeUserId;
   joinLocalStorageObject.activeUserName = activeUserName;
@@ -35,6 +35,20 @@ function loadLocalStorage() {
     console.error("Error loading data from localstorage");
   }
 }
+
+function saveUserToSessionStorage(userId, userName) {
+  sessionStorage.setItem("userId", userId);
+  sessionStorage.setItem("userName", userName);
+}
+
+function getUserIdFromSessionStorage() {
+  return sessionStorage.getItem("userId");
+}
+
+function getUserNameFromSessionStorage() {
+  return sessionStorage.getItem("userName");
+}
+
 
 /**
  * Initializes the global user data exactly once and returns a shared promise.
@@ -140,7 +154,15 @@ function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
   // console.log(userMenu);
   if (!userMenu) return;
+  
   userMenu.classList.toggle("d_none");
+}
+
+function showUserDialog() {
+  const dialog = document.getElementById("user_menu");
+  openBtn.addEventListener('click', () => {
+    dialog.showModal();
+  });
 }
 
 function renderAssignedAvatars(selectedUserIds, usersData) {
@@ -196,6 +218,14 @@ function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
   });
 }
 
+function InitGlobalEventListener() {
+    const openUserDialog = document.getElementById('open_user_dialog');
+    const dialog = document.getElementById('user_dialog');
+    openUserDialog.addEventListener('click', () => {
+    dialog.showModal();
+    });
+}
+
 /**
  * Initializes page-specific logic based on the current page identifier.
  *
@@ -244,6 +274,8 @@ window.initPage = async function initPage() {
       // optional: console.warn(`No initPage handler for page: ${page}`);
       break;
   }
+
+  InitGlobalEventListener();
 };
 
 function setActiveNavLink() {

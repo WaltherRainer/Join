@@ -140,3 +140,13 @@
 .modal_close:hover {
     color: var(--light-blue);
 }
+
+.pure_btn {
+    outline: none;
+    border: none;
+    background-color: var(--background-color);
+}
+
+.btn_wide {
+    min-width: 352px;
+}

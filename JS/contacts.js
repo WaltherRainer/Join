@@ -55,10 +55,20 @@ function renderContactDetails(users, userId) {
     initials,
     u.givenName,
     u.email,
-    u.phone || "-",
+    u.userPhone || "-",
     userId
   );
   renderIcons(target);
+
+  document.getElementById("edit_user").addEventListener("click", () => {
+    openEditContactModal(userId, u.givenName, u.email, u.userPhone);
+  });
+
+  document.getElementById("btn_delete_user").addEventListener("click", () => {
+    deleteContact(userId);
+  });
+
+
 }
 
 function initContactsClick(users) {
@@ -101,37 +111,75 @@ async function deleteContact(userId) {
 
 
 function openContactModal() {
-  const modal = document.getElementById("contact_modal");
+  const modal = document.getElementById("add_contact_modal");
   const host = document.getElementById("contact_modal_host");
   if (!modal || !host) return;
 
   modal.showModal();
 
-  listenEscapeFromModal("contact_modal");
+  listenEscapeFromModal("add_contact_modal");
   bindContactFormSubmitOnce();
   
   document.getElementById("modal_close").addEventListener("click", () => {
     closeContactModal();
   });
 
+  document.getElementById("clear_contact_form").addEventListener("click", () => {
+    resetContactForm();
+  });
+
 }
 
+
+function openEditContactModal(userId, givenName, email, userPhone) {
+  const modal = document.getElementById("edit_contact_modal");
+  const host = document.getElementById("edit_contact_modal_host");
+  if (!modal || !host) return;
+
+  modal.showModal();
+  preloadEditFormData(givenName, email, userPhone);
+  listenEscapeFromModal("edit_contact_modal");
+  bindEditContactFormSubmitOnce(userId);
+  
+  document.getElementById("edit_modal_close").addEventListener("click", () => {
+    closeEditContactModal();
+  });
+
+  document.getElementById("delete_contact_btn").addEventListener("click", () => {
+    deleteContact(userId);
+  });
+}
+
+function preloadEditFormData(givenName, email, userPhone) {
+  setValueById("edit_user_name", givenName);
+  setValueById("edit_user_email", email);
+  setValueById("edit_user_phone", userPhone);
+}
+
+
 function closeContactModal() {
-  const modal = document.getElementById("contact_modal");
+  const modal = document.getElementById("add_contact_modal");
+  modal.removeEventListener('submit', addNewUser);
   modal.close();
 }
 
 function contactEventList() {
-  document.getElementById("add_user").addEventListener("click", () => {
+  document.getElementById("open_add_user_modal").addEventListener("click", () => {
     openContactModal();
   });
+}
+
+function closeEditContactModal() {
+  const modal = document.getElementById("edit_contact_modal");
+  modal.removeEventListener('submit', editUser);
+  modal.close();
 }
 
 function bindContactFormSubmitOnce() {
   const form = document.getElementById("contact_form");
   if (!form) return;
-  // if (form.dataset.submitBound === "1") return;
-  // form.dataset.submitBound = "1";
+  if (form.dataset.submitBound === "1") return;
+  form.dataset.submitBound = "1";
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -139,9 +187,32 @@ function bindContactFormSubmitOnce() {
         await addNewUser();
     } 
     catch (err) {
-      console.error("addTask failed", err);
+      console.error("addUser failed", err);
     }
   });
+}
+
+function bindEditContactFormSubmitOnce(userId) {
+  const form = document.getElementById("edit_contact_form");
+  if (!form) return;
+  if (form.dataset.submitBound === "1") return;
+  form.dataset.submitBound = "1";
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        await editUser(userId);
+    } 
+    catch (err) {
+      console.error("EditUser failed", err);
+    }
+  });
+}
+
+function resetContactForm() {
+  setValueById("user_name", "");
+  setValueById("user_email", "");
+  setValueById("user_phone", "");
 }
 
 async function addNewUser() {
@@ -149,20 +220,40 @@ async function addNewUser() {
   const emailInp = document.getElementById("user_email");
   const userPhoneInp = document.getElementById("user_phone");
   const email = emailInp?.value?.trim() || "";
-  const userName = userNameInp?.value?.trim() || "";
+  const givenName = userNameInp?.value?.trim() || "";
   const userPhone = userPhoneInp?.value?.trim() || "";
+  const password = "12345"
+  let dataArray = {};
 
-  if (!email || !userName || !userPhone) return;
-
+  if (!email || !givenName || !userPhone) return;
+  window.usersReady = null;
   await initUsersLoading();
   if (userExists(email)) return;
-  const dataObj = { email, userName, userPhone };
-  const result = await uploadData("/users", dataObj);
-  // console.log("Firebase Key:", result?.name);
+  const dataObj = { email, givenName, password, userPhone };
+  await uploadData("/users", dataObj);
+  window.usersReady = null;
+  dataArray = await initUsersLoading();
+  resetContactForm();
+  closeContactModal();
+  renderContacts(dataArray);
+  initContactsClick(dataArray);
+  showToastOverlay("toast_contact_added");
+}
 
-  await initUsersLoading();
-
-  // showToastOverlay("signup_success_overlay", { onDone: activateLogIn });
-  // showSignupSuccessToast();
-  // resetSignupForm();
+async function editUser(userId) {
+  const userNameInp = document.getElementById("edit_user_name");
+  const emailInp = document.getElementById("edit_user_email");
+  const userPhoneInp = document.getElementById("edit_user_phone");
+  const email = emailInp?.value?.trim() || "";
+  const givenName = userNameInp?.value?.trim() || "";
+  const userPhone = userPhoneInp?.value?.trim() || "";
+  if (!email || !givenName || !userPhone) return;
+  let dataArray = {};
+  const dataObj = { email, givenName, userPhone };
+  await window.editData("/users", userId, dataObj);
+  window.usersReady = null;
+  dataArray = await initUsersLoading();
+  renderContacts(dataArray);
+  renderContactDetails(dataArray, userId);
+  closeEditContactModal();
 }

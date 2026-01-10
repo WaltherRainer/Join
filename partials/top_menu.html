@@ -3,20 +3,20 @@
     <div class="user_info">
         <a href="#" class="help_icon">?</a>
         <div class="user_avatar_wrapper">
-            <div class="user_avatar" onclick="toggleUserMenu()">MK</div>
+            <button class="pure_btn" id="open_user_dialog"><span class="user_avatar"></span>MK</button>
+            <!-- <div class="user_avatar" onclick="toggleUserMenu()">MK</div> -->
 
-            <div class="user_menu d_none" id="user_menu">
-                <a href="#">Legal Notice</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Log out</a>
-            </div>
+            <!-- <div class="user_menu d_none" id="user_menu">
+                <a id="link_legal_notice" href="#">Legal Notice</a>
+                <a id="link_privacy_policy" href="#">Privacy Policy</a>
+                <a id="log_out" href="#">Log out</a>
+            </div> -->
         </div>
     </div>
 </div>
 
-<script>
-    function toggleUserMenu() {
-        let userMenu = document.getElementById('user_menu');
-        userMenu.classList.toggle('d_none');
-    }
-</script>
+<dialog class="user_menu_dialog" id="user_dialog">
+    <a id="link_legal_notice" href="#">Legal Notice</a>
+    <a id="link_privacy_policy" href="#">Privacy Policy</a>
+    <a id="log_out" href="#">Log out</a>
+</dialog>

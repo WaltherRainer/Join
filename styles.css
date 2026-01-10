@@ -267,6 +267,8 @@ label {
   overflow: auto;
 }
 
+
+
 /* Close Button bleibt oben rechts */
 .add_task_modal_close {
   position: absolute;
@@ -363,7 +365,7 @@ label {
 .svg-icon {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
 }
 
 .input_icon {
@@ -377,4 +379,20 @@ label {
 
 .svg-icon svg {
   display: block;
+}
+
+.task_success_box {
+  width: 260px;               /* oder var(--task_success_width) */
+  height: 56px;               /* oder var(--task_success_height) */
+  background: var(--dark-blue);
+  color: white;
+  border-radius: 12px;
+
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+
+  transform: translateY(60vh);
+  opacity: 0;
 }
