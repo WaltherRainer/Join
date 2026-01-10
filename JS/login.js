@@ -131,12 +131,11 @@ async function userLogin(e) {
     saveLocalStorage("userIsGuest", false);
     
     window.location.replace("summary.html");
-    
+
   } else {
     warningLogin?.classList.add("visible");
   }
 }
-
 
 
 /**
@@ -154,6 +153,7 @@ function accessGranted(email, password) {
       window.activeUserId = id;
       window.activeUserName = u.givenName;
       saveUserToSessionStorage(id, u.givenName);
+
       return true;
     }
   }

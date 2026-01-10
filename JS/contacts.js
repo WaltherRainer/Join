@@ -128,6 +128,10 @@ function openContactModal() {
     resetContactForm();
   });
 
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeContactModal();
+  });
+
 }
 
 
@@ -147,6 +151,10 @@ function openEditContactModal(userId, givenName, email, userPhone) {
 
   document.getElementById("delete_contact_btn").addEventListener("click", () => {
     deleteContact(userId);
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeEditContactModal();
   });
 }
 

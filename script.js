@@ -1,7 +1,7 @@
 let users = {};
-let activeUserId = "54321";
+let activeUserId = "";
 let tasks = {};
-let activeUserName = "TestUser";
+let activeUserName = "";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
 
@@ -235,6 +235,10 @@ function InitGlobalEventListener() {
  */
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
+  const color = colorVarFromUserId(sessionStorage.userId)
+  document.documentElement.style.setProperty('--user_c_active', color);
+  const initials = initialsFromGivenName(sessionStorage.userName);
+  document.getElementById("active_user_avatar").innerHTML = initials;
 
   switch (page) {
     case "contacts":

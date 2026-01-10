@@ -45,17 +45,6 @@
   color: var(--light-blue);
 }
 
-.icon-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--secondary-background-color);
-  opacity: 0;
-  transform: scale(0.92);
-  transition: opacity 120ms ease, transform 120ms ease;
-}
-
 .icon-btn:hover::before {
   opacity: 1;
   transform: scale(1);

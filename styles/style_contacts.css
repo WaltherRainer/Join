@@ -262,6 +262,7 @@ h4 {
   user-select: none;
   color: var(--white-text-color);
   grid-area: avatar_large;
+  font-size: 47px;
   /* margin: 0 45px 0 45px; */
 }
 

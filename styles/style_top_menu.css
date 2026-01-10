@@ -39,8 +39,8 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    color: #4a90e2;
-    background-color: #fff;
+    color: var(--user_c_active);
+    background-color: var(--background-color);
     overflow: hidden;
     transition: filter 0.2s;
     cursor: pointer;

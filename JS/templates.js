@@ -110,5 +110,5 @@ window.userListItemTemplate = userListItemTemplate;
  * @returns {string} A string containing the active user's name.
  */
 function writeGreetingNameTemplate() {
-  return `${activeUserName}`;
+  return `${sessionStorage.userName}`;
 }

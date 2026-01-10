@@ -52,8 +52,8 @@ function wireSubtaskListEvents(state) {
  * @returns {void}
  */
 function clearSubtaskInput(state) {
-    state.subTaskUi.input.value = "";
-    state.subTaskUi.input.focus();
+    state.subTaskUi.inputSubTasks.value = "";
+    state.subTaskUi.inputSubTasks.focus();
 }
 
 
@@ -114,7 +114,6 @@ function renderSubtasks(state) {
 function syncSubtasksListInp(state) {
     if (state.subTaskUi.SubTaskListInp) state.subTaskUi.SubTaskListInp.value = JSON.stringify(state.subtasks);
 }
-
 
 
 /**
