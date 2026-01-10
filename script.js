@@ -146,10 +146,10 @@ function wireContactActionsGlobalOnce() {
   });
 }
 
-function editContactOverlayToggle() {
-  const overlay = document.getElementById("editContactOverlay");
-  overlay.classList.toggle("active");
-}
+// function editContactOverlayToggle() {
+//   const overlay = document.getElementById("editContactOverlay");
+//   overlay.classList.toggle("active");
+// }
 
 // document.getElementById("editContactOverlay").addEventListener("click", () => {
 //   editContactOverlayToggle();
@@ -159,11 +159,14 @@ function editContactOverlayToggle() {
 //   event.stopPropagation();
 // });
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    document.getElementById("editContactOverlay").classList.remove("active");
-  }
-});
+
+function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
+    document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      document.getElementById(modalDOMId).classList.remove("active");
+    }
+  });
+}
 
 
 /**

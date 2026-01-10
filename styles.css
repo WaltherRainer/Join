@@ -205,7 +205,7 @@ label {
   background: rgba(0, 0, 0, 0.35);
 }
 
-.modal_content {
+.add_task_modal_content {
   background: var(--background-color);
   border-radius: 16px;
   padding: 24px;
@@ -218,7 +218,7 @@ label {
   border: none;
 }
 
-.modal_close {
+.add_task_modal_close {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -247,7 +247,7 @@ label {
 }
 
 /* Inhalt = die eigentliche "Modal-Box" */
-.modal_content {
+.add_task_modal_content {
   width: 1116px;
   height: 870px;
 
@@ -268,7 +268,7 @@ label {
 }
 
 /* Close Button bleibt oben rechts */
-.modal_close {
+.add_task_modal_close {
   position: absolute;
   top: 16px;
   right: 16px;
@@ -300,7 +300,7 @@ label {
 
 /* Optional: auf kleineren Screens skalieren, damit’s nicht überläuft */
 @media (max-width: 1200px) {
-  .modal_content {
+  .add_task_modal_content {
     width: min(1116px, 92vw);
     height: min(870px, 90vh);
   }

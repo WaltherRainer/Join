@@ -105,10 +105,9 @@
   border: none;
   border-radius: 999px;
   user-select: none;
-  font-weight: 500;
-  font-size: 47px;
   color: var(--white-text-color);
   grid-area: avatar_large;
+  /* margin: 0 45px 0 45px; */
 }
 
 .contact_list_card {
@@ -200,4 +199,39 @@
 .contact_list_card.is-active .user_contact span,
 .contact_list_card.is-active .user_contact a {
   color: var(--white-text-color);
+}
+
+
+/* Inhalt = die eigentliche "Modal-Box" */
+.contact_modal_content {
+      min-width: 1212px;
+      width: 100%;
+      height: 592px;
+      /* border-radius: 30px; */
+
+  background: var(--background-color);
+
+  /* kein Rand / kein schwarzer Rahmen */
+  border: none;
+  outline: none;
+
+  /* Schatten (optional) */
+  /* box-shadow: 0 8px 24px var(--shadow-color); */
+
+  /* Zentrierung: dialog sorgt i.d.R. schon fürs Zentrieren,
+     aber so ist es stabil in allen Layouts */
+  position: relative;
+  overflow: auto;
+}
+
+.modal_close {
+  position: absolute;
+    top: 16px;
+    right: 16px;
+    border: 0;
+    background: transparent;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-color);
 }

@@ -101,7 +101,6 @@ function addUserIcon({ width = 20, height = 18, color } = {}) {
   });
 }
 
-
 function recyBin({ width = 18, height = 18, color } = {}) {
   return iconSvg({
     width,

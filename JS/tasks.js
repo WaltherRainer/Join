@@ -241,7 +241,7 @@ function bringModalToBackground() {
 function getModalElements() {
   const modal = document.getElementById("addTaskModal");
   const host = document.getElementById("addTaskModalHost");
-  const closeBtn = modal?.querySelector(".modal_close");
+  const closeBtn = modal?.querySelector(".add_task_modal_close");
   return { modal, host, closeBtn };
 }
 
@@ -279,6 +279,7 @@ function openAddTaskModal() {
     renderIcons(modal);
     modal.showModal();
   });
+  listenEscapeFromModal("addTaskModal");
 }
 
 function closeAddTaskModal() {

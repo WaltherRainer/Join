@@ -99,3 +99,32 @@ async function deleteContact(userId) {
   }
 }
 
+
+
+function openContactModal() {
+  const modal = document.getElementById("contact_modal");
+  const host = document.getElementById("contact_modal_host");
+  if (!modal || !host) return;
+
+  modal.showModal();
+
+  listenEscapeFromModal("contact_modal");
+
+  document.getElementById("modal_close").addEventListener("click", () => {
+    closeContactModal();
+  });
+
+}
+
+function closeContactModal() {
+  const modal = document.getElementById("contact_modal");
+  modal.close();
+}
+
+function contactEventList() {
+  document.getElementById("add_user").addEventListener("click", () => {
+    openContactModal();
+  });
+}
+
+
