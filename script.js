@@ -36,9 +36,15 @@ function loadLocalStorage() {
   }
 }
 
-function saveUserToSessionStorage(userId, userName) {
+function saveUserToSessionStorage(userId, userName, users) {
   sessionStorage.setItem("userId", userId);
   sessionStorage.setItem("userName", userName);
+  sessionStorage.setItem("users", JSON.stringify(users));
+}
+
+function ensureTasksAreLoaded() {
+  if (tasks && Object.keys(tasks).length > 0) return tasks;
+
 }
 
 function getUserIdFromSessionStorage() {
@@ -47,6 +53,24 @@ function getUserIdFromSessionStorage() {
 
 function getUserNameFromSessionStorage() {
   return sessionStorage.getItem("userName");
+}
+
+async function ensureUsersLoaded() {
+  if (users && Object.keys(users).length > 0) return users;
+  const dataObj =  JSON.parse(sessionStorage.getItem("users"));
+  if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
+  users = (await loadData("/users")) || {};
+  sessionStorage.setItem("users", JSON.stringify(users));
+  return users;
+}
+
+async function ensureTasksLoaded() {
+  if (tasks && Object.keys(tasks).length > 0) return tasks;
+  const dataObj =  JSON.parse(sessionStorage.getItem("tasks"));
+  if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
+  tasks = (await loadData("/tasks")) || {};
+  sessionStorage.setItem("tasks", JSON.stringify(tasks));
+  return tasks;
 }
 
 
@@ -88,11 +112,6 @@ async function loadTasks() {
   // loadTaskBoard(tasks, users);
 }
 
-async function ensureUsersLoaded() {
-  if (users && Object.keys(users).length > 0) return users;
-  users = (await loadData("/users")) || {};
-  return users;
-}
 
 function showNav(page = "summary") {
   setActiveNav(page);
@@ -250,36 +269,27 @@ function closeUserMenuDialog() {
 window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
   renderActiveUserAvatar();
-
+  const usersDataObj = await ensureUsersLoaded();
+  const tasksDataObj  = await ensureTasksLoaded();
   switch (page) {
     case "contacts":
-      if (typeof ensureUsersLoaded === "function") {
-        await ensureUsersLoaded();
-      }
-      renderContacts(users);
-      initContactsClick(users);
+      renderContacts(usersDataObj);
+      initContactsClick(usersDataObj);
       break;
-
     case "add_task":
-      if (typeof ensureUsersLoaded === "function") {
-        await ensureUsersLoaded();
-      }
-      initAssignedToDropdown(users);
+      initAssignedToDropdown(usersDataObj);
       initTaskTypeDropdown(TASK_CATEGORIES);
       initSubtasksInput();
       bindAddTaskFormSubmitOnce();
       break;
-
     case "summary":
       // loadSummary();
       await loadTasks();
       // renderSummary();
       break;
-
     case "board":
       await loadTasks();
-
-      loadTaskBoard(tasks, users);
+      loadTaskBoard(tasksDataObj, usersDataObj);
       // renderBoard();
       initAddTaskModalOnce();
       initBoardModalButton();
@@ -386,6 +396,8 @@ function showToastOverlay(overlayId, opts = {}) {
     box.removeEventListener("animationend", onAnimEnd);
   };
 }
+
+
 
 function w3includeHTML(cb) {
   var z, i, elmnt, file, xhttp;

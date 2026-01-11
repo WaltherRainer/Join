@@ -19,10 +19,10 @@ function setPwIcon(button, iconName) {
   if (window.renderIcons) window.renderIcons(button);
 }
 
-function guestLogin() {
+async function guestLogin() {
   saveLocalStorage("userIsGuest", true);
-  saveUserToSessionStorage("guest", "Guest");
-  initUsersLoading();
+  let dataObj = await loadData("/users");
+  saveUserToSessionStorage("guest", "Guest", dataObj);
   window.location.replace("summary.html");
 }
 
@@ -154,7 +154,7 @@ function accessGranted(email, password) {
     if (email === u.email && password === u.password) {
       window.activeUserId = id;
       window.activeUserName = u.givenName;
-      saveUserToSessionStorage(id, u.givenName);
+      saveUserToSessionStorage(id, u.givenName, window.users);
 
       return true;
     }
@@ -162,10 +162,7 @@ function accessGranted(email, password) {
   return false;
 }
 
-function userLogout() {
-  sessionStorage.clear();
-  window.location.replace("index.html");
-}
+
 
 /** resets the error when user is typing in something the input box */
 function enableFormErrorReset(formElement) {

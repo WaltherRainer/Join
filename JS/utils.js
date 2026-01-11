@@ -51,3 +51,8 @@ function userExists(email) {
 
   return Object.values(window.users).some((user) => user?.email === email);
 }
+
+function userLogout() {
+  sessionStorage.clear();
+  window.location.replace("index.html");
+}
