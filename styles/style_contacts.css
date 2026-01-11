@@ -178,7 +178,7 @@ h4 {
   min-height: calc(100dvh - 178px);
   background-color: var(--background-color);
   margin-top: -6px;
-  padding-top: 32px;
+  padding-top: 80px;
   overflow: auto;
 }
 
@@ -388,9 +388,9 @@ h4 {
   position: absolute;
     top: 16px;
     right: 16px;
-    border: 0;
+    /* border: 0; */
     background: transparent;
-    font-size: 28px;
+    /* font-size: 28px; */
     line-height: 1;
     cursor: pointer;
     color: var(--text-color);

@@ -188,6 +188,7 @@
   background: transparent;
   cursor: pointer;
   transition: background 120ms ease;
+  
 }
 
 .multi_select__toggle:hover {

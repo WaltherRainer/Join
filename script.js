@@ -220,10 +220,24 @@ function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
 
 function InitGlobalEventListener() {
     const openUserDialog = document.getElementById('open_user_dialog');
-    const dialog = document.getElementById('user_dialog');
     openUserDialog.addEventListener('click', () => {
-    dialog.showModal();
+    openUserMenuDialog();
     });
+}
+
+function openUserMenuDialog() {
+  const modal = document.getElementById("user_dialog");
+  modal.showModal();
+  listenEscapeFromModal("user_dialog");
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeUserMenuDialog();
+  });
+}
+
+function closeUserMenuDialog() {
+  const modal = document.getElementById("user_dialog");
+  // modal.removeEventListener('submit', editUser);
+  modal.close();
 }
 
 /**

@@ -57,13 +57,14 @@
 
 /* Dropdown selbst */
 .user_menu_dialog {
-    position: absolute;
-    top: 70px;
-    right: 0;
+    position: fixed;
+    top: 78px;
+    /* right: 0; */
     background-color: #1e2a3a;
     border-radius: 16px 0 16px 16px;
     min-width: 200px;
     flex-direction: column;
+    left: calc(100vw - 243px);
 }
 
 .user_menu_dialog a {
