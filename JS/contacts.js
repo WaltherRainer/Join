@@ -35,18 +35,18 @@ function renderContacts(users) {
     card.dataset.userId = user.id;
     card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
     wrapper.appendChild(card);
-    });
-    container.appendChild(wrapper);
-  }
+  });
+  container.appendChild(wrapper);
+}
 }
 
 function renderContactDetails(users, userId) {
   const u = users?.[userId];
   if (!u) return;
-
+  
   const initials = initialsFromGivenName(u.givenName);
   const bgColor = colorIndexFromUserId(userId);
-
+  
   const target = document.getElementById("contact_details_sect");
   if (!target) return;
   target.dataset.userId = userId;
@@ -59,16 +59,28 @@ function renderContactDetails(users, userId) {
     userId
   );
   renderIcons(target);
+  
+  initEditButton(userId, u.givenName, u.email, u.userPhone);
+  initDeleteButton(userId);
+}
 
-  document.getElementById("edit_user").addEventListener("click", () => {
-    openEditContactModal(userId, u.givenName, u.email, u.userPhone);
+function initEditButton(userId, givenName, email, userPhone) {
+  const editBtn = document.getElementById("edit_user");
+  if (!editBtn) return;
+  
+  editBtn.addEventListener("click", () => {
+    openEditContactModal(userId, givenName, email, userPhone);
+    console.log(window.users);
   });
+}
 
-  document.getElementById("btn_delete_user").addEventListener("click", () => {
+function initDeleteButton(userId) {
+  const deleteBtn = document.getElementById("btn_delete_user");
+  if (!deleteBtn) return;
+  
+  deleteBtn.addEventListener("click", () => {
     deleteContact(userId);
   });
-
-
 }
 
 function initContactsClick(users) {
@@ -142,6 +154,7 @@ function openEditContactModal(userId, givenName, email, userPhone) {
 
   modal.showModal();
   preloadEditFormData(givenName, email, userPhone);
+  renderEditContactAvatar(userId, givenName);
   listenEscapeFromModal("edit_contact_modal");
   bindEditContactFormSubmitOnce(userId);
   
@@ -265,3 +278,15 @@ async function editUser(userId) {
   renderContactDetails(dataArray, userId);
   closeEditContactModal();
 }
+
+function renderEditContactAvatar(userId, givenName) {
+  const avatarEl = document.getElementById("user_avatar_edit");
+  if (!avatarEl) return;
+  
+  const initials = initialsFromGivenName(givenName);
+  const bgColor = colorIndexFromUserId(userId);
+  
+  avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
+  avatarEl.innerHTML = initials;
+}
+
