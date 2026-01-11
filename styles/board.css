@@ -68,7 +68,6 @@
 }
 
 
-
 button.add_task_button {
     display: flex;
     justify-content: space-around;
@@ -199,4 +198,112 @@ section.task_section {
 
 .board_help_div {
     grid-area: main;
+}
+
+
+.marg_bot_16 {
+    margin: 0 0 16px 0;
+}
+
+.task_dialog {
+    max-width: 525px;
+    background-color: hsl(0, 0%, 95%);
+    border-radius: 30px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    padding: 48px 40px 48px 40px;
+    font-size: 24px;
+}
+
+.task_dialog_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tsk_dlg_type {
+    background-color: blue;
+    color: var(--white-text-color);
+    width: fit-content;
+    padding: 4px 24px 4px 24px;
+    border-radius: 8px;
+}
+
+.tsk_dlg_h2 {
+    font-size: 20px;
+}
+
+.tsk_dlg_h1 {
+    font-size: 60px;
+}
+
+.tsk_dlg_due_date_sec span:nth-child(1) {
+    margin-right: 32px;
+}
+
+.marg_r_53 {
+    margin-right: 58px;
+}
+
+.tsk_dlg_prio_sec {
+    display: flex;
+    align-items: center;
+}
+
+
+.tsk_dlg_assgnd {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 23px;
+}
+
+.sml_user_avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    color: #fff;
+    background-color: var(--user_c_active);
+    font-size: 20px;
+}
+
+.tsk_dlg_prio_div span:first-child {
+    margin-right: 8px;
+    text-align: center;
+}
+.tsk_dlg_prio_div svg {
+  vertical-align: middle;
+}
+
+.tsk_dlg_sbtsk {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 24px;
+}
+
+.tsk_dlg_sbtsk span {
+    font-size: 18px;
+}
+
+.tsk_dlg_act_sec {
+    display: flex;
+    justify-content: flex-end;
+    color: var(--blue);
+}
+
+.tsk_dlg_act_btn_div {
+    display: flex;
+    align-items: center;
+}
+
+.tsk_dlg_act_btn_div span {
+    vertical-align: middle;
+    padding: 0 6px 0 6px;
+    color: var(--blue);
 }

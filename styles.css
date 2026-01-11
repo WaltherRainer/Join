@@ -94,6 +94,11 @@ label {
   color: var(--text-color);
 }
 
+svg {
+  vertical-align: middle;
+}
+
+
 /* =========================
    Placeholder Style (global)
 ========================= */
@@ -379,7 +384,8 @@ label {
 }
 
 .svg-icon svg {
-  display: block;
+  /* display: block; */
+  vertical-align: middle;
 }
 
 .task_success_box {

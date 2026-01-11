@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <link rel="icon" type="image/x-icon" href="./assets/img/join.svg">
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="styles/button.css" />
     <link rel="stylesheet" href="styles/style_subtask.css" />
@@ -18,6 +19,7 @@
     <script src="./JS/templates.js" defer></script>
     <script src="./JS/contacts.js" defer></script>
     <script src="./JS/tasks_subtasks.js" defer></script>
+    <script src="./JS/task_utils.js" defer></script>
     <script src="./JS/tasks.js" defer></script>
     <script src="./script.js" defer></script>
     <title>Join Board</title>
@@ -175,12 +177,90 @@
     <div id="addTaskModalHost"></div>
   </div>
 
-  <!-- ✅ Task added Success Toast (inside dialog / top-layer) -->
   <div class="task_success_overlay" id="task_modal_success_overlay" aria-hidden="true" data-hold-ms="900">
     <div class="task_success_box" data-toast-box role="status" aria-live="polite">
       Task added to Board
     </div>
   </div>
+</dialog>
+
+
+<dialog id="show_task_modal" class="modal">
+    <div class="task_dialog">
+        <header class="task_dialog_header marg_bot_16">
+            <span class="tsk_dlg_type">User Story</span> <!-- user story Box -->
+            <span class="svg-icon" data-icon="delCross" data-w="14" data-h="14">
+                <!-- <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.575 7.975L1.675 12.875C1.49167 13.0583 1.25833 13.15 0.975 13.15C0.691667 13.15 0.458333 13.0583 0.275 12.875C0.0916667 12.6917 0 12.4583 0 12.175C0 11.8917 0.0916667 11.6583 0.275 11.475L5.175 6.575L0.275 1.675C0.0916667 1.49167 0 1.25833 0 0.975C0 0.691667 0.0916667 0.458333 0.275 0.275C0.458333 0.0916667 0.691667 0 0.975 0C1.25833 0 1.49167 0.0916667 1.675 0.275L6.575 5.175L11.475 0.275C11.6583 0.0916667 11.8917 0 12.175 0C12.4583 0 12.6917 0.0916667 12.875 0.275C13.0583 0.458333 13.15 0.691667 13.15 0.975C13.15 1.25833 13.0583 1.49167 12.875 1.675L7.975 6.575L12.875 11.475C13.0583 11.6583 13.15 11.8917 13.15 12.175C13.15 12.4583 13.0583 12.6917 12.875 12.875C12.6917 13.0583 12.4583 13.15 12.175 13.15C11.8917 13.15 11.6583 13.0583 11.475 12.875L6.575 7.975Z" fill="#2A3647"/>
+                </svg> -->
+            </span> <!-- corner close button  -->
+        </header>
+
+        <main>
+            <h1 class="tsk_dlg_h1 marg_bot_16">Kochwelt Page & Receipe Commander</h1> <!-- Titel -->
+            <h2 class="tsk_dlg_h2 marg_bot_16">Build start page with recipe recommendation.</h2> <!-- Description -->
+            <section class="tsk_dlg_due_date_sec marg_bot_16"> <!-- due date -->
+                <span>Due date:</span>
+                <span>10/05/2026</span>
+            </section>
+
+            <section class="tsk_dlg_prio_sec marg_bot_16"> <!-- priority -->
+                <span class="marg_r_53">Priority:</span>
+                <div class="tsk_dlg_prio_div">
+                    <span>Medium</span>
+                    <span>
+                        <svg width="17" height="7" viewBox="0 0 17 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.0685 6.33333H0.931507C0.684456 6.33333 0.447523 6.23448 0.272832 6.05852C0.0981406 5.88256 0 5.6439 0 5.39506C0 5.14621 0.0981406 4.90756 0.272832 4.7316C0.447523 4.55564 0.684456 4.45679 0.931507 4.45679H16.0685C16.3155 4.45679 16.5525 4.55564 16.7272 4.7316C16.9019 4.90756 17 5.14621 17 5.39506C17 5.6439 16.9019 5.88256 16.7272 6.05852C16.5525 6.23448 16.3155 6.33333 16.0685 6.33333Z" fill="#FF7A00"/>
+                        <path d="M16.0685 1.87654H0.931507C0.684456 1.87654 0.447523 1.77769 0.272832 1.60173C0.0981406 1.42577 0 1.18712 0 0.938272C0 0.689426 0.0981406 0.450773 0.272832 0.274813C0.447523 0.0988533 0.684456 0 0.931507 0L16.0685 0C16.3155 0 16.5525 0.0988533 16.7272 0.274813C16.9019 0.450773 17 0.689426 17 0.938272C17 1.18712 16.9019 1.42577 16.7272 1.60173C16.5525 1.77769 16.3155 1.87654 16.0685 1.87654Z" fill="#FF7A00"/>
+                        </svg>
+                    </span>
+                </div>
+            </section>
+
+            <section class="tsk_dlg_assgnd_sec marg_bot_16"> <!-- assigend to -->
+                <span>Assigned To:</span>
+                <div class="tsk_dlg_assgnd"> <!-- Avatar und Name -->
+                    <span class="sml_user_avatar">EM</span>
+                    <span>Emmanuel Mauer</span>
+                </div>
+            </section>
+
+            <section class="tsk_dlg_sbtsk_sec marg_bot_16"> <!-- subtasks -->
+                <span>Subtasks</span>
+                <div class="tsk_dlg_sbtsk"> <!-- checkbox for subtask done -->
+                    <span>
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12" stroke="#2A3647" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M5 9L9 13L17 1.5" stroke="#2A3647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span> 
+                    <span>Implement Recipe Recommendation</span>
+                </div>
+            </section>
+
+            <section class="tsk_dlg_act_sec marg_bot_16"> <!-- delete & edit button -->
+                <div class="tsk_dlg_act_btn_div">
+                    <button class="pure_btn">
+                        <span>
+                            <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3C0.716667 3 0.479167 2.90417 0.2875 2.7125C0.0958333 2.52083 0 2.28333 0 2C0 1.71667 0.0958333 1.47917 0.2875 1.2875C0.479167 1.09583 0.716667 1 1 1H5C5 0.716667 5.09583 0.479167 5.2875 0.2875C5.47917 0.0958333 5.71667 0 6 0H10C10.2833 0 10.5208 0.0958333 10.7125 0.2875C10.9042 0.479167 11 0.716667 11 1H15C15.2833 1 15.5208 1.09583 15.7125 1.2875C15.9042 1.47917 16 1.71667 16 2C16 2.28333 15.9042 2.52083 15.7125 2.7125C15.5208 2.90417 15.2833 3 15 3V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM3 3V16H13V3H3ZM5 13C5 13.2833 5.09583 13.5208 5.2875 13.7125C5.47917 13.9042 5.71667 14 6 14C6.28333 14 6.52083 13.9042 6.7125 13.7125C6.90417 13.5208 7 13.2833 7 13V6C7 5.71667 6.90417 5.47917 6.7125 5.2875C6.52083 5.09583 6.28333 5 6 5C5.71667 5 5.47917 5.09583 5.2875 5.2875C5.09583 5.47917 5 5.71667 5 6V13ZM9 13C9 13.2833 9.09583 13.5208 9.2875 13.7125C9.47917 13.9042 9.71667 14 10 14C10.2833 14 10.5208 13.9042 10.7125 13.7125C10.9042 13.5208 11 13.2833 11 13V6C11 5.71667 10.9042 5.47917 10.7125 5.2875C10.5208 5.09583 10.2833 5 10 5C9.71667 5 9.47917 5.09583 9.2875 5.2875C9.09583 5.47917 9 5.71667 9 6V13Z" fill="#2A3647"/>
+                            </svg>
+                        </span>
+                        <span>Delete</span>
+                    </button>
+                    <span style="font-size: 16px;">|</span>
+                    <button class="pure_btn">
+                        <span>
+                            <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 16.25H3.4L12.025 7.625L10.625 6.225L2 14.85V16.25ZM16.3 6.175L12.05 1.975L13.45 0.575C13.8333 0.191667 14.3042 0 14.8625 0C15.4208 0 15.8917 0.191667 16.275 0.575L17.675 1.975C18.0583 2.35833 18.2583 2.82083 18.275 3.3625C18.2917 3.90417 18.1083 4.36667 17.725 4.75L16.3 6.175ZM14.85 7.65L4.25 18.25H0V14L10.6 3.4L14.85 7.65Z" fill="#2A3647"/>
+                            </svg>
+                        </span>
+                        <span>Edit</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
 </dialog>
 
 <div id="addTaskLoader" style="display:none;"></div>

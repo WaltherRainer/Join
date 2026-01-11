@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <link rel="icon" type="image/x-icon" href="./assets/img/join.svg">
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_top_menu.css"/>
     <link rel="stylesheet" href="styles/style_index.css">
@@ -17,7 +18,9 @@
     <script src="./JS/icons.js" defer></script>
     <script src="./JS/templates.js" defer></script>
     <script src="./JS/tasks_subtasks.js" defer></script>
+    <script src="./JS/task_utils.js" defer></script>
     <script src="./JS/tasks.js" defer></script>
+    
     <script src="./script.js" defer></script>
     <title>Document</title>
     <style></style>
@@ -107,7 +110,7 @@
                             </div>
 
                             <div class="single_select__dropdown" hidden>
-                            <ul class="single_select__list"></ul>
+                                <ul class="single_select__list"></ul>
                             </div>
 
                             <input type="hidden" id="task_type" name="task_type" required>
@@ -164,11 +167,11 @@
   </div>
 
     <!-- Task added Success Toast -->
-<div class="task_success_overlay" id="task_success_overlay" aria-hidden="true" data-hold-ms="900">
-  <div class="task_success_box" data-toast-box role="status" aria-live="polite">
-    Task added to Board
-  </div>
-</div>
+    <div class="task_success_overlay" id="task_success_overlay" aria-hidden="true" data-hold-ms="900">
+        <div class="task_success_box" data-toast-box role="status" aria-live="polite">
+            Task added to Board
+        </div>
+    </div>
 
 
     <script>

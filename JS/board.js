@@ -1,12 +1,37 @@
-
-
-
-function initBoardModalButton() {
+function initBoardModalButtons() {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
   btn.addEventListener("click", openAddTaskModal);
+
+  const taskSect = document.querySelectorAll(".task_section");
+  if (taskSect.length === 0) return;
+
+  taskSect.forEach(section => {
+    section.addEventListener("click", (e) => {
+      const card = e.target.closest(".t_task");
+      if (!card) return;
+
+      // console.log(card.dataset.taskId);
+
+      const taskId = card.dataset.taskId;
+      if (!taskId) return;
+      renderTaskModal(taskId);
+      // setActiveTaskCard(card);
+    });
+  });
 }
 
+function showTaskModal() {
+  const modal = document.getElementById("show_task_modal");
+  
+  modal.showModal();
+}
+
+function renderTaskModal(taskId) {
+
+  showTaskModal();
+
+}
 
 function getBoardContainers() {
   const toDoDiv = document.getElementById("task_to_do");

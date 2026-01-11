@@ -105,38 +105,33 @@ function initUsersLoading() {
   return window.usersReady;
 }
 
-async function loadTasks() {
-  tasks = await loadData("/tasks");
-  const users = await ensureUsersLoaded();
-  // console.log(users);
-  // loadTaskBoard(tasks, users);
-}
 
 
-function showNav(page = "summary") {
-  setActiveNav(page);
-  const mainCont = document.getElementById("main_content");
-  mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
 
-  w3includeHTML(async () => {
-    renderIcons(document);
-    onPageLoaded(page);
+// function showNav(page = "summary") {
+//   setActiveNav(page);
+//   const mainCont = document.getElementById("main_content");
+//   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
 
-    if (page === "add_task") {
-      await ensureUsersLoaded();
-      initAssignedToDropdown(users);
-      initTaskTypeDropdown(TASK_CATEGORIES);
-      initSubtasksInput();
-    } else if (page === "contacts") {
-      renderContacts(users);
-      initContactsClick(users);
-    } else if (page === "summary") {
-      initSummary();
-    }
-  });
-}
+//   w3includeHTML(async () => {
+//     renderIcons(document);
+//     onPageLoaded();
 
-function onPageLoaded(page) {
+//     if (page === "add_task") {
+//       await ensureUsersLoaded();
+//       initAssignedToDropdown(users);
+//       initTaskTypeDropdown(TASK_CATEGORIES);
+//       initSubtasksInput();
+//     } else if (page === "contacts") {
+//       renderContacts(users);
+//       initContactsClick(users);
+//     } else if (page === "summary") {
+//       initSummary();
+//     }
+//   });
+// }
+
+function onPageLoaded() {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
 
@@ -149,12 +144,6 @@ function setActiveNav(page) {
   });
 }
 
-// async function loadStart() {
-//   users = (await loadData("/users")) || {};
-//   await loadTasks();
-//   showNav("summary");
-//   showAvatar();
-// }
 
 function showAvatar() {
   const avatar = document.getElementById("user_avatar_wrapper");
@@ -237,26 +226,48 @@ function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
   });
 }
 
+
 function InitGlobalEventListener() {
-    const openUserDialog = document.getElementById('open_user_dialog');
-    openUserDialog.addEventListener('click', () => {
-    openUserMenuDialog();
-    });
+  const btn = document.getElementById("open_user_dialog");
+  const menu = document.getElementById("user_dialog");
+
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleUserMenu();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (menu.hidden) return;
+
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      closeUserMenuDialog();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeUserMenuDialog();
+    }
+  });
+
+  function toggleUserMenu() {
+    if (menu.hidden) openUserMenuDialog();
+    else closeUserMenuDialog();
+  }
 }
 
 function openUserMenuDialog() {
-  const modal = document.getElementById("user_dialog");
-  modal.showModal();
-  listenEscapeFromModal("user_dialog");
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeUserMenuDialog();
-  });
+  const menu = document.getElementById("user_dialog");
+  menu.hidden = false;
+
+  const firstLink = menu.querySelector("a, button");
+  firstLink?.focus();
 }
 
+
 function closeUserMenuDialog() {
-  const modal = document.getElementById("user_dialog");
-  // modal.removeEventListener('submit', editUser);
-  modal.close();
+  const menu = document.getElementById("user_dialog");
+  menu.hidden = true;
 }
 
 /**
@@ -284,15 +295,15 @@ window.initPage = async function initPage() {
       break;
     case "summary":
       // loadSummary();
-      await loadTasks();
+      await ensureTasksLoaded();
       // renderSummary();
       break;
     case "board":
-      await loadTasks();
+      await ensureTasksLoaded();
       loadTaskBoard(tasksDataObj, usersDataObj);
       // renderBoard();
       initAddTaskModalOnce();
-      initBoardModalButton();
+      initBoardModalButtons();
       break;
 
     default:
@@ -396,8 +407,6 @@ function showToastOverlay(overlayId, opts = {}) {
     box.removeEventListener("animationend", onAnimEnd);
   };
 }
-
-
 
 function w3includeHTML(cb) {
   var z, i, elmnt, file, xhttp;

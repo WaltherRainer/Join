@@ -56,3 +56,8 @@ function userLogout() {
   sessionStorage.clear();
   window.location.replace("index.html");
 }
+
+function setValueById(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.value = value;
+}

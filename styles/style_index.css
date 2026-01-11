@@ -385,6 +385,7 @@ body.is_loaded {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  
 }
 
 .input_icon {
@@ -394,8 +395,4 @@ body.is_loaded {
   transform: translateY(-50%);
   display: grid;
   place-items: center;
-}
-
-.svg-icon svg {
-  display: block;
 }
