@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   padding-right: 74px;
+  background-color: var(--background-color);
 }
 
 .subtasks_input_wrap .input_subtasks {
@@ -81,7 +82,6 @@
 
 .subtasks_list li {
   position: relative;
-  width: 98%;
   padding: 6px 92px 6px 16px;
   margin: 2px 0;
   border-radius: 8px;
@@ -103,7 +103,7 @@
 /* Actions rechts */
 .subtask_actions {
   position: absolute;
-  right: 8px;
+  right: 13px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;

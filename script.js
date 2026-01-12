@@ -183,7 +183,7 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
     const initials = initialsFromGivenName(user.givenName);
     const bgColor = colorVarFromUserId(userId);
     const avatar = document.createElement("span");
-    avatar.className = "user__avatar";
+    avatar.className = "user__avatar avatar_wrap";
     avatar.style.background = bgColor;
     avatar.textContent = initials;
     container.appendChild(avatar);

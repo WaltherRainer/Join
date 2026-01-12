@@ -1,6 +1,3 @@
-
-
-
 function initAssignedToDropdown(usersData) {
   const ui = getAssignedToUi();
   if (!ui.root || isInitialized(ui.root)) return;
@@ -8,6 +5,7 @@ function initAssignedToDropdown(usersData) {
   const state = { usersData, selected: new Set(), ui };
   ui.root._assignedState = state;
   wireDropdownEvents(state);
+  wireFilterEvents(state);
   renderUserList(state);
 }
 
@@ -50,7 +48,29 @@ function getAssignedToUi() {
     placeholder: document.getElementById("assigned_to_placeholder"),
     valueEl: document.getElementById("assigned_to_value"),
     hiddenInput: document.getElementById("assigned_to_input"),
+    filterInput: document.getElementById("assigned_to_filter"),
   };
+}
+
+function wireFilterEvents(state) {
+  const { ui } = state;
+  if (!ui.filterInput) return;
+
+  ui.filterInput.addEventListener("input", (e) => {
+    state.query = e.target.value || "";
+    renderUserList(state);
+  });
+
+  ui.filterInput.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+
+  ui.filterInput.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeDropdown(ui);
+      ui.filterInput.blur();
+    }
+  });
 }
 
 function resetAssignedToDropdown() {
@@ -71,14 +91,6 @@ function resetAssignedToDropdown() {
     return;
   }
 
-  // Fallback (falls init noch nicht gelaufen ist)
-  if (ui.placeholder) ui.placeholder.hidden = false;
-  if (ui.valueEl) {
-    ui.valueEl.hidden = true;
-    ui.valueEl.textContent = "";
-  }
-  if (ui.hiddenInput) ui.hiddenInput.value = "";
-
   const avatarContainer = document.getElementById("assigned_avatar_container");
   if (avatarContainer) avatarContainer.innerHTML = "";
 }
@@ -86,8 +98,13 @@ function resetAssignedToDropdown() {
 function renderUserList(state) {
   const { list } = state.ui;
   list.innerHTML = "";
+  const q = (state.query || "").trim().toLowerCase();
   for (const [userId, userObj] of Object.entries(state.usersData)) {
+    const nameRaw = userObj?.givenName ?? "";
+    const name = nameRaw.toLowerCase();
+    if (q && !name.includes(q)) continue;
     const li = createUserListItem(state, userId, userObj);
+    if (state.selected.has(userId)) li.classList.add("is-selected");
     list.appendChild(li);
   }
 }
@@ -130,26 +147,59 @@ function applySelectionUi(ui, names, selected) {
     return;
   }
   ui.placeholder.hidden = true;
-  ui.valueEl.hidden = false;
-  ui.valueEl.textContent = names.join(", ");
+  ui.valueEl.hidden = true;
+  ui.valueEl.textContent = "";  //   names.join(", "); könnte da auch rein um die Namen zurück zu geben
   ui.hiddenInput.value = JSON.stringify([...selected]);
 }
 
 function wireDropdownEvents(state) {
   const { ui } = state;
+
+  function afterToggleSync() {
+    const isOpen = !ui.dropdown.hidden;
+
+    if (ui.filterInput) {
+      ui.filterInput.hidden = !isOpen;
+      if (isOpen) {
+        ui.filterInput.focus();
+        ui.filterInput.select();
+      } else {
+        ui.filterInput.value = "";
+        state.query = "";
+        renderUserList(state);
+      }
+    }
+    if (isOpen) ui.placeholder.hidden = true;
+    else {
+      if (state.selected.size === 0) ui.placeholder.hidden = false;
+    }
+  }
+
   ui.toggleBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     toggleDropdown(ui);
+    afterToggleSync();
   });
+
   ui.control.addEventListener("click", (e) => {
     if (e.target === ui.toggleBtn || ui.toggleBtn.contains(e.target)) return;
+
     toggleDropdown(ui);
+    afterToggleSync();
   });
+
   document.addEventListener("click", (e) => {
-    if (!ui.root.contains(e.target)) closeDropdown(ui);
+    if (!ui.root.contains(e.target)) {
+      closeDropdown(ui);
+      afterToggleSync();
+    }
   });
+
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeDropdown(ui);
+    if (e.key === "Escape") {
+      closeDropdown(ui);
+      afterToggleSync();
+    }
   });
 }
 

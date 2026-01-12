@@ -260,12 +260,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 2px #fff;
   border-radius: 999px;
   user-select: none;
   font-weight: 700;
   font-size: 16px;
   color: var(--white-text-color);
+  
+}
+
+.avatar_wrap {
+  margin-left: -20px;
+  border: 3px var(--background-color);
 }
 
 .user_name {
@@ -303,6 +309,7 @@
   gap: 6px;
   margin: 8px 0;
   min-height: 50px;
+  margin-left: 20px;
 }
 
 /* =========================
@@ -367,8 +374,6 @@
   opacity: 1;
 }
 
-
-
 .task_success_overlay.is_animating .task_success_box {
   animation: task_success_slide_in 600ms ease forwards;
 }
@@ -378,3 +383,10 @@
   to   { transform: translateY(0);    opacity: 1; }
 }
 
+.multi_select__filter{
+  border:0;
+  outline:none;
+  background:transparent;
+  flex:1;
+  min-width:140px;
+}
