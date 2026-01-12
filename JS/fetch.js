@@ -26,8 +26,8 @@ async function loadData(path = "") {
       throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
     }
     let data = await response.json();
-    console.log(data)
-    return data
+    console.log(data);
+    return data;
   } catch (error) {
     console.error("Fehler beim Abrufen der Daten:", error);
     return null;
@@ -81,7 +81,7 @@ async function editData(path = "", dataId, dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
 
-    const response = await fetch(url, {
+  const response = await fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataObj),
@@ -92,7 +92,6 @@ async function editData(path = "", dataId, dataObj) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }
   return await response.json();
-
 }
 
 /**
