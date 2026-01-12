@@ -33,7 +33,7 @@ function getContactListTempl(userId, givenName, userEmail) {
           <p>${userEmail}</p>
         </div>
       </div>
-  `
+  `;
 }
 
 function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo, userId) {
@@ -65,7 +65,7 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
           <h4>Phone</h4>
           <span>${phoneNo}</span>
       </div>
-  `
+  `;
 }
 
 function taskItemTemplate(task, users) {
@@ -85,15 +85,15 @@ function taskItemTemplate(task, users) {
               <div class="t_priority">${task.priority}</div>
           </div>
       </div>
-  `
+  `;
 }
 
-function noTaskTemplate(text) { 
+function noTaskTemplate(text) {
   return `
   <div class="no_task"><p>${text}</p></div>
-  `; 
+  `;
 }
-// ${fillSubTasksBar(task.subTasks)} 
+// ${fillSubTasksBar(task.subTasks)}
 
 window.userListItemTemplate = userListItemTemplate;
 

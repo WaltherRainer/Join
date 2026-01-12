@@ -5,34 +5,29 @@ let activeUserName = "";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
 
-let joinLocalStorageObject = {}; // erzeugt object für localStorage
+let joinSessionStorageObject = {}; // erzeugt object für SessionStorage
 
 let usersReady = null;
 
 function indexInit() {
-  initLocalStorage();
+  initSessionStorage();
 }
 
-function initLocalStorage() {
-  localStorage.removeItem("joinLocalStorageObject"); // Löscht zum Start von Join die alten Daten im localStorage  Evtl geht auch localStorage.clear();
-  joinLocalStorageObject.userIsGuest = false; // Wenn User ein Gast (nicht eingeloggt) ist, dann 'true'
-  joinLocalStorageObject.activeUserId = activeUserId;
-  joinLocalStorageObject.activeUserName = activeUserName;
-  localStorage.setItem("joinLocalStorageObject", JSON.stringify(joinLocalStorageObject));
+function initSessionStorage() {
+  sessionStorage.setItem("userIsGuest", false); // Wenn User ein Gast (nicht eingeloggt) ist, dann 'true'
 }
 
-function saveLocalStorage(key, value) {
-  joinLocalStorageObject[key] = value;
-  localStorage.setItem("joinLocalStorageObject", JSON.stringify(joinLocalStorageObject));
+function saveSessionStorage(key, value) {
+  sessionStorage.setItem(key, JSON.stringify(value));
 }
 
-function loadLocalStorage() {
-  const tempArr = JSON.parse(localStorage.getItem("joinLocalStorageObject"));
+function loadSessionStorage() {
+  const tempArr = JSON.parse(sessionStorage.getItem("joinSessionStorageObject"));
 
   if (tempArr != null) {
-    joinLocalStorageObject = tempArr;
+    joinSessionStorageObject = tempArr;
   } else {
-    console.error("Error loading data from localstorage");
+    console.error("Error loading data from session storage");
   }
 }
 
@@ -44,7 +39,6 @@ function saveUserToSessionStorage(userId, userName, users) {
 
 function ensureTasksAreLoaded() {
   if (tasks && Object.keys(tasks).length > 0) return tasks;
-
 }
 
 function getUserIdFromSessionStorage() {
@@ -57,7 +51,7 @@ function getUserNameFromSessionStorage() {
 
 async function ensureUsersLoaded() {
   if (users && Object.keys(users).length > 0) return users;
-  const dataObj =  JSON.parse(sessionStorage.getItem("users"));
+  const dataObj = JSON.parse(sessionStorage.getItem("users"));
   if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
   users = (await loadData("/users")) || {};
   sessionStorage.setItem("users", JSON.stringify(users));
@@ -66,13 +60,12 @@ async function ensureUsersLoaded() {
 
 async function ensureTasksLoaded() {
   if (tasks && Object.keys(tasks).length > 0) return tasks;
-  const dataObj =  JSON.parse(sessionStorage.getItem("tasks"));
+  const dataObj = JSON.parse(sessionStorage.getItem("tasks"));
   if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
   tasks = (await loadData("/tasks")) || {};
   sessionStorage.setItem("tasks", JSON.stringify(tasks));
   return tasks;
 }
-
 
 /**
  * Initializes the global user data exactly once and returns a shared promise.
@@ -104,9 +97,6 @@ function initUsersLoading() {
   }
   return window.usersReady;
 }
-
-
-
 
 // function showNav(page = "summary") {
 //   setActiveNav(page);
@@ -144,7 +134,6 @@ function setActiveNav(page) {
   });
 }
 
-
 function showAvatar() {
   const avatar = document.getElementById("user_avatar_wrapper");
   avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
@@ -162,13 +151,13 @@ function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
   // console.log(userMenu);
   if (!userMenu) return;
-  
+
   userMenu.classList.toggle("d_none");
 }
 
 function showUserDialog() {
   const dialog = document.getElementById("user_menu");
-  openBtn.addEventListener('click', () => {
+  openBtn.addEventListener("click", () => {
     dialog.showModal();
   });
 }
@@ -226,7 +215,6 @@ function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
   });
 }
 
-
 function InitGlobalEventListener() {
   const btn = document.getElementById("open_user_dialog");
   const menu = document.getElementById("user_dialog");
@@ -264,7 +252,6 @@ function openUserMenuDialog() {
   firstLink?.focus();
 }
 
-
 function closeUserMenuDialog() {
   const menu = document.getElementById("user_dialog");
   menu.hidden = true;
@@ -281,7 +268,7 @@ window.initPage = async function initPage() {
   const page = document.body?.dataset?.page;
   renderActiveUserAvatar();
   const usersDataObj = await ensureUsersLoaded();
-  const tasksDataObj  = await ensureTasksLoaded();
+  const tasksDataObj = await ensureTasksLoaded();
   switch (page) {
     case "contacts":
       renderContacts(usersDataObj);
@@ -315,10 +302,10 @@ window.initPage = async function initPage() {
 };
 
 function renderActiveUserAvatar() {
-    const color = colorVarFromUserId(sessionStorage.userId)
-    document.documentElement.style.setProperty('--user_c_active', color);
-    const initials = initialsFromGivenName(sessionStorage.userName);
-    document.getElementById("active_user_avatar").innerHTML = initials;
+  const color = colorVarFromUserId(sessionStorage.userId);
+  document.documentElement.style.setProperty("--user_c_active", color);
+  const initials = initialsFromGivenName(sessionStorage.userName);
+  document.getElementById("active_user_avatar").innerHTML = initials;
 }
 
 function setActiveNavLink() {

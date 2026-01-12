@@ -20,7 +20,6 @@ function setPwIcon(button, iconName) {
 }
 
 async function guestLogin() {
-  saveLocalStorage("userIsGuest", true);
   let dataObj = await loadData("/users");
   saveUserToSessionStorage("guest", "Guest", dataObj);
   window.location.replace("summary.html");
@@ -130,15 +129,13 @@ async function userLogin(e) {
   const emailValue = emailInput.value.trim();
   const passwordValue = passwordInput.value.trim();
   if (accessGranted(emailValue, passwordValue)) {
-    saveLocalStorage("userIsGuest", false);
-    
-    window.location.replace("summary.html");
+    saveSessionStorage("userIsGuest", false);
 
+    window.location.replace("summary.html");
   } else {
     warningLogin?.classList.add("visible");
   }
 }
-
 
 /**
  * Function to check if user and password matches, sets the user id and returns true when a match was found
@@ -161,8 +158,6 @@ function accessGranted(email, password) {
   }
   return false;
 }
-
-
 
 /** resets the error when user is typing in something the input box */
 function enableFormErrorReset(formElement) {

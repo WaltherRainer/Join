@@ -1,27 +1,5 @@
-/**
- * Initializes the summary section by writing all greeting-related content
- * to the DOM.
- *
- * This function acts as a small orchestration layer and calls the individual
- * greeting functions in the correct order. It is intended to be executed
- * after the DOM or dynamically included HTML content has been fully loaded.
- *
- * Currently, it performs the following actions:
- * - Updates the time-of-day greeting (see {@link writeGreetingDay})
- * - Updates the personalized name greeting (see {@link writeGreetingName})
- *
- * If the required target elements are not present in the DOM, the called
- * functions are expected to fail silently.
- *
- * @function initSummary
- * @returns {void} This function does not return a value.
- *
- * @example
- * // Call after HTML includes or DOM initialization
- * initSummary();
- */
 function initSummary() {
-  loadLocalStorage();
+  // loadSessionStorage();
   writeGreetingDay();
   writeGreetingName();
 }
