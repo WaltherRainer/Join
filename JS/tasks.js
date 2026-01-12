@@ -142,9 +142,6 @@ function clearTaskForm() {
   resetTaskTypeDropdownUi();
 }
 
-
-
-
 function clearEditInput(state) {
   const el = state.ui.listEl.querySelector('li.is-editing input.subtask_edit');
   if (el) el.value = "";

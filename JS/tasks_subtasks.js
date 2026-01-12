@@ -225,7 +225,7 @@ function makeSubtaskActions() {
 function makeIconBtn(action, iconFn) {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "icon-btn icon-btn--nohovercircle";
+    btn.className = "icon_btn icon_btn--nohovercircle icon_btn_std_size";
     btn.dataset.action = action;
     btn.innerHTML = iconFn({ width: 18, height: 18 });
     return btn;

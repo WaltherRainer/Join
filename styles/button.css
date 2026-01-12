@@ -167,7 +167,110 @@
     font-size: 30px;
 }
 
-
 .btn_close_modal:hover {
   background: var(--border_color);
+}
+
+.icon_text_btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text_color_grey);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+/* .icon_text_btn:hover {
+  background-color: var(--secondary-background-color);
+}
+
+.icon_hover:hover {
+  background-color: var(--secondary-background-color);
+} */
+
+.icon_text_btn.is-edit {
+  color: var(--blue);
+
+}
+
+.icon_text_btn.is-edit:hover {
+  color: var(--light-blue);
+  
+}
+
+.icon_text_btn.is-delete {
+  color: var(--blue);
+}
+
+.icon_text_btn.is-delete:hover {
+  color: var(--warning_red);
+}
+
+.edit_contact_btn {
+    display: flex;
+    
+}
+
+.clear_button {
+    padding: 16px 16px;
+    color: var(--blue);
+    font-size: 21px;
+    font-weight: 400;
+    background-color: transparent;
+    border: 1px solid var(--blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.clear_button:hover {
+    border: 1px solid var(--light-blue);
+    color: var(--light-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.default_button {
+    font-family: 'Inter';
+    background-color: var(--blue);
+    color: var(--background-color);
+    font-size: 21px;
+    font-weight: 700;
+    
+    border-radius: 8px;
+    cursor: pointer;
+    border-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px 0 16px;
+}
+
+.button_icon {
+    display: inline-flex;
+}
+
+.default_button:hover {
+    background-color: var(--light-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.close_button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+#btn_delete_task:hover {
+    color: red;
 }

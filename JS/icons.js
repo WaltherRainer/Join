@@ -204,11 +204,11 @@ function prioUrgent({ width = 20, height = 15, color = "#FF3D00" } = {}) {
 }
 
 
-function prioMedium({ width = 20, height = 15, color = "var(--prio-medium)" } = {}) {
+function prioMedium({ width = 20, height = 8, color = "var(--prio-medium)" } = {}) {
   return iconSvg({
     width,
     height,
-    viewBox: "0 0 20 15",
+    viewBox: "0 0 20 8",
     color,
     paths: [
       { d: "M18.9041 7.45086H1.09589C0.805242 7.45086 0.526498 7.33456 0.320979 7.12755C0.11546 6.92054 0 6.63977 0 6.34701C0 6.05425 0.11546 5.77349 0.320979 5.56647C0.526498 5.35946 0.805242 5.24316 1.09589 5.24316H18.9041C19.1948 5.24316 19.4735 5.35946 19.679 5.56647C19.8845 5.77349 20 6.05425 20 6.34701C20 6.63977 19.8845 6.92054 19.679 7.12755C19.4735 7.33456 19.1948 7.45086 18.9041 7.45086Z" },
@@ -378,6 +378,27 @@ function checkMark({ width = 15, height = 11, color = "var(--nav-icon)" } = {}) 
   });
 }
 
+function checkBoxUnchecked() {
+  return `
+        <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
+      </svg>
+  `
+}
+
+function checkBoxChecked({ width = 18, height = 18, color = "var(--nav-icon)" } = {}) {
+  return iconSvg({
+    width,
+    height,
+    viewBox: "0 0 18 18",
+    color,
+    paths: [
+      { d: "M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12" },
+      { d: "M5 9L9 13L17 1.5" },
+    ],
+  });
+}
+
 const ICONS = {
   recyBin,
   editPencil,
@@ -399,7 +420,7 @@ const ICONS = {
   prioLow,
   editPencilBig,
   prioUrgentBig,
-  confTickBig, phone, checkMark,
+  confTickBig, phone, checkMark, checkBoxChecked,
 };
 
 function renderIcons(root = document) {

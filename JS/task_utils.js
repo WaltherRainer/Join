@@ -342,5 +342,30 @@ function closeTaskTypeDropdown(ui) {
   ui.caret.classList.remove("caret_rotate");
 }
 
+function resetPriorityButtons() {
+  const urgent = document.querySelector('input[name="priority"][value="urgent"]');
+  const medium = document.querySelector('input[name="priority"][value="medium"]');
+  const low = document.querySelector('input[name="priority"][value="low"]');
+
+  if (urgent) urgent.checked = false;
+  if (medium) medium.checked = true;
+  if (low) low.checked = false;
+}
+
+function resetTaskTypeDropdownUi() {
+  const root = document.getElementById("task_type_select");
+  if (!root) return;
+
+  const valueEl = root.querySelector(".single_select__value");
+  const placeholder = root.querySelector(".single_select__placeholder");
+  const hiddenInput = document.getElementById("task_type");
+
+  if (valueEl) {
+    valueEl.hidden = true;
+    valueEl.textContent = "";
+  }
+  if (placeholder) placeholder.hidden = false;
+  if (hiddenInput) hiddenInput.value = "";
+}
 
 window.initAssignedToDropdown = initAssignedToDropdown;

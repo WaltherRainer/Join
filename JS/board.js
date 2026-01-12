@@ -1,4 +1,4 @@
-function initBoardModalButtons() {
+function initBoardEventList(tasks, users) {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
   btn.addEventListener("click", openAddTaskModal);
@@ -10,27 +10,125 @@ function initBoardModalButtons() {
     section.addEventListener("click", (e) => {
       const card = e.target.closest(".t_task");
       if (!card) return;
-
-      // console.log(card.dataset.taskId);
-
       const taskId = card.dataset.taskId;
       if (!taskId) return;
-      renderTaskModal(taskId);
-      // setActiveTaskCard(card);
+      openTaskModal(taskId, tasks, users);
     });
   });
 }
 
-function showTaskModal() {
-  const modal = document.getElementById("show_task_modal");
-  
-  modal.showModal();
+function deleteTask(taskId) {
+  console.log(taskId)
 }
 
-function renderTaskModal(taskId) {
+function initEditMode() {
+  console.log("edit")
+}
 
-  showTaskModal();
+function initTaskModal(tasks) {
+  const ui = getTaskUi();
+}
 
+function getTaskUi() {
+  const titel = document.getElementById("tsk_dlg_h1");
+  const descr = document.getElementById("tsk_dlg_h2");
+  const dueDate = document.getElementById("tsk_dlg_due_date");
+  const prio = document.getElementById("tsk_dlg_prio_div");
+  const assignedTo = document.getElementById("tsk_dlg_assgnd_div");
+  const subTaskDiv = document.getElementById("tsk_dlg_sbtsk");
+  const SubTaskList = document.getElementById("subtasks_check_list");
+  return {
+    titel: titel,
+    descr: descr,
+    dueDate: dueDate,
+    prio: prio,
+    assignedTo: assignedTo,
+    subTaskDiv: subTaskDiv,
+    SubTaskList: SubTaskList,
+  };
+
+}
+
+function initTaskModalEventList(modal, taskId) {
+
+  listenEscapeFromModal("show_task_modal");
+
+  document.getElementById("tsk_dlg_close").addEventListener("click", () => {
+    closeTaskModal(modal);
+  });
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeTaskModal(modal);
+  });
+
+  const editBtn = document.getElementById("btn_edit_task");
+  editBtn.addEventListener("click", initEditMode);
+
+  const deleteBtn = document.getElementById("btn_delete_task");
+  deleteBtn.addEventListener("click", () => deleteTask(taskId));
+
+}
+
+function closeTaskModal(modal) {
+  modal.close();
+}
+
+async function openTaskModal(taskId, tasks, users) {
+  const modal = document.getElementById("show_task_modal");
+  if (!modal) return;
+
+  modal.showModal();
+  initTaskModalEventList(modal, taskId);
+
+  const ui = getTaskUi();
+  renderTaskModal(taskId, ui, tasks, users);
+}
+
+function renderTaskModal(taskId, ui, tasks, users) {
+  const id = String(taskId).trim();
+  const task = tasks[id];
+
+  if (!task) {
+    console.warn("Task nicht gefunden:", id);
+    return;
+  }
+
+  ui.titel.textContent = task.titel;
+  ui.descr.textContent = task.description ?? "(without description)";
+  ui.dueDate.textContent = task.finishDate;
+  ui.prio.innerHTML = getTaskDialogPrioTempl(task.priority);
+  ui.assignedTo.innerHTML = renderAssignedTo(task, users);
+  ui.SubTaskList.innerHTML = renderSubtasksContent(task);
+  renderIcons();
+}
+
+function renderAssignedTo(task, users) {
+  let assTo = ""
+  task.assignedTo.forEach(element => {
+    console.log(task.assignedTo)
+    let user = users[element];
+    if (user) {
+      console.log(user);
+      let bgColor = colorIndexFromUserId(element);
+      let userName = user.givenName;
+      let initials = initialsFromGivenName(userName);
+      assTo += getAssignedToTempl(initials, userName, bgColor);
+    }
+  });
+return assTo;
+}
+
+
+function renderSubtasksContent(task) {
+  let subTaskCont = ""
+  if (task.subTasks && typeof task.subTasks === "object" && task.subTasks.length > 0) {
+    task.subTasks.forEach(element => {
+      let subTaskTitel = element.title;
+      let unDone = element.done;
+      subTaskCont += getTaskDialSubtaskTempl(subTaskTitel, unDone);
+    });
+  }
+  return subTaskCont;
 }
 
 function getBoardContainers() {
@@ -80,6 +178,7 @@ function loadTaskBoard(tasks, users) {
   const items = returnArrayOfTasks(tasks);
   renderItems(items, containers, users);
   renderEmptyStates(containers);
+  initBoardEventList(tasks, users);
 }
 
 const returnArrayOfTasks = (tasks) => {

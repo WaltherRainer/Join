@@ -112,3 +112,80 @@ window.userListItemTemplate = userListItemTemplate;
 function writeGreetingNameTemplate() {
   return `${sessionStorage.userName}`;
 }
+
+
+function getTaskDialogPrioTempl(prio) {
+  switch (prio) {
+    case "medium":
+    return `
+      <span>Medium</span>
+      <span class="svg-icon" data-icon="prioMedium" data-w="20" data-h="16"></span>
+    `
+    case "low":
+    return `
+      <span>Low</span>
+      <span class="svg-icon" data-icon="prioLow" data-w="20" data-h="16"></span>
+    `
+    case "high":
+    return `
+      <span>High</span>
+      <span class="svg-icon" data-icon="prioHigh" data-w="20" data-h="16"></span>
+    `
+  }
+}
+
+function getTaskDialAssToTempl(initials, userName, bgColor) {
+  return `
+      <div class="tsk_dlg_assgnd">
+        <span class="sml_user_avatar" style="background-color: var(--user_c_${bgColor});">${initials}</span>
+        <span>${userName}</span>
+     </div>
+  `
+}
+
+function getTaskDialSubtaskTempl(subTaskTitel, unDone) {
+  return `
+      <li data-index="0">
+          <div class="subtask_action">
+              <button type="button" class="icon_btn icon_btn--nohovercircle" data-action="toggle">
+                      <div class="checkbox_svg" aria-hidden="${unDone}">
+                          <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                              <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"></rect>
+                          </svg>
+                          <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                              <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
+                              <path d="M5 9L9 13L17 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </svg>
+                          <span>${subTaskTitel}</span>
+                      </div>
+              </button>
+          </div>
+      </li>
+  `
+}
+
+function getCheckBoxTempl() {
+  return `
+      <div class="checkbox_svg" aria-hidden="true">
+      <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
+      </svg>
+
+      <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12"
+              stroke="white" stroke-width="2" stroke-linecap="round"/>
+        <path d="M5 9L9 13L17 1.5"
+              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  `
+}
+
+function getAssignedToTempl(initials, userName, bgColor) {
+  return `
+      <div class="tsk_dlg_assgnd"> <!-- Avatar und Name -->
+          <span class="sml_user_avatar" style="background-color: var(--user_c_${bgColor});">${initials}</span>
+          <span>${userName}</span>
+      </div>
+  `
+}

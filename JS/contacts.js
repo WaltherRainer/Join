@@ -133,7 +133,7 @@ function openContactModal() {
   bindContactFormSubmitOnce();
   
   document.getElementById("modal_close").addEventListener("click", () => {
-    closeContactModal();
+    closeContactModal(modal);
   });
 
   document.getElementById("clear_contact_form").addEventListener("click", () => {
@@ -141,11 +141,10 @@ function openContactModal() {
   });
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeContactModal();
+    if (e.target === modal) closeContactModal(modal);
   });
 
 }
-
 
 function openEditContactModal(userId, givenName, email, userPhone) {
   const modal = document.getElementById("edit_contact_modal");
@@ -159,7 +158,7 @@ function openEditContactModal(userId, givenName, email, userPhone) {
   bindEditContactFormSubmitOnce(userId);
   
   document.getElementById("edit_modal_close").addEventListener("click", () => {
-    closeEditContactModal();
+    closeEditContactModal(modal);
   });
 
   document.getElementById("delete_contact_btn").addEventListener("click", () => {
@@ -167,7 +166,7 @@ function openEditContactModal(userId, givenName, email, userPhone) {
   });
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeEditContactModal();
+    if (e.target === modal) closeEditContactModal(modal);
   });
 }
 
@@ -177,9 +176,7 @@ function preloadEditFormData(givenName, email, userPhone) {
   setValueById("edit_user_phone", userPhone);
 }
 
-
-function closeContactModal() {
-  const modal = document.getElementById("add_contact_modal");
+function closeContactModal(modal) {
   modal.removeEventListener('submit', addNewUser);
   modal.close();
 }
@@ -190,8 +187,7 @@ function contactEventList() {
   });
 }
 
-function closeEditContactModal() {
-  const modal = document.getElementById("edit_contact_modal");
+function closeEditContactModal(modal) {
   modal.removeEventListener('submit', editUser);
   modal.close();
 }
@@ -237,6 +233,7 @@ function resetContactForm() {
 }
 
 async function addNewUser() {
+  const modal = document.getElementById("add_contact_modal");
   const userNameInp = document.getElementById("user_name");
   const emailInp = document.getElementById("user_email");
   const userPhoneInp = document.getElementById("user_phone");
@@ -255,13 +252,14 @@ async function addNewUser() {
   window.usersReady = null;
   dataArray = await initUsersLoading();
   resetContactForm();
-  closeContactModal();
+  closeContactModal(modal);
   renderContacts(dataArray);
   initContactsClick(dataArray);
   showToastOverlay("toast_contact_added");
 }
 
 async function editUser(userId) {
+  const modal = document.getElementById("edit_contact_modal");
   const userNameInp = document.getElementById("edit_user_name");
   const emailInp = document.getElementById("edit_user_email");
   const userPhoneInp = document.getElementById("edit_user_phone");
@@ -276,7 +274,7 @@ async function editUser(userId) {
   dataArray = await initUsersLoading();
   renderContacts(dataArray);
   renderContactDetails(dataArray, userId);
-  closeEditContactModal();
+  closeEditContactModal(modal);
 }
 
 function renderEditContactAvatar(userId, givenName) {

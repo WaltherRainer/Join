@@ -226,7 +226,6 @@ function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
   });
 }
 
-
 function InitGlobalEventListener() {
   const btn = document.getElementById("open_user_dialog");
   const menu = document.getElementById("user_dialog");
@@ -303,7 +302,6 @@ window.initPage = async function initPage() {
       loadTaskBoard(tasksDataObj, usersDataObj);
       // renderBoard();
       initAddTaskModalOnce();
-      initBoardModalButtons();
       break;
 
     default:

@@ -26,10 +26,14 @@
   gap: 6px;
 }
 
-.icon-btn {
-  position: relative;
+.icon_btn_std_size {
   width: 32px;
   height: 32px;
+}
+
+.icon_btn {
+  position: relative;
+
   padding: 0;
 
   border: 0;
@@ -42,22 +46,22 @@
   cursor: pointer;
 }
 
-.icon-btn:hover {
+.icon_btn:hover {
   color: var(--light-blue);
 }
 
-.icon-btn:hover::before {
+.icon_btn:hover::before {
   opacity: 1;
   transform: scale(1);
 }
 
-.icon-btn svg {
+.icon_btn svg {
   position: relative;
   z-index: 1;
   pointer-events: none;
 }
 
-.icon-btn--nohovercircle::before {
+.icon_btn--nohovercircle::before {
   display: none !important;
 }
 
@@ -103,7 +107,7 @@
 /* Actions rechts */
 .subtask_actions {
   position: absolute;
-  right: 13px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -121,7 +125,7 @@
 }
 
 /* kleinere Buttons in der Liste */
-.subtask_actions .icon-btn {
+.subtask_actions .icon_btn {
   width: 28px;
   height: 28px;
 }
