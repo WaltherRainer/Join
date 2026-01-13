@@ -17,7 +17,6 @@
     <script src="./JS/utils.js" defer></script>
     <script src="./JS/templates.js" defer></script>
     <script src="https://www.w3schools.com/lib/w3.js"></script>
-
     <title>Join - Summary</title>
 </head>
 
@@ -26,13 +25,10 @@
         <header class="header_join">
             <div w3-include-html="partials/top_menu.html"></div>
         </header>
-
         <div class="navbar_shell" w3-include-html="partials/navbar.html"></div>
 
-
-
         <main class="summary_main">
-            <div class="title_box">
+            <div class="title_box_summary">
                 <div class="summary_title">Join 360</div>
                 <div class="summary_subtitle">Key Metrics at a glance</div>
             </div>
@@ -112,14 +108,15 @@
 
             </div>
         </main>
-        <script>
-            w3.includeHTML(() => {
-                if (window.renderIcons) window.renderIcons(document);
-                if (window.initPage) window.initPage();
-                if (window.setActiveNavLink) window.setActiveNavLink();
+    </div>
+    <script>
+        w3.includeHTML(() => {
+            if (window.renderIcons) window.renderIcons(document);
+            if (window.initPage) window.initPage();
+            if (window.setActiveNavLink) window.setActiveNavLink();
+        });
+    </script>
 
-            });
-        </script>
 
 </body>
 

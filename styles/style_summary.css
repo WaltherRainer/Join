@@ -8,7 +8,7 @@
   grid-area: main;
 }
 
-.title_box {
+.title_box_summary {
   display: flex;
   align-items: center;
   margin-bottom: 50px;
