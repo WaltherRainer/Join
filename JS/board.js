@@ -1,3 +1,7 @@
+function initBoard() {
+  checkIfUserIsLoggedIn();
+}
+
 function initBoardEventList(tasks, users) {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;

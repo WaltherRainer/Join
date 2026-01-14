@@ -22,6 +22,7 @@ function setPwIcon(button, iconName) {
 async function guestLogin() {
   let dataObj = await loadData("/users");
   saveUserToSessionStorage("guest", "Guest", dataObj);
+  sessionStorage.setItem("userLoggedIn", true);
   window.location.replace("summary.html");
 }
 
@@ -130,7 +131,7 @@ async function userLogin(e) {
   const passwordValue = passwordInput.value.trim();
   if (accessGranted(emailValue, passwordValue)) {
     saveSessionStorage("userIsGuest", false);
-
+    sessionStorage.setItem("userLoggedIn", true);
     window.location.replace("summary.html");
   } else {
     warningLogin?.classList.add("visible");

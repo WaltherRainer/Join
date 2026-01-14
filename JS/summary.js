@@ -1,5 +1,5 @@
 function initSummary() {
-  // loadSessionStorage();
+  checkIfUserIsLoggedIn();
   writeGreetingDay();
   writeGreetingName();
 }

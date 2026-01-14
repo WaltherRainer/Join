@@ -14,7 +14,9 @@ function indexInit() {
 }
 
 function initSessionStorage() {
-  sessionStorage.setItem("userIsGuest", false); // Wenn User ein Gast (nicht eingeloggt) ist, dann 'true'
+  // sessionStorage.clear();
+  sessionStorage.setItem("userLoggedIn", false); // Wenn sich ein User eingeloggt, auch als Gast, dann 'true'
+  sessionStorage.setItem("userId", "notLoggedIn");
 }
 
 function saveSessionStorage(key, value) {
@@ -420,4 +422,11 @@ function w3includeHTML(cb) {
     }
   }
   if (cb) cb();
+}
+
+function checkIfUserIsLoggedIn() {
+  const userLoggedIn = sessionStorage.getItem("userLoggedIn");
+  if (userLoggedIn !== "true") {
+    window.location.replace("index.html");
+  }
 }

@@ -1,3 +1,8 @@
+function initContacts() {
+  checkIfUserIsLoggedIn();
+  contactEventList()
+}
+
 function groupUsersByFirstLetter(usersObj) {
   const groups = {};
 

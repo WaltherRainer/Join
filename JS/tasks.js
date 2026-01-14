@@ -14,6 +14,10 @@ const TASK_CATEGORIES = [
   { value: 'user_story', label: 'User Story' }
 ];
 
+function initAddTask() {
+  checkIfUserIsLoggedIn();
+}
+
 async function loadTasks() {
   tasks = await loadData("/tasks");
   const users = await ensureUsersLoaded();
