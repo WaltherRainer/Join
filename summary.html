@@ -43,7 +43,7 @@
                             <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
                                 <span class="svg-icon" data-icon="editPencilBig" data-w="69" data-h="69"></span>
                                 <div class="todo_box">
-                                    <p class="big_numbers">1</p>
+                                    <p class="big_numbers" id="toDo"></p>
                                     <p>To-do</p>
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                             <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
                                 <span class="svg-icon" data-icon="confTickBig" data-w="69" data-h="69"></span>
                                 <div class="todo_box">
-                                    <p class="big_numbers">1</p>
+                                    <p class="big_numbers" id="toDoDone"></p>
                                     <p>Done</p>
                                 </div>
                             </div>
@@ -65,12 +65,12 @@
                             <div class="urgent_box_left">
                                 <span class="svg-icon" data-icon="prioUrgentBig" data-w="60" data-h="60"></span>
                                 <div class="urgent_box">
-                                    <p class="big_numbers">1</p>
+                                    <p class="big_numbers" id="toDoUrgent"></p>
                                     <p>Urgent</p>
                                 </div>
                             </div>
                             <div class="urgent_box_right">
-                                <p class="deadline">October 16, 2022</p>
+                                <p class="deadline" id="toDoUrgentDeadline"></p>
                                 <p>Upcoming Deadline</p>
                             </div>
                         </div>
@@ -79,21 +79,21 @@
                     <div class="task_boxes">
                         <a href="./board.html">
                             <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers">5</p>
+                                <p class="big_numbers" id="tasksInBoard"></p>
                                 <p>Tasks in</p>
                                 <p>Board</p>
                             </div>
                         </a>
                         <a href="./board.html">
                             <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers">2</p>
+                                <p class="big_numbers" id="tasksInProgress"></p>
                                 <p>Tasks in</p>
                                 <p>Progress</p>
                             </div>
                         </a>
                         <a href="./board.html">
                             <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers">2</p>
+                                <p class="big_numbers" id="tasksAwaitingFeedback"></p>
                                 <p>Awaiting</p>
                                 <p>feedback</p>
                             </div>

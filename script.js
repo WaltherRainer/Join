@@ -283,9 +283,7 @@ window.initPage = async function initPage() {
       bindAddTaskFormSubmitOnce();
       break;
     case "summary":
-      // loadSummary();
       await ensureTasksLoaded();
-      // renderSummary();
       break;
     case "board":
       await ensureTasksLoaded();
