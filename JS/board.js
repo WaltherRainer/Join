@@ -10,6 +10,14 @@ function saveTasksToSession(tasks) {
   sessionStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
+function loadUsersFromSession() {
+  return JSON.parse(sessionStorage.getItem("users") || "{}");
+}
+
+function saveUsersToSession(users) {
+  sessionStorage.setItem("users", JSON.stringify(users));
+}
+
 function initBoard() {
   checkIfUserIsLoggedIn();
 }
@@ -231,6 +239,7 @@ function renderItems(items, containers, users) {
   containers.inProgressDiv.innerHTML = "";
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
+  
   items.forEach(task => {
     const taskHTML = taskItemTemplate(task, users);
     const target = statusContainerFor(task.status, containers);
@@ -328,7 +337,7 @@ function allowDrop(event) {
 
 function dropTask(status) {
   const tasks = loadTasksFromSession();
-  const users = window.users || {};
+  const users = loadUsersFromSession();
   
   if (currentDraggedTaskId && tasks[currentDraggedTaskId]) {
     tasks[currentDraggedTaskId].status = status;
