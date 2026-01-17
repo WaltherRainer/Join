@@ -1,5 +1,7 @@
 const dirtyTaskIds = new Set();
 
+let currentDraggedTaskId;
+
 function loadTasksFromSession() {
   return JSON.parse(sessionStorage.getItem("tasks") || "{}");
 }
@@ -314,4 +316,24 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
   }
 
   return visible;
+}
+
+function startDragTask(id) {
+  currentDraggedTaskId = id;
+}
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function dropTask(status) {
+  const tasks = loadTasksFromSession();
+  const users = window.users || {};
+  
+  if (currentDraggedTaskId && tasks[currentDraggedTaskId]) {
+    tasks[currentDraggedTaskId].status = status;
+    saveTasksToSession(tasks);
+  }
+  
+  loadTaskBoard(tasks, users);
 }

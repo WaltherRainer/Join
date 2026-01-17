@@ -53,7 +53,7 @@
                             <h2>To do</h2>
                             <button><img src="./assets/img/add.svg" alt="add"></button>
                         </div>
-                        <div id="task_to_do" class="task_list">
+                        <div id="task_to_do" class="task_list" ondrop="dropTask(0)" ondragover="allowDrop(event)">
                             <div class="no_task">
                                 <p></p>
                             </div>
@@ -64,7 +64,7 @@
                             <h2>In progress</h2>
                             <button><img src="./assets/img/add.svg" alt="add"></button>
                         </div>
-                        <div id="task_progress" class="task_list">
+                        <div id="task_progress" class="task_list" ondrop="dropTask(1)" ondragover="allowDrop(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -107,7 +107,7 @@
                             <h2>Await feedback</h2>
                             <button><img src="./assets/img/add.svg" alt="add"></button>
                         </div>
-                        <div id="task_await" class="task_list">
+                        <div id="task_await" class="task_list" ondrop="dropTask(2)" ondragover="allowDrop(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -134,7 +134,7 @@
                         <div class="task_list_head">
                             <h2>Done</h2>
                         </div>
-                        <div id="task_done" class="task_list">
+                        <div id="task_done" class="task_list" ondrop="dropTask(3)" ondragover="allowDrop(event)">
                             <div class="task">
                                 <div class="t_category">
 

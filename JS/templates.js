@@ -70,7 +70,7 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 
 function taskItemTemplate(task, users) {
   return `
-    <div class="t_task" draggable="true" ondragstart="dragStart(event)" data-task-id="${task.id}">
+    <div class="t_task" draggable="true" ondragstart="startDragTask('${task.id}')" data-task-id="${task.id}">
       <div class="t_category">
         <p style="background-color: ${getTaskCatLabel(task.type).color};" >${getTaskCatLabel(task.type).label}</p>
       </div>
