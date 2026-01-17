@@ -148,11 +148,10 @@ function getBoardContainers() {
 }
 
 function statusContainerFor(status, containers) {
-  const s = String(status || "").toLowerCase();
-  if (s.includes("to do") || s === "to do") return containers.toDoDiv;
-  if (s.includes("in progress")) return containers.inProgressDiv;
-  if (s.includes("await")) return containers.awaitfeedbackdiv;
-  if (s.includes("done")) return containers.doneDiv;
+  if (status === 0) return containers.toDoDiv;
+  if (status === 1) return containers.inProgressDiv;
+  if (status === 2) return containers.awaitfeedbackdiv;
+  if (status === 3) return containers.doneDiv;
   return containers.toDoDiv; // fallback
 }
 
