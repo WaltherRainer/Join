@@ -94,6 +94,24 @@ async function editData(path = "", dataId, dataObj) {
   return await response.json();
 }
 
+async function patchData(path = "", dataId, partialObj) {
+  const cleanPath = String(path || "").replace(/^\/+/, "");
+  const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
+
+  const response = await fetch(url, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(partialObj),
+    redirect: "follow",
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
+  }
+  return await response.json();
+}
+
+
 /**
  * Deletes data on the backend via an HTTP DELETE request.
  *
