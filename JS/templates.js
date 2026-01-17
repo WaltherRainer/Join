@@ -71,22 +71,30 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 function taskItemTemplate(task, users) {
   return `
     <div class="t_task" draggable="true" ondragstart="dragStart(event)" data-task-id="${task.id}">
-          <div class="t_category">${task.category}</div>
+      <div class="t_category">
+        <p style="background-color: ${getTaskCatLabel(task.type).color};" >${getTaskCatLabel(task.type).label}</p>
+      </div>
           <div class="t_title_description">
               <p class="t_title">${task.titel}</p>
               <p class="t_description">${task.description}</p>
           </div>
            <div class="t_sub_tasks">
               <div class="t_sub_task_bar"></div>
-              <div class="t_sub_task_count">${task.subTasks} Subtasks</div>
+              <span>${countSubtasksDone(task).done} / ${countSubtasksDone(task).counter} Subtasks</span>
           </div>
           <div class="t_assigned_priotity">
               <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
-              <div class="t_priority">${task.priority}</div>
+              <div class="t_priority">
+                ${getTaskDialogPrioTempl(task.priority)}
+              </div>
           </div>
       </div>
   `;
 }
+
+/* <div class="t_sub_task_count">${task.subTasks} Subtasks</div> 
+<div class="t_priority">${getTaskDialogPrioTempl(task.priority)}</div>
+temp gelöscht*/
 
 function noTaskTemplate(text) {
   return `
@@ -126,10 +134,10 @@ function getTaskDialogPrioTempl(prio) {
       <span>Low</span>
       <span class="svg-icon" data-icon="prioLow" data-w="20" data-h="16"></span>
     `
-    case "high":
+    case "urgent":
     return `
-      <span>High</span>
-      <span class="svg-icon" data-icon="prioHigh" data-w="20" data-h="16"></span>
+      <span>Urgent</span>
+      <span class="svg-icon" data-icon="prioUrgent" data-w="20" data-h="16"></span>
     `
   }
 }

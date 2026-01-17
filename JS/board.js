@@ -165,7 +165,9 @@ function renderItems(items, containers, users) {
     const taskHTML = taskItemTemplate(task, users);
     const target = statusContainerFor(task.status, containers);
     target.insertAdjacentHTML('beforeend', taskHTML);
+    renderIcons(target);
   });
+  
 }
 
 function renderEmptyStates(containers) {

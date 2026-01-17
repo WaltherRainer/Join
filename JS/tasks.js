@@ -9,10 +9,6 @@ const statusTypes = {
   4 : "Cancelled"
 };
 
-const TASK_CATEGORIES = [
-  { value: 'technical_task', label: 'Technical Task' },
-  { value: 'user_story', label: 'User Story' }
-];
 
 function initAddTask() {
   checkIfUserIsLoggedIn();

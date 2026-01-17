@@ -135,6 +135,8 @@ section.task_section {
     margin-bottom: 16px;
     gap: 16px;
     border-radius: 24px;
+    cursor: pointer;
+    width: 252px;
 }
 .t_category p {
     background-color: blue;
@@ -327,4 +329,14 @@ section.task_section {
 .task_card_action_btn:hover {
     color: var(--light-blue);
     cursor: pointer;
+}
+
+.t_assigned_priotity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.t_priority span:nth-child(1){
+    display: none;
 }

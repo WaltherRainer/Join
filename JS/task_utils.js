@@ -1,3 +1,44 @@
+const TASK_CATEGORIES = [
+  { value: 'technical_task', label: 'Technical Task' },
+  { value: 'user_story', label: 'User Story' }
+];
+
+
+function getTaskCatLabel(value) {
+  let taskObj = {};
+  
+  switch (value) {
+    case "technical_task":
+      taskObj = {"label" : "Technical Task", "color" : "#0038FF"};
+      break;
+    case "user_story":
+      taskObj = {"label" : "User Story", "color" : "#1FD7C1"};
+      break;
+    default:
+      taskObj = {"label" : "Task", "color" : "#0038FF"};
+      break;
+  }
+
+  return taskObj;
+}
+
+function countSubtasksDone(task) {
+  let returnObj = {"done" : 0, "counter" : 0};
+  let counter = 0;
+  let done = 0;
+  let Obj = task.subTasks;
+  if (!Obj) return returnObj;
+  Obj.forEach((subTask) => {
+    counter++;
+    if (subTask.done === true) {
+      done++;
+    }
+  })
+  returnObj = {"done" : done, "counter" : counter}
+  return returnObj;
+}
+
+
 function initAssignedToDropdown(usersData) {
   const ui = getAssignedToUi();
   if (!ui.root || isInitialized(ui.root)) return;
