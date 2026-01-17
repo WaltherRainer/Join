@@ -126,29 +126,32 @@ async function deleteContact(userId) {
   }
 }
 
-
 function openContactModal() {
   const modal = document.getElementById("add_contact_modal");
   const host = document.getElementById("contact_modal_host");
   if (!modal || !host) return;
 
   modal.showModal();
-
-  listenEscapeFromModal("add_contact_modal");
-  bindContactFormSubmitOnce();
   
-  document.getElementById("modal_close").addEventListener("click", () => {
-    closeContactModal(modal);
+  const removeEsc = listenEscapeFromModal("add_contact_modal", async (m) => {
+    closeContactModal(m);
   });
+
+  const close = () => {
+    closeContactModal(modal);
+    removeEsc();
+  };
+
+  document.getElementById("modal_close").addEventListener("click", close, { once: true });
 
   document.getElementById("clear_contact_form").addEventListener("click", () => {
     resetContactForm();
   });
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeContactModal(modal);
-  });
-
+    if (e.target === modal) close();
+  }, { once: true });
+  modal.addEventListener("close", removeEsc, { once: true });
 }
 
 function openEditContactModal(userId, givenName, email, userPhone) {
@@ -159,21 +162,31 @@ function openEditContactModal(userId, givenName, email, userPhone) {
   modal.showModal();
   preloadEditFormData(givenName, email, userPhone);
   renderEditContactAvatar(userId, givenName);
-  listenEscapeFromModal("edit_contact_modal");
-  bindEditContactFormSubmitOnce(userId);
-  
-  document.getElementById("edit_modal_close").addEventListener("click", () => {
-    closeEditContactModal(modal);
+
+  const removeEsc = listenEscapeFromModal("edit_contact_modal", async (m) => {
+    closeEditContactModal(m);
   });
+
+  const close = () => {
+    closeEditContactModal(modal);
+    removeEsc();
+  };
+
+  bindEditContactFormSubmitOnce(userId);
+
+  document.getElementById("edit_modal_close").addEventListener("click", close, { once: true });
 
   document.getElementById("delete_contact_btn").addEventListener("click", () => {
     deleteContact(userId);
-  });
+  }, { once: true });
 
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeEditContactModal(modal);
-  });
+    if (e.target === modal) close();
+  }, { once: true });
+
+  modal.addEventListener("close", removeEsc, { once: true });
 }
+
 
 function preloadEditFormData(givenName, email, userPhone) {
   setValueById("edit_user_name", givenName);

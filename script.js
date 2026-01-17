@@ -100,28 +100,6 @@ function initUsersLoading() {
   return window.usersReady;
 }
 
-// function showNav(page = "summary") {
-//   setActiveNav(page);
-//   const mainCont = document.getElementById("main_content");
-//   mainCont.innerHTML = `<div w3-include-html="${page}.html"></div>`;
-
-//   w3includeHTML(async () => {
-//     renderIcons(document);
-//     onPageLoaded();
-
-//     if (page === "add_task") {
-//       await ensureUsersLoaded();
-//       initAssignedToDropdown(users);
-//       initTaskTypeDropdown(TASK_CATEGORIES);
-//       initSubtasksInput();
-//     } else if (page === "contacts") {
-//       renderContacts(users);
-//       initContactsClick(users);
-//     } else if (page === "summary") {
-//       initSummary();
-//     }
-//   });
-// }
 
 function onPageLoaded() {
   const btn = document.getElementById("openAddTaskModalBtn");
@@ -151,9 +129,7 @@ function renderAvatar(activeUserId, activeUserName) {
 
 function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
-  // console.log(userMenu);
   if (!userMenu) return;
-
   userMenu.classList.toggle("d_none");
 }
 
@@ -196,26 +172,27 @@ function wireContactActionsGlobalOnce() {
   });
 }
 
-// function editContactOverlayToggle() {
-//   const overlay = document.getElementById("editContactOverlay");
-//   overlay.classList.toggle("active");
-// }
+function listenEscapeFromModal(modalDOMId, onClose) {
+  const handler = async (event) => {
+    if (event.key !== "Escape") return;
 
-// document.getElementById("editContactOverlay").addEventListener("click", () => {
-//   editContactOverlayToggle();
-// });
+    const modal = document.getElementById(modalDOMId);
+    if (!modal) return;
 
-// document.querySelector(".edit_contact_overlay").addEventListener("click", (event) => {
-//   event.stopPropagation();
-// });
+    const isOpen = modal.open === true || modal.classList.contains("active");
+    if (!isOpen) return;
 
-function listenEscapeFromModal(modalDOMId = "editContactOverlay") {
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      document.getElementById(modalDOMId).classList.remove("active");
+    if (typeof onClose === "function") {
+      await onClose(modal);
+    } else {
+      modal.close?.();
+      modal.classList.remove("active");
     }
-  });
+  };
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
 }
+
 
 function InitGlobalEventListener() {
   const btn = document.getElementById("open_user_dialog");

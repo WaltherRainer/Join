@@ -340,3 +340,15 @@ section.task_section {
 .t_priority span:nth-child(1){
     display: none;
 }
+
+.checkbox_checked {
+  display: none;
+}
+
+.subtask_li_elements.is-done .checkbox_checked {
+  display: inline;
+}
+
+.subtask_li_elements.is-done .checkbox_unchecked {
+  display: none;
+}

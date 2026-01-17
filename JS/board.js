@@ -1,3 +1,13 @@
+const dirtyTaskIds = new Set();
+
+function loadTasksFromSession() {
+  return JSON.parse(sessionStorage.getItem("tasks") || "{}");
+}
+
+function saveTasksToSession(tasks) {
+  sessionStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 function initBoard() {
   checkIfUserIsLoggedIn();
 }
@@ -19,6 +29,8 @@ function initBoardEventList(tasks, users) {
       openTaskModal(taskId, tasks, users);
     });
   });
+
+  console.log(tasks)
 }
 
 function deleteTask(taskId) {
@@ -53,16 +65,18 @@ function getTaskUi() {
 
 }
 
-function initTaskModalEventList(modal, taskId) {
+function initTaskModalEventList(modal, taskId, tasks) {
 
-  listenEscapeFromModal("show_task_modal");
-
-  document.getElementById("tsk_dlg_close").addEventListener("click", () => {
-    closeTaskModal(modal);
+    listenEscapeFromModal(async () => {
+    await closeTaskModal(modal, taskId);
   });
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeTaskModal(modal);
+  document.getElementById("tsk_dlg_close").addEventListener("click", async () => {
+    await closeTaskModal(modal, taskId);
+  });
+
+  modal.addEventListener("click", async (e) => {
+    if (e.target === modal) await closeTaskModal(modal, taskId);
   });
 
   const editBtn = document.getElementById("btn_edit_task");
@@ -71,21 +85,74 @@ function initTaskModalEventList(modal, taskId) {
   const deleteBtn = document.getElementById("btn_delete_task");
   deleteBtn.addEventListener("click", () => deleteTask(taskId));
 
+  const subTaskLi = document.getElementById("subtasks_check_list");
+  subTaskLi.addEventListener("click", function (event) {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+    const li = button.closest("li");
+    const index = Number(li.dataset.index);
+    console.log(index);
+    toggleSubtaskDone(index, taskId, tasks)
+});
 }
 
-function closeTaskModal(modal) {
-  modal.close();
+
+function toggleSubtaskDone(index, taskId) {
+  const tasks = loadTasksFromSession();
+  const task = tasks[taskId];
+  if (!task || !task.subTasks[index]) return;
+
+  const done = !task.subTasks[index].done;
+  task.subTasks[index].done = done;
+
+  saveTasksToSession(tasks);
+  dirtyTaskIds.add(taskId);
+
+  const li = document.querySelector(
+    `#subtasks_check_list li[data-index="${index}"]`
+  );
+
+  if (li) {
+    li.classList.toggle("is-done", done);
+
+    const btn = li.querySelector("button[data-action]");
+    btn?.setAttribute("aria-pressed", String(done));
+  }
 }
+
+
+async function closeTaskModal(modal, taskId) {
+  if (dirtyTaskIds.has(taskId)) {
+    const tasks = loadTasksFromSession();
+    const task = tasks[taskId];
+    if (task) {
+      await saveTaskSubtasksToFirebase(taskId, task.subTasks); 
+      dirtyTaskIds.delete(taskId);
+    }
+  }
+  modal.close?.();
+//Hier noch die aktualisierung des Boards triggern
+
+}
+
+async function saveTaskSubtasksToFirebase(taskId, subTasks) {
+  return await patchData("tasks", taskId, { subTasks });
+}
+
 
 async function openTaskModal(taskId, tasks, users) {
   const modal = document.getElementById("show_task_modal");
   if (!modal) return;
 
   modal.showModal();
-  initTaskModalEventList(modal, taskId);
+  
 
   const ui = getTaskUi();
   renderTaskModal(taskId, ui, tasks, users);
+
+  initTaskModalEventList(modal, taskId, tasks);
+
+
 }
 
 function renderTaskModal(taskId, ui, tasks, users) {
@@ -125,11 +192,13 @@ return assTo;
 
 function renderSubtasksContent(task) {
   let subTaskCont = ""
+  let index = 0;
   if (task.subTasks && typeof task.subTasks === "object" && task.subTasks.length > 0) {
     task.subTasks.forEach(element => {
       let subTaskTitel = element.title;
-      let unDone = element.done;
-      subTaskCont += getTaskDialSubtaskTempl(subTaskTitel, unDone);
+      let done = element.done;
+      subTaskCont += getTaskDialSubtaskTempl(subTaskTitel, done, index);
+      index++;
     });
   }
   return subTaskCont;

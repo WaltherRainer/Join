@@ -50,11 +50,12 @@ function initAssignedToDropdown(usersData) {
   renderUserList(state);
 }
 
+
 function openAddTaskModal() {
   const modal = document.getElementById("addTaskModal");
   const host = document.getElementById("addTaskModalHost");
-
   if (!modal || !host) return;
+
   ensureAddTaskFormLoaded(async (form) => {
     host.appendChild(form);
     const usersDataObj = await ensureUsersLoaded();
@@ -64,10 +65,17 @@ function openAddTaskModal() {
     initSubtasksInput();
     bindAddTaskFormSubmitOnce();
     renderIcons(modal);
+
     modal.showModal();
+
+    const removeEsc = listenEscapeFromModal("addTaskModal", async (m) => {
+      closeAddTaskModal()
+    });
+
+    modal.addEventListener("close", removeEsc, { once: true });
   });
-  listenEscapeFromModal("addTaskModal");
 }
+
 
 function isInitialized(root) {
   if (root.dataset.initialized === "1") return true;
