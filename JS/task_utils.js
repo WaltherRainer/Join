@@ -38,6 +38,18 @@ function countSubtasksDone(task) {
   return returnObj;
 }
 
+function updateTaskCard(taskId, tasks) {
+  const users = loadUsersFromSession();
+  const task = tasks[taskId];
+  if (!task) return;
+  const cards = document.querySelectorAll(
+    `.t_task[data-task-id="${taskId}"]`
+  );
+
+  cards.forEach(function(card) {
+    card.innerHTML = getTaskItemContent(task, users);
+  });
+}
 
 function initAssignedToDropdown(usersData) {
   const ui = getAssignedToUi();

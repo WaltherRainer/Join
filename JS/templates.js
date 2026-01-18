@@ -71,25 +71,31 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 function taskItemTemplate(task, users) {
   return `
     <div class="t_task" draggable="true" ondragstart="startDragTask('${task.id}')" data-task-id="${task.id}">
-      <div class="t_category">
-        <p style="background-color: ${getTaskCatLabel(task.type).color};" >${getTaskCatLabel(task.type).label}</p>
-      </div>
-          <div class="t_title_description">
-              <p class="t_title">${task.titel}</p>
-              <p class="t_description">${task.description}</p>
-          </div>
-           <div class="t_sub_tasks">
-              <div class="t_sub_task_bar"></div>
-              <span>${countSubtasksDone(task).done} / ${countSubtasksDone(task).counter} Subtasks</span>
-          </div>
-          <div class="t_assigned_priotity">
-              <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
-              <div class="t_priority">
-                ${getTaskDialogPrioTempl(task.priority)}
-              </div>
-          </div>
+      ${getTaskItemContent(task, users)}
       </div>
   `;
+}
+
+function getTaskItemContent(task, users) {
+  return `
+    <div class="t_category">
+      <p style="background-color: ${getTaskCatLabel(task.type).color};" >${getTaskCatLabel(task.type).label}</p>
+    </div>
+        <div class="t_title_description">
+            <p class="t_title">${task.titel}</p>
+            <p class="t_description">${task.description}</p>
+        </div>
+          <div class="t_sub_tasks">
+            <div class="t_sub_task_bar"></div>
+            <span class="task_subtask_count">${countSubtasksDone(task).done} / ${countSubtasksDone(task).counter} Subtasks</span>
+        </div>
+        <div class="t_assigned_priotity">
+            <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
+            <div class="t_priority">
+              ${getTaskDialogPrioTempl(task.priority)}
+            </div>
+        </div>
+  `
 }
 
 

@@ -2,6 +2,20 @@ const dirtyTaskIds = new Set();
 
 let currentDraggedTaskId;
 
+let taskModalEscBound = false;
+
+function bindTaskModalEscapeOnce(modal) {
+  if (taskModalEscBound) return;
+  taskModalEscBound = true;
+
+  document.addEventListener("keydown", async (event) => {
+    if (event.key !== "Escape") return;
+    if (modal.open) {
+      await closeTaskModal(modal, modal.dataset.taskId);
+    }
+  });
+}
+
 function loadTasksFromSession() {
   return JSON.parse(sessionStorage.getItem("tasks") || "{}");
 }
@@ -22,7 +36,7 @@ function initBoard() {
   checkIfUserIsLoggedIn();
 }
 
-function initBoardEventList(tasks, users) {
+function initBoardEventList(users) {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
   btn.addEventListener("click", openAddTaskModal);
@@ -36,11 +50,9 @@ function initBoardEventList(tasks, users) {
       if (!card) return;
       const taskId = card.dataset.taskId;
       if (!taskId) return;
-      openTaskModal(taskId, tasks, users);
+      openTaskModal(taskId, users);
     });
   });
-
-  console.log(tasks)
 }
 
 function deleteTask(taskId) {
@@ -72,38 +84,41 @@ function getTaskUi() {
     subTaskDiv: subTaskDiv,
     SubTaskList: SubTaskList,
   };
-
 }
 
-function initTaskModalEventList(modal, taskId, tasks) {
-
-    listenEscapeFromModal(async () => {
-    await closeTaskModal(modal, taskId);
-  });
+function initTaskModalEventList(modal) {
+  if (modal.dataset.listenersBound === "true") return;
+  modal.dataset.listenersBound = "true";
 
   document.getElementById("tsk_dlg_close").addEventListener("click", async () => {
-    await closeTaskModal(modal, taskId);
+    await closeTaskModal(modal, modal.dataset.taskId);
   });
 
   modal.addEventListener("click", async (e) => {
-    if (e.target === modal) await closeTaskModal(modal, taskId);
+    if (e.target === modal) await closeTaskModal(modal, modal.dataset.taskId);
   });
 
-  const editBtn = document.getElementById("btn_edit_task");
-  editBtn.addEventListener("click", initEditMode);
+  document.getElementById("btn_edit_task").addEventListener("click", () => {
+    initEditMode();
+  });
 
-  const deleteBtn = document.getElementById("btn_delete_task");
-  deleteBtn.addEventListener("click", () => deleteTask(taskId));
+  document.getElementById("btn_delete_task").addEventListener("click", () => {
+    deleteTask(modal.dataset.taskId);
+  });
 
-  const subTaskLi = document.getElementById("subtasks_check_list");
-  subTaskLi.addEventListener("click", function (event) {
-    const button = event.target.closest("button[data-action]");
+  modal.addEventListener("click", (event) => {
+    const button = event.target.closest('button[data-action="toggle"]');
     if (!button) return;
-    const li = button.closest("li");
+
+    const ul = button.closest("#subtasks_check_list");
+    if (!ul) return;
+
+    const li = button.closest("li[data-index]");
+    if (!li) return;
+
     const index = Number(li.dataset.index);
-    console.log(index);
-    toggleSubtaskDone(index, taskId, tasks)
-});
+    toggleSubtaskDone(index, modal.dataset.taskId);
+  });
 }
 
 
@@ -130,39 +145,33 @@ function toggleSubtaskDone(index, taskId) {
   }
 }
 
-
 async function closeTaskModal(modal, taskId) {
+  const tasks = loadTasksFromSession();
   if (dirtyTaskIds.has(taskId)) {
-    const tasks = loadTasksFromSession();
     const task = tasks[taskId];
     if (task) {
-      await saveTaskSubtasksToFirebase(taskId, task.subTasks); 
+      await saveTaskSubtasksToFirebase(taskId, task.subTasks);
       dirtyTaskIds.delete(taskId);
+      updateTaskCard(taskId, tasks);
     }
   }
   modal.close?.();
-//Hier noch die aktualisierung des Boards triggern
-
 }
 
 async function saveTaskSubtasksToFirebase(taskId, subTasks) {
   return await patchData("tasks", taskId, { subTasks });
 }
 
-
-async function openTaskModal(taskId, tasks, users) {
+async function openTaskModal(taskId, users) {
+  const tasks = JSON.parse(sessionStorage.getItem("tasks") || "{}");
   const modal = document.getElementById("show_task_modal");
   if (!modal) return;
-
+  modal.dataset.taskId = String(taskId);
   modal.showModal();
-  
-
+  bindTaskModalEscapeOnce(modal);
   const ui = getTaskUi();
   renderTaskModal(taskId, ui, tasks, users);
-
-  initTaskModalEventList(modal, taskId, tasks);
-
-
+  initTaskModalEventList(modal);
 }
 
 function renderTaskModal(taskId, ui, tasks, users) {
@@ -263,7 +272,7 @@ function loadTaskBoard(tasks, users) {
   const items = returnArrayOfTasks(tasks);
   renderItems(items, containers, users);
   renderEmptyStates(containers);
-  initBoardEventList(tasks, users);
+  initBoardEventList(users);
 }
 
 const returnArrayOfTasks = (tasks) => {
