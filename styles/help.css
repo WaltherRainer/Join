@@ -1,0 +1,52 @@
+.help_main {
+  margin-left: 96px;
+  margin-top: 110px;
+  margin-right: 98px;
+  color: var(--text-color);
+  max-width: 1014px;
+}
+
+.help_headline {
+  font-size: 61px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.help_joinText {
+  color: var(--light-blue);
+}
+
+.help_container {
+  display: grid;
+  grid-template-areas:
+    "number headline"
+    "number content";
+  padding-bottom: 20px;
+  text-align: left;
+}
+
+.help_container div.number {
+  grid-area: number;
+  font-weight: 700;
+  font-size: 27px;
+  width: 56px;
+  text-align: start;
+}
+
+.help_container div.headline {
+  grid-area: headline;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: start;
+}
+
+.help_container div.content {
+  grid-area: content;
+  text-align: left;
+  align-self: start;
+}
+
+.help_container .number,
+.help_container .headline {
+  text-align: start;
+}
