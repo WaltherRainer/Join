@@ -86,8 +86,8 @@ function getTaskItemContent(task, users) {
             <p class="t_description">${task.description}</p>
         </div>
           <div class="t_sub_tasks">
-            <div class="t_sub_task_bar"></div>
-            <span class="task_subtask_count">${countSubtasksDone(task).done} / ${countSubtasksDone(task).counter} Subtasks</span>
+            <div class="t_sub_task_bar" style="width: ${fillSubTasksBar(task)}%;"></div>
+            ${subtasksCounter(task)}
         </div>
         <div class="t_assigned_priotity">
             <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
@@ -96,6 +96,13 @@ function getTaskItemContent(task, users) {
             </div>
         </div>
   `
+}
+function getSubtasksCountAndTotalTemplate(done, total) {
+  return `
+    <span class="task_subtask_count">
+      ${done} / ${total} Subtasks
+    </span>
+  `;
 }
 
 

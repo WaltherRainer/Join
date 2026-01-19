@@ -22,6 +22,12 @@ function getTaskCatLabel(value) {
   return taskObj;
 }
 
+function subtasksCounter(task) {
+  const subtaskcount = countSubtasksDone(task);
+  if (subtaskcount.counter === 0) return "";
+  return getSubtasksCountAndTotalTemplate(subtaskcount.done, subtaskcount.counter);
+}
+
 function countSubtasksDone(task) {
   let returnObj = {"done" : 0, "counter" : 0};
   let counter = 0;
@@ -36,6 +42,17 @@ function countSubtasksDone(task) {
   })
   returnObj = {"done" : done, "counter" : counter}
   return returnObj;
+}
+
+function fillSubTasksBar(task) {
+  const subtaskcount = countSubtasksDone(task);
+  const total = subtaskcount.counter;
+  const done = subtaskcount.done;
+  let percentage = 0;
+  if (total > 0) {
+    percentage = (done / total) * 40;
+  }
+  return percentage;
 }
 
 function updateTaskCard(taskId, tasks) {

@@ -157,6 +157,7 @@ section.task_section {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
 }
 .t_sub_task_bar {
@@ -164,7 +165,9 @@ section.task_section {
     border-radius: 16px;
     margin-right: 10px;
     height: 8px;
-    width: 40%;
+}
+.task_subtask_count {
+    width: 60%;
 }
 .t_assigned_to {
     display: flex;
