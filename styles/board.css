@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
     background-color: var(--secondary-background-color);
-    max-height: calc(100dvh - 96px);
+    max-height: calc(100vh - 96px);
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
@@ -18,7 +18,7 @@
     margin-top: 79.5px;
     margin-left: 64px;
     margin-bottom: 72px;
-    width: 70%;
+    width: 90%;
 }
 
 .board_title {
@@ -87,9 +87,10 @@ section.task_section {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    width: 80%;
+    width: 90%;
     gap: 64px;
 }
+
 .task_list_div {
     width: 25%;
 }
@@ -120,6 +121,8 @@ section.task_section {
     border-radius: 10px;
     align-items: center;
     padding: 10px;
+    width: 100%;
+    max-width: 252px;
 }
 .no_task p {
     text-align: center;
@@ -136,7 +139,8 @@ section.task_section {
     gap: 16px;
     border-radius: 24px;
     cursor: pointer;
-    width: 252px;
+    width: 100%;
+    max-width: 252px;
 }
 .t_category p {
     background-color: blue;
