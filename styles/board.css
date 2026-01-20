@@ -48,7 +48,7 @@
 
 .search_task {
     font-size: 20px;
-    width: 50%;
+    width: 100%;
     color: var(--text-color);
     border: none;
     outline: none;
@@ -62,11 +62,18 @@
     border-color: var(--light-blue);
 }
 
-.search_task_area img {
+.search_task_area span:active {
+    color: var(--light-blue)
+}
+
+.search_task_area span {
     padding-left: 16px;
     border-left: 1px solid var(--border_color);
 }
 
+.search_task_area span:hover {
+    cursor: pointer;
+}
 
 button.add_task_button {
     display: flex;
@@ -78,9 +85,8 @@ button.add_task_button {
     width: 160px;
 }
 
-button.add_task_button img {
-    width: 18px;
-    height: 18px;
+button.add_task_button span {
+    color: var(--white-text-color);
 }
 
 section.task_section {
@@ -93,6 +99,7 @@ section.task_section {
 
 .task_list_div {
     width: 25%;
+    height: calc();
 }
 .task_list_head {
     display: flex;
@@ -102,14 +109,21 @@ section.task_section {
     padding-bottom: 16px;
 }
 
-.task_list_head button img {
-    filter: brightness(0);
-    width: 8px;
+.task_list_head button span {
+    cursor: pointer;
+    color: var(--text-color);
 }
 .task_list_head button {
+    cursor: pointer;
     border: 2px solid var(--text-color);
     border-radius: 8px;
     width: 24px;
+}
+.task_list_head button:hover span {
+    color: var(--light-blue);
+}
+.task_list_head button:hover {
+    border-color: var(--light-blue)
 }
 .task_list_head h2 {
     font-size: 20px;
@@ -122,7 +136,6 @@ section.task_section {
     align-items: center;
     padding: 10px;
     width: 100%;
-    max-width: 252px;
 }
 .no_task p {
     text-align: center;
@@ -140,7 +153,6 @@ section.task_section {
     border-radius: 24px;
     cursor: pointer;
     width: 100%;
-    max-width: 252px;
 }
 .t_category p {
     background-color: blue;
