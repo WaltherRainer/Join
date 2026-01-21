@@ -1,6 +1,10 @@
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_wrapper");
 const indexHeader = document.getElementById("index_header");
+const form = document.getElementById("register_form");
+const registerBtn = document.getElementById("register_btn");
+const privacyCheckbox = document.getElementById("terms_accepted");
+const inputs = form.querySelectorAll("input[required]:not([type='checkbox'])");
 const ICON = Object.freeze({
   LOCK: "lock",
   EYE_CLOSED: "eye_closed",
@@ -307,3 +311,14 @@ function resetSignupForm() {
   const warning = form.querySelector("#warning_signup_failed");
   warning?.classList.remove("visible");
 }
+
+function checkForm() {
+
+    const allFilled = [...inputs].every(input => input.value.trim() !== "");
+    const privacyAccepted = privacyCheckbox.checked;
+
+  registerBtn.disabled = !(allFilled && privacyAccepted);
+}
+
+inputs.forEach(input => input.addEventListener("input", checkForm));
+privacyCheckbox.addEventListener("change", checkForm);

@@ -103,8 +103,7 @@
                         <h2 >Sign up</h2>
                         <div class="underline_sign_up"></div>
                     </div>
-
-                    <form onsubmit="addUser(); return false">
+                    <form onsubmit="addUser(); return false" id="register_form"> 
                         <div class="input_box">
                             <input id="given_name" type="text" required placeholder=" ">
                             <label for="given_name">Name</label>
@@ -133,7 +132,7 @@
                         </div>
                         <span class="warning_text" id="warning_signup_failed">Your passwords don't match. Please try again.</span>
                         <div class="btn_div">
-                            <button class="default-button">Sign up</button>
+                            <button class="default-button" id="register_btn" disabled>Sign up</button>
                         </div>
                         <div class="terms_div">
                             <input class="check_box" type="checkbox" name="terms_accepted" id="terms_accepted" required>
