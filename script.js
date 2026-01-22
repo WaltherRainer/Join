@@ -143,19 +143,40 @@ function showUserDialog() {
 function renderAssignedAvatars(selectedUserIds, usersData) {
   const container = document.getElementById("assigned_avatar_container");
   if (!container) return;
+
   container.innerHTML = "";
-  selectedUserIds.forEach((userId) => {
+  const idsArray = Array.isArray(selectedUserIds)
+    ? selectedUserIds
+    : Array.from(selectedUserIds);
+
+  const MAX_VISIBLE = 4;
+  const visibleUsers = idsArray.slice(0, MAX_VISIBLE);
+  const extraCount = idsArray.length - MAX_VISIBLE;
+
+  visibleUsers.forEach((userId) => {
     const user = usersData[userId];
     if (!user) return;
+
     const initials = initialsFromGivenName(user.givenName);
     const bgColor = colorVarFromUserId(userId);
+
     const avatar = document.createElement("span");
     avatar.className = "user__avatar avatar_wrap";
     avatar.style.background = bgColor;
     avatar.textContent = initials;
+
     container.appendChild(avatar);
   });
+
+  if (extraCount > 0) {
+    const moreAvatar = document.createElement("span");
+    moreAvatar.className = "user__avatar avatar_wrap avatar_more";
+    moreAvatar.textContent = `+${extraCount}`;
+
+    container.appendChild(moreAvatar);
+  }
 }
+
 
 function wireContactActionsGlobalOnce() {
   if (document.documentElement.dataset.contactsBound === "1") return;

@@ -394,3 +394,9 @@
   flex:1;
   min-width:140px;
 }
+
+.avatar_more {
+  background: var(--blue);
+  color: var(--white-text-color);
+  font-weight: 600;
+}
