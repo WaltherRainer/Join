@@ -313,12 +313,16 @@ function resetSignupForm() {
 }
 
 function checkForm() {
+  const allFilled = [...inputs].every(input => input.value.trim() !== "");
+  const privacyAccepted = privacyCheckbox.checked;
 
-    const allFilled = [...inputs].every(input => input.value.trim() !== "");
-    const privacyAccepted = privacyCheckbox.checked;
+  const isValid = allFilled && privacyAccepted;
 
-  registerBtn.disabled = !(allFilled && privacyAccepted);
+  registerBtn.classList.toggle("is-disabled", !isValid);
+  registerBtn.setAttribute("aria-disabled", String(!isValid));
 }
 
 inputs.forEach(input => input.addEventListener("input", checkForm));
 privacyCheckbox.addEventListener("change", checkForm);
+
+checkForm();

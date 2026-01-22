@@ -274,3 +274,8 @@
 #btn_delete_task:hover {
     color: red;
 }
+
+.default-button.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
