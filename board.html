@@ -57,7 +57,7 @@
                                 <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_to_do" class="task_list" ondrop="dropTask(0)" ondragover="allowDrop(event)">
+                        <div id="task_to_do" class="task_list" ondrop="dropTask(event, 0)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
                             <div class="no_task">
                                 <p></p>
                             </div>
@@ -70,7 +70,7 @@
                                 <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_progress" class="task_list" ondrop="dropTask(1)" ondragover="allowDrop(event)">
+                        <div id="task_progress" class="task_list" ondrop="dropTask(event, 1)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -115,7 +115,7 @@
                                 <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_await" class="task_list" ondrop="dropTask(2)" ondragover="allowDrop(event)">
+                        <div id="task_await" class="task_list" ondrop="dropTask(event, 2)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -142,7 +142,7 @@
                         <div class="task_list_head">
                             <h2>Done</h2>
                         </div>
-                        <div id="task_done" class="task_list" ondrop="dropTask(3)" ondragover="allowDrop(event)">
+                        <div id="task_done" class="task_list" ondrop="dropTask(event, 3)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
 

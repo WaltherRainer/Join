@@ -249,7 +249,10 @@ function renderItems(items, containers, users) {
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
   
-  items.forEach(task => {
+  // Sortiere Tasks nach ihrer Reihenfolge innerhalb der Kategorie
+  const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
+  
+  sortedItems.forEach(task => {
     const taskHTML = taskItemTemplate(task, users);
     const target = statusContainerFor(task.status, containers);
     target.insertAdjacentHTML('beforeend', taskHTML);
@@ -291,9 +294,9 @@ function findUserDataNameAndColor(item, users = window.users || {}) {
   // item can be a userId (string) or an object with userId/id/givenName/name
   if (typeof item === 'string') {
     const user = users?.[item];
-    if (!user) return null; // skip undefined user ids
+    if (!user) return null; 
     const givenName = user.givenName || user.name;
-    if (!givenName) return null; // no displayable name
+    if (!givenName) return null; 
     return { initials: initialsFromGivenName(givenName, ''), bgColor: colorIndexFromUserId(item) };
   }
 
@@ -338,20 +341,102 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
 
 function startDragTask(id) {
   currentDraggedTaskId = id;
+  document.querySelectorAll(".task_list_div").forEach(div => {
+    div.classList.add("on-drop");
+  });
+  const taskElement = document.querySelector(`[data-task-id="${id}"]`);
+  if (taskElement) {
+    taskElement.classList.add("dragging-task");
+  }
+}
+
+function endDragTask(event, id) {
+  currentDraggedTaskId = null;
+  document.querySelectorAll(".task_list_div").forEach(div => {
+    div.classList.remove("on-drop");
+    div.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
+  });
+  const taskElement = document.querySelector(`[data-task-id="${id}"]`);
+  if (taskElement) {
+    taskElement.classList.remove("dragging-task");;
+  }
+}
+
+function findDropPosition(event, taskElements) {
+  for (let i = 0; i < taskElements.length; i++) {
+    const rect = taskElements[i].getBoundingClientRect();
+    if (event.clientY < rect.top + rect.height / 2) {
+      return i;
+    }
+  }
+  return taskElements.length;
 }
 
 function allowDrop(event) {
   event.preventDefault();
+  const dropZone = event.currentTarget;
+  const taskElements = Array.from(dropZone.querySelectorAll('.t_task'));
+
+  dropZone.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
+  
+  let insertBeforeElement = null;
+  insertBeforeElement = taskElements[findDropPosition(event, taskElements)];
+  
+  const placeholder = document.createElement('div');
+  placeholder.className = 'drag-placeholder';
+  
+  if (insertBeforeElement) {
+    insertBeforeElement.parentNode.insertBefore(placeholder, insertBeforeElement);
+  } else {
+    dropZone.appendChild(placeholder);
+  }
 }
 
-function dropTask(status) {
+function dropTask(event, status) {
+  event.preventDefault();
   const tasks = loadTasksFromSession();
   const users = loadUsersFromSession();
-  
-  if (currentDraggedTaskId && tasks[currentDraggedTaskId]) {
-    tasks[currentDraggedTaskId].status = status;
-    saveTasksToSession(tasks);
+
+  if (!currentDraggedTaskId || !tasks[currentDraggedTaskId]) return;
+
+  const dropZone = event.currentTarget;
+  const taskElements = Array.from(dropZone.querySelectorAll('.t_task'));
+
+  insertIndex = findDropPosition(event, taskElements);
+  const tasksInStatus = sortTasksInStatus(status, tasks);
+  deleteAndAddTaskInStatusPosition(tasksInStatus);
+  reRenderTasksInOrder(tasksInStatus, tasks, users, status);
+}
+
+function sortTasksInStatus(status, tasks) {
+  const tasksInStatus = Object.entries(tasks)
+    .filter(([_, task]) => task.status === status)
+    .map(([id, task]) => ({ id, task }))
+    .sort((a, b) => (a.task.order || 0) - (b.task.order || 0));
+  return tasksInStatus;
+}
+
+function deleteAndAddTaskInStatusPosition(tasksInStatus) {
+    const oldTaskIndex = tasksInStatus.findIndex(({ id }) => id === currentDraggedTaskId);
+  if (oldTaskIndex !== -1) {
+    tasksInStatus.splice(oldTaskIndex, 1);
   }
+    tasksInStatus.splice(insertIndex, 0, { id: currentDraggedTaskId, task: tasks[currentDraggedTaskId] });
+}
+
+function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
+  tasks[currentDraggedTaskId].status = status;
+  tasksInStatus.forEach(({ id }, index) => {
+    tasks[id].order = index;
+  });
   
+  saveTasksToSession(tasks);
   loadTaskBoard(tasks, users);
+}
+
+function removeDragPlaceholder(event) {
+  if (event.target === event.currentTarget) {
+    const dropZone = event.currentTarget;
+    dropZone.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
+  }
 }

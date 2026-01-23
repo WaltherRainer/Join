@@ -70,7 +70,8 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 
 function taskItemTemplate(task, users) {
   return `
-    <div class="t_task" draggable="true" ondragstart="startDragTask('${task.id}')" data-task-id="${task.id}">
+    <div class="t_task" draggable="true" ondragstart="startDragTask('${task.id}')" 
+    ondragend="endDragTask(event, '${task.id}')" data-task-id="${task.id}">
       ${getTaskItemContent(task, users)}
       </div>
   `;
