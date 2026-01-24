@@ -132,6 +132,8 @@ function openContactModal() {
   if (!modal || !host) return;
 
   modal.showModal();
+
+  bindContactFormSubmitOnce();
   
   const removeEsc = listenEscapeFromModal("add_contact_modal", async (m) => {
     closeContactModal(m);
