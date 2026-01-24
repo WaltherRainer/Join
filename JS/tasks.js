@@ -168,6 +168,43 @@ function bindAddTaskFormSubmitOnce() {
       console.error("addTask failed", err);
     }
   });
-}
 
+  
+  document.querySelectorAll(".standard_input_box[required]").forEach(input => {
+    input.addEventListener("blur", () => {
+      const error = input.nextElementSibling;
+
+      if (!input.checkValidity()) {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        error.innerText = "This field is required";
+      } else {
+        input.classList.add("is-valid");
+        input.classList.remove("is-invalid");
+        error.innerText = "";
+      }
+    });
+  });
+
+    const formInputBtn = document.getElementById("task_type_btn");
+    formInputBtn.addEventListener("blur", () => {
+      const hidden = document.getElementById("task_type");
+      const taskTypeDiv = document.getElementById("task_type_control");
+      const taskTypeOuterDiv = document.getElementById("task_type_select");
+
+      const error = taskTypeOuterDiv.nextElementSibling;
+
+      if  (!hidden.value) {
+        taskTypeDiv.classList.add("is-invalid");
+        taskTypeDiv.classList.remove("is-valid");
+        error.innerText = "This field is required";
+      } else {
+        taskTypeDiv.classList.add("is-valid");
+        taskTypeDiv.classList.remove("is-invalid");
+        error.innerText = "";
+      }
+    });
+
+
+}
 

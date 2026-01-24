@@ -35,12 +35,13 @@
 
     <main class="add_task_main">
         <div id="addTaskInlineHost">
-            <form id="addTaskForm" class="add_task_form" action="/add_task" method="post">
+            <form id="addTaskForm" class="add_task_form" action="/add_task" method="post" novalidate>
                 <h1 class="add_task_titel">Add Task</h1>
                 <div class="add_task_form_left">
                     <div class="form_row">
                         <label for="task_titel">Title<span class="red_star">*</span></label>
                         <input class="standard_input_box" type="text" id="task_titel" name="task_titel" placeholder="Enter a title" required>
+                        <span class="error-message"></span>
                     </div>
                     <div class="form_row">
                         <label for="task_descr">Description</label>
@@ -50,6 +51,7 @@
                     <div class="form_row">
                         <label for="task_due_date">Due Date<span class="red_star">*</span></label>
                         <input class="standard_input_box" type="date" id="task_due_date" name="task_due_date" aria-label="dd/mm/yyyy" required>
+                        <span class="error-message"></span>
                     </div>
                 </div>
                 <div class="add_task_form_right">
@@ -88,22 +90,23 @@
                             <ul class="multi_select__list" id="assigned_to_list"></ul>
                             </div>
                             <input type="hidden" id="assigned_to_input" name="assigned_to" required />
+                            <span class="error-message"></span>
                         </div>
                     </div>
 
                     <div class="assigned_avatar" id="assigned_avatar_container"></div>
 
                     <div class="form_row">
-                        <label for="task_type">Task type</label>
-
+                        <label for="task_type">Category<span class="red_star">*</span></label>
+                        
                         <div class="single_select" id="task_type_select">
                             <div class="single_select__control" id="task_type_control">
-                            <span class="single_select__placeholder">Select task type</span>
-                            <span class="single_select__value" hidden></span>
+                                <span class="single_select__placeholder">Select task type</span>
+                                <span class="single_select__value" hidden></span>
 
-                            <button type="button" class="multi_select__toggle" aria-label="Toggle">
-                                <div class="caret"></div>
-                            </button>
+                                <button type="button" class="multi_select__toggle" id="task_type_btn" aria-label="Toggle">
+                                    <div class="caret"></div>
+                                </button>
                             </div>
 
                             <div class="single_select__dropdown" hidden>
@@ -111,7 +114,9 @@
                             </div>
 
                             <input type="hidden" id="task_type" name="task_type" required>
+                            
                         </div>
+                        <span class="error-message"></span>
                     </div>
 
                     <div class="form_row">

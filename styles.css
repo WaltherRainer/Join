@@ -190,6 +190,14 @@ svg {
     border-color: var(--light-blue);
 }
 
+.standard_input_box.is-invalid {
+  border: 2px solid #d32f2f;
+}
+
+.standard_input_box.is-valid {
+  border: 2px solid #2e7d32;
+}
+
 .link_wrapper {
     display: flex;
     justify-content: space-between;

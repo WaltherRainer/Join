@@ -322,6 +322,16 @@
   position: relative;
 }
 
+.single_select__control.is-valid {
+  border: 2px solid #2e7d32;
+
+}
+
+.single_select__control.is-invalid {
+  border: 2px solid #d32f2f;
+}
+
+
 .single_select__control {
   display: flex;
   align-items: center;

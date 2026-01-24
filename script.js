@@ -101,31 +101,60 @@ function initUsersLoading() {
 }
 
 
-function onPageLoaded() {
-  const btn = document.getElementById("openAddTaskModalBtn");
-  if (!btn) return;
+// function onPageLoaded() {
+//   const btn = document.getElementById("openAddTaskModalBtn");
+//   if (!btn) return;
 
-  btn.onclick = () => openAddTaskModal();
-}
+//   btn.onclick = () => openAddTaskModal();
+// }
 
-function setActiveNav(page) {
-  document.querySelectorAll(".nav_link").forEach((link) => {
-    link.classList.toggle("active", link.dataset.page === page);
-  });
-}
+// function setActiveNav(page) {
+//   document.querySelectorAll(".nav_link").forEach((link) => {
+//     link.classList.toggle("active", link.dataset.page === page);
+//   });
+// }
 
-function showAvatar() {
-  const avatar = document.getElementById("user_avatar_wrapper");
-  avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
-}
 
-function renderAvatar(activeUserId, activeUserName) {
-  const initials = initialsFromGivenName(activeUserName);
-  const bgColor = colorIndexFromUserId(activeUserId);
-  return `
-    <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
-  `;
-}
+// NICHT BENÖTIGT...???!!!
+
+// function showAvatar() {
+//   const avatar = document.getElementById("user_avatar_wrapper");
+
+//   // Wrapper leeren
+//   avatar.innerText = "";
+
+//   // Avatar-Element erzeugen
+//   const avatarElement = renderAvatar(activeUserId, activeUserName);
+//   avatar.appendChild(avatarElement);
+// }
+
+// function renderAvatar(activeUserId, activeUserName) {
+//   const initials = initialsFromGivenName(activeUserName);
+//   const bgColor = colorIndexFromUserId(activeUserId);
+
+//   const div = document.createElement("div");
+//   div.className = "user_avatar";
+//   div.innerText = initials;
+//   div.style.color = `var(--user_c_${bgColor})`;
+
+//   div.addEventListener("click", toggleUserMenu);
+
+//   return div;
+// }
+
+
+// function showAvatar() {
+//   const avatar = document.getElementById("user_avatar_wrapper");
+//   avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
+// }
+
+// function renderAvatar(activeUserId, activeUserName) {
+//   const initials = initialsFromGivenName(activeUserName);
+//   const bgColor = colorIndexFromUserId(activeUserId);
+//   return `
+//     <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
+//   `;
+// }
 
 function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");

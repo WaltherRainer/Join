@@ -126,6 +126,7 @@ async function deleteContact(userId) {
   }
 }
 
+
 function openContactModal() {
   const modal = document.getElementById("add_contact_modal");
   const host = document.getElementById("contact_modal_host");
@@ -134,7 +135,7 @@ function openContactModal() {
   modal.showModal();
 
   bindContactFormSubmitOnce();
-  
+
   const removeEsc = listenEscapeFromModal("add_contact_modal", async (m) => {
     closeContactModal(m);
   });
@@ -147,7 +148,7 @@ function openContactModal() {
   document.getElementById("modal_close").addEventListener("click", close, { once: true });
 
   document.getElementById("clear_contact_form").addEventListener("click", () => {
-    resetContactForm();
+    closeContactModal(modal);
   });
 
   modal.addEventListener("click", (e) => {

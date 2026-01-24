@@ -11,10 +11,7 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("login_form")?.addEventListener("submit", userLogin);
-  document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
-});
+
 
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
@@ -210,12 +207,15 @@ window.addEventListener("load", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("login_form")?.addEventListener("submit", userLogin);
+  document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
   if (window.renderIcons) window.renderIcons(document);
 
   document.querySelectorAll(".input_box").forEach((box) => {
     initPasswordToggle(box);
   });
 });
+
 
 /**
  * This Function is used to add a User to the path users in the Database
