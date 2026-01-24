@@ -404,7 +404,8 @@ function dropTask(event, status) {
 
   insertIndex = findDropPosition(event, taskElements);
   const tasksInStatus = sortTasksInStatus(status, tasks);
-  deleteAndAddTaskInStatusPosition(tasksInStatus);
+  console.log("Tasks in status before drop:", tasksInStatus);
+  deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks);
   reRenderTasksInOrder(tasksInStatus, tasks, users, status);
 }
 
@@ -416,12 +417,23 @@ function sortTasksInStatus(status, tasks) {
   return tasksInStatus;
 }
 
-function deleteAndAddTaskInStatusPosition(tasksInStatus) {
+function deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks) {
     const oldTaskIndex = tasksInStatus.findIndex(({ id }) => id === currentDraggedTaskId);
-  if (oldTaskIndex !== -1) {
-    tasksInStatus.splice(oldTaskIndex, 1);
-  }
-    tasksInStatus.splice(insertIndex, 0, { id: currentDraggedTaskId, task: tasks[currentDraggedTaskId] });
+    let draggedTaskData = null;
+    
+    if (oldTaskIndex !== -1) {
+      draggedTaskData = tasksInStatus[oldTaskIndex];
+      tasksInStatus.splice(oldTaskIndex, 1);
+      if (oldTaskIndex < insertIndex) {
+        insertIndex--;
+      }
+    } else {
+      draggedTaskData = { id: currentDraggedTaskId, task: tasks[currentDraggedTaskId] };
+    }
+    
+    if (draggedTaskData && draggedTaskData.task) {
+      tasksInStatus.splice(insertIndex, 0, draggedTaskData);
+    }
 }
 
 function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
