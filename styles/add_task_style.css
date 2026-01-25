@@ -19,6 +19,17 @@
     "form_actions form_actions";
 }
 
+.add_task_form.edit_mode {
+  display: grid;
+  grid-template-columns: 500px;
+  grid-template-rows: 80px 1fr 80px 80px;
+  grid-template-areas:
+    "add_task_titel"
+    "add_task_form_left"
+    "add_task_form_right"
+    "form_actions";
+}
+
 .add_task_titel {
   grid-area: add_task_titel;
   margin-bottom: 0;
@@ -323,12 +334,12 @@
 }
 
 .single_select__control.is-valid {
-  border: 2px solid #2e7d32;
+  border: 1px solid var(--border_color);
 
 }
 
 .single_select__control.is-invalid {
-  border: 2px solid #d32f2f;
+  border: 2px solid var(--warning_red);
 }
 
 

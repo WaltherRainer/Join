@@ -101,61 +101,6 @@ function initUsersLoading() {
 }
 
 
-// function onPageLoaded() {
-//   const btn = document.getElementById("openAddTaskModalBtn");
-//   if (!btn) return;
-
-//   btn.onclick = () => openAddTaskModal();
-// }
-
-// function setActiveNav(page) {
-//   document.querySelectorAll(".nav_link").forEach((link) => {
-//     link.classList.toggle("active", link.dataset.page === page);
-//   });
-// }
-
-
-// NICHT BENÖTIGT...???!!!
-
-// function showAvatar() {
-//   const avatar = document.getElementById("user_avatar_wrapper");
-
-//   // Wrapper leeren
-//   avatar.innerText = "";
-
-//   // Avatar-Element erzeugen
-//   const avatarElement = renderAvatar(activeUserId, activeUserName);
-//   avatar.appendChild(avatarElement);
-// }
-
-// function renderAvatar(activeUserId, activeUserName) {
-//   const initials = initialsFromGivenName(activeUserName);
-//   const bgColor = colorIndexFromUserId(activeUserId);
-
-//   const div = document.createElement("div");
-//   div.className = "user_avatar";
-//   div.innerText = initials;
-//   div.style.color = `var(--user_c_${bgColor})`;
-
-//   div.addEventListener("click", toggleUserMenu);
-
-//   return div;
-// }
-
-
-// function showAvatar() {
-//   const avatar = document.getElementById("user_avatar_wrapper");
-//   avatar.innerHTML = renderAvatar(activeUserId, activeUserName);
-// }
-
-// function renderAvatar(activeUserId, activeUserName) {
-//   const initials = initialsFromGivenName(activeUserName);
-//   const bgColor = colorIndexFromUserId(activeUserId);
-//   return `
-//     <div class="user_avatar" onclick="toggleUserMenu()" style="color: var(--user_c_${bgColor});">${initials}</div>
-//   `;
-// }
-
 function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
   if (!userMenu) return;
@@ -304,10 +249,19 @@ window.initPage = async function initPage() {
       initContactsClick(usersDataObj);
       break;
     case "add_task":
+      const host = document.getElementById("addTaskInlineHost");
+      await mountTaskForm(host, {
+        title: "Test",
+        preset: { title: "", description: "", priority: "" },
+      });
+
       initAssignedToDropdown(usersDataObj);
       initTaskTypeDropdown(TASK_CATEGORIES);
       initSubtasksInput();
       bindAddTaskFormSubmitOnce();
+
+
+
       break;
     case "summary":
       await ensureTasksLoaded();
@@ -315,6 +269,9 @@ window.initPage = async function initPage() {
     case "board":
       await ensureTasksLoaded();
       loadTaskBoard(tasksDataObj, usersDataObj);
+
+
+
       // renderBoard();
       initAddTaskModalOnce();
       break;
@@ -454,4 +411,109 @@ function checkIfUserIsLoggedIn() {
   if (userLoggedIn !== "true") {
     window.location.replace("index.html");
   }
+}
+
+
+function removeAllInputErrors() {
+  reqInputFields = document.querySelectorAll(".required_input")
+  reqInputFields.forEach(resetInputValidation)
+}
+
+function setInputInValid(element, errorElement) {
+    const error = errorElement.nextElementSibling;
+    element.classList.add("is-invalid");
+    element.classList.remove("is-valid");
+    error.innerText = "This field is required";
+}
+
+function setInputValid(element, errorElement) {
+    const error = errorElement.nextElementSibling;
+    element.classList.add("is-valid");
+    element.classList.remove("is-invalid");
+    error.innerText = "";
+}
+
+function resetInputValidation(element) {
+  element.classList.remove("is-invalid")
+  element.classList.remove("is-valid")
+}
+
+
+// ---------- Partial Loader ----------
+async function loadPartial(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to load partial: ${url} (${res.status})`);
+  return await res.text();
+}
+
+async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSubmit = null } = {}) {
+  const html = await loadPartial("./partials/task_form.html");
+  hostEl.innerHTML = html;
+
+  const form = hostEl.querySelector("form.add_task_form");
+  // Überschrift im Form:
+  form.querySelector(".add_task_titel").textContent = title;
+
+  // preset values
+  if (preset) {
+    if (preset.titel != null) form.elements.task_titel.value = preset.titel;
+    if (preset.description != null) form.elements.task_descr.value = preset.description;
+    if (preset.finishDate != null) form.elements.task_due_date.value = preset.finishDate;
+
+    if (preset.priority != null) {
+      const radio = form.querySelector(`input[name="priority"][value="${preset.priority}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    if (preset.type != null) form.elements.task_type.value = preset.type;
+
+    if (preset.assignedTo != null) {
+      form.elements.assigned_to_input.value = JSON.stringify(preset.assignedTo);
+    }
+
+    if (preset?.subTasks != null) {
+      form.elements.subtasks_json.value = JSON.stringify(preset.subTasks);
+    }
+
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const data = {
+      titel: form.elements.task_titel.value.trim(),
+      description: form.elements.task_descr.value.trim(),
+      finishDate: form.elements.task_due_date.value,
+      priority: form.elements.priority.value,
+      type: form.elements.task_type.value,
+      assignedTo: safeParseArray(form.elements.assigned_to_input.value),
+      subTasks: safeParseArray(form.elements.subtasks_json.value)
+    };
+
+
+    if (typeof onSubmit === "function") onSubmit(data);
+  });
+
+  return form;
+}
+
+function safeParseArray(str) {
+  try {
+    const v = JSON.parse(str || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
+
+async function openModal(modalHost) {
+  // mount fresh form every time
+  await mountTaskForm(modalHost, {
+    title: "Task Form",
+    preset: { title: "", description: "", priority: "" },
+    onSubmit: () => {
+      // For demo: close after submit
+      modalHost.close();
+    },
+  });
 }

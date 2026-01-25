@@ -37,6 +37,7 @@ function initBoard() {
 }
 
 function initBoardEventList(users) {
+  console.log(users);
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
   btn.addEventListener("click", openAddTaskModal);
@@ -59,13 +60,170 @@ function deleteTask(taskId) {
   console.log(taskId)
 }
 
-function initEditMode() {
-  console.log("edit")
+async function enterTaskEditMode(users) {
+  const modal = document.getElementById("show_task_modal");
+  const host = document.getElementById("EditTaskModalHost");
+  const wrapper = document.getElementById("task_dialog_content_wrapper");
+
+  const taskId = modal.dataset.taskId;
+  const tasks = JSON.parse(sessionStorage.getItem("tasks") || "{}");
+  const task = tasks[String(taskId)];
+  if (!task) return;
+
+  wrapper.classList.add("is-hidden");
+  host.innerHTML = "";
+
+  const form = await mountTaskForm(host, {
+    title: "Task bearbeiten",
+    preset: task, // 👈 weil keys identisch: titel, description, finishDate, priority, type, assignedTo, subTasks
+    onSubmit: async (data) => {
+      tasks[String(taskId)] = {
+        ...task,
+        titel: data.titel,
+        description: data.description,
+        finishDate: data.finishDate,
+        priority: data.priority,
+        type: data.type,
+        assignedTo: data.assignedTo,
+        subTasks: data.subTasks
+      };
+      sessionStorage.setItem("tasks", JSON.stringify(tasks));
+
+      exitEditMode();
+
+      // View neu rendern
+      const ui = getTaskUi();
+      renderTaskModal(taskId, ui, tasks, users);
+    }
+  });
+
+  // UI init nach mount
+  initAssignedToDropdown(users);
+  initTaskTypeDropdown(TASK_CATEGORIES);
+  initSubtasksInput();
+  renderIcons(modal);
+
+  // ✅ Jetzt: Hidden->UI synchronisieren (siehe Abschnitt 4)
+  syncTypeUIFromHidden(form);
+  syncAssignedUIFromHidden(form, users);
+  syncSubtasksUIFromHidden(form);
+
+  form.classList.add("edit_mode");
+  form.elements.task_titel?.focus();
 }
 
-function initTaskModal(tasks) {
-  const ui = getTaskUi();
+function exitEditMode() {
+  document.getElementById("EditTaskModalHost").innerHTML = "";
+  document.getElementById("task_dialog_content_wrapper").classList.remove("is-hidden");
 }
+
+function syncTypeUIFromHidden(form) {
+  const hidden = form.elements.task_type;
+  const control = form.querySelector("#task_type_control");
+  const placeholder = control?.querySelector(".single_select__placeholder");
+  const valueSpan = control?.querySelector(".single_select__value");
+
+  if (!hidden || !control) return;
+
+  const type = hidden.value?.trim();
+  if (!type) return;
+
+  // Anzeige-Text: entweder mapping oder type direkt
+  const label = type; // oder: TASK_CATEGORIES[type]
+
+  if (placeholder) placeholder.hidden = true;
+  if (valueSpan) {
+    valueSpan.hidden = false;
+    valueSpan.textContent = label;
+  }
+}
+
+function syncAssignedUIFromHidden(form, usersObj) {
+  const hidden = form.elements.assigned_to_input; // <input type="hidden" id="assigned_to_input" ...>
+  const ids = safeParseArray(hidden?.value);
+
+  const placeholder = form.querySelector("#assigned_to_placeholder");
+  const valueBox = form.querySelector("#assigned_to_value");
+
+  if (!placeholder || !valueBox) return;
+
+  if (!ids.length) {
+    placeholder.hidden = false;
+    valueBox.hidden = true;
+    valueBox.textContent = "";
+    return;
+  }
+
+  const names = ids
+    .map(id => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
+    .filter(Boolean);
+
+  placeholder.hidden = true;
+  valueBox.hidden = false;
+  valueBox.textContent = names.length ? names.join(", ") : `${ids.length} selected`;
+}
+
+
+function syncSubtasksUIFromHidden(form) {
+const hidden = form.elements.subtasks_json;
+const list = form.querySelector("#subtasks_list");
+if (!hidden || !list) return;
+
+const subTasks = safeParseArray(hidden.value);
+list.innerHTML = "";
+
+subTasks.forEach((st, idx) => {
+  const li = document.createElement("li");
+  li.textContent = st?.title ?? st?.name ?? `Subtask ${idx + 1}`;
+  list.appendChild(li);
+});
+}
+
+
+function safeParseArray(str) {
+  try {
+    const v = JSON.parse(str || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
+
+
+// function initEditMode() {
+//   const modal = document.getElementById("show_task_modal");
+//   const modalHost = document.getElementById("EditTaskModalHost");
+//   const wrapper = document.getElementById("task_dialog_content_wrapper");
+//   wrapper.innerHTML = "";
+  
+//   openModal(modalHost);
+
+  
+//   ensureAddTaskFormLoaded(async (form) => {
+//     modalHost.appendChild(form);
+//     const usersDataObj = await ensureUsersLoaded();
+//     initAssignedToDropdown(usersDataObj);
+//     resetAssignedToDropdown();
+//     initTaskTypeDropdown(TASK_CATEGORIES);
+//     initSubtasksInput();
+//     bindAddTaskFormSubmitOnce();
+//     renderIcons(modal);
+
+//     modal.showModal();
+
+//     const removeEsc = listenEscapeFromModal("addTaskModal", async (m) => {
+//       closeAddTaskModal()
+//     });
+
+//     modal.addEventListener("close", removeEsc, { once: true });
+//   });
+
+
+// }
+
+// function initTaskModal(tasks) {
+//   const ui = getTaskUi();
+// }
 
 function getTaskUi() {
   const titel = document.getElementById("tsk_dlg_h1");
@@ -98,9 +256,10 @@ function initTaskModalEventList(modal) {
     if (e.target === modal) await closeTaskModal(modal, modal.dataset.taskId);
   });
 
-  document.getElementById("btn_edit_task").addEventListener("click", () => {
-    initEditMode();
-  });
+document.getElementById("btn_edit_task").addEventListener("click", () => {
+  enterTaskEditMode(modal.__users || {});
+});
+
 
   document.getElementById("btn_delete_task").addEventListener("click", () => {
     deleteTask(modal.dataset.taskId);
@@ -165,6 +324,7 @@ async function saveTaskSubtasksToFirebase(taskId, subTasks) {
 async function openTaskModal(taskId, users) {
   const tasks = JSON.parse(sessionStorage.getItem("tasks") || "{}");
   const modal = document.getElementById("show_task_modal");
+  modal.__users = users;
   if (!modal) return;
   modal.dataset.taskId = String(taskId);
   modal.showModal();
@@ -172,6 +332,7 @@ async function openTaskModal(taskId, users) {
   const ui = getTaskUi();
   renderTaskModal(taskId, ui, tasks, users);
   initTaskModalEventList(modal);
+
 }
 
 function renderTaskModal(taskId, ui, tasks, users) {
@@ -191,6 +352,7 @@ function renderTaskModal(taskId, ui, tasks, users) {
   ui.SubTaskList.innerHTML = renderSubtasksContent(task);
   renderIcons();
 }
+
 
 function renderAssignedTo(task, users) {
   let assTo = ""

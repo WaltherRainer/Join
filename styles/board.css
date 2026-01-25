@@ -397,3 +397,11 @@ section.task_section {
 .subtask_li_elements.is-done .checkbox_unchecked {
   display: none;
 }
+
+.is-hidden { 
+    display: none !important; 
+}
+
+.edit_task_modal_host {
+    background-color: var(--background-color);
+}

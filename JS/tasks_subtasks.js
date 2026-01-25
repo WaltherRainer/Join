@@ -20,6 +20,9 @@ function initSubtasksInput() {
 
   const subTaskUi = { inputSubTasks, SubTaskListElem, SubTaskListInp };
   const state = { subtasks: [], editingIndex: null, subTaskUi };
+    // ⬇️ neu: vorhandene subtasks aus hidden input übernehmen
+    state.subtasks = safeParseArray(SubTaskListInp.value);
+
   btnClear.innerHTML = delCross({ width: 18, height: 18 });
   btnAdd.innerHTML = addCross({ width: 18, height: 18 });
   btnClear.onclick = () => clearSubtaskInput(state);
@@ -97,6 +100,7 @@ function onSubtaskKeydown(state, e) {
  * @returns {void}
  */
 function renderSubtasks(state) {
+    console.log(state);
     state.subTaskUi.SubTaskListElem.innerHTML = "";
     state.subtasks.forEach((subtask, idx) => {
     state.subTaskUi.SubTaskListElem.appendChild(makeSubtaskLi(state, subtask, idx));

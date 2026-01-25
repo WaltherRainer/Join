@@ -191,11 +191,11 @@ svg {
 }
 
 .standard_input_box.is-invalid {
-  border: 2px solid #d32f2f;
+  border: 2px solid var(--warning_red);
 }
 
 .standard_input_box.is-valid {
-  border: 2px solid #2e7d32;
+  border: 1px solid var(--border_color);
 }
 
 .link_wrapper {

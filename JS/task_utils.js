@@ -81,12 +81,13 @@ function initAssignedToDropdown(usersData) {
 
 
 function openAddTaskModal() {
+  const modalHost = document.getElementById("addTaskModalHost");
   const modal = document.getElementById("addTaskModal");
-  const host = document.getElementById("addTaskModalHost");
-  if (!modal || !host) return;
+  if (!modal || !modalHost) return;
+  openModal(modalHost);
 
   ensureAddTaskFormLoaded(async (form) => {
-    host.appendChild(form);
+    modalHost.appendChild(form);
     const usersDataObj = await ensureUsersLoaded();
     initAssignedToDropdown(usersDataObj);
     resetAssignedToDropdown();
@@ -392,6 +393,7 @@ function selectTaskType(ui, cat) {
   ui.valueEl.hidden = false;
   ui.placeholder.hidden = true;
   closeTaskTypeDropdown(ui);
+  removeAllInputErrors();
 }
 
 function wireTaskTypeEvents(ui) {

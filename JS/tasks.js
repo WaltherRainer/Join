@@ -122,7 +122,6 @@ function initAddTaskModalOnce() {
   });
 }
 
-
 function clearTaskForm() {
   setValueById("task_titel", "");
   setValueById("task_descr", "");
@@ -140,6 +139,7 @@ function clearTaskForm() {
   const avatarContainer = document.getElementById("assigned_avatar_container");
   if (avatarContainer) avatarContainer.innerHTML = "";
   resetTaskTypeDropdownUi();
+  removeAllInputErrors();
 }
 
 function clearEditInput(state) {
@@ -169,42 +169,32 @@ function bindAddTaskFormSubmitOnce() {
     }
   });
 
-  
+  const clearBtn = document.getElementById("clear_task_form_btn");
+  clearBtn.addEventListener("click", clearTaskForm)
+
   document.querySelectorAll(".standard_input_box[required]").forEach(input => {
     input.addEventListener("blur", () => {
-      const error = input.nextElementSibling;
 
       if (!input.checkValidity()) {
-        input.classList.add("is-invalid");
-        input.classList.remove("is-valid");
-        error.innerText = "This field is required";
+        setInputInValid(input, input);
       } else {
-        input.classList.add("is-valid");
-        input.classList.remove("is-invalid");
-        error.innerText = "";
+        setInputValid(input, input);
       }
     });
   });
 
-    const formInputBtn = document.getElementById("task_type_btn");
-    formInputBtn.addEventListener("blur", () => {
-      const hidden = document.getElementById("task_type");
-      const taskTypeDiv = document.getElementById("task_type_control");
-      const taskTypeOuterDiv = document.getElementById("task_type_select");
+  const formInputBtn = document.getElementById("task_type_btn");
+  formInputBtn.addEventListener("blur", () => {
+    const hidden = document.getElementById("task_type");
+    const taskTypeDiv = document.getElementById("task_type_control");
+    const taskTypeOuterDiv = document.getElementById("task_type_select");
 
-      const error = taskTypeOuterDiv.nextElementSibling;
-
-      if  (!hidden.value) {
-        taskTypeDiv.classList.add("is-invalid");
-        taskTypeDiv.classList.remove("is-valid");
-        error.innerText = "This field is required";
-      } else {
-        taskTypeDiv.classList.add("is-valid");
-        taskTypeDiv.classList.remove("is-invalid");
-        error.innerText = "";
-      }
-    });
-
-
+    if  (!hidden.value) {
+      setInputInValid(taskTypeDiv, taskTypeOuterDiv);
+    } else {
+      setInputValid(taskTypeDiv, taskTypeOuterDiv);
+    }
+  });
 }
+
 

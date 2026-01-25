@@ -12,7 +12,6 @@ const ICON = Object.freeze({
 });
 
 
-
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
   if (!holder) return;
@@ -25,6 +24,7 @@ async function guestLogin() {
   saveUserToSessionStorage("guest", "Guest", dataObj);
   sessionStorage.setItem("userLoggedIn", true);
   window.location.replace("summary.html");
+  
 }
 
 function setAriaLabel(input, btn) {
