@@ -494,12 +494,11 @@ function safeParseArray(str) {
 }
 
 async function openModal(modalHost) {
-  // mount fresh form every time
   await mountTaskForm(modalHost, {
     title: "Task Form",
     preset: { title: "", description: "", priority: "" },
     onSubmit: () => {
-      // For demo: close after submit
+      // For demo: close after submit!!!
       modalHost.close();
     },
   });

@@ -204,6 +204,10 @@ svg {
     align-items: center;
 }
 
+.modal {
+  border-radius: 16px;
+}
+
 .policy_links {
     margin-top: auto;
     margin-bottom: 48px;

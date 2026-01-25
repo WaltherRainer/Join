@@ -71,7 +71,7 @@ async function enterTaskEditMode(users) {
 
   const form = await mountTaskForm(host, {
     title: "Task bearbeiten",
-    preset: task, // 👈 weil keys identisch: titel, description, finishDate, priority, type, assignedTo, subTasks
+    preset: task, 
     onSubmit: async (data) => {
       tasks[String(taskId)] = {
         ...task,
@@ -86,20 +86,16 @@ async function enterTaskEditMode(users) {
       sessionStorage.setItem("tasks", JSON.stringify(tasks));
 
       exitEditMode();
-
-      // View neu rendern
       const ui = getTaskUi();
       renderTaskModal(taskId, ui, tasks, users);
     },
   });
 
-  // UI init nach mount
   initAssignedToDropdown(users);
   initTaskTypeDropdown(TASK_CATEGORIES);
   initSubtasksInput();
   renderIcons(modal);
 
-  // ✅ Jetzt: Hidden->UI synchronisieren (siehe Abschnitt 4)
   syncTypeUIFromHidden(form);
   syncAssignedUIFromHidden(form, users);
   syncSubtasksUIFromHidden(form);
@@ -124,8 +120,7 @@ function syncTypeUIFromHidden(form) {
   const type = hidden.value?.trim();
   if (!type) return;
 
-  // Anzeige-Text: entweder mapping oder type direkt
-  const label = type; // oder: TASK_CATEGORIES[type]
+  const label = TASK_CATEGORIES[type]; 
 
   if (placeholder) placeholder.hidden = true;
   if (valueSpan) {
@@ -152,6 +147,7 @@ function syncAssignedUIFromHidden(form, usersObj) {
 
   const names = ids
     .map((id) => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
+    .map(id => usersObj?.[id]?.givenName)
     .filter(Boolean);
 
   placeholder.hidden = true;

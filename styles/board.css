@@ -404,4 +404,8 @@ section.task_section {
 
 .edit_task_modal_host {
     background-color: var(--background-color);
+
+    
+    overflow: auto;
+
 }
