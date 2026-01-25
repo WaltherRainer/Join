@@ -22,12 +22,14 @@
 .add_task_form.edit_mode {
   display: grid;
   grid-template-columns: 500px;
-  grid-template-rows: 80px 1fr 80px 80px;
+  grid-template-rows: 65px 445px 500px;
   grid-template-areas:
     "add_task_titel"
     "add_task_form_left"
     "add_task_form_right"
     "form_actions";
+  padding: 16px 16px 16px 16px;
+  max-height: 900px;
 }
 
 .add_task_titel {
