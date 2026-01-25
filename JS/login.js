@@ -11,7 +11,6 @@ const ICON = Object.freeze({
   EYE_OPEN: "eye_open",
 });
 
-
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
   if (!holder) return;
@@ -24,7 +23,6 @@ async function guestLogin() {
   saveUserToSessionStorage("guest", "Guest", dataObj);
   sessionStorage.setItem("userLoggedIn", true);
   window.location.replace("summary.html");
-  
 }
 
 function setAriaLabel(input, btn) {
@@ -216,7 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
 /**
  * This Function is used to add a User to the path users in the Database
  *
@@ -313,7 +310,7 @@ function resetSignupForm() {
 }
 
 function checkForm() {
-  const allFilled = [...inputs].every(input => input.value.trim() !== "");
+  const allFilled = [...inputs].every((input) => input.value.trim() !== "");
   const privacyAccepted = privacyCheckbox.checked;
 
   const isValid = allFilled && privacyAccepted;
@@ -322,7 +319,7 @@ function checkForm() {
   registerBtn.setAttribute("aria-disabled", String(!isValid));
 }
 
-inputs.forEach(input => input.addEventListener("input", checkForm));
+inputs.forEach((input) => input.addEventListener("input", checkForm));
 privacyCheckbox.addEventListener("change", checkForm);
 
 checkForm();

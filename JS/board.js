@@ -28,10 +28,6 @@ function loadUsersFromSession() {
   return JSON.parse(sessionStorage.getItem("users") || "{}");
 }
 
-function saveUsersToSession(users) {
-  sessionStorage.setItem("users", JSON.stringify(users));
-}
-
 function initBoard() {
   checkIfUserIsLoggedIn();
 }
@@ -45,7 +41,7 @@ function initBoardEventList(users) {
   const taskSect = document.querySelectorAll(".task_section");
   if (taskSect.length === 0) return;
 
-  taskSect.forEach(section => {
+  taskSect.forEach((section) => {
     section.addEventListener("click", (e) => {
       const card = e.target.closest(".t_task");
       if (!card) return;
@@ -57,7 +53,7 @@ function initBoardEventList(users) {
 }
 
 function deleteTask(taskId) {
-  console.log(taskId)
+  console.log(taskId);
 }
 
 async function enterTaskEditMode(users) {
@@ -85,7 +81,7 @@ async function enterTaskEditMode(users) {
         priority: data.priority,
         type: data.type,
         assignedTo: data.assignedTo,
-        subTasks: data.subTasks
+        subTasks: data.subTasks,
       };
       sessionStorage.setItem("tasks", JSON.stringify(tasks));
 
@@ -94,7 +90,7 @@ async function enterTaskEditMode(users) {
       // View neu rendern
       const ui = getTaskUi();
       renderTaskModal(taskId, ui, tasks, users);
-    }
+    },
   });
 
   // UI init nach mount
@@ -155,7 +151,7 @@ function syncAssignedUIFromHidden(form, usersObj) {
   }
 
   const names = ids
-    .map(id => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
+    .map((id) => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
     .filter(Boolean);
 
   placeholder.hidden = true;
@@ -163,22 +159,20 @@ function syncAssignedUIFromHidden(form, usersObj) {
   valueBox.textContent = names.length ? names.join(", ") : `${ids.length} selected`;
 }
 
-
 function syncSubtasksUIFromHidden(form) {
-const hidden = form.elements.subtasks_json;
-const list = form.querySelector("#subtasks_list");
-if (!hidden || !list) return;
+  const hidden = form.elements.subtasks_json;
+  const list = form.querySelector("#subtasks_list");
+  if (!hidden || !list) return;
 
-const subTasks = safeParseArray(hidden.value);
-list.innerHTML = "";
+  const subTasks = safeParseArray(hidden.value);
+  list.innerHTML = "";
 
-subTasks.forEach((st, idx) => {
-  const li = document.createElement("li");
-  li.textContent = st?.title ?? st?.name ?? `Subtask ${idx + 1}`;
-  list.appendChild(li);
-});
+  subTasks.forEach((st, idx) => {
+    const li = document.createElement("li");
+    li.textContent = st?.title ?? st?.name ?? `Subtask ${idx + 1}`;
+    list.appendChild(li);
+  });
 }
-
 
 function safeParseArray(str) {
   try {
@@ -189,16 +183,14 @@ function safeParseArray(str) {
   }
 }
 
-
 // function initEditMode() {
 //   const modal = document.getElementById("show_task_modal");
 //   const modalHost = document.getElementById("EditTaskModalHost");
 //   const wrapper = document.getElementById("task_dialog_content_wrapper");
 //   wrapper.innerHTML = "";
-  
+
 //   openModal(modalHost);
 
-  
 //   ensureAddTaskFormLoaded(async (form) => {
 //     modalHost.appendChild(form);
 //     const usersDataObj = await ensureUsersLoaded();
@@ -217,7 +209,6 @@ function safeParseArray(str) {
 
 //     modal.addEventListener("close", removeEsc, { once: true });
 //   });
-
 
 // }
 
@@ -256,10 +247,9 @@ function initTaskModalEventList(modal) {
     if (e.target === modal) await closeTaskModal(modal, modal.dataset.taskId);
   });
 
-document.getElementById("btn_edit_task").addEventListener("click", () => {
-  enterTaskEditMode(modal.__users || {});
-});
-
+  document.getElementById("btn_edit_task").addEventListener("click", () => {
+    enterTaskEditMode(modal.__users || {});
+  });
 
   document.getElementById("btn_delete_task").addEventListener("click", () => {
     deleteTask(modal.dataset.taskId);
@@ -280,7 +270,6 @@ document.getElementById("btn_edit_task").addEventListener("click", () => {
   });
 }
 
-
 function toggleSubtaskDone(index, taskId) {
   const tasks = loadTasksFromSession();
   const task = tasks[taskId];
@@ -292,9 +281,7 @@ function toggleSubtaskDone(index, taskId) {
   saveTasksToSession(tasks);
   dirtyTaskIds.add(taskId);
 
-  const li = document.querySelector(
-    `#subtasks_check_list li[data-index="${index}"]`
-  );
+  const li = document.querySelector(`#subtasks_check_list li[data-index="${index}"]`);
 
   if (li) {
     li.classList.toggle("is-done", done);
@@ -332,7 +319,6 @@ async function openTaskModal(taskId, users) {
   const ui = getTaskUi();
   renderTaskModal(taskId, ui, tasks, users);
   initTaskModalEventList(modal);
-
 }
 
 function renderTaskModal(taskId, ui, tasks, users) {
@@ -353,11 +339,10 @@ function renderTaskModal(taskId, ui, tasks, users) {
   renderIcons();
 }
 
-
 function renderAssignedTo(task, users) {
-  let assTo = ""
-  task.assignedTo.forEach(element => {
-    console.log(task.assignedTo)
+  let assTo = "";
+  task.assignedTo.forEach((element) => {
+    console.log(task.assignedTo);
     let user = users[element];
     if (user) {
       console.log(user);
@@ -367,15 +352,14 @@ function renderAssignedTo(task, users) {
       assTo += getAssignedToTempl(initials, userName, bgColor);
     }
   });
-return assTo;
+  return assTo;
 }
 
-
 function renderSubtasksContent(task) {
-  let subTaskCont = ""
+  let subTaskCont = "";
   let index = 0;
   if (task.subTasks && typeof task.subTasks === "object" && task.subTasks.length > 0) {
-    task.subTasks.forEach(element => {
+    task.subTasks.forEach((element) => {
       let subTaskTitel = element.title;
       let done = element.done;
       subTaskCont += getTaskDialSubtaskTempl(subTaskTitel, done, index);
@@ -410,25 +394,24 @@ function renderItems(items, containers, users) {
   containers.inProgressDiv.innerHTML = "";
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
-  
+
   // Sortiere Tasks nach ihrer Reihenfolge innerhalb der Kategorie
   const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
-  
-  sortedItems.forEach(task => {
+
+  sortedItems.forEach((task) => {
     const taskHTML = taskItemTemplate(task, users);
     const target = statusContainerFor(task.status, containers);
-    target.insertAdjacentHTML('beforeend', taskHTML);
+    target.insertAdjacentHTML("beforeend", taskHTML);
     renderIcons(target);
   });
-  
 }
 
 function renderEmptyStates(containers) {
-  const isEmpty = el => !el.querySelector('.t_task');
-  if (isEmpty(containers.toDoDiv)) containers.toDoDiv.insertAdjacentHTML('beforeend', noTaskTemplate("No task To do"));
-  if (isEmpty(containers.inProgressDiv)) containers.inProgressDiv.insertAdjacentHTML('beforeend', noTaskTemplate("No task In progress"));
-  if (isEmpty(containers.awaitfeedbackdiv)) containers.awaitfeedbackdiv.insertAdjacentHTML('beforeend', noTaskTemplate("No task Await feedback"));
-  if (isEmpty(containers.doneDiv)) containers.doneDiv.insertAdjacentHTML('beforeend', noTaskTemplate("No task Done"));
+  const isEmpty = (el) => !el.querySelector(".t_task");
+  if (isEmpty(containers.toDoDiv)) containers.toDoDiv.insertAdjacentHTML("beforeend", noTaskTemplate("No task To do"));
+  if (isEmpty(containers.inProgressDiv)) containers.inProgressDiv.insertAdjacentHTML("beforeend", noTaskTemplate("No task In progress"));
+  if (isEmpty(containers.awaitfeedbackdiv)) containers.awaitfeedbackdiv.insertAdjacentHTML("beforeend", noTaskTemplate("No task Await feedback"));
+  if (isEmpty(containers.doneDiv)) containers.doneDiv.insertAdjacentHTML("beforeend", noTaskTemplate("No task Done"));
 }
 
 function loadTaskBoard(tasks, users) {
@@ -448,30 +431,30 @@ const returnArrayOfTasks = (tasks) => {
   } else {
     return [];
   }
-}
+};
 
 function findUserDataNameAndColor(item, users = window.users || {}) {
   if (!item) return null;
 
   // item can be a userId (string) or an object with userId/id/givenName/name
-  if (typeof item === 'string') {
+  if (typeof item === "string") {
     const user = users?.[item];
-    if (!user) return null; 
+    if (!user) return null;
     const givenName = user.givenName || user.name;
-    if (!givenName) return null; 
-    return { initials: initialsFromGivenName(givenName, ''), bgColor: colorIndexFromUserId(item) };
+    if (!givenName) return null;
+    return { initials: initialsFromGivenName(givenName, ""), bgColor: colorIndexFromUserId(item) };
   }
 
-  if (typeof item === 'object') {
+  if (typeof item === "object") {
     const userId = item.userId || item.id;
     const givenName = item.givenName || item.name;
     if (givenName) {
-      return { initials: initialsFromGivenName(givenName, ''), bgColor: colorIndexFromUserId(userId || '') };
+      return { initials: initialsFromGivenName(givenName, ""), bgColor: colorIndexFromUserId(userId || "") };
     }
     if (userId && users?.[userId]) {
       const user = users[userId];
       const name = user.givenName || user.name;
-      if (name) return { initials: initialsFromGivenName(name, ''), bgColor: colorIndexFromUserId(userId) };
+      if (name) return { initials: initialsFromGivenName(name, ""), bgColor: colorIndexFromUserId(userId) };
     }
   }
 
@@ -480,17 +463,18 @@ function findUserDataNameAndColor(item, users = window.users || {}) {
 
 function mapAssignedTo(assignedTo, users = window.users || {}) {
   if (!assignedTo || !Array.isArray(assignedTo)) return "";
-  const entries = assignedTo
-    .map(item => findUserDataNameAndColor(item, users))
-    .filter(Boolean);
+  const entries = assignedTo.map((item) => findUserDataNameAndColor(item, users)).filter(Boolean);
 
   if (entries.length === 0) return "";
 
   const maxVisible = 3;
-  const visible = entries.slice(0, maxVisible)
-    .map(({ initials, bgColor }) => `
+  const visible = entries
+    .slice(0, maxVisible)
+    .map(
+      ({ initials, bgColor }) => `
       <span class="user_avatar_small" style="background-color: var(--user_c_${bgColor});">${escapeHtml(initials)}</span>
-    `)
+    `,
+    )
     .join("");
 
   if (entries.length > maxVisible) {
@@ -503,7 +487,7 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
 
 function startDragTask(id) {
   currentDraggedTaskId = id;
-  document.querySelectorAll(".task_list_div").forEach(div => {
+  document.querySelectorAll(".task_list_div").forEach((div) => {
     div.classList.add("on-drop");
   });
   const taskElement = document.querySelector(`[data-task-id="${id}"]`);
@@ -514,13 +498,13 @@ function startDragTask(id) {
 
 function endDragTask(event, id) {
   currentDraggedTaskId = null;
-  document.querySelectorAll(".task_list_div").forEach(div => {
+  document.querySelectorAll(".task_list_div").forEach((div) => {
     div.classList.remove("on-drop");
-    div.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
+    div.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
   });
   const taskElement = document.querySelector(`[data-task-id="${id}"]`);
   if (taskElement) {
-    taskElement.classList.remove("dragging-task");;
+    taskElement.classList.remove("dragging-task");
   }
 }
 
@@ -537,16 +521,16 @@ function findDropPosition(event, taskElements) {
 function allowDrop(event) {
   event.preventDefault();
   const dropZone = event.currentTarget;
-  const taskElements = Array.from(dropZone.querySelectorAll('.t_task'));
+  const taskElements = Array.from(dropZone.querySelectorAll(".t_task"));
 
-  dropZone.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
-  
+  dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
+
   let insertBeforeElement = null;
   insertBeforeElement = taskElements[findDropPosition(event, taskElements)];
-  
-  const placeholder = document.createElement('div');
-  placeholder.className = 'drag-placeholder';
-  
+
+  const placeholder = document.createElement("div");
+  placeholder.className = "drag-placeholder";
+
   if (insertBeforeElement) {
     insertBeforeElement.parentNode.insertBefore(placeholder, insertBeforeElement);
   } else {
@@ -562,7 +546,7 @@ function dropTask(event, status) {
   if (!currentDraggedTaskId || !tasks[currentDraggedTaskId]) return;
 
   const dropZone = event.currentTarget;
-  const taskElements = Array.from(dropZone.querySelectorAll('.t_task'));
+  const taskElements = Array.from(dropZone.querySelectorAll(".t_task"));
 
   insertIndex = findDropPosition(event, taskElements);
   const tasksInStatus = sortTasksInStatus(status, tasks);
@@ -580,22 +564,22 @@ function sortTasksInStatus(status, tasks) {
 }
 
 function deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks) {
-    const oldTaskIndex = tasksInStatus.findIndex(({ id }) => id === currentDraggedTaskId);
-    let draggedTaskData = null;
-    
-    if (oldTaskIndex !== -1) {
-      draggedTaskData = tasksInStatus[oldTaskIndex];
-      tasksInStatus.splice(oldTaskIndex, 1);
-      if (oldTaskIndex < insertIndex) {
-        insertIndex--;
-      }
-    } else {
-      draggedTaskData = { id: currentDraggedTaskId, task: tasks[currentDraggedTaskId] };
+  const oldTaskIndex = tasksInStatus.findIndex(({ id }) => id === currentDraggedTaskId);
+  let draggedTaskData = null;
+
+  if (oldTaskIndex !== -1) {
+    draggedTaskData = tasksInStatus[oldTaskIndex];
+    tasksInStatus.splice(oldTaskIndex, 1);
+    if (oldTaskIndex < insertIndex) {
+      insertIndex--;
     }
-    
-    if (draggedTaskData && draggedTaskData.task) {
-      tasksInStatus.splice(insertIndex, 0, draggedTaskData);
-    }
+  } else {
+    draggedTaskData = { id: currentDraggedTaskId, task: tasks[currentDraggedTaskId] };
+  }
+
+  if (draggedTaskData && draggedTaskData.task) {
+    tasksInStatus.splice(insertIndex, 0, draggedTaskData);
+  }
 }
 
 function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
@@ -603,7 +587,7 @@ function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
   tasksInStatus.forEach(({ id }, index) => {
     tasks[id].order = index;
   });
-  
+
   saveTasksToSession(tasks);
   loadTaskBoard(tasks, users);
 }
@@ -611,6 +595,6 @@ function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
 function removeDragPlaceholder(event) {
   if (event.target === event.currentTarget) {
     const dropZone = event.currentTarget;
-    dropZone.querySelectorAll('.drag-placeholder').forEach(el => el.remove());
+    dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
   }
 }

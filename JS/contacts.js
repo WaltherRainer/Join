@@ -1,6 +1,6 @@
 function initContacts() {
   checkIfUserIsLoggedIn();
-  contactEventList()
+  contactEventList();
 }
 
 function groupUsersByFirstLetter(usersObj) {
@@ -23,7 +23,7 @@ function renderContacts(users) {
   const container = document.querySelector(".contact_list_sect");
   if (!container) return;
 
-  container.querySelectorAll(".contact_list_item").forEach(e => e.remove());
+  container.querySelectorAll(".contact_list_item").forEach((e) => e.remove());
   const groups = groupUsersByFirstLetter(users);
   const sortedLetters = Object.keys(groups).sort();
 
@@ -34,37 +34,30 @@ function renderContacts(users) {
     letterDiv.className = "first_letter";
     letterDiv.textContent = letter;
     wrapper.appendChild(letterDiv);
-    groups[letter].forEach(user => {
-    const card = document.createElement("div");
-    card.className = "contact_list_card";
-    card.dataset.userId = user.id;
-    card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
-    wrapper.appendChild(card);
-  });
-  container.appendChild(wrapper);
-}
+    groups[letter].forEach((user) => {
+      const card = document.createElement("div");
+      card.className = "contact_list_card";
+      card.dataset.userId = user.id;
+      card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
+      wrapper.appendChild(card);
+    });
+    container.appendChild(wrapper);
+  }
 }
 
 function renderContactDetails(users, userId) {
   const u = users?.[userId];
   if (!u) return;
-  
+
   const initials = initialsFromGivenName(u.givenName);
   const bgColor = colorIndexFromUserId(userId);
-  
+
   const target = document.getElementById("contact_details_sect");
   if (!target) return;
   target.dataset.userId = userId;
-  target.innerHTML = getContactDetailsTempl(
-    bgColor,
-    initials,
-    u.givenName,
-    u.email,
-    u.userPhone || "-",
-    userId
-  );
+  target.innerHTML = getContactDetailsTempl(bgColor, initials, u.givenName, u.email, u.userPhone || "-", userId);
   renderIcons(target);
-  
+
   initEditButton(userId, u.givenName, u.email, u.userPhone);
   initDeleteButton(userId);
 }
@@ -72,7 +65,7 @@ function renderContactDetails(users, userId) {
 function initEditButton(userId, givenName, email, userPhone) {
   const editBtn = document.getElementById("edit_user");
   if (!editBtn) return;
-  
+
   editBtn.addEventListener("click", () => {
     openEditContactModal(userId, givenName, email, userPhone);
     console.log(window.users);
@@ -82,7 +75,7 @@ function initEditButton(userId, givenName, email, userPhone) {
 function initDeleteButton(userId) {
   const deleteBtn = document.getElementById("btn_delete_user");
   if (!deleteBtn) return;
-  
+
   deleteBtn.addEventListener("click", () => {
     deleteContact(userId);
   });
@@ -104,8 +97,7 @@ function initContactsClick(users) {
 }
 
 function setActiveContactCard(cardEl) {
-  document.querySelectorAll(".contact_list_card.is-active")
-    .forEach(el => el.classList.remove("is-active"));
+  document.querySelectorAll(".contact_list_card.is-active").forEach((el) => el.classList.remove("is-active"));
   cardEl.classList.add("is-active");
 }
 
@@ -113,10 +105,10 @@ async function deleteContact(userId) {
   if (!userId) return;
   try {
     await deleteData(`/users/${userId}`);
-    users = await loadData("/users") || {};
+    users = (await loadData("/users")) || {};
+    saveUsersToSession(users);
     renderContacts(users);
-    document.querySelectorAll(".contact_list_card.is-active")
-      .forEach(el => el.classList.remove("is-active"));
+    document.querySelectorAll(".contact_list_card.is-active").forEach((el) => el.classList.remove("is-active"));
     const details = document.getElementById("contact_details_sect");
     if (details) {
       details.innerHTML = "";
@@ -125,7 +117,6 @@ async function deleteContact(userId) {
     console.error("Delete failed:", err);
   }
 }
-
 
 function openContactModal() {
   const modal = document.getElementById("add_contact_modal");
@@ -151,9 +142,13 @@ function openContactModal() {
     closeContactModal(modal);
   });
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) close();
-  }, { once: true });
+  modal.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === modal) close();
+    },
+    { once: true },
+  );
   modal.addEventListener("close", removeEsc, { once: true });
 }
 
@@ -179,17 +174,24 @@ function openEditContactModal(userId, givenName, email, userPhone) {
 
   document.getElementById("edit_modal_close").addEventListener("click", close, { once: true });
 
-  document.getElementById("delete_contact_btn").addEventListener("click", () => {
-    deleteContact(userId);
-  }, { once: true });
+  document.getElementById("delete_contact_btn").addEventListener(
+    "click",
+    () => {
+      deleteContact(userId);
+    },
+    { once: true },
+  );
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) close();
-  }, { once: true });
+  modal.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === modal) close();
+    },
+    { once: true },
+  );
 
   modal.addEventListener("close", removeEsc, { once: true });
 }
-
 
 function preloadEditFormData(givenName, email, userPhone) {
   setValueById("edit_user_name", givenName);
@@ -198,7 +200,7 @@ function preloadEditFormData(givenName, email, userPhone) {
 }
 
 function closeContactModal(modal) {
-  modal.removeEventListener('submit', addNewUser);
+  modal.removeEventListener("submit", addNewUser);
   modal.close();
 }
 
@@ -209,7 +211,7 @@ function contactEventList() {
 }
 
 function closeEditContactModal(modal) {
-  modal.removeEventListener('submit', editUser);
+  modal.removeEventListener("submit", editUser);
   modal.close();
 }
 
@@ -222,9 +224,8 @@ function bindContactFormSubmitOnce() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-        await addNewUser();
-    } 
-    catch (err) {
+      await addNewUser();
+    } catch (err) {
       console.error("addUser failed", err);
     }
   });
@@ -239,9 +240,8 @@ function bindEditContactFormSubmitOnce(userId) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
-        await editUser(userId);
-    } 
-    catch (err) {
+      await editUser(userId);
+    } catch (err) {
       console.error("EditUser failed", err);
     }
   });
@@ -261,15 +261,19 @@ async function addNewUser() {
   const email = emailInp?.value?.trim() || "";
   const givenName = userNameInp?.value?.trim() || "";
   const userPhone = userPhoneInp?.value?.trim() || "";
-  const password = "12345"
+  const password = "12345";
   let dataArray = {};
 
   if (!email || !givenName || !userPhone) return;
+
   window.usersReady = null;
   await initUsersLoading();
+
   if (userExists(email)) return;
+
   const dataObj = { email, givenName, password, userPhone };
   await uploadData("/users", dataObj);
+  saveUsersToSession(users);
   window.usersReady = null;
   dataArray = await initUsersLoading();
   resetContactForm();
@@ -293,6 +297,7 @@ async function editUser(userId) {
   await window.editData("/users", userId, dataObj);
   window.usersReady = null;
   dataArray = await initUsersLoading();
+  saveUsersToSession(dataArray);
   renderContacts(dataArray);
   renderContactDetails(dataArray, userId);
   closeEditContactModal(modal);
@@ -301,11 +306,10 @@ async function editUser(userId) {
 function renderEditContactAvatar(userId, givenName) {
   const avatarEl = document.getElementById("user_avatar_edit");
   if (!avatarEl) return;
-  
+
   const initials = initialsFromGivenName(givenName);
   const bgColor = colorIndexFromUserId(userId);
-  
+
   avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
   avatarEl.innerHTML = initials;
 }
-

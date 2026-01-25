@@ -100,7 +100,6 @@ function initUsersLoading() {
   return window.usersReady;
 }
 
-
 function toggleUserMenu() {
   let userMenu = document.getElementById("user_menu");
   if (!userMenu) return;
@@ -119,9 +118,7 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
   if (!container) return;
 
   container.innerHTML = "";
-  const idsArray = Array.isArray(selectedUserIds)
-    ? selectedUserIds
-    : Array.from(selectedUserIds);
+  const idsArray = Array.isArray(selectedUserIds) ? selectedUserIds : Array.from(selectedUserIds);
 
   const MAX_VISIBLE = 4;
   const visibleUsers = idsArray.slice(0, MAX_VISIBLE);
@@ -150,7 +147,6 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
     container.appendChild(moreAvatar);
   }
 }
-
 
 function wireContactActionsGlobalOnce() {
   if (document.documentElement.dataset.contactsBound === "1") return;
@@ -187,7 +183,6 @@ function listenEscapeFromModal(modalDOMId, onClose) {
   document.addEventListener("keydown", handler);
   return () => document.removeEventListener("keydown", handler);
 }
-
 
 function InitGlobalEventListener() {
   const btn = document.getElementById("open_user_dialog");
@@ -260,8 +255,6 @@ window.initPage = async function initPage() {
       initSubtasksInput();
       bindAddTaskFormSubmitOnce();
 
-
-
       break;
     case "summary":
       await ensureTasksLoaded();
@@ -269,8 +262,6 @@ window.initPage = async function initPage() {
     case "board":
       await ensureTasksLoaded();
       loadTaskBoard(tasksDataObj, usersDataObj);
-
-
 
       // renderBoard();
       initAddTaskModalOnce();
@@ -413,31 +404,29 @@ function checkIfUserIsLoggedIn() {
   }
 }
 
-
 function removeAllInputErrors() {
-  reqInputFields = document.querySelectorAll(".required_input")
-  reqInputFields.forEach(resetInputValidation)
+  reqInputFields = document.querySelectorAll(".required_input");
+  reqInputFields.forEach(resetInputValidation);
 }
 
 function setInputInValid(element, errorElement) {
-    const error = errorElement.nextElementSibling;
-    element.classList.add("is-invalid");
-    element.classList.remove("is-valid");
-    error.innerText = "This field is required";
+  const error = errorElement.nextElementSibling;
+  element.classList.add("is-invalid");
+  element.classList.remove("is-valid");
+  error.innerText = "This field is required";
 }
 
 function setInputValid(element, errorElement) {
-    const error = errorElement.nextElementSibling;
-    element.classList.add("is-valid");
-    element.classList.remove("is-invalid");
-    error.innerText = "";
+  const error = errorElement.nextElementSibling;
+  element.classList.add("is-valid");
+  element.classList.remove("is-invalid");
+  error.innerText = "";
 }
 
 function resetInputValidation(element) {
-  element.classList.remove("is-invalid")
-  element.classList.remove("is-valid")
+  element.classList.remove("is-invalid");
+  element.classList.remove("is-valid");
 }
-
 
 // ---------- Partial Loader ----------
 async function loadPartial(url) {
@@ -474,7 +463,6 @@ async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSub
     if (preset?.subTasks != null) {
       form.elements.subtasks_json.value = JSON.stringify(preset.subTasks);
     }
-
   }
 
   form.addEventListener("submit", (e) => {
@@ -487,9 +475,8 @@ async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSub
       priority: form.elements.priority.value,
       type: form.elements.task_type.value,
       assignedTo: safeParseArray(form.elements.assigned_to_input.value),
-      subTasks: safeParseArray(form.elements.subtasks_json.value)
+      subTasks: safeParseArray(form.elements.subtasks_json.value),
     };
-
 
     if (typeof onSubmit === "function") onSubmit(data);
   });
@@ -516,4 +503,8 @@ async function openModal(modalHost) {
       modalHost.close();
     },
   });
+}
+
+function saveUsersToSession(users) {
+  sessionStorage.setItem("users", JSON.stringify(users));
 }
