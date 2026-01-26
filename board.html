@@ -23,7 +23,7 @@
     <script src="./JS/task_utils.js" defer></script>
     <script src="./JS/tasks.js" defer></script>
     <script src="./script.js" defer></script>
-    <title>Join Board</title>
+    <title>Join - Board</title>
 </head>
 
 <body data-page="board" onload="initBoard()">
@@ -43,7 +43,7 @@
                             <span class="svg-icon" data-icon="search" data-w="18" data-h="18"></span>
 
                         </div>
-                        <button id="openAddTaskModalBtn" class="default-button add_task_button">Add task 
+                        <button id="openAddTaskModalBtn" class="default-button add_task_button">Add task
                             <span class="svg-icon" data-icon="add" data-w="19" data-h="19"></span>
                         </button>
                     </div>
@@ -54,10 +54,12 @@
                         <div class="task_list_head">
                             <h2>To do</h2>
                             <button>
-                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
+                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8"
+                                    aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_to_do" class="task_list" ondrop="dropTask(event, 0)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
+                        <div id="task_to_do" class="task_list" ondrop="dropTask(event, 0)" ondragover="allowDrop(event)"
+                            ondragleave="removeDragPlaceholder(event)">
                             <div class="no_task">
                                 <p></p>
                             </div>
@@ -67,10 +69,12 @@
                         <div class="task_list_head">
                             <h2>In progress</h2>
                             <button>
-                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
+                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8"
+                                    aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_progress" class="task_list" ondrop="dropTask(event, 1)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
+                        <div id="task_progress" class="task_list" ondrop="dropTask(event, 1)"
+                            ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -112,10 +116,12 @@
                         <div class="task_list_head">
                             <h2>Await feedback</h2>
                             <button>
-                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8" aria-label="add task"></span>
+                                <span class="svg-icon" data-icon="add" data-w="8" data-h="8"
+                                    aria-label="add task"></span>
                             </button>
                         </div>
-                        <div id="task_await" class="task_list" ondrop="dropTask(event, 2)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
+                        <div id="task_await" class="task_list" ondrop="dropTask(event, 2)" ondragover="allowDrop(event)"
+                            ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
                                     <p>User Story</p>
@@ -142,7 +148,8 @@
                         <div class="task_list_head">
                             <h2>Done</h2>
                         </div>
-                        <div id="task_done" class="task_list" ondrop="dropTask(event, 3)" ondragover="allowDrop(event)" ondragleave="removeDragPlaceholder(event)">
+                        <div id="task_done" class="task_list" ondrop="dropTask(event, 3)" ondragover="allowDrop(event)"
+                            ondragleave="removeDragPlaceholder(event)">
                             <div class="task">
                                 <div class="t_category">
 
@@ -203,7 +210,6 @@
             </div>
         </dialog>
 
-
         <dialog id="show_task_modal" class="modal">
             <div class="edit_task_modal_host" id="EditTaskModalHost"></div>
             <div class="task_dialog" id="task_dialog_content_wrapper">
@@ -246,7 +252,6 @@
                     <section class="tsk_dlg_sbtsk_sec marg_bot_16"> <!-- subtasks -->
                         <span>Subtasks</span>
                         <div id="tsk_dlg_sbtsk" class="tsk_dlg_sbtsk"> <!-- checkbox for subtask done -->
-
 
                             <ul id="subtasks_check_list" class="subtasks_check_list">
                                 <li data-index="0">
@@ -291,10 +296,6 @@
                                 <span>Edit</span>
                             </button>
 
-
-
-
-
                             <!-- <button class="pure_btn task_card_action_btn">
                         <span>
                             <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -319,7 +320,6 @@
         </dialog>
 
         <div id="addTaskLoader" style="display:none;"></div>
-
 
         <script>
             w3.includeHTML(() => {
