@@ -585,12 +585,14 @@ function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
   });
 
   saveTasksToSession(tasks);
+  patchData("tasks", currentDraggedTaskId, { status, order: tasks[currentDraggedTaskId].order });
   loadTaskBoard(tasks, users);
 }
 
 function removeDragPlaceholder(event) {
   if (event.target === event.currentTarget) {
     const dropZone = event.currentTarget;
+    console.log(dropZone)
     dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
   }
 }
