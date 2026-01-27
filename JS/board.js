@@ -517,6 +517,9 @@ function findDropPosition(event, taskElements) {
 function allowDrop(event) {
   event.preventDefault();
   const dropZone = event.currentTarget;
+  
+  document.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
+  
   const taskElements = Array.from(dropZone.querySelectorAll(".t_task"));
 
   dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
