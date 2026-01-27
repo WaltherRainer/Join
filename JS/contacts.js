@@ -106,7 +106,7 @@ async function deleteContact(userId) {
   try {
     await deleteData(`/users/${userId}`);
     users = (await loadData("/users")) || {};
-    saveUsersToSession(users);
+    saveUsersToSessionStorage(users);
     renderContacts(users);
     document.querySelectorAll(".contact_list_card.is-active").forEach((el) => el.classList.remove("is-active"));
     const details = document.getElementById("contact_details_sect");
@@ -273,7 +273,7 @@ async function addNewUser() {
 
   const dataObj = { email, givenName, password, userPhone };
   await uploadData("/users", dataObj);
-  saveUsersToSession(users);
+  saveUsersToSessionStorage(users);
   window.usersReady = null;
   dataArray = await initUsersLoading();
   resetContactForm();
@@ -297,7 +297,7 @@ async function editUser(userId) {
   await window.editData("/users", userId, dataObj);
   window.usersReady = null;
   dataArray = await initUsersLoading();
-  saveUsersToSession(dataArray);
+  saveUsersToSessionStorage(dataArray);
   renderContacts(dataArray);
   renderContactDetails(dataArray, userId);
   closeEditContactModal(modal);

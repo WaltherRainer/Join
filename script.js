@@ -504,6 +504,10 @@ async function openModal(modalHost) {
   });
 }
 
-function saveUsersToSession(users) {
+function saveUsersToSessionStorage(users) {
   sessionStorage.setItem("users", JSON.stringify(users));
+}
+
+function saveTasksToSessionStorage(tasks) {
+  sessionStorage.setItem("tasks", JSON.stringify(tasks));
 }
