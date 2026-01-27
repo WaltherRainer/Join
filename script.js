@@ -243,27 +243,26 @@ window.initPage = async function initPage() {
       renderContacts(usersDataObj);
       initContactsClick(usersDataObj);
       break;
+
     case "add_task":
       const host = document.getElementById("addTaskInlineHost");
       await mountTaskForm(host, {
-        title: "Test",
+        title: "Add Task",
         preset: { title: "", description: "", priority: "" },
       });
-
       initAssignedToDropdown(usersDataObj);
       initTaskTypeDropdown(TASK_CATEGORIES);
       initSubtasksInput();
       bindAddTaskFormSubmitOnce();
-
       break;
+
     case "summary":
       await ensureTasksLoaded();
       break;
+
     case "board":
       await ensureTasksLoaded();
       loadTaskBoard(tasksDataObj, usersDataObj);
-
-      // renderBoard();
       initAddTaskModalOnce();
       break;
 
@@ -271,7 +270,6 @@ window.initPage = async function initPage() {
       // optional: console.warn(`No initPage handler for page: ${page}`);
       break;
   }
-
   InitGlobalEventListener();
 };
 
@@ -428,7 +426,7 @@ function resetInputValidation(element) {
   element.classList.remove("is-valid");
 }
 
-// ---------- Partial Loader ----------
+
 async function loadPartial(url) {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load partial: ${url} (${res.status})`);
