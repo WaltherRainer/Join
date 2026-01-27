@@ -120,8 +120,7 @@ h4 {
   grid-area: contact_list;
   min-height: calc(100dvh - 178px);
   background-color: var(--background-color);
-  margin-top: -6px;
-  padding-top: 80px;
+  margin-top: -2px;
   overflow: auto;
 }
 
@@ -137,14 +136,23 @@ h4 {
 }
 
 .add_contact_btn {
-    width: 445px;
+    /* width: 445px;
     position: fixed;
     height: 100px;
     top: 76px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 10; */
+    width: 445px;
+    position: sticky;   /* statt fixed */
+    top: 0;             /* Abstand innerhalb der Liste */
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: var(--background-color)
 }
 
 .add_contact_btn::before{
