@@ -81,7 +81,7 @@ h4 {
   grid-area: contact_head;
 }
 
-.summary_title {
+.contacts_title {
   font-size: 61px;
   font-weight: 700;
   color: hsla(0, 0%, 0%, 1);
@@ -91,7 +91,7 @@ h4 {
   border-right-color: hsla(198, 76%, 52%, 1);
 }
 
-.summary_subtitle {
+.contacts_subtitle {
   font-size: 27px;
   font-weight: 400;
   color: hsla(215, 26%, 22%, 1);
