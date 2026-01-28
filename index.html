@@ -1,9 +1,10 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="./assets/img/join.svg">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="./assets/img/join.svg">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_index.css">
@@ -13,41 +14,38 @@
     <script src="./JS/utils.js" defer></script>
     <script src="./JS/templates.js" defer></script>
     <title>Join</title>
-<style>
+    <style>
+        /* ---------- Reduced Motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
 
-    /* ---------- Reduced Motion ---------- */
-
-@media (prefers-reduced-motion: reduce) {
-  body,
-  .logo_container,
-  .page_content {
-    transition: none;
-  }
-}
-
-</style>
-
+            body,
+            .logo_container,
+            .page_content {
+                transition: none;
+            }
+        }
+    </style>
 </head>
 
 <body class="index_body" id="index_body" onload="indexInit()">
     <div id="logo_container" class="logo_container">
         <svg width="274" height="335" viewBox="0 0 274 335" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M196.314 0H135.623V69.8251H196.314V0Z" fill="#2A3647"/>
+            <path d="M196.314 0H135.623V69.8251H196.314V0Z" fill="#2A3647" />
             <path d="M135.623 126.614H196.315V225.091C196.592 248.787 189.848 272.031 176.94 291.868C164.195 
             311.141 139.591 334.072 94.0723 334.072C44.4917 334.072 15.5931 310.626 0 297.777L38.2825 
             250.554C53.5021 262.981 68.1615 273.204 94.3057 273.204C114.101 273.204 121.99 265.138 126.612 
-            258.104C132.896 248.334 136.146 236.908 135.95 225.279L135.623 126.614Z" fill="#2A3647"/>
-            <path d="M104.67 82.5332H43.9781V143.495H104.67V82.5332Z" fill="#29ABE2"/>
+            258.104C132.896 248.334 136.146 236.908 135.95 225.279L135.623 126.614Z" fill="#2A3647" />
+            <path d="M104.67 82.5332H43.9781V143.495H104.67V82.5332Z" fill="#29ABE2" />
             <path d="M228.108 305.467C228.108 318.456 221.525 325.444 212.328 325.444C203.131 325.444 
             197.108 317.143 197.108 306.123C197.108 295.103 203.318 286.381 212.842 286.381C222.366 286.381 
             228.108 294.962 228.108 305.467ZM204.158 305.983C204.158 313.814 207.286 319.582 212.655 
             319.582C218.024 319.582 221.058 313.486 221.058 305.514C221.058 298.526 218.257 291.961 212.655 
-            291.961C207.053 291.961 204.158 298.292 204.158 305.983Z" fill="#2A3647"/>
-            <path d="M240.153 286.944V324.834H233.43V286.944H240.153Z" fill="#2A3647"/>
+            291.961C207.053 291.961 204.158 298.292 204.158 305.983Z" fill="#2A3647" />
+            <path d="M240.153 286.944V324.834H233.43V286.944H240.153Z" fill="#2A3647" />
             <path d="M247.436 324.834V286.944H254.905L262.935 302.56C265.002 306.643 266.842 310.838 
             268.444 315.127C268.024 310.438 267.837 305.045 267.837 299.042V286.944H274V324.834H267.044L258.92 
             308.89C256.77 304.702 254.853 300.397 253.178 295.994C253.178 300.684 253.505 305.983 253.505 
-            312.501V324.787L247.436 324.834Z" fill="#2A3647"/>
+            312.501V324.787L247.436 324.834Z" fill="#2A3647" />
         </svg>
     </div>
     <section class="page_content">
@@ -74,11 +72,13 @@
 
                             <label for="password">Password</label>
 
-                            <button type="button" class="password_svg" data-password-toggle aria-label="Passwort anzeigen">
+                            <button type="button" class="password_svg" data-password-toggle
+                                aria-label="Passwort anzeigen">
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
                             </button>
                         </div>
-                        <span class="warning_text" id="warning_login_failed">Check your Email and password. Please try again.</span>
+                        <span class="warning_text" id="warning_login_failed">Check your Email and password. Please try
+                            again.</span>
                         <div class="btn_div">
                             <button type="submit" class="default-button">Log in</button>
                             <button type="button" onclick="guestLogin()" class="secondary-button">Guest Log in</button>
@@ -86,28 +86,30 @@
                     </form>
                 </div>
             </div>
-        
 
             <div class="login_wrapper sign_up_size sign_up_form" id="sign_up_form">
                 <div class="form_box login">
                     <div class="login_header">
                         <a onclick="activateLogIn()">
-                            <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="21" height="20" viewBox="0 0 21 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4.27563 8.48509H19.1716C19.908 8.48509 20.505 9.08204 20.505 9.81842C20.505 
                                 10.5548 19.908 11.1518 19.1716 11.1518H4.27563L10.485 17.3611C11.0056 17.8817 11.0056 
                                 18.7258 10.485 19.2464C9.96434 19.767 9.12025 19.767 8.59963 19.2464L0.585843 11.2326C-0.195206 
                                 10.4516 -0.195204 9.18526 0.585844 8.40421L8.59963 0.39042C9.12025 -0.130201 9.96434 -0.1302 
-                                10.485 0.39042C11.0056 0.911041 11.0056 1.75513 10.485 2.27575L4.27563 8.48509Z" fill="#29ABE2"/>
+                                10.485 0.39042C11.0056 0.911041 11.0056 1.75513 10.485 2.27575L4.27563 8.48509Z"
+                                    fill="#29ABE2" />
                             </svg>
                         </a>
-                        <h2 >Sign up</h2>
+                        <h2>Sign up</h2>
                         <div class="underline_sign_up"></div>
                     </div>
-                    <form onsubmit="addUser(); return false" id="register_form"> 
+                    <form onsubmit="addUser(); return false" id="register_form">
                         <div class="input_box">
                             <input id="given_name" type="text" required placeholder=" ">
                             <label for="given_name">Name</label>
-                            <span class="svg-icon is-muted input_icon" data-icon="person" data-w="16" data-h="16"></span>
+                            <span class="svg-icon is-muted input_icon" data-icon="person" data-w="16"
+                                data-h="16"></span>
                         </div>
 
                         <div class="input_box">
@@ -117,8 +119,8 @@
                         </div>
 
                         <div class="input_box">
-                        <input id="new_user_password" type="password" required data-password placeholder=" ">
-                        <label for="password">Password</label>
+                            <input id="new_user_password" type="password" required data-password placeholder=" ">
+                            <label for="password">Password</label>
                             <button type="button" class="password_svg" data-password-toggle>
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
                             </button>
@@ -130,7 +132,8 @@
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
                             </button>
                         </div>
-                        <span class="warning_text" id="warning_signup_failed">Your passwords don't match. Please try again.</span>
+                        <span class="warning_text" id="warning_signup_failed">Your passwords don't match. Please try
+                            again.</span>
                         <div class="btn_div">
                             <button class="default-button" id="register_btn">Sign up</button>
                         </div>
@@ -148,19 +151,20 @@
         <a href="./legal_notice.html">Legal Notice</a>
     </footer>
 
-<script src="./script.js"></script>
-<script src="./JS/login.js"></script>
+    <script src="./script.js"></script>
+    <script src="./JS/login.js"></script>
 
     <!-- Signup Success Toast -->
-<div class="signup_success_overlay"
-     id="signup_success_overlay"
-     aria-hidden="true"
-     data-hold-ms="1000"
-     data-on-done="activateLogIn">
-  <div class="signup_success_box" data-toast-box role="status" aria-live="polite">
-    Signup successful
-  </div>
-</div>
+    <div class="signup_success_overlay" id="signup_success_overlay" aria-hidden="true" data-hold-ms="1000"
+        data-on-done="activateLogIn">
+        <div class="signup_success_box" data-toast-box role="status" aria-live="polite">
+            Signup successful
+        </div>
+    </div>
+
+    <div class="landscape-message">
+        <p>For the best experience, please rotate your device to landscape mode.</p>
+    </div>
 
 </body>
 
