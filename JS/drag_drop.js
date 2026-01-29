@@ -1,9 +1,6 @@
 
 function startDragTask(id) {
   currentDraggedTaskId = id;
-  document.querySelectorAll(".task_list_div").forEach((div) => {
-    div.classList.add("on-drop");
-  });
   const taskElement = document.querySelector(`[data-task-id="${id}"]`);
   if (taskElement) {
     taskElement.classList.add("dragging-task");
@@ -13,7 +10,6 @@ function startDragTask(id) {
 function endDragTask(event, id) {
   currentDraggedTaskId = null;
   document.querySelectorAll(".task_list_div").forEach((div) => {
-    div.classList.remove("on-drop");
     div.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
   });
   const taskElement = document.querySelector(`[data-task-id="${id}"]`);
@@ -105,7 +101,7 @@ function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
     tasks[id].order = index;
   });
 
-  saveTasksToSession(tasks);
+  saveTasksToSessionStorage(tasks);
   patchData("tasks", currentDraggedTaskId, { status, order: tasks[currentDraggedTaskId].order });
   loadTaskBoard(tasks, users);
 }
