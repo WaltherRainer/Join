@@ -1,14 +1,11 @@
 let parkedHost = null;
-
-
 const statusTypes = {
-  0 : "To Do",
-  1 : "In Progress",
-  2 : "Await Feedback",
-  3 : "Done",
-  4 : "Cancelled"
+  0: "To Do",
+  1: "In Progress",
+  2: "Await Feedback",
+  3: "Done",
+  4: "Cancelled",
 };
-
 
 function initAddTask() {
   checkIfUserIsLoggedIn();
@@ -20,15 +17,13 @@ async function loadTasks() {
 }
 
 async function addTask({ toastId = "task_success_overlay", taskStatus = 0, afterDone, refreshAfter = false } = {}) {
-  const taskTitel   = document.getElementById("task_titel");
-  const taskDescr   = document.getElementById("task_descr");
-  const taskType     = document.getElementById("task_type");
-  const taskPrio    = document.querySelector('input[name="priority"]:checked');
+  const taskTitel = document.getElementById("task_titel");
+  const taskDescr = document.getElementById("task_descr");
+  const taskType = document.getElementById("task_type");
+  const taskPrio = document.querySelector('input[name="priority"]:checked');
   const taskDueDate = document.getElementById("task_due_date");
-
-  const subTasks   = getSubtasksArray();
+  const subTasks = getSubtasksArray();
   const assignedTo = getAssignedToIds();
-
   const newTaskObj = {
     titel: taskTitel?.value?.trim() || "",
     description: taskDescr?.value?.trim() || "",
@@ -37,17 +32,18 @@ async function addTask({ toastId = "task_success_overlay", taskStatus = 0, after
     priority: taskPrio?.value || "",
     finishDate: taskDueDate?.value || "",
     assignedTo,
-    subTasks
+    subTasks,
   };
 
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
+  saveTasksToSessionStorage(tasks);
 
   showToastOverlay(toastId, {
     onDone: () => {
       if (typeof afterDone === "function") afterDone();
       if (refreshAfter) loadTasks();
-    }
+    },
   });
 
   clearTaskForm();
@@ -68,14 +64,12 @@ async function addTaskFromAddTaskPage() {
 function afterTaskAddedInModal() {
   const modal = document.querySelector(".add_task_modal");
   modal?.classList.remove("is_background");
-
   closeAddTaskModal();
   loadTasks();
 }
 
 async function addTaskFromBoardModal() {
   bringModalToBackground();
-
   await addTask({
     toastId: "task_modal_success_overlay",
     afterDone: afterTaskAddedInModal,
@@ -93,7 +87,6 @@ function getModalElements() {
   const closeBtn = modal?.querySelector(".add_task_modal_close");
   return { modal, host, closeBtn };
 }
-
 
 function closeAddTaskModal() {
   const { modal, host } = getModalElements();
@@ -129,13 +122,10 @@ function clearTaskForm() {
   setValueById("task_due_date", "");
   setValueById("input_subtasks", "");
   setValueById("subtasks_list_input", "[]");
-
   const list = document.getElementById("subtasks_list");
   if (list) list.innerHTML = "";
-
   resetPriorityButtons();
   resetAssignedToDropdown();
-
   const avatarContainer = document.getElementById("assigned_avatar_container");
   if (avatarContainer) avatarContainer.innerHTML = "";
   resetTaskTypeDropdownUi();
@@ -143,7 +133,7 @@ function clearTaskForm() {
 }
 
 function clearEditInput(state) {
-  const el = state.ui.listEl.querySelector('li.is-editing input.subtask_edit');
+  const el = state.ui.listEl.querySelector("li.is-editing input.subtask_edit");
   if (el) el.value = "";
   if (el) el.focus();
 }
@@ -153,12 +143,10 @@ function bindAddTaskFormSubmitOnce() {
   if (!form) return;
   if (form.dataset.submitBound === "1") return;
   form.dataset.submitBound = "1";
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
       const page = document.body.dataset.page;
-
       if (page === "board") {
         await addTaskFromBoardModal();
       } else {
@@ -170,11 +158,10 @@ function bindAddTaskFormSubmitOnce() {
   });
 
   const clearBtn = document.getElementById("clear_task_form_btn");
-  clearBtn.addEventListener("click", clearTaskForm)
+  clearBtn.addEventListener("click", clearTaskForm);
 
-  document.querySelectorAll(".standard_input_box[required]").forEach(input => {
+  document.querySelectorAll(".standard_input_box[required]").forEach((input) => {
     input.addEventListener("blur", () => {
-
       if (!input.checkValidity()) {
         setInputInValid(input, input);
       } else {
@@ -188,13 +175,10 @@ function bindAddTaskFormSubmitOnce() {
     const hidden = document.getElementById("task_type");
     const taskTypeDiv = document.getElementById("task_type_control");
     const taskTypeOuterDiv = document.getElementById("task_type_select");
-
-    if  (!hidden.value) {
+    if (!hidden.value) {
       setInputInValid(taskTypeDiv, taskTypeOuterDiv);
     } else {
       setInputValid(taskTypeDiv, taskTypeOuterDiv);
     }
   });
 }
-
-

@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/style_top_menu.css" />
     <link rel="stylesheet" href="styles/button.css">
-    <link rel="stylesheet" href="styles/style_summary.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
+    <link rel="stylesheet" href="styles/style_summary.css">
     <script src="./script.js" defer></script>
     <script src="./JS/fetch.js" defer></script>
     <script src="./JS/icons.js" defer></script>
@@ -31,6 +31,7 @@
             <div class="title_box_summary">
                 <div class="summary_title">Join 360</div>
                 <div class="summary_subtitle">Key Metrics at a glance</div>
+                <div class="summary_subtitle_line"></div>
             </div>
 
             <div class="container_of_a_lot_boxes">
@@ -40,7 +41,7 @@
                     <div class="todo_done_box">
                         <!-- To-do box -->
                         <a href="./board.html">
-                            <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="todo_done_boxes hover_card" style="background-color: var(--div_hover_main);">
                                 <span class="svg-icon" data-icon="editPencilBig" data-w="69" data-h="69"></span>
                                 <div class="todo_box">
                                     <p class="big_numbers" id="toDo"></p>
@@ -49,7 +50,7 @@
                             </div>
                         </a>
                         <a href="./board.html">
-                            <div class="todo_done_boxes hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="todo_done_boxes hover_card" style="background-color: var(--div_hover_main);">
                                 <span class="svg-icon" data-icon="confTickBig" data-w="69" data-h="69"></span>
                                 <div class="todo_box">
                                     <p class="big_numbers" id="toDoDone"></p>
@@ -61,7 +62,7 @@
 
                     <!-- Urgent box -->
                     <a href="./board.html">
-                        <div class="urgent_box_main hover_card " style="background-color: var(--div_hover_main);">
+                        <div class="urgent_box_main hover_card" style="background-color: var(--div_hover_main);">
                             <div class="urgent_box_left">
                                 <span class="svg-icon" data-icon="prioUrgentBig" data-w="60" data-h="60"></span>
                                 <div class="urgent_box">
@@ -78,21 +79,21 @@
                     <!-- 3 Tasks boxes -->
                     <div class="task_boxes">
                         <a href="./board.html">
-                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
                                 <p class="big_numbers" id="tasksInBoard"></p>
                                 <p>Tasks in</p>
                                 <p>Board</p>
                             </div>
                         </a>
                         <a href="./board.html">
-                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
                                 <p class="big_numbers" id="tasksInProgress"></p>
                                 <p>Tasks in</p>
                                 <p>Progress</p>
                             </div>
                         </a>
                         <a href="./board.html">
-                            <div class="summary_box hover_card " style="background-color: var(--div_hover_main);">
+                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
                                 <p class="big_numbers" id="tasksAwaitingFeedback"></p>
                                 <p>Awaiting</p>
                                 <p>feedback</p>
@@ -104,6 +105,10 @@
                 <div class="greeting">
                     <p id="greetingDay"></p>
                     <p class="greeting_name" id="greetingName"></p>
+                </div>
+
+                <div class="landscape-message">
+                    <p>For the best experience, please rotate your device to landscape mode.</p>
                 </div>
 
             </div>

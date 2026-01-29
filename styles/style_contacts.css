@@ -81,7 +81,7 @@ h4 {
   grid-area: contact_head;
 }
 
-.summary_title {
+.contacts_title {
   font-size: 61px;
   font-weight: 700;
   color: hsla(0, 0%, 0%, 1);
@@ -91,7 +91,7 @@ h4 {
   border-right-color: hsla(198, 76%, 52%, 1);
 }
 
-.summary_subtitle {
+.contacts_subtitle {
   font-size: 27px;
   font-weight: 400;
   color: hsla(215, 26%, 22%, 1);
@@ -120,8 +120,7 @@ h4 {
   grid-area: contact_list;
   min-height: calc(100dvh - 178px);
   background-color: var(--background-color);
-  margin-top: -6px;
-  padding-top: 80px;
+  margin-top: -2px;
   overflow: auto;
 }
 
@@ -137,14 +136,23 @@ h4 {
 }
 
 .add_contact_btn {
-    width: 445px;
+    /* width: 445px;
     position: fixed;
     height: 100px;
     top: 76px;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 10; */
+    width: 445px;
+    position: sticky;   /* statt fixed */
+    top: 0;             /* Abstand innerhalb der Liste */
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: var(--background-color)
 }
 
 .add_contact_btn::before{

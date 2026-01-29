@@ -1,8 +1,10 @@
 const dirtyTaskIds = new Set();
-
 let currentDraggedTaskId;
-
 let taskModalEscBound = false;
+
+function initBoard() {
+  checkIfUserIsLoggedIn();
+}
 
 function bindTaskModalEscapeOnce(modal) {
   if (taskModalEscBound) return;
@@ -20,20 +22,11 @@ function loadTasksFromSession() {
   return JSON.parse(sessionStorage.getItem("tasks") || "{}");
 }
 
-function saveTasksToSession(tasks) {
-  sessionStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
 function loadUsersFromSession() {
   return JSON.parse(sessionStorage.getItem("users") || "{}");
 }
 
-function initBoard() {
-  checkIfUserIsLoggedIn();
-}
-
 function initBoardEventList(users) {
-  console.log(users);
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
   btn.addEventListener("click", openAddTaskModal);
@@ -54,13 +47,13 @@ function initBoardEventList(users) {
 
 function deleteTask(taskId) {
   console.log(taskId);
+  console.log("Hier sollte die Löschfunktion implementiert werden.");
 }
 
 async function enterTaskEditMode(users) {
   const modal = document.getElementById("show_task_modal");
   const host = document.getElementById("EditTaskModalHost");
   const wrapper = document.getElementById("task_dialog_content_wrapper");
-
   const taskId = modal.dataset.taskId;
   const tasks = JSON.parse(sessionStorage.getItem("tasks") || "{}");
   const task = tasks[String(taskId)];
@@ -71,7 +64,7 @@ async function enterTaskEditMode(users) {
 
   const form = await mountTaskForm(host, {
     title: "Task bearbeiten",
-    preset: task, 
+    preset: task,
     onSubmit: async (data) => {
       tasks[String(taskId)] = {
         ...task,
@@ -120,7 +113,7 @@ function syncTypeUIFromHidden(form) {
   const type = hidden.value?.trim();
   if (!type) return;
 
-  const label = TASK_CATEGORIES[type]; 
+  const label = TASK_CATEGORIES[type];
 
   if (placeholder) placeholder.hidden = true;
   if (valueSpan) {
@@ -147,7 +140,7 @@ function syncAssignedUIFromHidden(form, usersObj) {
 
   const names = ids
     .map((id) => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
-    .map(id => usersObj?.[id]?.givenName)
+    .map((id) => usersObj?.[id]?.givenName)
     .filter(Boolean);
 
   placeholder.hidden = true;
@@ -274,7 +267,7 @@ function toggleSubtaskDone(index, taskId) {
   const done = !task.subTasks[index].done;
   task.subTasks[index].done = done;
 
-  saveTasksToSession(tasks);
+  saveTasksToSessionStorage(tasks);
   dirtyTaskIds.add(taskId);
 
   const li = document.querySelector(`#subtasks_check_list li[data-index="${index}"]`);
@@ -338,10 +331,8 @@ function renderTaskModal(taskId, ui, tasks, users) {
 function renderAssignedTo(task, users) {
   let assTo = "";
   task.assignedTo.forEach((element) => {
-    console.log(task.assignedTo);
     let user = users[element];
     if (user) {
-      console.log(user);
       let bgColor = colorIndexFromUserId(element);
       let userName = user.givenName;
       let initials = initialsFromGivenName(userName);
