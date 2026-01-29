@@ -84,9 +84,10 @@ select {
 body {
   min-height: 100vh;
   background: var(--background-color);
-  max-width: 1920px; /* Prevents the content from getting too wide */
+  max-width: 1440px; /* Prevents the content from getting too wide */
   width: 100%; /* Ensures it scales down on smaller screens */
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin: 0;
 }
 
 label {
@@ -132,7 +133,7 @@ svg {
 .display_grid {
   display: grid;
   grid-template-columns: 232px 1fr;
-  grid-template-rows: 82px 1fr;
+  grid-template-rows: 96px 1fr;
   grid-template-areas:
     "nav header"
     "nav main";
@@ -414,7 +415,31 @@ svg {
   opacity: 0;
 }
 
-@media (max-width: 900px) {
+/* Standardmäßig die Meldung verstecken */
+.landscape-message {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 9999;
+  text-align: center;
+  padding-top: 20%;
+}
+
+/* Zuerst den Landscape-Bereich definieren */
+@media (orientation: landscape) and (max-width: 926px) {
+  .landscape-message {
+    display: block; /* Meldung anzeigen */
+  }
+  body > * {
+    display: none; /* Restlichen Inhalt ausblenden */
+  }
+}
+
+@media (max-width: 880px) {
   .display_grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -423,7 +448,7 @@ svg {
       "header"
       "main"
       "nav";
-    min-height: 100vh;
+      height: calc(100dvh - 12px);
   }
 
   .navbar_shell {
@@ -451,29 +476,5 @@ svg {
 
   .policy_links {
     display: none;
-  }
-}
-
-/* Standardmäßig die Meldung verstecken */
-.landscape-message {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  z-index: 9999;
-  text-align: center;
-  padding-top: 20%;
-}
-
-/* Zuerst den Landscape-Bereich definieren */
-@media (orientation: landscape) and (max-width: 900px) {
-  .landscape-message {
-    display: block; /* Meldung anzeigen */
-  }
-  body > * {
-    display: none; /* Restlichen Inhalt ausblenden */
   }
 }
