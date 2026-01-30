@@ -107,6 +107,17 @@ svg {
   opacity: 1;
 }
 
+.display_grid {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  grid-template-rows: 96px 1fr;
+  grid-template-areas:
+    "nav header"
+    "nav main";
+  height: 100dvh;     /* besser als 100vh auf Mobile */
+  overflow: hidden;   /* verhindert, dass der Body scrollt */
+}
+
 .navbar_shell {
   grid-area: nav;
   background-color: var(--blue);
@@ -128,15 +139,6 @@ svg {
   color: var(--border_color);
   font-size: 20px;
   font-weight: 400;
-}
-
-.display_grid {
-  display: grid;
-  grid-template-columns: 232px 1fr;
-  grid-template-rows: 96px 1fr;
-  grid-template-areas:
-    "nav header"
-    "nav main";
 }
 
 .d_none {
@@ -448,10 +450,11 @@ svg {
       "header"
       "main"
       "nav";
-      height: calc(100dvh - 12px);
+    height: calc(100dvh - 12px);
   }
 
   .navbar_shell {
+  grid-area: nav;
     min-height: auto;
   }
 

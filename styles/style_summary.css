@@ -216,7 +216,8 @@
     display: none;
   }
   .summary_main {
-    padding-left: 32px;}
+    padding-left: 32px;
+  }
 }
 
 @media (max-width: 880px) {
@@ -305,4 +306,37 @@
     height: 116px;
     padding: 0;
   }
+}
+
+@media (max-width: 420px) {
+  .todo_done_box {
+    gap: 8px;
+  }
+
+  .todo_done_boxes {
+    width: 139px;
+  }
+
+  .task_boxes {
+    gap: 8px;
+  }
+
+  .urgent_box_main {
+    width: 278px;
+  }
+
+  .urgent_box_left {
+    padding-right: 8px;
+    gap: 8px;
+  }
+  .urgent_box_right {
+    padding-left: 8px;
+  }
+
+  .big_numbers {
+    font-size: 32px;
+  }
+  .summary_box {
+        width: 90px;
+    }
 }
