@@ -1,12 +1,11 @@
-/* =========================
-   Add Task – Layout
-========================= */
-
 .add_task_main {
-  height: calc(100dvh - 96px);
+  grid-area: main;
+  overflow: auto;   /* NUR dieser Bereich scrollt */
+  min-height: 0;    /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0;     /* optional, hilft bei langen Inhalten */
+  /* height: calc(100dvh - 96px); */
   padding: 60px;
   background-color: var(--secondary-background-color);
-  grid-area: main;
 }
 
 .add_task_form {
@@ -140,9 +139,15 @@
   box-shadow: none;
 }
 
-.priority_urgent input:checked + span { background-color: var(--prio-urgent); }
-.priority_medium input:checked + span { background-color: var(--prio-medium); }
-.priority_low input:checked + span { background-color: var(--prio-low); }
+.priority_urgent input:checked + span {
+  background-color: var(--prio-urgent);
+}
+.priority_medium input:checked + span {
+  background-color: var(--prio-medium);
+}
+.priority_low input:checked + span {
+  background-color: var(--prio-low);
+}
 
 /* =========================
    Form actions
@@ -202,7 +207,6 @@
   background: transparent;
   cursor: pointer;
   transition: background 120ms ease;
-  
 }
 
 .multi_select__toggle:hover {
@@ -240,8 +244,9 @@
   margin: 4px 4px 4px 4px;
   cursor: pointer;
   background: transparent;
-  transition: background-color 160ms ease, color 160ms ease;
-
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
 .multi_select__item:hover {
@@ -281,7 +286,6 @@
   font-weight: 700;
   font-size: 16px;
   color: var(--white-text-color);
-  
 }
 
 .avatar_wrap {
@@ -316,8 +320,12 @@
   display: none;
 }
 
-.multi_select__item.is-selected .checkbox_unchecked { display: none; }
-.multi_select__item.is-selected .checkbox_checked   { display: block; }
+.multi_select__item.is-selected .checkbox_unchecked {
+  display: none;
+}
+.multi_select__item.is-selected .checkbox_checked {
+  display: block;
+}
 
 .assigned_avatar {
   display: flex;
@@ -337,13 +345,11 @@
 
 .single_select__control.is-valid {
   border: 1px solid var(--border_color);
-
 }
 
 .single_select__control.is-invalid {
   border: 2px solid var(--warning_red);
 }
-
 
 .single_select__control {
   display: flex;
@@ -406,16 +412,22 @@
 }
 
 @keyframes task_success_slide_in {
-  from { transform: translateY(60vh); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from {
+    transform: translateY(60vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.multi_select__filter{
-  border:0;
-  outline:none;
-  background:transparent;
-  flex:1;
-  min-width:140px;
+.multi_select__filter {
+  border: 0;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  min-width: 140px;
 }
 
 .avatar_more {

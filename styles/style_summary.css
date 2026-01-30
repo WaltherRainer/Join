@@ -1,13 +1,15 @@
 .summary_main {
+  grid-area: main;
+  overflow: auto; /* NUR dieser Bereich scrollt */
+  min-height: 0; /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0; /* optional, hilft bei langen Inhalten */
   display: flex;
   flex-direction: column;
   padding-top: 110px;
   padding-left: 96px;
   background-color: var(--secondary-background-color);
   font-size: 16px;
-  height: calc(100dvh - 96px);
-  grid-area: main;
-  padding-top: 48px;
+  /* height: calc(100dvh - 96px); */
 }
 
 .title_box_summary {
@@ -329,6 +331,7 @@
     padding-right: 8px;
     gap: 8px;
   }
+  
   .urgent_box_right {
     padding-left: 8px;
   }
@@ -336,7 +339,8 @@
   .big_numbers {
     font-size: 32px;
   }
+
   .summary_box {
-        width: 90px;
-    }
+    width: 90px;
+  }
 }

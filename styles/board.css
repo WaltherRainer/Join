@@ -1,7 +1,10 @@
-
-.board-help-div {
+.board_help_div {
     grid-area: main;
+    overflow: auto;     /* NUR dieser Bereich scrollt */
+    min-height: 0;      /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+    min-width: 0;       /* optional, hilft bei langen Inhalten */
 }
+
 .board {
     display: flex;
     flex-direction: column;
@@ -13,6 +16,7 @@
     overflow-x: hidden;
     width: 100%;
 }
+
 .board_head {
     display: flex;
     flex-direction: row;
@@ -109,12 +113,14 @@ section.task_section {
     overflow-y: hidden;
     position: relative;
 }
+
 .task_list_wrapper {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
 }
+
 .task_list {
     overflow: auto;
     position: relative;
@@ -125,6 +131,7 @@ section.task_section {
     scrollbar-width: thin;
     scrollbar-gutter: stable;
 }
+
 .task_list::-webkit-scrollbar-track {
     margin-bottom: 16px;
 }
@@ -142,6 +149,7 @@ section.task_section {
     pointer-events: none;
     flex-shrink: 0;
 }
+
 .task_list_head {
     display: flex;
     flex-direction: row;
@@ -261,11 +269,6 @@ section.task_section {
     width: 32px;
     font-weight: 600;
 }
-
-.board_help_div {
-    grid-area: main;
-}
-
 
 .marg_bot_16 {
     margin: 0 0 16px 0;

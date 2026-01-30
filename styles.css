@@ -147,6 +147,9 @@ svg {
 
 .main_content {
   grid-area: main;
+  overflow: auto;     /* NUR dieser Bereich scrollt */
+  min-height: 0;      /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0;       /* optional, hilft bei langen Inhalten */
 }
 
 .header_join {
