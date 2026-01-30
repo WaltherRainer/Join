@@ -496,4 +496,12 @@ svg {
   .policy_links {
     display: none;
   }
+
+  .privacy_policy_main {
+    margin: 16px 0 16px 8px;
+  }
+
+  .legal_notice_main {
+    margin: 16px 0 16px 8px;
+  }
 }

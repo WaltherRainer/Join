@@ -72,3 +72,19 @@ h5,
 h6 {
   padding-bottom: 24px;
 }
+
+@media (max-width: 880px) {
+  .help_main {
+    margin: 8px;
+  }
+
+  .help_headline {
+    font-size: 47px;
+  }
+
+  .help_container div.number {
+    font-size: 27px;
+    width: 32px;
+    text-align: start;
+  }
+}
