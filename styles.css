@@ -114,8 +114,8 @@ svg {
   grid-template-areas:
     "nav header"
     "nav main";
-  height: 100dvh;     /* besser als 100vh auf Mobile */
-  overflow: hidden;   /* verhindert, dass der Body scrollt */
+  height: 100dvh; /* besser als 100vh auf Mobile */
+  overflow: hidden; /* verhindert, dass der Body scrollt */
 }
 
 .navbar_shell {
@@ -417,6 +417,22 @@ svg {
   opacity: 0;
 }
 
+.privacy_policy_main {
+  grid-area: main;
+  overflow: auto; /* NUR dieser Bereich scrollt */
+  min-height: 0; /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0; /* optional, hilft bei langen Inhalten */
+  margin: 32px;
+}
+
+.legal_notice_main {
+  grid-area: main;
+  overflow: auto; /* NUR dieser Bereich scrollt */
+  min-height: 0; /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0; /* optional, hilft bei langen Inhalten */
+  margin: 32px;
+}
+
 /* Standardmäßig die Meldung verstecken */
 .landscape-message {
   display: none;
@@ -454,7 +470,7 @@ svg {
   }
 
   .navbar_shell {
-  grid-area: nav;
+    grid-area: nav;
     min-height: auto;
   }
 
