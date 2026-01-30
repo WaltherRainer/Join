@@ -101,7 +101,7 @@ h4 {
 .contacts_layout {
   display: grid;
   grid-template-columns: 456px 8px 1fr;
-  grid-template-rows: 96px calc(100dvh - 178px);
+  grid-template-rows: 96px calc(100dvh - 192px);
   grid-template-areas:
     "contact_list shadow contact_head"
     "contact_list shadow contact_details";
@@ -144,7 +144,6 @@ h4 {
     align-items: center;
     justify-content: center;
     z-index: 10; */
-    width: 445px;
     position: sticky;   /* statt fixed */
     top: 0;             /* Abstand innerhalb der Liste */
     height: 100px;

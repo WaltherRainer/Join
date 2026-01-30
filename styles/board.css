@@ -8,7 +8,7 @@
     align-items: center;
     background-color: var(--secondary-background-color);
     height: 100vh;
-    max-height: calc(100vh - 82px);
+    max-height: calc(100vh - 96px);
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
@@ -23,7 +23,7 @@
     margin-left: 64px;
     margin-bottom: 52px;
     width: 90%;
-    max-height: calc(20% - 82px);
+    max-height: calc(20% - 96px);
 }
 
 .board_title {
