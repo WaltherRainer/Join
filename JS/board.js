@@ -65,7 +65,7 @@ async function enterTaskEditMode(users) {
   const form = await mountTaskForm(host, {
     title: "Task bearbeiten",
     preset: task,
-    onSubmit: async (data) => {
+    onSubmitData: async (data) => {
       tasks[String(taskId)] = {
         ...task,
         titel: data.titel,
@@ -84,9 +84,10 @@ async function enterTaskEditMode(users) {
     },
   });
 
-  initAssignedToDropdown(users);
-  initTaskTypeDropdown(TASK_CATEGORIES);
-  initSubtasksInput();
+  initAssignedToDropdown(form, users);
+  resetAssignedToDropdown(form);
+  initTaskTypeDropdown(form, TASK_CATEGORIES);
+  initSubtasksInput(form);
   renderIcons(modal);
 
   syncTypeUIFromHidden(form);
@@ -94,9 +95,11 @@ async function enterTaskEditMode(users) {
   syncSubtasksUIFromHidden(form);
 
   form.classList.add("edit_mode");
-  const cancelBtn = document.getElementById("clear_task_form_btn");
-  cancelBtn.classList.add("is-hidden");
-  form.elements.task_titel?.focus();
+  const cancelBtn = form.querySelector("#clear_task_form_btn");
+  cancelBtn?.classList.add("is-hidden");
+
+  form.querySelector("#task_titel")?.focus();
+
 }
 
 function exitEditMode() {
@@ -105,8 +108,8 @@ function exitEditMode() {
 }
 
 function syncTypeUIFromHidden(form) {
-  const hidden = form.elements.task_type;
-  const control = form.querySelector("#task_type_control");
+  const hidden = form.elements.task_cat;
+  const control = form.querySelector("#task_cat_control");
   const placeholder = control?.querySelector(".single_select__placeholder");
   const valueSpan = control?.querySelector(".single_select__value");
 
@@ -141,9 +144,8 @@ function syncAssignedUIFromHidden(form, usersObj) {
   }
 
   const names = ids
-    .map((id) => usersObj?.[id]?.givenName) // ✅ Map-Zugriff
-    .map((id) => usersObj?.[id]?.givenName)
-    .filter(Boolean);
+  .map((id) => usersObj?.[id]?.givenName)
+  .filter(Boolean);
 
   placeholder.hidden = true;
   valueBox.hidden = false;
@@ -185,8 +187,8 @@ function safeParseArray(str) {
 //   ensureAddTaskFormLoaded(async (form) => {
 //     modalHost.appendChild(form);
 //     const usersDataObj = await ensureUsersLoaded();
-//     initAssignedToDropdown(usersDataObj);
-//     resetAssignedToDropdown();
+//     initAssignedToDropdown(form, usersDataObj);
+//     resetAssignedToDropdown(form);
 //     initTaskTypeDropdown(TASK_CATEGORIES);
 //     initSubtasksInput();
 //     bindAddTaskFormSubmitOnce();

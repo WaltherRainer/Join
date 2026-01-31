@@ -68,43 +68,48 @@ function updateTaskCard(taskId, tasks) {
   });
 }
 
-function initAssignedToDropdown(usersData) {
-  const ui = getAssignedToUi();
+function initAssignedToDropdown(form, usersData) {
+  const ui = getAssignedToUi(form);
   if (!ui.root || isInitialized(ui.root)) return;
   if (!usersData || typeof usersData !== "object") return;
+
   const state = { usersData, selected: new Set(), ui };
   ui.root._assignedState = state;
+
   wireDropdownEvents(state);
   wireFilterEvents(state);
   renderUserList(state);
 }
 
-
-function openAddTaskModal() {
+async function openAddTaskModal() {
   const modalHost = document.getElementById("addTaskModalHost");
   const modal = document.getElementById("addTaskModal");
   if (!modal || !modalHost) return;
-  openModal(modalHost);
 
-  ensureAddTaskFormLoaded(async (form) => {
-    modalHost.appendChild(form);
-    const usersDataObj = await ensureUsersLoaded();
-    initAssignedToDropdown(usersDataObj);
-    resetAssignedToDropdown();
-    initTaskTypeDropdown(TASK_CATEGORIES);
-    initSubtasksInput();
-    bindAddTaskFormSubmitOnce();
-    renderIcons(modal);
+  const usersDataObj = await ensureUsersLoaded();
 
-    modal.showModal();
-
-    const removeEsc = listenEscapeFromModal("addTaskModal", async (m) => {
-      closeAddTaskModal()
-    });
-
-    modal.addEventListener("close", removeEsc, { once: true });
+  const form = await mountTaskForm(modalHost, {
+    title: "Add Task",
+    preset: { titel: "", description: "", priority: "medium" },
+    mode: "modal",
+    toastId: "task_modal_success_overlay",
+    afterSaved: afterTaskAddedInModal, 
   });
+
+  initAssignedToDropdown(form, usersDataObj);
+  resetAssignedToDropdown(form);
+  initTaskTypeDropdown(form, TASK_CATEGORIES);
+  initSubtasksInput(form);
+
+  renderIcons(modal);
+  modal.showModal();
+
+  const removeEsc = listenEscapeFromModal("addTaskModal", async () => {
+    closeAddTaskModal();
+  });
+  modal.addEventListener("close", removeEsc, { once: true });
 }
+
 
 
 function isInitialized(root) {
@@ -113,23 +118,27 @@ function isInitialized(root) {
   return false;
 }
 
-function getAssignedToUi() {
-  const root = document.getElementById("assigned_to");
+function getAssignedToUi(form) {
+  const root = form.querySelector("#assigned_to");
   if (!root) return { root: null };
-  const toggleBtn = document.getElementById("assigned_to_toggle");
+
+  const toggleBtn = root.querySelector("#assigned_to_toggle");
+
   return {
     root,
     control: root.querySelector(".multi_select__control"),
     toggleBtn,
-    dropdown: document.getElementById("assigned_to_dropdown"),
-    list: document.getElementById("assigned_to_list"),
+    dropdown: root.querySelector("#assigned_to_dropdown"),
+    list: root.querySelector("#assigned_to_list"),
     caret: toggleBtn?.querySelector(".caret"),
-    placeholder: document.getElementById("assigned_to_placeholder"),
-    valueEl: document.getElementById("assigned_to_value"),
-    hiddenInput: document.getElementById("assigned_to_input"),
-    filterInput: document.getElementById("assigned_to_filter"),
+    placeholder: root.querySelector("#assigned_to_placeholder"),
+    valueEl: root.querySelector("#assigned_to_value"),
+    hiddenInput: root.querySelector("#assigned_to_input"),
+    filterInput: root.querySelector("#assigned_to_filter"),
+    avatarContainer: form.querySelector("#assigned_avatar_container"),
   };
 }
+
 
 function wireFilterEvents(state) {
   const { ui } = state;
@@ -152,8 +161,8 @@ function wireFilterEvents(state) {
   });
 }
 
-function resetAssignedToDropdown() {
-  const ui = getAssignedToUi();
+function resetAssignedToDropdown(form) {
+  const ui = getAssignedToUi(form);
   if (!ui.root) return;
 
   const state = ui.root._assignedState;
@@ -161,18 +170,16 @@ function resetAssignedToDropdown() {
   if (state) {
     state.selected.clear();
 
-    state.ui.list?.querySelectorAll(".is-selected").forEach(li => {
-      li.classList.remove("is-selected");
-    });
+    state.ui.list?.querySelectorAll(".is-selected").forEach(li => li.classList.remove("is-selected"));
 
-    applySelectionUi(state.ui, [], state.selected);
-    renderAssignedAvatars(state.selected, state.usersData);
+    applySelectionUi(state.ui, [], state.selected, state.usersData);
+    renderAssignedAvatars(state.selected, state.usersData, state.ui.avatarContainer);
     return;
   }
 
-  const avatarContainer = document.getElementById("assigned_avatar_container");
-  if (avatarContainer) avatarContainer.innerHTML = "";
+  if (ui.avatarContainer) ui.avatarContainer.innerHTML = "";
 }
+
 
 function renderUserList(state) {
   const { list } = state.ui;
@@ -213,22 +220,24 @@ function updateSelection(state, userId, isChecked) {
   const names = [...selected]
   .map(id => usersData[id]?.givenName)
   .filter(Boolean);
-  applySelectionUi(ui, names, selected);
+  applySelectionUi(ui, names, selected, state.usersData);
   renderAssignedAvatars(selected, usersData);
 }
 
-function applySelectionUi(ui, names, selected) {
+function applySelectionUi(ui, names, selected, usersData) {
   if (names.length === 0) {
     ui.placeholder.hidden = false;
     ui.valueEl.hidden = true;
     ui.valueEl.textContent = "";
     ui.hiddenInput.value = "";
+    renderAssignedAvatars(selected, usersData, ui.avatarContainer);
     return;
   }
   ui.placeholder.hidden = true;
   ui.valueEl.hidden = true;
-  ui.valueEl.textContent = "";  //   names.join(", "); könnte da auch rein um die Namen zurück zu geben
+  ui.valueEl.textContent = "";
   ui.hiddenInput.value = JSON.stringify([...selected]);
+  renderAssignedAvatars(selected, usersData, ui.avatarContainer);
 }
 
 function wireDropdownEvents(state) {
@@ -322,7 +331,6 @@ function getSubtasksArray() {
   }
 }
 
-
 function getAssignedToIds() {
   const hidden = document.getElementById("assigned_to_input");
   if (!hidden || !hidden.value) return [];
@@ -334,29 +342,8 @@ function getAssignedToIds() {
   }
 }
 
-
-function ensureAddTaskFormLoaded(cb) {
-  const existing = document.getElementById("addTaskForm");
-  if (existing) return cb(existing);
-  const loader = document.getElementById("addTaskLoader");
-  if (!loader) {
-    console.error("addTaskLoader fehlt auf dieser Seite.");
-    return;
-  }
-  loader.innerHTML = `<div w3-include-html="add_task.html"></div>`;
-  w3.includeHTML(() => {
-    const form = document.getElementById("addTaskForm");
-    if (!form) {
-      console.error("Form nicht gefunden. Prüfe add_task.html (id='addTaskForm').");
-      return;
-    }
-    cb(form);
-  });
-}
-
-
-function initTaskTypeDropdown(categories) {
-  const root = document.getElementById("task_type_select");
+function initTaskTypeDropdown(form, categories) {
+  const root = form.querySelector("#task_cat_select");
   if (!root || isInitialized(root)) return;
   const ui = getTaskTypeUi(root);
   renderTaskTypeOptions(ui, categories);
@@ -371,7 +358,7 @@ function getTaskTypeUi(root) {
     list: root.querySelector(".single_select__list"),
     valueEl: root.querySelector(".single_select__value"),
     placeholder: root.querySelector(".single_select__placeholder"),
-    hiddenInput: document.getElementById("task_type"),
+    hiddenInput: document.getElementById("task_cat"),
     caret: root.querySelector(".caret"),
   };
 }
@@ -393,8 +380,14 @@ function selectTaskType(ui, cat) {
   ui.valueEl.hidden = false;
   ui.placeholder.hidden = true;
   closeTaskTypeDropdown(ui);
-  removeAllInputErrors();
+
+  const taskTypeDiv = ui.root.querySelector("#task_cat_control");
+  const taskTypeOuterDiv = ui.root; 
+  if (taskTypeDiv && taskTypeOuterDiv) {
+    setInputValid(taskTypeDiv, taskTypeOuterDiv);
+  }
 }
+
 
 function wireTaskTypeEvents(ui) {
   ui.control.addEventListener("click", () => toggleTaskTypeDropdown(ui));
@@ -422,23 +415,24 @@ function closeTaskTypeDropdown(ui) {
   ui.caret.classList.remove("caret_rotate");
 }
 
-function resetPriorityButtons() {
-  const urgent = document.querySelector('input[name="priority"][value="urgent"]');
-  const medium = document.querySelector('input[name="priority"][value="medium"]');
-  const low = document.querySelector('input[name="priority"][value="low"]');
+function resetPriorityButtons(form) {
+  const urgent = form.querySelector('input[name="priority"][value="urgent"]');
+  const medium = form.querySelector('input[name="priority"][value="medium"]');
+  const low = form.querySelector('input[name="priority"][value="low"]');
 
   if (urgent) urgent.checked = false;
   if (medium) medium.checked = true;
   if (low) low.checked = false;
 }
 
-function resetTaskTypeDropdownUi() {
-  const root = document.getElementById("task_type_select");
+
+function resetTaskTypeDropdownUi(form) {
+  const root = form.querySelector("#task_cat_select");
   if (!root) return;
 
   const valueEl = root.querySelector(".single_select__value");
   const placeholder = root.querySelector(".single_select__placeholder");
-  const hiddenInput = document.getElementById("task_type");
+  const hiddenInput = form.querySelector("#task_cat");
 
   if (valueEl) {
     valueEl.hidden = true;
@@ -447,5 +441,6 @@ function resetTaskTypeDropdownUi() {
   if (placeholder) placeholder.hidden = false;
   if (hiddenInput) hiddenInput.value = "";
 }
+
 
 window.initAssignedToDropdown = initAssignedToDropdown;

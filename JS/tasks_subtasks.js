@@ -1,30 +1,32 @@
-/**
- * Initializes the subtasks input UI for the “add task” form.
- * - Guards against double-initialization via a `data-subtasks-init` flag on the form.
- * - Wires up clear/add buttons, keyboard handling, list events, and performs the initial render + sync.
- *
- * @returns {void}
- */
-function initSubtasksInput() {
-  const form = document.getElementById("addTaskForm");
-  if (form?.dataset.subtasksInit === "1") return;
+function initSubtasksInput(form) {
+  if (!form) return;
+  if (form.dataset.subtasksInit === "1") return;
   form.dataset.subtasksInit = "1";
 
-  const inputSubTasks = document.getElementById("input_subtasks");
-  const SubTaskListElem = document.getElementById("subtasks_list");
-  const SubTaskListInp = document.getElementById("subtasks_list_input");
+  const inputSubTasks = form.querySelector("#input_subtasks");
+  const subTaskListElem = form.querySelector("#subtasks_list");
+  const subTaskListInp = form.querySelector("#subtasks_list_input");
 
-  const root = inputSubTasks.closest(".form_row") || document;
-  const btnClear = root.querySelector(".subtasks_clear");
-  const btnAdd = root.querySelector(".subtasks_add");
+  if (!inputSubTasks || !subTaskListElem || !subTaskListInp) return;
 
-  const subTaskUi = { inputSubTasks, SubTaskListElem, SubTaskListInp };
+  const rowRoot = inputSubTasks.closest(".form_row") || form;
+  const btnClear = rowRoot.querySelector(".subtasks_clear");
+  const btnAdd = rowRoot.querySelector(".subtasks_add");
+  if (!btnClear || !btnAdd) return;
+
+  const subTaskUi = {
+    inputSubTasks,
+    SubTaskListElem: subTaskListElem,
+    SubTaskListInp: subTaskListInp
+  };
+
   const state = { subtasks: [], editingIndex: null, subTaskUi };
-    // ⬇️ neu: vorhandene subtasks aus hidden input übernehmen
-    state.subtasks = safeParseArray(SubTaskListInp.value);
+
+  state.subtasks = safeParseArray(subTaskListInp.value);
 
   btnClear.innerHTML = delCross({ width: 18, height: 18 });
   btnAdd.innerHTML = addCross({ width: 18, height: 18 });
+
   btnClear.onclick = () => clearSubtaskInput(state);
   btnAdd.onclick = () => addSubtaskFromInput(state);
   inputSubTasks.onkeydown = (e) => onSubtaskKeydown(state, e);

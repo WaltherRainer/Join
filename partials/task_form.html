@@ -1,4 +1,4 @@
-<form id="addTaskForm" class="add_task_form" action="/add_task" method="post" novalidate>
+<form class="add_task_form" action="/add_task" method="post" novalidate>
     <h1 class="add_task_titel">Add Task</h1>
     <div class="add_task_form_left">
         <div class="form_row">
@@ -59,14 +59,14 @@
         <div class="assigned_avatar" id="assigned_avatar_container"></div>
 
         <div class="form_row">
-            <label for="task_type">Category<span class="red_star">*</span></label>
+            <label for="task_cat">Category<span class="red_star">*</span></label>
             
-            <div class="single_select" id="task_type_select">
-                <div class="single_select__control required_input" id="task_type_control">
+            <div class="single_select" id="task_cat_select">
+                <div class="single_select__control required_input" id="task_cat_control">
                     <span class="single_select__placeholder">Select task type</span>
                     <span class="single_select__value" hidden></span>
 
-                    <button type="button" class="multi_select__toggle" id="task_type_btn" aria-label="Toggle">
+                    <button type="button" class="multi_select__toggle" id="task_cat_btn" aria-label="Toggle">
                         <div class="caret"></div>
                     </button>
                 </div>
@@ -75,7 +75,7 @@
                     <ul class="single_select__list"></ul>
                 </div>
 
-                <input type="hidden" id="task_type" name="task_type" required>
+                <input type="hidden" id="task_cat" name="task_cat" required>
                 
             </div>
             <span class="error-message"></span>

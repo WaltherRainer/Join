@@ -57,13 +57,4 @@ function userLogout() {
   window.location.replace("index.html");
 }
 
-function setValueById(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.value = value;
-}
-
-// function userDataObject(userId, users) {
-
-//   return Object.values(users).some((user) => user === userId);
-// }
 

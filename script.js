@@ -113,8 +113,7 @@ function showUserDialog() {
   });
 }
 
-function renderAssignedAvatars(selectedUserIds, usersData) {
-  const container = document.getElementById("assigned_avatar_container");
+function renderAssignedAvatars(selectedUserIds, usersData, container) {
   if (!container) return;
 
   container.innerHTML = "";
@@ -143,10 +142,10 @@ function renderAssignedAvatars(selectedUserIds, usersData) {
     const moreAvatar = document.createElement("span");
     moreAvatar.className = "user__avatar avatar_wrap avatar_more";
     moreAvatar.textContent = `+${extraCount}`;
-
     container.appendChild(moreAvatar);
   }
 }
+
 
 function wireContactActionsGlobalOnce() {
   if (document.documentElement.dataset.contactsBound === "1") return;
@@ -244,18 +243,20 @@ window.initPage = async function initPage() {
       initContactsClick(usersDataObj);
       break;
 
-    case "add_task":
-      const host = document.getElementById("addTaskInlineHost");
-      await mountTaskForm(host, {
-        title: "Add Task",
-        preset: { title: "", description: "", priority: "" },
-      });
-      initAssignedToDropdown(usersDataObj);
-      initTaskTypeDropdown(TASK_CATEGORIES);
-      initSubtasksInput();
-      bindAddTaskFormSubmitOnce();
-      break;
-
+      case "add_task": {
+        const host = document.getElementById("addTaskInlineHost");
+        const form = await mountTaskForm(host, {
+          title: "Add Task",
+          preset: { titel: "", description: "", priority: "medium" },
+          toastId: "task_success_overlay",
+          afterSaved: () => activateBoard(),
+        });
+        initAssignedToDropdown(form, usersDataObj);
+        resetAssignedToDropdown(form);
+        initTaskTypeDropdown(form, TASK_CATEGORIES);
+        initSubtasksInput(form);
+        break;
+      }
     case "summary":
       await ensureTasksLoaded();
       break;
@@ -402,8 +403,8 @@ function checkIfUserIsLoggedIn() {
   }
 }
 
-function removeAllInputErrors() {
-  reqInputFields = document.querySelectorAll(".required_input");
+function removeAllInputErrors(form) {
+  const reqInputFields = form.querySelectorAll(".required_input");
   reqInputFields.forEach(resetInputValidation);
 }
 
@@ -433,15 +434,22 @@ async function loadPartial(url) {
   return await res.text();
 }
 
-async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSubmit = null } = {}) {
+async function mountTaskForm(hostEl, {
+    title = "Add Task",
+    preset = null,
+    mode = "page", // optional
+    toastId = "task_success_overlay",
+    taskStatus = 0,
+    afterSaved = null,
+    onSubmitData = null, 
+  } = {}) {
+
   const html = await loadPartial("./partials/task_form.html");
   hostEl.innerHTML = html;
 
   const form = hostEl.querySelector("form.add_task_form");
-  // Überschrift im Form:
   form.querySelector(".add_task_titel").textContent = title;
 
-  // preset values
   if (preset) {
     if (preset.titel != null) form.elements.task_titel.value = preset.titel;
     if (preset.description != null) form.elements.task_descr.value = preset.description;
@@ -452,7 +460,7 @@ async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSub
       if (radio) radio.checked = true;
     }
 
-    if (preset.type != null) form.elements.task_type.value = preset.type;
+    if (preset.type != null) form.elements.task_cat.value = preset.type;
 
     if (preset.assignedTo != null) {
       form.elements.assigned_to_input.value = JSON.stringify(preset.assignedTo);
@@ -463,21 +471,52 @@ async function mountTaskForm(hostEl, { title = "Task Form", preset = null, onSub
     }
   }
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const data = {
-      titel: form.elements.task_titel.value.trim(),
-      description: form.elements.task_descr.value.trim(),
-      finishDate: form.elements.task_due_date.value,
-      priority: form.elements.priority.value,
-      type: form.elements.task_type.value,
-      assignedTo: safeParseArray(form.elements.assigned_to_input.value),
-      subTasks: safeParseArray(form.elements.subtasks_json.value),
-    };
-
-    if (typeof onSubmit === "function") onSubmit(data);
+form.querySelectorAll(".standard_input_box[required]").forEach((input) => {
+  input.addEventListener("blur", () => {
+    if (!input.checkValidity()) setInputInValid(input, input);
+    else setInputValid(input, input);
   });
+});
+
+form.querySelector("#task_cat_btn")?.addEventListener("blur", () => {
+  const hidden = form.querySelector("#task_cat");
+  const taskTypeDiv = form.querySelector("#task_cat_control");
+  const taskTypeOuterDiv = form.querySelector("#task_cat_select");
+  if (!hidden.value) setInputInValid(taskTypeDiv, taskTypeOuterDiv);
+  else setInputValid(taskTypeDiv, taskTypeOuterDiv);
+});
+
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!validateAddTaskForm(form)) return;
+
+  const data = {
+    titel: form.querySelector("#task_titel")?.value?.trim() || "",
+    description: form.querySelector("#task_descr")?.value?.trim() || "",
+    finishDate: form.querySelector("#task_due_date")?.value || "",
+    priority: form.querySelector('input[name="priority"]:checked')?.value || "",
+    type: form.querySelector("#task_cat")?.value || "",
+    assignedTo: getAssignedToIds(form),
+    subTasks: getSubtasksArray(form),
+  };
+
+  if (typeof onSubmitData === "function") {
+    await onSubmitData(data, form);
+    return;
+  }
+
+  const newTaskObj = { ...data, status: taskStatus };
+
+  await addTaskData(newTaskObj, {
+    toastId,
+    afterDone: () => typeof afterSaved === "function" && afterSaved(newTaskObj),
+    refreshAfter: false,
+  });
+
+  clearTaskForm(form);
+});
 
   return form;
 }
@@ -489,17 +528,6 @@ function safeParseArray(str) {
   } catch {
     return [];
   }
-}
-
-async function openModal(modalHost) {
-  await mountTaskForm(modalHost, {
-    title: "Task Form",
-    preset: { title: "", description: "", priority: "" },
-    onSubmit: () => {
-      // For demo: close after submit!!!
-      modalHost.close();
-    },
-  });
 }
 
 function saveUsersToSessionStorage(users) {
