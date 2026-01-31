@@ -35,6 +35,11 @@ async function addTask({ toastId = "task_success_overlay", taskStatus = 0, after
     subTasks,
   };
 
+  if (!newTaskObj.titel || !newTaskObj.finishDate || !newTaskObj.type || !newTaskObj.priority) {
+    console.warn("addTask blocked: missing required fields", newTaskObj);
+    return;
+  }
+
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
   saveTasksToSessionStorage(tasks);
@@ -145,6 +150,9 @@ function bindAddTaskFormSubmitOnce() {
   form.dataset.submitBound = "1";
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (!validateAddTaskForm(form)) return;
+
     try {
       const page = document.body.dataset.page;
       if (page === "board") {
@@ -156,6 +164,7 @@ function bindAddTaskFormSubmitOnce() {
       console.error("addTask failed", err);
     }
   });
+
 
   const clearBtn = document.getElementById("clear_task_form_btn");
   clearBtn.addEventListener("click", clearTaskForm);
@@ -182,3 +191,47 @@ function bindAddTaskFormSubmitOnce() {
     }
   });
 }
+
+function validateAddTaskForm() {
+  let ok = true;
+
+  const title = document.getElementById("task_titel");
+  const due = document.getElementById("task_due_date");
+
+  if (!title.checkValidity()) {
+    setInputInValid(title, title);
+    ok = false;
+  } else {
+    setInputValid(title, title);
+  }
+
+  if (!due.checkValidity()) {
+    setInputInValid(due, due);
+    ok = false;
+  } else {
+    setInputValid(due, due);
+  }
+
+  const hidden = document.getElementById("task_type");
+  const taskTypeDiv = document.getElementById("task_type_control");
+  const taskTypeOuterDiv = document.getElementById("task_type_select");
+
+  if (!hidden.value) {
+    setInputInValid(taskTypeDiv, taskTypeOuterDiv);
+    ok = false;
+  } else {
+    setInputValid(taskTypeDiv, taskTypeOuterDiv);
+  }
+
+  if (!ok) {
+    const firstInvalid = document.querySelector(".is-invalid");
+    if (firstInvalid?.id === "task_type_control") {
+      document.getElementById("task_type_btn")?.focus();
+    } else {
+      firstInvalid?.focus?.();
+    }
+  }
+
+  return ok;
+}
+

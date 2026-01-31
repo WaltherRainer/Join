@@ -61,8 +61,8 @@
    Form rows / inputs
 ========================= */
 
-.add_task_form_left input {
-  margin-bottom: 32px;
+.form_div_descr {
+  margin-top: 64px;
 }
 
 .form_row {

@@ -94,6 +94,8 @@ async function enterTaskEditMode(users) {
   syncSubtasksUIFromHidden(form);
 
   form.classList.add("edit_mode");
+  const cancelBtn = document.getElementById("clear_task_form_btn");
+  cancelBtn.classList.add("is-hidden");
   form.elements.task_titel?.focus();
 }
 

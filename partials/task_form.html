@@ -6,10 +6,9 @@
             <input class="standard_input_box required_input" type="text" id="task_titel" name="task_titel" placeholder="Enter a title" required>
             <span class="error-message"></span>
         </div>
-        <div class="form_row">
+        <div class="form_row form_div_descr">
             <label for="task_descr">Description</label>
-            <textarea class="task_descr_textarea" id="task_descr" name="task_descr" rows="4" cols="50"
-                required placeholder="Enter a description"></textarea>
+            <textarea class="task_descr_textarea" id="task_descr" name="task_descr" rows="4" cols="50" placeholder="Enter a description"></textarea>
         </div>
         <div class="form_row">
             <label for="task_due_date">Due Date<span class="red_star">*</span></label>
@@ -52,7 +51,7 @@
                 <div class="multi_select__dropdown" id="assigned_to_dropdown" role="listbox" aria-multiselectable="true" hidden>
                 <ul class="multi_select__list" id="assigned_to_list"></ul>
                 </div>
-                <input type="hidden" id="assigned_to_input" name="assigned_to" required />
+                <input type="hidden" id="assigned_to_input" name="assigned_to"/>
                 <span class="error-message"></span>
             </div>
         </div>
@@ -107,7 +106,7 @@
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
-            <button type="submit" class="create_button default-button">Create Task
+            <button id="submit_task_form_btn" type="submit" class="create_button default-button">Create Task
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="mask0_415283_1199" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
                     width="24" height="24">
