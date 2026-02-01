@@ -131,12 +131,12 @@ async function enterTaskEditMode(users) {
   });
 
   initAssignedToDropdown(form, users);
-  resetAssignedToDropdown(form);
+  // resetAssignedToDropdown(form);
   initTaskTypeDropdown(form, TASK_CATEGORIES);
   initSubtasksInput(form);
 
-  syncTypeUIFromHidden(form);
-  syncAssignedUIFromHidden(form, users);
+  syncTaskCatUI(form);
+  syncAssignedToUI(form, users);
 
   renderIcons(modal);
 
@@ -170,23 +170,23 @@ function exitEditMode() {
   document.getElementById("task_dialog_content_wrapper").classList.remove("is-hidden");
 }
 
-function syncTypeUIFromHidden(form) {
+function syncTaskCatUI(form) {
   if (!form) return;
 
   const root = form.querySelector("#task_cat_select");
   if (!root) return;
 
-  const hidden = form.querySelector("#task_cat");
+  const taskCat = form.querySelector("#task_cat");
   const valueEl = root.querySelector(".single_select__value");
   const placeholder = root.querySelector(".single_select__placeholder");
 
-  if (!hidden || !valueEl || !placeholder) return;
+  if (!taskCat || !valueEl || !placeholder) return;
 
-  const val = String(hidden.value || "").trim();
+  const val = String(taskCat.value || "").trim();
   if (!val) {
     valueEl.textContent = "";
-    valueEl.hidden = true;
-    placeholder.hidden = false;
+    valueEl.taskCat = true;
+    placeholder.taskCat = false;
     return;
   }
 
@@ -194,23 +194,24 @@ function syncTypeUIFromHidden(form) {
     .find(c => c.value === val);
 
   valueEl.textContent = cat?.label || val;
-  valueEl.hidden = false;
-  placeholder.hidden = true;
+  valueEl.taskCat = false;
+  placeholder.taskCat = true;
 }
 
 
-function syncAssignedUIFromHidden(form, usersObj) {
-  const hidden = form.elements.assigned_to_input; 
-  const ids = safeParseArray(hidden?.value);
+function syncAssignedToUI(form, usersObj) {
+  const assignedToInput = form.elements.assigned_to_input; 
+  const ids = safeParseArray(assignedToInput?.value);
 
   const placeholder = form.querySelector("#assigned_to_placeholder");
   const valueBox = form.querySelector("#assigned_to_value");
+  const avatarContainer = form.querySelector("#assigned_avatar_container");
 
   if (!placeholder || !valueBox) return;
 
   if (!ids.length) {
-    placeholder.hidden = false;
-    valueBox.hidden = true;
+    placeholder.assignedToInput = false;
+    valueBox.assignedToInput = true;
     valueBox.textContent = "";
     return;
   }
@@ -219,17 +220,20 @@ function syncAssignedUIFromHidden(form, usersObj) {
   .map((id) => usersObj?.[id]?.givenName)
   .filter(Boolean);
 
-  placeholder.hidden = true;
-  valueBox.hidden = false;
+  placeholder.assignedToInput = true;
+  valueBox.assignedToInput = false;
   valueBox.textContent = names.length ? names.join(", ") : `${ids.length} selected`;
+
+  renderAssignedAvatars(ids, usersObj, avatarContainer);
+
 }
 
-function syncSubtasksUIFromHidden(form) {
-  const hidden = form.elements.subtasks_json;
+function syncSubtasksUI(form) {
+  const subTask = form.elements.subtasks_json;
   const list = form.querySelector("#subtasks_list");
-  if (!hidden || !list) return;
+  if (!subTask || !list) return;
 
-  const subTasks = safeParseArray(hidden.value);
+  const subTasks = safeParseArray(subTask.value);
   list.innerHTML = "";
 
   subTasks.forEach((st, idx) => {

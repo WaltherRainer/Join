@@ -108,7 +108,7 @@ function clearTaskForm(form) {
   const avatarContainer = form.querySelector("#assigned_avatar_container");
   if (avatarContainer) avatarContainer.innerHTML = "";
 
-  resetTaskTypeDropdownUi(form);
+  resetTaskCatDropdownUi(form);
   removeAllInputErrors(form);
 }
 
@@ -119,11 +119,7 @@ function clearEditInput(state) {
 }
 
 function validateAddTaskForm(form) {
-
-  console.log("validateAddTaskForm called", form);
-
   let ok = true;
-
   const title = form.querySelector("#task_titel");
   const due = form.querySelector("#task_due_date");
 
@@ -141,15 +137,15 @@ function validateAddTaskForm(form) {
     setInputValid(due, due);
   }
 
-  const hidden = form.querySelector("#task_cat");
-  const taskTypeDiv = form.querySelector("#task_cat_control");
-  const taskTypeOuterDiv = form.querySelector("#task_cat_select");
+  const taskCat = form.querySelector("#task_cat");
+  const taskCatDiv = form.querySelector("#task_cat_control");
+  const taskCatOuterDiv = form.querySelector("#task_cat_select");
 
-  if (!hidden?.value) {
-    setInputInValid(taskTypeDiv, taskTypeOuterDiv);
+  if (!taskCat?.value) {
+    setInputInValid(taskCatDiv, taskCatOuterDiv);
     ok = false;
   } else {
-    setInputValid(taskTypeDiv, taskTypeOuterDiv);
+    setInputValid(taskCatDiv, taskCatOuterDiv);
   }
 
   if (!ok) {

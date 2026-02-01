@@ -131,10 +131,10 @@ function getAssignedToUi(form) {
     dropdown: root.querySelector("#assigned_to_dropdown"),
     list: root.querySelector("#assigned_to_list"),
     caret: toggleBtn?.querySelector(".caret"),
-    placeholder: root.querySelector("#assigned_to_placeholder"),
+    assignedToPlaceholder: root.querySelector("#assigned_to_placeholder"),
     valueEl: root.querySelector("#assigned_to_value"),
-    hiddenInput: root.querySelector("#assigned_to_input"),
-    filterInput: root.querySelector("#assigned_to_filter"),
+    assignedToInput: root.querySelector("#assigned_to_input"),
+    assignedToassignedToFilterInput: root.querySelector("#assigned_to_filter"),
     avatarContainer: form.querySelector("#assigned_avatar_container"),
   };
 }
@@ -142,21 +142,21 @@ function getAssignedToUi(form) {
 
 function wireFilterEvents(state) {
   const { ui } = state;
-  if (!ui.filterInput) return;
+  if (!ui.assignedToassignedToFilterInput) return;
 
-  ui.filterInput.addEventListener("input", (e) => {
+  ui.assignedToassignedToFilterInput.addEventListener("input", (e) => {
     state.query = e.target.value || "";
     renderUserList(state);
   });
 
-  ui.filterInput.addEventListener("click", (e) => {
+  ui.assignedToassignedToFilterInput.addEventListener("click", (e) => {
     e.stopPropagation();
   });
 
-  ui.filterInput.addEventListener("keydown", (e) => {
+  ui.assignedToassignedToFilterInput.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeDropdown(ui);
-      ui.filterInput.blur();
+      ui.assignedToassignedToFilterInput.blur();
     }
   });
 }
@@ -221,23 +221,23 @@ function updateSelection(state, userId, isChecked) {
   .map(id => usersData[id]?.givenName)
   .filter(Boolean);
   applySelectionUi(ui, names, selected, state.usersData);
-  renderAssignedAvatars(selected, usersData);
+  renderAssignedAvatars(selected, usersData, ui.avatarContainer);
   state.form?._markDirty?.();
 }
 
 function applySelectionUi(ui, names, selected, usersData) {
   if (names.length === 0) {
-    ui.placeholder.hidden = false;
+    ui.assignedToPlaceholder.hidden = false;
     ui.valueEl.hidden = true;
     ui.valueEl.textContent = "";
-    ui.hiddenInput.value = "";
+    ui.assignedToInput.value = "";
     renderAssignedAvatars(selected, usersData, ui.avatarContainer);
     return;
   }
-  ui.placeholder.hidden = true;
+  ui.assignedToPlaceholder.hidden = true;
   ui.valueEl.hidden = true;
   ui.valueEl.textContent = "";
-  ui.hiddenInput.value = JSON.stringify([...selected]);
+  ui.assignedToInput.value = JSON.stringify([...selected]);
   renderAssignedAvatars(selected, usersData, ui.avatarContainer);
 }
 
@@ -247,20 +247,20 @@ function wireDropdownEvents(state) {
   function afterToggleSync() {
     const isOpen = !ui.dropdown.hidden;
 
-    if (ui.filterInput) {
-      ui.filterInput.hidden = !isOpen;
+    if (ui.assignedToassignedToFilterInput) {
+      ui.assignedToassignedToFilterInput.hidden = !isOpen;
       if (isOpen) {
-        ui.filterInput.focus();
-        ui.filterInput.select();
+        ui.assignedToassignedToFilterInput.focus();
+        ui.assignedToassignedToFilterInput.select();
       } else {
-        ui.filterInput.value = "";
+        ui.assignedToassignedToFilterInput.value = "";
         state.query = "";
         renderUserList(state);
       }
     }
-    if (isOpen) ui.placeholder.hidden = true;
+    if (isOpen) ui.assignedToPlaceholder.hidden = true;
     else {
-      if (state.selected.size === 0) ui.placeholder.hidden = false;
+      if (state.selected.size === 0) ui.assignedToPlaceholder.hidden = false;
     }
   }
 
@@ -346,12 +346,12 @@ function getAssignedToIds() {
 function initTaskTypeDropdown(form, categories) {
   const root = form.querySelector("#task_cat_select");
   if (!root || isInitialized(root)) return;
-  const ui = getTaskTypeUi(root);
-  renderTaskTypeOptions(ui, categories);
-  wireTaskTypeEvents(ui);
+  const ui = getTaskCatUi(root);
+  renderTaskCatOptions(ui, categories);
+  wireTaskCatEvents(ui);
 }
 
-function getTaskTypeUi(root) {
+function getTaskCatUi(root) {
   return {
     root,
     control: root.querySelector(".single_select__control"),
@@ -359,28 +359,28 @@ function getTaskTypeUi(root) {
     list: root.querySelector(".single_select__list"),
     valueEl: root.querySelector(".single_select__value"),
     placeholder: root.querySelector(".single_select__placeholder"),
-    hiddenInput: root.querySelector("#task_cat"),
+    assignedToInput: root.querySelector("#task_cat"),
     caret: root.querySelector(".caret"),
   };
 }
 
-function renderTaskTypeOptions(ui, categories) {
+function renderTaskCatOptions(ui, categories) {
   ui.list.innerHTML = "";
   categories.forEach((cat) => {
     const li = document.createElement("li");
     li.className = "single_select__item";
     li.textContent = cat.label;
-    li.addEventListener("click", () => selectTaskType(ui, cat));
+    li.addEventListener("click", () => selectTaskCat(ui, cat));
     ui.list.appendChild(li);
   });
 }
 
-function selectTaskType(ui, cat) {
-  ui.hiddenInput.value = cat.value;
+function selectTaskCat(ui, cat) {
+  ui.assignedToInput.value = cat.value;
   ui.valueEl.textContent = cat.label;
   ui.valueEl.hidden = false;
   ui.placeholder.hidden = true;
-  closeTaskTypeDropdown(ui);
+  closeTaskCatDropdown(ui);
 
   const taskTypeDiv = ui.root.querySelector("#task_cat_control");
   const taskTypeOuterDiv = ui.root; 
@@ -391,28 +391,28 @@ function selectTaskType(ui, cat) {
 }
 
 
-function wireTaskTypeEvents(ui) {
-  ui.control.addEventListener("click", () => toggleTaskTypeDropdown(ui));
+function wireTaskCatEvents(ui) {
+  ui.control.addEventListener("click", () => toggleTaskCatDropdown(ui));
 
   document.addEventListener("click", (e) => {
-    if (!ui.root.contains(e.target)) closeTaskTypeDropdown(ui);
+    if (!ui.root.contains(e.target)) closeTaskCatDropdown(ui);
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeTaskTypeDropdown(ui);
+    if (e.key === "Escape") closeTaskCatDropdown(ui);
   });
 }
 
-function toggleTaskTypeDropdown(ui) {
-  ui.dropdown.hidden ? openTaskTypeDropdown(ui) : closeTaskTypeDropdown(ui);
+function toggleTaskCatDropdown(ui) {
+  ui.dropdown.hidden ? openTaskCatDropdown(ui) : closeTaskCatDropdown(ui);
 }
 
-function openTaskTypeDropdown(ui) {
+function openTaskCatDropdown(ui) {
   ui.dropdown.hidden = false;
   ui.caret.classList.add("caret_rotate");
 }
 
-function closeTaskTypeDropdown(ui) {
+function closeTaskCatDropdown(ui) {
   ui.dropdown.hidden = true;
   ui.caret.classList.remove("caret_rotate");
 }
@@ -428,20 +428,20 @@ function resetPriorityButtons(form) {
 }
 
 
-function resetTaskTypeDropdownUi(form) {
+function resetTaskCatDropdownUi(form) {
   const root = form.querySelector("#task_cat_select");
   if (!root) return;
 
   const valueEl = root.querySelector(".single_select__value");
   const placeholder = root.querySelector(".single_select__placeholder");
-  const hiddenInput = form.querySelector("#task_cat");
+  const assignedToInput = form.querySelector("#task_cat");
 
   if (valueEl) {
     valueEl.hidden = true;
     valueEl.textContent = "";
   }
   if (placeholder) placeholder.hidden = false;
-  if (hiddenInput) hiddenInput.value = "";
+  if (assignedToInput) assignedToInput.value = "";
 }
 
 

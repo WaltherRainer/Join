@@ -147,20 +147,20 @@ function renderAssignedAvatars(selectedUserIds, usersData, container) {
 }
 
 
-function wireContactActionsGlobalOnce() {
-  if (document.documentElement.dataset.contactsBound === "1") return;
-  document.documentElement.dataset.contactsBound = "1";
+// function wireContactActionsGlobalOnce() {
+//   if (document.documentElement.dataset.contactsBound === "1") return;
+//   document.documentElement.dataset.contactsBound = "1";
 
-  document.addEventListener("click", async (e) => {
-    const btn = e.target.closest('button[data-action="delete"][data-user-id]');
-    if (!btn) return;
-    const inContacts = btn.closest(".contact_detail");
-    if (!inContacts) return;
-    const userId = btn.dataset.userId;
-    if (!userId) return;
-    await deleteContact(userId);
-  });
-}
+//   document.addEventListener("click", async (e) => {
+//     const btn = e.target.closest('button[data-action="delete"][data-user-id]');
+//     if (!btn) return;
+//     const inContacts = btn.closest(".contact_detail");
+//     if (!inContacts) return;
+//     const userId = btn.dataset.userId;
+//     if (!userId) return;
+//     await deleteContact(userId);
+//   });
+// }
 
 function listenEscapeFromModal(modalDOMId, onClose) {
   const handler = async (event) => {
@@ -454,23 +454,19 @@ async function mountTaskForm(hostEl, {
     if (preset.titel != null) form.elements.task_titel.value = preset.titel;
     if (preset.description != null) form.elements.task_descr.value = preset.description;
     if (preset.finishDate != null) form.elements.task_due_date.value = preset.finishDate;
-
     if (preset.priority != null) {
       const radio = form.querySelector(`input[name="priority"][value="${preset.priority}"]`);
       if (radio) radio.checked = true;
     }
-
     if (preset.type != null) form.elements.task_cat.value = preset.type;
-
-    if (preset.assignedTo != null) {
-      form.elements.assigned_to_input.value = JSON.stringify(preset.assignedTo);
+    if (preset?.assignedTo != null) {
+      const hiddenAssigned = form.querySelector("#assigned_to_input");
+      if (hiddenAssigned) hiddenAssigned.value = JSON.stringify(preset.assignedTo);
     }
-
     if (preset?.subTasks != null) {
       const hidden = form.querySelector("#subtasks_list_input");
       if (hidden) hidden.value = JSON.stringify(preset.subTasks);
     }
-
   }
 
 form.querySelectorAll(".standard_input_box[required]").forEach((input) => {
