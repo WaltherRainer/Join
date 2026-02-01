@@ -467,8 +467,10 @@ async function mountTaskForm(hostEl, {
     }
 
     if (preset?.subTasks != null) {
-      form.elements.subtasks_json.value = JSON.stringify(preset.subTasks);
+      const hidden = form.querySelector("#subtasks_list_input");
+      if (hidden) hidden.value = JSON.stringify(preset.subTasks);
     }
+
   }
 
 form.querySelectorAll(".standard_input_box[required]").forEach((input) => {

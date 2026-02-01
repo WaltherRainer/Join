@@ -59,7 +59,7 @@ async function uploadData(path = "", dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}.json`;
 
-  // console.log("UPLOAD url:", url);
+  // console.log(dataObj);
 
   const response = await fetch(url, {
     method: "POST",
@@ -81,6 +81,8 @@ async function editData(path = "", dataId, dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
 
+  // console.log(dataObj);
+
   const response = await fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
@@ -97,6 +99,8 @@ async function editData(path = "", dataId, dataObj) {
 async function patchData(path = "", dataId, partialObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
+
+  // console.log(partialObj);
 
   const response = await fetch(url, {
     method: "PATCH",

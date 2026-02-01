@@ -73,7 +73,7 @@ function initAssignedToDropdown(form, usersData) {
   if (!ui.root || isInitialized(ui.root)) return;
   if (!usersData || typeof usersData !== "object") return;
 
-  const state = { usersData, selected: new Set(), ui };
+  const state = { form, usersData, selected: new Set(), ui };
   ui.root._assignedState = state;
 
   wireDropdownEvents(state);
@@ -222,6 +222,7 @@ function updateSelection(state, userId, isChecked) {
   .filter(Boolean);
   applySelectionUi(ui, names, selected, state.usersData);
   renderAssignedAvatars(selected, usersData);
+  state.form?._markDirty?.();
 }
 
 function applySelectionUi(ui, names, selected, usersData) {
@@ -317,7 +318,7 @@ function escapeHtml(str) {
 }
 
 function getSubtasksArray() {
-  const hidden = document.getElementById("subtasks_list_input");
+  const hidden = document.querySelector("#subtasks_list_input");
   if (!hidden || !hidden.value) return [];
   try {
     const arr = JSON.parse(hidden.value);
@@ -358,7 +359,7 @@ function getTaskTypeUi(root) {
     list: root.querySelector(".single_select__list"),
     valueEl: root.querySelector(".single_select__value"),
     placeholder: root.querySelector(".single_select__placeholder"),
-    hiddenInput: document.getElementById("task_cat"),
+    hiddenInput: root.querySelector("#task_cat"),
     caret: root.querySelector(".caret"),
   };
 }
@@ -386,6 +387,7 @@ function selectTaskType(ui, cat) {
   if (taskTypeDiv && taskTypeOuterDiv) {
     setInputValid(taskTypeDiv, taskTypeOuterDiv);
   }
+  ui.root.closest("form")?._markDirty?.();
 }
 
 

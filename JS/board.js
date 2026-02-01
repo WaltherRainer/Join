@@ -45,19 +45,72 @@ function initBoardEventList(users) {
   });
 }
 
-function deleteTask(taskId) {
-  console.log(taskId);
-  console.log("Hier sollte die Löschfunktion implementiert werden.");
+function setSubmitLabel(form, label) {
+  const btn = form.querySelector("#submit_task_form_btn");
+  const span = btn?.querySelector(".btn_label");
+  if (span) span.textContent = label;
 }
+
+function setSubmitEnabled(form, enabled) {
+  const btn = form.querySelector("#submit_task_form_btn");
+  if (!btn) return;
+  btn.disabled = !enabled;
+  btn.classList.toggle("is-disabled", !enabled);
+}
+
+
+function markEditFormDirty(form) {
+  if (!form || form.dataset.editDirty === "1") return;
+  form.dataset.editDirty = "1";
+  setSubmitEnabled(form, true);
+}
+
+
+function installEditDirtyTracking(form) {
+  form.dataset.editDirty = "0";
+  setSubmitLabel(form, "OK");
+  setSubmitEnabled(form, false);
+  const mark = () => markEditFormDirty(form);
+  form.addEventListener("input", mark, true);
+  form.addEventListener("change", mark, true);
+  form._markDirty = mark;
+}
+
+
+async function deleteTask(taskId) {
+  const id = String(taskId || "").trim();
+  if (!id) return;
+
+  const modal = document.getElementById("show_task_modal");
+  const users = modal?.__users;
+
+  try {
+    await deleteData(`tasks/${id}`);
+    const tasks = loadTasksFromSession();
+    delete tasks[id];
+    saveTasksToSessionStorage(tasks);
+    dirtyTaskIds?.delete?.(id);
+    modal?.close?.();
+    if (users) {
+      loadTaskBoard(tasks, users);
+    } else {
+      console.warn("deleteTask: users missing on modal -> board not rerendered");
+    }
+  } catch (err) {
+    console.error("deleteTask failed", err);
+    alert("Löschen fehlgeschlagen. Details in der Konsole.");
+  }
+}
+
 
 async function enterTaskEditMode(users) {
   const modal = document.getElementById("show_task_modal");
   const host = document.getElementById("EditTaskModalHost");
   const wrapper = document.getElementById("task_dialog_content_wrapper");
-  const taskId = modal.dataset.taskId;
-  const tasks = JSON.parse(sessionStorage.getItem("tasks") || "{}");
-  const task = tasks[String(taskId)];
-  if (!task) return;
+  const taskId = String(modal.dataset.taskId || "");
+  const tasks = loadTasksFromSession();
+  const task = tasks[taskId];
+  if (!modal || !host || !wrapper || !task) return;
 
   wrapper.classList.add("is-hidden");
   host.innerHTML = "";
@@ -65,19 +118,12 @@ async function enterTaskEditMode(users) {
   const form = await mountTaskForm(host, {
     title: "Task bearbeiten",
     preset: task,
-    onSubmitData: async (data) => {
-      tasks[String(taskId)] = {
-        ...task,
-        titel: data.titel,
-        description: data.description,
-        finishDate: data.finishDate,
-        priority: data.priority,
-        type: data.type,
-        assignedTo: data.assignedTo,
-        subTasks: data.subTasks,
-      };
-      sessionStorage.setItem("tasks", JSON.stringify(tasks));
-
+    onSubmitData: async (data, formEl) => {
+      if (formEl.dataset.editDirty !== "1") return;
+      const patch = buildTaskPatchFromFormData(data);
+      tasks[taskId] = { ...tasks[taskId], ...patch };
+      saveTasksToSessionStorage(tasks);
+      await patchData("tasks", taskId, patch);
       exitEditMode();
       const ui = getTaskUi();
       renderTaskModal(taskId, ui, tasks, users);
@@ -88,13 +134,17 @@ async function enterTaskEditMode(users) {
   resetAssignedToDropdown(form);
   initTaskTypeDropdown(form, TASK_CATEGORIES);
   initSubtasksInput(form);
-  renderIcons(modal);
 
   syncTypeUIFromHidden(form);
   syncAssignedUIFromHidden(form, users);
-  syncSubtasksUIFromHidden(form);
+
+  renderIcons(modal);
 
   form.classList.add("edit_mode");
+  installEditDirtyTracking(form);
+
+
+    form.classList.add("edit_mode");
   const cancelBtn = form.querySelector("#clear_task_form_btn");
   cancelBtn?.classList.add("is-hidden");
 
@@ -121,27 +171,36 @@ function exitEditMode() {
 }
 
 function syncTypeUIFromHidden(form) {
-  const hidden = form.elements.task_cat;
-  const control = form.querySelector("#task_cat_control");
-  const placeholder = control?.querySelector(".single_select__placeholder");
-  const valueSpan = control?.querySelector(".single_select__value");
+  if (!form) return;
 
-  if (!hidden || !control) return;
+  const root = form.querySelector("#task_cat_select");
+  if (!root) return;
 
-  const type = hidden.value?.trim();
-  if (!type) return;
+  const hidden = form.querySelector("#task_cat");
+  const valueEl = root.querySelector(".single_select__value");
+  const placeholder = root.querySelector(".single_select__placeholder");
 
-  const label = TASK_CATEGORIES[type];
+  if (!hidden || !valueEl || !placeholder) return;
 
-  if (placeholder) placeholder.hidden = true;
-  if (valueSpan) {
-    valueSpan.hidden = false;
-    valueSpan.textContent = label;
+  const val = String(hidden.value || "").trim();
+  if (!val) {
+    valueEl.textContent = "";
+    valueEl.hidden = true;
+    placeholder.hidden = false;
+    return;
   }
+
+  const cat = (Array.isArray(TASK_CATEGORIES) ? TASK_CATEGORIES : [])
+    .find(c => c.value === val);
+
+  valueEl.textContent = cat?.label || val;
+  valueEl.hidden = false;
+  placeholder.hidden = true;
 }
 
+
 function syncAssignedUIFromHidden(form, usersObj) {
-  const hidden = form.elements.assigned_to_input; // <input type="hidden" id="assigned_to_input" ...>
+  const hidden = form.elements.assigned_to_input; 
   const ids = safeParseArray(hidden?.value);
 
   const placeholder = form.querySelector("#assigned_to_placeholder");
@@ -226,12 +285,12 @@ function initTaskModalEventList(modal) {
     }
   });
 
-  document.getElementById("btn_edit_task").addEventListener("click", () => {
+  modal.querySelector("#btn_edit_task").addEventListener("click", () => {
     enterTaskEditMode(modal.__users || {});
   });
 
-  document.getElementById("btn_delete_task").addEventListener("click", () => {
-    deleteTask(modal.dataset.taskId);
+  modal.querySelector("#btn_delete_task").addEventListener("click", async () => {
+    await deleteTask(modal.dataset.taskId);
   });
 
   modal.addEventListener("click", (event) => {

@@ -119,6 +119,7 @@ function renderSubtasks(state) {
  */
 function syncSubtasksListInp(state) {
     if (state.subTaskUi.SubTaskListInp) state.subTaskUi.SubTaskListInp.value = JSON.stringify(state.subtasks);
+    state.subTaskUi.SubTaskListInp.closest("form")?._markDirty?.();
 }
 
 
@@ -263,18 +264,6 @@ function enterEditMode(state, idx) {
     state.editingIndex = idx;
     renderSubtasks(state);
     focusEditInputEnd(state);
-}
-
-
-/**
- * Exits edit mode (without changing data), and re-renders the list.
- *
- * @param {Object} state - Subtasks UI state object.
- * @returns {void}
- */
-function exitEditMode(state) {
-    state.editingIndex = null;
-    renderSubtasks(state);
 }
 
 

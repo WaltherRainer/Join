@@ -164,4 +164,15 @@ function validateAddTaskForm(form) {
   return ok;
 }
 
+function buildTaskPatchFromFormData(data) {
+  return {
+    titel: data.titel,
+    description: data.description,
+    finishDate: data.finishDate,
+    priority: data.priority,
+    type: data.type,
+    assignedTo: data.assignedTo,
+    subTasks: data.subTasks,
+  };
+}
 
