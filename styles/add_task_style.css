@@ -27,8 +27,8 @@
     "add_task_form_left"
     "add_task_form_right"
     "form_actions";
-  padding: 16px 16px 16px 16px;
-  max-height: 900px;
+  /* padding: 16px 16px 16px 16px; */
+  max-height: 770px;
 }
 
 .add_task_titel {
@@ -45,9 +45,19 @@
   border-right: 1px solid var(--line-color);
 }
 
+.add_task_form_left.edit_mode {
+  grid-area: add_task_form_left;
+  padding-right: 0px;
+  border-right: 0px solid var(--line-color);
+}
+
 .add_task_form_right {
   grid-area: add_task_form_right;
   padding-left: 48px;
+}
+
+.add_task_form_right.edit_mode {
+  padding-left: 0px;
 }
 
 /* (optional/legacy) Trennlinie – meist redundant wegen border-right oben */
@@ -161,6 +171,11 @@
   margin-top: 32px;
   margin-right: 4px;
 }
+
+.form_actions.edit_mode  {
+  margin-right: 54px;
+}
+
 
 /* =========================
    Multi select

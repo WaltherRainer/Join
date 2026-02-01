@@ -98,6 +98,19 @@ async function enterTaskEditMode(users) {
   const cancelBtn = form.querySelector("#clear_task_form_btn");
   cancelBtn?.classList.add("is-hidden");
 
+  const submitBtn = form.querySelector("#submit_task_form_btn");
+  submitBtn.querySelector(".btn_label").textContent = "OK";
+
+  const actionBtn = form.querySelector(".form_actions");
+  actionBtn.classList.add("edit_mode");
+
+  const addTaskFormRight = form.querySelector(".add_task_form_right");
+  addTaskFormRight.classList.add("edit_mode");
+
+  const addTaskFormLeft = form.querySelector(".add_task_form_left");
+  addTaskFormLeft.classList.add("edit_mode");
+
+
   form.querySelector("#task_titel")?.focus();
 
 }
@@ -176,39 +189,6 @@ function safeParseArray(str) {
   }
 }
 
-// function initEditMode() {
-//   const modal = document.getElementById("show_task_modal");
-//   const modalHost = document.getElementById("EditTaskModalHost");
-//   const wrapper = document.getElementById("task_dialog_content_wrapper");
-//   wrapper.innerHTML = "";
-
-//   openModal(modalHost);
-
-//   ensureAddTaskFormLoaded(async (form) => {
-//     modalHost.appendChild(form);
-//     const usersDataObj = await ensureUsersLoaded();
-//     initAssignedToDropdown(form, usersDataObj);
-//     resetAssignedToDropdown(form);
-//     initTaskTypeDropdown(TASK_CATEGORIES);
-//     initSubtasksInput();
-//     bindAddTaskFormSubmitOnce();
-//     renderIcons(modal);
-
-//     modal.showModal();
-
-//     const removeEsc = listenEscapeFromModal("addTaskModal", async (m) => {
-//       closeAddTaskModal()
-//     });
-
-//     modal.addEventListener("close", removeEsc, { once: true });
-//   });
-
-// }
-
-// function initTaskModal(tasks) {
-//   const ui = getTaskUi();
-// }
-
 function getTaskUi() {
   const titel = document.getElementById("tsk_dlg_h1");
   const descr = document.getElementById("tsk_dlg_h2");
@@ -232,12 +212,18 @@ function initTaskModalEventList(modal) {
   if (modal.dataset.listenersBound === "true") return;
   modal.dataset.listenersBound = "true";
 
-  document.getElementById("tsk_dlg_close").addEventListener("click", async () => {
+  modal.querySelector(".btn_close_modal")?.addEventListener("click", async () => {
+    modal.querySelector("#EditTaskModalHost")?.replaceChildren();
+    modal.querySelector("#task_dialog_content_wrapper")?.classList.remove("is-hidden");
     await closeTaskModal(modal, modal.dataset.taskId);
   });
 
   modal.addEventListener("click", async (e) => {
-    if (e.target === modal) await closeTaskModal(modal, modal.dataset.taskId);
+    if (e.target === modal) {
+      modal.querySelector("#EditTaskModalHost")?.replaceChildren();
+      modal.querySelector("#task_dialog_content_wrapper")?.classList.remove("is-hidden");
+      await closeTaskModal(modal, modal.dataset.taskId);
+    }
   });
 
   document.getElementById("btn_edit_task").addEventListener("click", () => {
