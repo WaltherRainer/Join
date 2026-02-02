@@ -22,7 +22,17 @@
     <script src="./JS/tasks.js" defer></script>
     <script src="./script.js" defer></script>
     <title>Join - Add task</title>
-    <style></style>
+    <style>
+        @media (max-width: 880px) {
+    .add_task_form {
+        grid-template-columns: 1fr;
+    }
+
+    .add_task_form > * {
+        width: 100%;
+    }
+}
+    </style>
 </head>
 
 <body data-page="add_task" onload="initAddTask()">

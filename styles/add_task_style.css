@@ -10,7 +10,7 @@
 
 .add_task_form {
   display: grid;
-  grid-template-columns: 500px 500px;
+  grid-template-columns: repeat(2, minmax(0, 500px));
   grid-template-rows: 80px 1fr 80px;
   grid-template-areas:
     "add_task_titel add_task_titel"
@@ -77,7 +77,7 @@
 
 .form_row {
   display: grid;
-  grid-template-columns: 448px;
+  grid-template-columns: auto;
   grid-template-rows: 30px;
   align-items: center;
   margin-bottom: 24px;
@@ -449,4 +449,82 @@
   background: var(--blue);
   color: var(--white-text-color);
   font-weight: 600;
+}
+
+
+@media (max-width: 880px) {
+  .add_task_form {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "add_task_titel"
+      "add_task_form_left"
+      "add_task_form_right"
+      "form_actions";
+    gap: 24px;
+    width: 100%;
+  }
+
+  .add_task_form_left {
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .add_task_form_right {
+    padding-left: 0;
+  }
+
+  .form_row {
+    grid-template-columns: 1fr;
+  }
+
+  .form_row .form_div_descr{
+    margin: 0;
+  }
+  .add_task_main{
+    padding: 20px;
+  }
+  .add_task_form {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .add_task_form > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+  #clear_task_form_btn, #submit_task_form_btn{
+    font-size: 18px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+  }
+  .form_actions{
+    gap: 4px;
+  }
+  .form_div_descr{
+    margin-top: 12px;
+  }
+  .task_descr_textarea{
+    margin-bottom: 0;
+  }
+  .form_row{
+    margin-bottom: 12px;
+  }
+  .priority_buttons_container{
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 1340px){
+  .add_task_main{
+    padding: 20px;
+  }
+  .priority_btn span{
+    width: 80px;
+    font-size: 18px;
+  }
+  .priority_buttons_container {
+    gap: 8px;
+  }
 }
