@@ -1,78 +1,70 @@
 h4 {
-    font-size: 27px;
-    font-weight: 400;
+  font-size: 27px;
+  font-weight: 400;
 }
 
-
-/* #region OVERLAY */
 .overlay_backdrop {
-    border-radius: 30px;
+  border-radius: 30px;
 }
 
 .edit_contact_overlay {
-    transition: transform 400ms ease;
-    display: flex;
-    z-index: 1000;
+  transition: transform 400ms ease;
+  display: flex;
+  z-index: 1000;
 }
 
 .overlay_left {
-    height: 100%;
-    background-color: var(--blue);
-    color: var(--white-text-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 16px;
-    padding: 0 46px;
-    margin-right: 50px;
+  height: 100%;
+  background-color: var(--blue);
+  color: var(--white-text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 46px;
+  margin-right: 50px;
 }
 
 .overlay_left h2 {
-    font-size: 61px;
+  font-size: 61px;
 }
-/* #endregion */
 
 .divider {
-    width: 90px;
-    height: 4px;
-    background-color: var(--light-blue);
+  width: 90px;
+  height: 4px;
+  background-color: var(--light-blue);
 }
 
 .overlay_right {
-    height: 100%;
-    flex: 1;
-    border-radius: 0 30px 30px 0;
-    display: flex;
-    align-items: center;
-    background-color: var(--white-text-color);
-    gap: 50px;
-    
+  height: 100%;
+  flex: 1;
+  border-radius: 0 30px 30px 0;
+  display: flex;
+  align-items: center;
+  background-color: var(--white-text-color);
+  gap: 50px;
 }
 
 .input-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .input-wrapper input {
-    width: 422px;
-    padding: 12px 44px 12px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
+  width: 422px;
+  padding: 12px 44px 12px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .input_icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
-
-
-
-
 
 .title_box {
   display: flex;
@@ -108,7 +100,6 @@ h4 {
   background-color: var(--secondary-background-color);
 }
 
-
 .shadow {
   grid-area: shadow;
   background-image: linear-gradient(to left, #f9f9f9, #f0f0f0);
@@ -136,7 +127,7 @@ h4 {
 }
 
 .add_contact_btn {
-    /* width: 445px;
+  /* width: 445px;
     position: fixed;
     height: 100px;
     top: 76px;
@@ -144,29 +135,29 @@ h4 {
     align-items: center;
     justify-content: center;
     z-index: 10; */
-    position: sticky;   /* statt fixed */
-    top: 0;             /* Abstand innerhalb der Liste */
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    background: var(--background-color)
+  position: sticky; /* statt fixed */
+  top: 0; /* Abstand innerhalb der Liste */
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background: var(--background-color);
 }
 
-.add_contact_btn::before{
+.add_contact_btn::before {
   content: "";
   position: absolute;
-  inset: 0; 
+  inset: 0;
   pointer-events: none;
   z-index: 0;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
 
-.add_contact_btn > button{
+.add_contact_btn > button {
   position: relative;
   z-index: 1;
 }
@@ -234,7 +225,6 @@ h4 {
   align-items: center;
 }
 
-
 .contact_detail {
   grid-area: contact_detail;
   margin: 16px 0 0 40px;
@@ -271,13 +261,12 @@ h4 {
   color: var(--white-text-color);
 }
 
-
 /* Inhalt = die eigentliche "Modal-Box" */
 .contact_modal_content {
-      min-width: 1212px;
-      width: 100%;
-      height: 592px;
-      /* border-radius: 30px; */
+  min-width: 1212px;
+  width: 100%;
+  height: 592px;
+  /* border-radius: 30px; */
 
   background: var(--background-color);
 
@@ -296,14 +285,14 @@ h4 {
 
 .modal_close {
   position: absolute;
-    top: 16px;
-    right: 16px;
-    /* border: 0; */
-    background: transparent;
-    /* font-size: 28px; */
-    line-height: 1;
-    cursor: pointer;
-    color: var(--text-color);
+  top: 16px;
+  right: 16px;
+  /* border: 0; */
+  background: transparent;
+  /* font-size: 28px; */
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text-color);
 }
 
 .toast_overlay {
@@ -313,21 +302,19 @@ h4 {
   place-items: center;
   opacity: 0;
   pointer-events: none;
-
-
 }
 
 .toast_box {
-  width: 260px;               /* oder var(--task_success_width) */
-  height: 56px;               /* oder var(--task_success_height) */
+  width: 260px; /* oder var(--task_success_width) */
+  height: 56px; /* oder var(--task_success_height) */
   background: var(--dark-blue);
   color: white;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   bottom: 120px;
   transform: translateX(50vw);
@@ -344,6 +331,45 @@ h4 {
 }
 
 @keyframes toastIn {
-  from { transform: translateX(50vw); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+  from {
+    transform: translateX(50vw);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1200px) {
+  .title_box {
+    margin-left: 16px;
+  }
+
+  .contacts_title {
+    font-size: 47px;
+    font-weight: 700;
+    color: hsla(0, 0%, 0%, 1);
+    padding-right: 8px;
+  }
+
+  .contacts_subtitle {
+    font-size: 20px;
+    font-weight: 400;
+    padding-left: 8px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .add_contact_btn {
+    display: none;
+  }
+
+  .title_box {
+    display: none;
+  }
+
+  .contact_details_sect {
+    display: none;
+  }
 }
