@@ -469,11 +469,10 @@ svg {
       "header"
       "main"
       "nav";
-    height: calc(100dvh - 12px);
+    /* height: calc(100dvh - 12px); */
   }
 
   .navbar_shell {
-    grid-area: nav;
     min-height: auto;
   }
 
@@ -494,6 +493,12 @@ svg {
     gap: 8px;
     padding-left: 0;
     padding-right: 0;
+    height: 80px;
+    justify-content: center;
+  }
+
+  .nav_link.active {
+    border-radius: 16px;
   }
 
   .policy_links {
