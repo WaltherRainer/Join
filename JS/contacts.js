@@ -208,6 +208,9 @@ function contactEventList() {
   document.getElementById("open_add_user_modal").addEventListener("click", () => {
     openContactModal();
   });
+  document.getElementById("open_add_user_modal2").addEventListener("click", () => {
+    openContactModal();
+  });
 }
 
 function closeEditContactModal(modal) {

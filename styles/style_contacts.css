@@ -361,6 +361,30 @@ h4 {
   z-index: 1000;
 }
 
+@media (max-width: 1250px) {
+  .contact_modal_content {
+    min-width: auto;
+    /* max-width: 396px; */
+    height: 352px;
+  }
+
+  .contacts_modal_icon {
+    display: none;
+  }
+
+  .overlay_left h2 {
+    font-size: 47px;
+  }
+
+  aside h4 {
+    font-size: 20px;
+  }
+
+  .divider {
+    height: 3px;
+  }
+}
+
 @media (max-width: 1200px) {
   .title_box {
     margin-left: 16px;
