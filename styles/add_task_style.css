@@ -1,8 +1,11 @@
 .add_task_main {
   grid-area: main;
-  overflow: auto;   /* NUR dieser Bereich scrollt */
-  min-height: 0;    /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
-  min-width: 0;     /* optional, hilft bei langen Inhalten */
+  overflow: auto;
+  /* NUR dieser Bereich scrollt */
+  min-height: 0;
+  /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0;
+  /* optional, hilft bei langen Inhalten */
   /* height: calc(100dvh - 96px); */
   padding: 60px;
   background-color: var(--secondary-background-color);
@@ -137,25 +140,27 @@
    Priority buttons (checked)
 ========================= */
 
-.priority_urgent input:checked + span,
-.priority_medium input:checked + span,
-.priority_low input:checked + span {
+.priority_urgent input:checked+span,
+.priority_medium input:checked+span,
+.priority_low input:checked+span {
   color: var(--white-text-color);
   font-weight: 700;
   box-shadow: none;
 }
 
-.priority_btn input:checked + span:hover {
+.priority_btn input:checked+span:hover {
   box-shadow: none;
 }
 
-.priority_urgent input:checked + span {
+.priority_urgent input:checked+span {
   background-color: var(--prio-urgent);
 }
-.priority_medium input:checked + span {
+
+.priority_medium input:checked+span {
   background-color: var(--prio-medium);
 }
-.priority_low input:checked + span {
+
+.priority_low input:checked+span {
   background-color: var(--prio-low);
 }
 
@@ -172,7 +177,7 @@
   margin-right: 4px;
 }
 
-.form_actions.edit_mode  {
+.form_actions.edit_mode {
   margin-right: 54px;
 }
 
@@ -338,6 +343,7 @@
 .multi_select__item.is-selected .checkbox_unchecked {
   display: none;
 }
+
 .multi_select__item.is-selected .checkbox_checked {
   display: block;
 }
@@ -431,6 +437,7 @@
     transform: translateY(60vh);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -451,6 +458,21 @@
   font-weight: 600;
 }
 
+@media (max-width: 1340px) {
+  .add_task_main {
+    padding: 20px;
+  }
+
+  .priority_btn span {
+    width: 80px;
+    font-size: 18px;
+  }
+
+  .priority_buttons_container {
+    gap: 8px;
+  }
+
+}
 
 @media (max-width: 880px) {
   .add_task_form {
@@ -463,6 +485,10 @@
       "form_actions";
     gap: 24px;
     width: 100%;
+  }
+
+  .add_task_titel {
+    font-size: 47px!important;
   }
 
   .add_task_form_left {
@@ -478,53 +504,71 @@
     grid-template-columns: 1fr;
   }
 
-  .form_row .form_div_descr{
+  .form_row .form_div_descr {
     margin: 0;
   }
-  .add_task_main{
+
+  .add_task_main {
     padding: 20px;
   }
+
   .add_task_form {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  .add_task_form > * {
+
+  .add_task_form>* {
     min-width: 0;
     max-width: 100%;
   }
-  #clear_task_form_btn, #submit_task_form_btn{
+
+  #clear_task_form_btn,
+  #submit_task_form_btn {
     font-size: 18px;
     padding-right: 10px;
     padding-left: 10px;
     padding-bottom: 6px;
     padding-top: 6px;
   }
-  .form_actions{
+
+  .form_actions {
     gap: 4px;
   }
-  .form_div_descr{
+
+  .form_div_descr {
     margin-top: 12px;
   }
-  .task_descr_textarea{
+
+  .task_descr_textarea {
     margin-bottom: 0;
   }
-  .form_row{
-    margin-bottom: 12px;
-  }
-  .priority_buttons_container{
-    margin-bottom: 12px;
-  }
-}
 
-@media (max-width: 1340px){
-  .add_task_main{
-    padding: 20px;
+  .form_row {
+    margin-bottom: 12px;
   }
-  .priority_btn span{
-    width: 80px;
-    font-size: 18px;
-  }
+
   .priority_buttons_container {
-    gap: 8px;
+    margin-bottom: 12px;
   }
+
+  .standard_input_box,
+  .add_task_form, 
+  .add_task_form input, 
+  .add_task_form textarea, 
+  .add_task_form select, 
+  .add_task_form label,
+  .add_task_form span {
+    font-size: 16px !important;
+  }
+
+  #task_titel::placeholder,
+  #task_descr::placeholder,
+  #input_subtasks::placeholder {
+    font-size: 16px !important;
+  }
+
+  #assigned_to_placeholder::placeholder{
+    font-size: 16px!important;
+  }
+  
 }
