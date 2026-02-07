@@ -530,12 +530,17 @@ function searchBoardTasks(){
   const inputWord = document.getElementById("input_search_task").value.replace(/\s/g, '').toLowerCase();
   console.log(inputWord);
   
-  const tasks = loadTasksFromSession();
+  const tasks = returnArrayOfTasks(loadTasksFromSession());
+  const filteredTasks = filterTasksBySearch(tasks, inputWord); 
+  console.log(filteredTasks);
+
 }
 
 function filterTasksBySearch(tasks, inputWord) {
-  if (!inputWord) return returnArrayOfTasks(tasks);
-  
+  if (!inputWord) return tasks;
+  return tasks.filter(task => 
+    task.titel.toLowerCase().includes(inputWord) || (task.description.toLowerCase().includes(inputWord))
+  );
 
 }
 
