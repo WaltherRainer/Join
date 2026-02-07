@@ -4,6 +4,7 @@ let taskModalEscBound = false;
 
 function initBoard() {
   checkIfUserIsLoggedIn();
+  initSearchInput();
 }
 
 function bindTaskModalEscapeOnce(modal) {
@@ -523,4 +524,23 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
   }
 
   return visible;
+}
+
+function searchBoardTasks(){
+  const inputWord = document.getElementById("input_search_task").value.replace(/\s/g, '').toLowerCase();
+  console.log(inputWord);
+  
+  const tasks = loadTasksFromSession();
+}
+
+function filterTasksBySearch(tasks, inputWord) {
+  if (!inputWord) return returnArrayOfTasks(tasks);
+  
+
+}
+
+function initSearchInput() {
+  const input = document.getElementById("input_search_task");
+  if (!input) return;
+  input.addEventListener("input", searchBoardTasks);
 }
