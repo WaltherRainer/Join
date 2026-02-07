@@ -145,7 +145,7 @@ async function enterTaskEditMode(users) {
   installEditDirtyTracking(form);
 
 
-    form.classList.add("edit_mode");
+  form.classList.add("edit_mode");
   const cancelBtn = form.querySelector("#clear_task_form_btn");
   cancelBtn?.classList.add("is-hidden");
 
@@ -201,7 +201,7 @@ function syncTaskCatUI(form) {
 
 
 function syncAssignedToUI(form, usersObj) {
-  const assignedToInput = form.elements.assigned_to_input; 
+  const assignedToInput = form.elements.assigned_to_input;
   const ids = safeParseArray(assignedToInput?.value);
 
   const placeholder = form.querySelector("#assigned_to_placeholder");
@@ -218,8 +218,8 @@ function syncAssignedToUI(form, usersObj) {
   }
 
   const names = ids
-  .map((id) => usersObj?.[id]?.givenName)
-  .filter(Boolean);
+    .map((id) => usersObj?.[id]?.givenName)
+    .filter(Boolean);
 
   placeholder.assignedToInput = true;
   valueBox.assignedToInput = false;
@@ -458,7 +458,9 @@ function renderEmptyStates(containers) {
 function loadTaskBoard(tasks, users) {
   const containers = getBoardContainers();
   if (!containers) return;
-  const items = returnArrayOfTasks(tasks);
+
+  const items = Array.isArray(tasks) ? tasks : returnArrayOfTasks(tasks);
+
   renderItems(items, containers, users);
   renderEmptyStates(containers);
   initBoardEventList(users);
@@ -526,22 +528,19 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
   return visible;
 }
 
-function searchBoardTasks(){
-  const inputWord = document.getElementById("input_search_task").value.replace(/\s/g, '').toLowerCase();
-  console.log(inputWord);
-  
+function searchBoardTasks() {
+  const inputWord = document.getElementById("input_search_task").value.trim().replace(/\s+/g, ' ').toLowerCase();
   const tasks = returnArrayOfTasks(loadTasksFromSession());
-  const filteredTasks = filterTasksBySearch(tasks, inputWord); 
-  console.log(filteredTasks);
-
+  const filteredTasks = filterTasksBySearch(tasks, inputWord);
+  loadTaskBoard(filteredTasks, loadUsersFromSession());
 }
 
 function filterTasksBySearch(tasks, inputWord) {
   if (!inputWord) return tasks;
-  return tasks.filter(task => 
-    task.titel.toLowerCase().includes(inputWord) || (task.description.toLowerCase().includes(inputWord))
+  return tasks.filter(task =>
+    task.titel?.trim().replace(/\s+/g, ' ').toLowerCase().includes(inputWord) || 
+    (task.description?.trim().replace(/\s+/g, ' ').toLowerCase().includes(inputWord))
   );
-
 }
 
 function initSearchInput() {
