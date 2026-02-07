@@ -9,6 +9,12 @@ const statusTypes = {
 
 function initAddTask() {
   checkIfUserIsLoggedIn();
+  
+  // HIER DEN CODE EINFÜGEN:
+  const form = document.querySelector(".add_task_form");
+  if (form) {
+    form.addEventListener("submit", handleFormSubmit);
+  }
 }
 
 async function loadTasks() {
@@ -172,3 +178,37 @@ function buildTaskPatchFromFormData(data) {
   };
 }
 
+async function handleFormSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+
+  // 1. Validierung prüfen
+  if (!validateAddTaskForm(form)) {
+    return; // Stoppt hier, wenn Felder leer sind
+  }
+
+  // 2. Daten für die Datenbank vorbereiten (Mapping)
+  const newTask = {
+    titel: form.querySelector("#task_titel").value,
+    description: form.querySelector("#task_descr").value,
+    finishDate: form.querySelector("#task_due_date").value, // Mapping auf finishDate
+    type: form.querySelector("#task_cat").value,           // Mapping auf type
+    priority: form.querySelector('input[name="priority"]:checked')?.value || "medium",
+    subTasks: JSON.parse(form.querySelector("#subtasks_list_input").value || "[]"),
+    status: 0
+  };
+
+  // 3. Datenbank-Upload aufrufen
+  await addTaskData(newTask, {
+    afterDone: () => window.location.href = "board.html"
+  });
+}
+
+// Hilfsfunktionen für die Optik der Fehlermeldungen
+function setInputInValid(el, root) {
+  root.classList.add("is-invalid");
+}
+
+function setInputValid(el, root) {
+  root.classList.remove("is-invalid");
+}
