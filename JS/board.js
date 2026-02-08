@@ -532,6 +532,7 @@ function searchBoardTasks() {
   const inputWord = document.getElementById("input_search_task").value.trim().replace(/\s+/g, ' ').toLowerCase();
   const tasks = returnArrayOfTasks(loadTasksFromSession());
   const filteredTasks = filterTasksBySearch(tasks, inputWord);
+  updateNoResultsMessage(filteredTasks);
   loadTaskBoard(filteredTasks, loadUsersFromSession());
 }
 
@@ -547,4 +548,14 @@ function initSearchInput() {
   const input = document.getElementById("input_search_task");
   if (!input) return;
   input.addEventListener("input", searchBoardTasks);
+}
+
+function updateNoResultsMessage(filteredTasks) {
+  let messageEl = document.getElementById("no_results_message");
+  if (filteredTasks.length === 0) {
+    messageEl.classList.remove("is-hidden");
+  } else {
+    messageEl.classList.add("is-hidden");
+  }
+
 }
