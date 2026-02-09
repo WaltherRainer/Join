@@ -447,6 +447,10 @@ async function mountTaskForm(hostEl, {
   const html = await loadPartial("./partials/task_form.html");
   hostEl.innerHTML = html;
 
+  if (window.renderIcons) {
+    window.renderIcons(hostEl); 
+  }
+
   const form = hostEl.querySelector("form.add_task_form");
   form.querySelector(".add_task_titel").textContent = title;
 
