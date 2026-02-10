@@ -84,7 +84,7 @@ function getTaskItemContent(task, users) {
     </div>
         <div class="t_title_description">
             <p class="t_title">${task.titel}</p>
-            <p class="t_description">${task.description}</p>
+            <p class="t_description">${checkOverflow(task.description)}</p>
         </div>
           <div class="t_sub_tasks">
             <div class="t_sub_task_bar" style="width: ${fillSubTasksBar(task)}%;"></div>

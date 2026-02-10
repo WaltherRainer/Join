@@ -22,6 +22,16 @@ function getTaskCatLabel(value) {
   return taskObj;
 }
 
+function checkOverflow(description) {
+  if (!description || description == "") return "";
+  if (typeof description !== "string") return "";
+  const maxLength = 50;
+  if (description.length > maxLength) {
+    return description.substring(0, maxLength) + "...";
+  }
+  return description;
+}
+
 function subtasksCounter(task) {
   const subtaskcount = countSubtasksDone(task);
   if (subtaskcount.counter === 0) return "";
