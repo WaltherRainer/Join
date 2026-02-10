@@ -392,12 +392,14 @@ function renderTaskModal(taskId, ui, tasks, users) {
 
 function renderAssignedTo(task, users) {
   let assTo = "";
+  if (!task || !Array.isArray(task.assignedTo) || task.assignedTo.length === 0) return assTo;
+
   task.assignedTo.forEach((element) => {
-    let user = users[element];
+    const user = users?.[element];
     if (user) {
-      let bgColor = colorIndexFromUserId(element);
-      let userName = user.givenName;
-      let initials = initialsFromGivenName(userName);
+      const bgColor = colorIndexFromUserId(element);
+      const userName = user.givenName || user.name || "";
+      const initials = initialsFromGivenName(userName);
       assTo += getAssignedToTempl(initials, userName, bgColor);
     }
   });
