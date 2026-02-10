@@ -28,10 +28,36 @@ async function addTaskData(newTaskObj, { toastId = "task_success_overlay", after
     return;
   }
 
+  // Ensure the new task appears at the top of its status column.
+  // 1) Load current tasks
+  const allTasks = await loadData("/tasks") || {};
+  const status = typeof newTaskObj.status === "number" ? newTaskObj.status : 0;
+
+  // 2) Bump order of existing tasks in the same status (increment by 1)
+  const patches = [];
+  Object.entries(allTasks).forEach(([id, t]) => {
+    if (t && Number(t.status) === status) {
+      const newOrder = (t.order || 0) + 1;
+      // update local copy
+      t.order = newOrder;
+      // prepare patch to persist
+      patches.push(patchData("tasks", id, { order: newOrder }).catch((e) => {
+        console.error("failed to patch order for", id, e);
+      }));
+    }
+  });
+
+  // wait for order patches to complete (best-effort)
+  await Promise.all(patches);
+
+  // 3) Set new task order to 0 (top) and upload
+  newTaskObj.order = 0;
   const result = await uploadData("tasks", newTaskObj);
   console.log("Firebase Key:", result?.name);
 
-  saveTasksToSessionStorage(tasks);
+  // 4) Refresh session storage and show toast
+  const refreshed = await loadData("/tasks");
+  saveTasksToSessionStorage(refreshed || {});
 
   showToastOverlay(toastId, {
     onDone: () => {
@@ -45,11 +71,20 @@ function activateBoard() {
   window.location.replace("board.html");
 }
 
-function afterTaskAddedInModal() {
+async function afterTaskAddedInModal() {
   const modal = document.querySelector(".add_task_modal");
   modal?.classList.remove("is_background");
   closeAddTaskModal();
-  loadTasks();
+  
+  // load ne task from DB and update session storage
+  const newTasks = await loadData("/tasks");
+  saveTasksToSessionStorage(newTasks);
+  
+  // reload board if function exists
+  if (typeof loadTaskBoard === "function") {
+    const users = JSON.parse(sessionStorage.getItem("users") || "{}");
+    loadTaskBoard(newTasks, users);
+  }
 }
 
 function bringModalToBackground() {

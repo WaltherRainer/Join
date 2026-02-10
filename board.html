@@ -55,7 +55,7 @@
               </div>
               <button
                 id="openAddTaskModalBtn"
-                class="default-button add_task_button"
+                class="default-button add_task_button add_task_trigger"
               >
                 Add task
                 <span
@@ -71,7 +71,7 @@
             <div class="to_do task_list_div">
               <div class="task_list_head">
                 <h2>To do</h2>
-                <button>
+                <button class="add_task_trigger" data-status="0">
                   <span
                     class="svg-icon"
                     data-icon="add"
@@ -98,7 +98,7 @@
             <div class="in_progress task_list_div">
               <div class="task_list_head">
                 <h2>In progress</h2>
-                <button>
+                <button class="add_task_trigger" data-status="1">
                   <span
                     class="svg-icon"
                     data-icon="add"
@@ -157,7 +157,7 @@
             <div class="await_feedback task_list_div">
               <div class="task_list_head">
                 <h2>Await feedback</h2>
-                <button>
+                <button class="add_task_trigger" data-status="2">
                   <span
                     class="svg-icon"
                     data-icon="add"

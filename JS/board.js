@@ -30,7 +30,15 @@ function loadUsersFromSession() {
 function initBoardEventList(users) {
   const btn = document.getElementById("openAddTaskModalBtn");
   if (!btn) return;
-  btn.addEventListener("click", openAddTaskModal);
+  btn.addEventListener("click", () => openAddTaskModal(0));
+  const buttons = document.querySelectorAll(".add_task_trigger");
+  if (!buttons) return;
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const status = Number(button.dataset.status) || 0;
+      openAddTaskModal(status);
+    });
+});
 
   const taskSect = document.querySelectorAll(".task_section");
   if (taskSect.length === 0) return;

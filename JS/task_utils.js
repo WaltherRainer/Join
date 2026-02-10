@@ -81,7 +81,7 @@ function initAssignedToDropdown(form, usersData) {
   renderUserList(state);
 }
 
-async function openAddTaskModal() {
+async function openAddTaskModal(taskStatus = 0) {
   const modalHost = document.getElementById("addTaskModalHost");
   const modal = document.getElementById("addTaskModal");
   if (!modal || !modalHost) return;
@@ -93,6 +93,7 @@ async function openAddTaskModal() {
     preset: { titel: "", description: "", priority: "medium" },
     mode: "modal",
     toastId: "task_modal_success_overlay",
+    taskStatus: taskStatus,
     afterSaved: afterTaskAddedInModal, 
   });
 
