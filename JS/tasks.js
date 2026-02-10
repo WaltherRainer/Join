@@ -58,6 +58,8 @@ async function addTaskData(newTaskObj, { toastId = "task_success_overlay", after
   // 4) Refresh session storage and show toast
   const refreshed = await loadData("/tasks");
   saveTasksToSessionStorage(refreshed || {});
+  // Also update global tasks variable so ensureTasksLoaded() gets fresh data
+  tasks = refreshed || {};
 
   showToastOverlay(toastId, {
     onDone: () => {
