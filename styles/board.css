@@ -519,7 +519,6 @@ section.task_section {
     section.task_section {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 32px;
         max-height: none;
         overflow-y: visible;
     }
@@ -548,6 +547,7 @@ section.task_section {
         padding-bottom: 50px;
         width: calc(100% - 32px);
         margin-left: 16px;
+        gap: 0;
     }
 
     .task_list {
@@ -557,7 +557,7 @@ section.task_section {
         overflow-x: auto;
         overflow-y: hidden;
         gap: 16px;
-        padding: 8px 4px 16px 4px;
+        padding: 8px 4px 8px 4px;
         height: auto;
         min-height: 150px;
         scrollbar-width: thin;
@@ -616,14 +616,29 @@ section.task_section {
 
     .task_list_div {
         width: 100%;
-        margin-bottom: 32px;
+        margin-bottom: 16px;
     }
 
     .t_task {
-        min-width: 280px;
-        max-width: 300px;
+        width: 252px;            
+        height: 225px;          
+        min-width: 252px;        
+        flex-shrink: 0;         
         margin-bottom: 0;
-        flex-shrink: 0;
+        gap: 0;
+        box-sizing: border-box;  
+        overflow: hidden;        
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+    }
+
+    .t_description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 16px;
     }
 
     .task_modal_shell {
