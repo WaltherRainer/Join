@@ -495,7 +495,7 @@ section.task_section {
     color: #a8a8a8;
 }
 
-@media (max-width: 1210px) {
+@media (max-width: 1260px) {
     .board_head {
         margin-left: 40px;
         width: 92%;

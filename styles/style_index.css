@@ -1,72 +1,72 @@
-.sign_up_size{
-    width: 598px;
-    height: 630px;
+.sign_up_size {
+  width: 598px;
+  height: 630px;
 }
 
 
 .login_size {
-    width: 652px;
-    height: 449px;
+  width: 652px;
+  height: 449px;
 }
 
 .login_wrapper {
-    position: relative;
-    background: transparent;
-    box-shadow: 0 0 25px var(--shadow-color);
-    overflow: hidden;
-    border-radius: 20px;
+  position: relative;
+  background: transparent;
+  box-shadow: 0 0 25px var(--shadow-color);
+  overflow: hidden;
+  border-radius: 20px;
 }
 
 .login_wrapper .form_box {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: var(--background-color);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--background-color);
 }
 
 .login_wrapper .form_box.login {
-    left: 0;
-    padding: 0 115px 0 115px;
+  left: 0;
+  padding: 0 115px 0 115px;
 }
 
 .form_box h2 {
-    font-size: 61px;
-    color: var(--text-color);
-    text-align: center;
+  font-size: 61px;
+  color: var(--text-color);
+  text-align: center;
 }
 
 .form_box .input_box {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    margin: 25px 0 6px 0;
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 25px 0 6px 0;
 }
 
 .input_box input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    outline: none;
-    border: 2px solid var(--border_color);
-    border-radius: 10px;
-    font-size: 16px;
-    color: var(--text-color);
-    font-weight: 500;
-    transition: .25s;
-    padding: 2px 60px 2px 16px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  border: 2px solid var(--border_color);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: .25s;
+  padding: 2px 60px 2px 16px;
 }
 
 .input_box input:focus,
 .input_box input:valid {
-    border-color: var(--border_color);
+  border-color: var(--border_color);
 }
 
 .input_box input:focus {
-    border-color: var(--light-blue);
+  border-color: var(--light-blue);
 }
 
 .input_box.has_error input {
@@ -78,39 +78,39 @@
 }
 
 .input_box label {
-    position: absolute;
-    top: 50%;
-    left: 16px;
-    transform: translateY(-40%);
-    font-size: 16px;
-    color: var(--border_color);
-    pointer-events: none;
-    transition: .25s;
-    background-color: var(--background-color);
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-40%);
+  font-size: 16px;
+  color: var(--border_color);
+  pointer-events: none;
+  transition: .25s;
+  background-color: var(--background-color);
 }
 
 .input_box input:focus~label,
 .input_box input:valid~label {
-    top: -5px;
-}
-
-.input_box input:focus ~ label,
-.input_box input:not(:placeholder-shown) ~ label {
   top: -5px;
 }
 
-.input_box input:-webkit-autofill ~ label {
+.input_box input:focus~label,
+.input_box input:not(:placeholder-shown)~label {
+  top: -5px;
+}
+
+.input_box input:-webkit-autofill~label {
   top: -5px;
 }
 
 .input_box svg {
-    position: absolute;
-    top: 50%;
-    right: 24px;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: var(--text-color);
-    transition: .25s;
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--text-color);
+  transition: .25s;
 }
 
 .input_box .password_svg {
@@ -135,33 +135,33 @@
 }
 
 .password_svg.pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .btn_div {
-    display: flex;
-    justify-content: space-around;
-    padding-top: 36px;
+  display: flex;
+  justify-content: space-around;
+  padding-top: 36px;
 }
 
 .underline_login {
-    height: 3px;
-    background-color: #29ABE2;
-    width: 140px;
-    left: 0;
-    transform: translateX(100%);
-    margin-top: 12px;
-    border-radius: 3px;
+  height: 3px;
+  background-color: #29ABE2;
+  width: 140px;
+  left: 0;
+  transform: translateX(100%);
+  margin-top: 12px;
+  border-radius: 3px;
 }
 
 .underline_sign_up {
-    height: 3px;
-    background-color: #29ABE2;
-    width: 180px;
-    left: 0;
-    transform: translateX(53%);
-    margin-top: 12px;
-    border-radius: 3px;
+  height: 3px;
+  background-color: #29ABE2;
+  width: 180px;
+  left: 0;
+  transform: translateX(53%);
+  margin-top: 12px;
+  border-radius: 3px;
 }
 
 /* ---------- Logo ---------- */
@@ -174,7 +174,8 @@
   transform-origin: top left;
   z-index: 1000;
 
-  color: var(--background-color); /* steuert SVG-Farbe */
+  color: var(--background-color);
+  /* steuert SVG-Farbe */
 
   transition:
     top 0.8s ease,
@@ -220,82 +221,83 @@ body.is_loaded {
 }
 
 .index_header {
-    position: fixed;
-    top: 65px;
-    right: 65px;
+  position: fixed;
+  top: 65px;
+  right: 65px;
 }
 
 .sign_up_box span {
-    color: var(--text-color);
-    padding-right: 16px;
-    font-size: 20px;
+  color: var(--text-color);
+  padding-right: 16px;
+  font-size: 20px;
 }
 
 .index_footer a {
-    color: var(--border_color);
+  color: var(--border_color);
 }
 
 .index_footer {
-    display: flex;
-    justify-content: space-between;
-    position: fixed;
-    bottom: 32px;
-    min-width: 246px;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 32px;
+  min-width: 246px;
 }
 
 .index_body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .check_box {
-    height: 16px;
-    width: 16px;
-    margin-right: 16px;
+  height: 16px;
+  width: 16px;
+  margin-right: 16px;
 }
 
 .terms_div {
-    margin-top: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .terms_div a {
-    color: var(--light-blue);
+  color: var(--light-blue);
 }
 
 .login_header {
-    position: relative;
+  position: relative;
 }
 
 .login_header a {
-    position: absolute;
-    transform: translateY(100%) translateX(-150%);
-    cursor: pointer;
+  position: absolute;
+  transform: translateY(100%) translateX(-150%);
+  cursor: pointer;
 }
 
 .sign_up_form {
-    display: none;
+  display: none;
 }
 
 .sign_up_form.enable {
-    display: block;
+  display: block;
 }
 
 .login_form.disable {
-    display: none;
+  display: none;
 }
 
 .index_header.disable {
-    display: none;
-    transition: 1s;
+  display: none;
+  transition: 1s;
 }
 
 .warning_text {
   display: block;
-  min-height: 18px;      /* reserviert Platz, auch wenn leer */
+  min-height: 18px;
+  /* reserviert Platz, auch wenn leer */
   margin-top: 6px;
   color: var(--warning_red);
   font-size: 13px;
@@ -334,7 +336,8 @@ body.is_loaded {
   inset: 0;
   display: grid;
   place-items: center;
-  pointer-events: none; /* blockiert keine Klicks */
+  pointer-events: none;
+  /* blockiert keine Klicks */
   z-index: 2000;
 
   opacity: 0;
@@ -374,6 +377,7 @@ body.is_loaded {
     transform: translateY(60vh);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -385,14 +389,164 @@ body.is_loaded {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  
+
 }
 
 .input_icon {
   position: absolute;
   top: 50%;
-  right: 2px; /*mittig unter dem anderem Icon*/
+  right: 2px;
+  /*mittig unter dem anderem Icon*/
   transform: translateY(-50%);
   display: grid;
   place-items: center;
+}
+
+@media (max-width: 960px) {
+
+  /* In deinem CSS suchen und ersetzen: */
+  .logo_container.is_in_corner {
+    top: var(--corner_offset);
+    left: var(--corner_offset);
+
+    /* 64px Ziel / 274px Ist-Zustand */
+    transform: translate(0, 0) scale(calc(64 / 274));
+
+    color: var(--logo-light-blue);
+  }
+
+  .logo_svg,
+  .logo_container svg {
+    width: 274px;
+    /* Die Originalbreite aus dem HTML */
+    height: auto;
+    display: block;
+  }
+
+}
+
+@media (max-width: 680px) {
+  .index_body {
+    display: flex;
+    flex-direction: column;
+    /* Nutzt die volle verfügbare Höhe des Displays */
+    height: 100dvh; 
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Verhindert Scrollen auf dem Body selbst */
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  /* Der Container, der alles umschließt */
+  .page_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Zentriert Box und Button vertikal */
+    flex-grow: 1;
+    width: 100%;
+    padding: 80px 24px 20px; /* Platz für das Logo oben */
+    box-sizing: border-box;
+  }
+
+  .page_content.is_visible {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Die Login Box nach oben */
+  .login_wrapper {
+    order: 1;
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  /* Den Sign-Up Header unter die Box schieben */
+  .index_header {
+    order: 2;
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .sign_up_box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sign_up_box span {
+    display: inline-block;
+    font-size: 18px;
+    padding-right: 0;
+  }
+
+  /* Footer ganz nach unten pinnen */
+  .index_footer {
+    order: 3;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+    margin-top: auto; /* Schiebt den Footer an den unteren Rand von 100vh */
+  }
+
+  .login_size,
+  .sign_up_size {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    min-height: 400px; /* Leicht reduziert für 100vh Layouts */
+  }
+
+  .login_wrapper .form_box.login {
+    padding: 32px 24px;
+    position: relative;
+  }
+
+  .form_box h2 {
+    font-size: 40px;
+  }
+
+  .underline_login,
+  .underline_sign_up {
+    transform: none;
+    margin: 12px auto 0 auto;
+  }
+
+  .btn_div {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn_div button {
+    width: 100%;
+    max-width: 180px;
+  }
+
+  button {
+    font-size: 16px !important;
+  }
+
+  .login_header a {
+    transform: translateY(10px) translateX(0px);
+  }
+
+  /* Logo-Fix für 64px (wie zuvor besprochen) */
+  .logo_container.is_in_corner {
+    transform: translate(0, 0) scale(calc(64 / 274));
+    top: 20px;
+    left: 20px;
+  }
 }
