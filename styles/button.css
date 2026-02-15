@@ -49,15 +49,24 @@
 
 .clear_button {
     width: 110px;
-    padding: 16px 16px;
     margin-right: 16px;
+    padding: 16px 16px;
     color: var(--blue);
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 400;
     background-color: transparent;
     border: 1px solid var(--blue);
     display: flex;
+    justify-content: center;
     align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.clear_button:hover {
+    border: 1px solid var(--light-blue);
+    color: var(--light-blue);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .clear_button svg {
@@ -215,26 +224,6 @@
 .edit_contact_btn {
     display: flex;
     
-}
-
-.clear_button {
-    padding: 16px 16px;
-    color: var(--blue);
-    font-size: 21px;
-    font-weight: 400;
-    background-color: transparent;
-    border: 1px solid var(--blue);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.clear_button:hover {
-    border: 1px solid var(--light-blue);
-    color: var(--light-blue);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 .default_button {

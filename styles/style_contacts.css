@@ -192,6 +192,7 @@ h4 {
 }
 
 .user_avatar_large {
+  background: grey;
   width: 120px;
   height: 120px;
   flex: 0 0 auto;
@@ -204,7 +205,22 @@ h4 {
   color: var(--white-text-color);
   grid-area: avatar_large;
   font-size: 47px;
-  /* margin: 0 45px 0 45px; */
+}
+
+.user_avatar_large_responsive {
+  background: grey;
+  width: 120px;
+  height: 120px;
+  flex: 0 0 auto;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  user-select: none;
+  color: var(--white-text-color);
+  grid-area: avatar_large;
+  font-size: 47px;
 }
 
 .contact_list_card {
@@ -404,9 +420,7 @@ h4 {
   .modal_close {
     color: white;
   }
-}
 
-@media (max-width: 1200px) {
   .title_box {
     margin-left: 16px;
   }
@@ -422,6 +436,26 @@ h4 {
     font-size: 20px;
     font-weight: 400;
     padding-left: 8px;
+  }
+
+  .clear_button {
+    display: none;
+  }
+
+  .user_avatar_large {
+    display: none;
+  }
+
+  .user_avatar_large_responsive {
+    display: inline-flex;
+    position: absolute;
+    left: calc(50% - 60px);
+    top: 350px;
+    transform: translateY(-50%); /* Mittelpunkt auf die Grenze legen */
+    z-index: 2;
+
+    /* Optional: weißer Rand wie im Screenshot */
+    border: 4px solid #fff;
   }
 }
 
