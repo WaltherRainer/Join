@@ -220,10 +220,6 @@ svg {
   color: var(--policy-link-color);
 }
 
-.modal::backdrop {
-  background: rgba(0, 0, 0, 0.35);
-}
-
 .add_task_modal_content {
   background: var(--background-color);
   border-radius: 16px;
@@ -490,3 +486,7 @@ svg {
     margin: 16px 0 16px 8px;
   }
 }
+
+/* @media (max-width: 425px) {
+
+} */

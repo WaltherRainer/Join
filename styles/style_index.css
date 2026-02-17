@@ -3,7 +3,6 @@
   height: 630px;
 }
 
-
 .login_size {
   width: 652px;
   height: 449px;
@@ -56,7 +55,7 @@
   font-size: 16px;
   color: var(--text-color);
   font-weight: 500;
-  transition: .25s;
+  transition: 0.25s;
   padding: 2px 60px 2px 16px;
 }
 
@@ -85,21 +84,21 @@
   font-size: 16px;
   color: var(--border_color);
   pointer-events: none;
-  transition: .25s;
+  transition: 0.25s;
   background-color: var(--background-color);
 }
 
-.input_box input:focus~label,
-.input_box input:valid~label {
+.input_box input:focus ~ label,
+.input_box input:valid ~ label {
   top: -5px;
 }
 
-.input_box input:focus~label,
-.input_box input:not(:placeholder-shown)~label {
+.input_box input:focus ~ label,
+.input_box input:not(:placeholder-shown) ~ label {
   top: -5px;
 }
 
-.input_box input:-webkit-autofill~label {
+.input_box input:-webkit-autofill ~ label {
   top: -5px;
 }
 
@@ -110,7 +109,7 @@
   transform: translateY(-50%);
   font-size: 18px;
   color: var(--text-color);
-  transition: .25s;
+  transition: 0.25s;
 }
 
 .input_box .password_svg {
@@ -146,7 +145,7 @@
 
 .underline_login {
   height: 3px;
-  background-color: #29ABE2;
+  background-color: #29abe2;
   width: 140px;
   left: 0;
   transform: translateX(100%);
@@ -156,7 +155,7 @@
 
 .underline_sign_up {
   height: 3px;
-  background-color: #29ABE2;
+  background-color: #29abe2;
   width: 180px;
   left: 0;
   transform: translateX(53%);
@@ -302,7 +301,7 @@ body.is_loaded {
   color: var(--warning_red);
   font-size: 13px;
   opacity: 0;
-  transition: opacity .2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .warning_text.visible {
@@ -384,70 +383,60 @@ body.is_loaded {
   }
 }
 
-/* Platzhalter-Element für Icons */
 .svg-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
 }
 
 .input_icon {
   position: absolute;
   top: 50%;
   right: 2px;
-  /*mittig unter dem anderem Icon*/
   transform: translateY(-50%);
   display: grid;
   place-items: center;
 }
 
 @media (max-width: 960px) {
-
-  /* In deinem CSS suchen und ersetzen: */
   .logo_container.is_in_corner {
     top: var(--corner_offset);
     left: var(--corner_offset);
 
     /* 64px Ziel / 274px Ist-Zustand */
     transform: translate(0, 0) scale(calc(64 / 274));
-
     color: var(--logo-light-blue);
   }
 
   .logo_svg,
   .logo_container svg {
     width: 274px;
-    /* Die Originalbreite aus dem HTML */
     height: auto;
     display: block;
   }
-
 }
 
 @media (max-width: 680px) {
   .index_body {
     display: flex;
     flex-direction: column;
-    /* Nutzt die volle verfügbare Höhe des Displays */
-    height: 100dvh; 
+    height: 100dvh;
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Verhindert Scrollen auf dem Body selbst */
+    overflow: hidden;
     justify-content: flex-start;
     align-items: center;
   }
 
-  /* Der Container, der alles umschließt */
   .page_content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Zentriert Box und Button vertikal */
+    justify-content: center;
     flex-grow: 1;
     width: 100%;
-    padding: 80px 24px 20px; /* Platz für das Logo oben */
+    padding: 80px 24px 20px;
     box-sizing: border-box;
   }
 
