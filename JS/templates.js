@@ -68,12 +68,25 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
   `;
 }
 
-function taskItemTemplate(task, users) {
+function taskItemTemplate(task, users, isDraggable) {
+  const dragAttrs = isDraggable 
+    ? `draggable="true" ondragstart="startDragTask('${task.id}')" ondragend="endDragTask(event, '${task.id}')"` 
+    : '';
+
+  const selectHtml = !isDraggable
+    ? `<select class="task_status_select secondary-button" onchange="switchStatusContainer('${task.id}', this.value)" onclick="event.stopPropagation()">
+        <option value="0" ${task.status === 0 ? 'selected' : ''}>To Do</option>
+        <option value="1" ${task.status === 1 ? 'selected' : ''}>In progress</option>
+        <option value="2" ${task.status === 2 ? 'selected' : ''}>Await feedback</option>
+        <option value="3" ${task.status === 3 ? 'selected' : ''}>Done</option>
+      </select>`
+    : '';
+  
   return `
-    <div class="t_task" draggable="true" ondragstart="startDragTask('${task.id}')" 
-    ondragend="endDragTask(event, '${task.id}')" data-task-id="${task.id}">
+    <div class="t_task" ${dragAttrs} data-task-id="${task.id}">
+      ${selectHtml}
       ${getTaskItemContent(task, users)}
-      </div>
+    </div>
   `;
 }
 

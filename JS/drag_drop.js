@@ -63,7 +63,6 @@ function dropTask(event, status) {
 
   insertIndex = findDropPosition(event, taskElements);
   const tasksInStatus = sortTasksInStatus(status, tasks);
-  console.log("Tasks in status before drop:", tasksInStatus);
   deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks);
   reRenderTasksInOrder(tasksInStatus, tasks, users, status);
 }

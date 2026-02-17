@@ -45,6 +45,7 @@ function initBoardEventList(users) {
 
   taskSect.forEach((section) => {
     section.addEventListener("click", (e) => {
+      if (e.target.tagName === "SELECT") return;
       const card = e.target.closest(".t_task");
       if (!card) return;
       const taskId = card.dataset.taskId;
@@ -432,6 +433,33 @@ function getBoardContainers() {
   return { toDoDiv, inProgressDiv, awaitfeedbackdiv, doneDiv };
 }
 
+function findStatusName(status) {
+  if(statusTypes[status] == "In Progress"){
+    return "Progress";
+  } else {
+    return statusTypes[status] || "Unknown";
+  }
+}
+
+function switchStatusContainer(taskId, newStatusNum) {
+  currentDraggedTaskId = taskId;
+  const tasks = loadTasksFromSession();
+  const task = tasks[taskId];
+  const users = loadUsersFromSession();
+  
+  if (!task) return;
+  
+  const newStatus = Number(newStatusNum);
+  const tasksInStatus = sortTasksInStatus(newStatus, tasks);
+  
+  // Insert at the beginning (position 0)
+  const insertIndex = 0;
+  deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks);
+  reRenderTasksInOrder(tasksInStatus, tasks, users, newStatus);
+  currentDraggedTaskId = null;
+}
+
+
 function statusContainerFor(status, containers) {
   if (status === 0) return containers.toDoDiv;
   if (status === 1) return containers.inProgressDiv;
@@ -448,9 +476,9 @@ function renderItems(items, containers, users) {
 
   // Sortiere Tasks nach ihrer Reihenfolge innerhalb der Kategorie
   const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
-
+  const isDraggable = window.innerWidth > 880;
   sortedItems.forEach((task) => {
-    const taskHTML = taskItemTemplate(task, users);
+    const taskHTML = taskItemTemplate(task, users, isDraggable);
     const target = statusContainerFor(task.status, containers);
     target.insertAdjacentHTML("beforeend", taskHTML);
     renderIcons(target);
