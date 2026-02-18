@@ -199,6 +199,11 @@ function preloadEditFormData(givenName, email, userPhone) {
   setValueById("edit_user_phone", userPhone);
 }
 
+function setValueById(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.value = value;
+}
+
 function closeContactModal(modal) {
   modal.removeEventListener("submit", addNewUser);
   modal.close();
