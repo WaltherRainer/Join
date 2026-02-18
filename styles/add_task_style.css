@@ -522,6 +522,10 @@
 }
 
 @media (max-width: 880px) {
+  .priority_buttons_container {
+    gap: 8px;
+  }
+
 
   .add_task_form.edit_mode {                                                      /* marc */
     padding: 6px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
