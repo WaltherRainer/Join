@@ -80,6 +80,7 @@
 
 .priority_buttons_container {
     display: flex;
+    
     gap: 20px;
     margin-top: 4px;
     margin-bottom: 24px;
