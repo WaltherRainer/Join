@@ -299,6 +299,7 @@ section.task_section {
     /* max-width: 525px;
     min-width: 525px; */
     background-color: var(--background-color);
+    /* padding: 0 24px; */
     /* border-radius: 30px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
     padding: 48px 40px 48px 40px;
@@ -447,7 +448,7 @@ section.task_section {
 
 .edit_task_modal_host {
     background-color: var(--background-color);
-    overflow-x: hidden;
+    /* overflow-x: hidden; */                                                           /* marc */
 }
 
 #show_task_modal.modal {
@@ -464,6 +465,24 @@ section.task_section {
     max-height: min(90vh, 900px);
     overflow: auto;
     border-radius: 16px;
+    isolation: isolate;
+    padding: 0 20px;
+}
+
+/* Stylen der Scrollbar für Webkit (Chrome, Safari, Edge) */
+#show_task_modal .task_modal_shell::-webkit-scrollbar {
+    width: 8px;
+}
+
+#show_task_modal .task_modal_shell::-webkit-scrollbar-track {
+    background: transparent;
+    /* Margin oben und unten, damit die Scrollbar nicht in die Rundung fährt */
+    margin: 10px 0; 
+}
+
+#show_task_modal .task_modal_shell::-webkit-scrollbar-thumb {
+    background: #A8A8A8;
+    border-radius: 10px;
 }
 
 #show_task_modal .task_modal_header {
@@ -472,9 +491,9 @@ section.task_section {
     z-index: 30;
     display: flex;
     justify-content: flex-end;
-    padding: 0px 0px 10px 0px;
+    padding: 16px 12px 10px 0px;
     background: var(--background-color);
-    margin-right: -6px;
+    /* margin-right: -6px; */ /* horizontaler scrollbalken weg */
 }
 
 .task_modal_shell {
@@ -483,7 +502,7 @@ section.task_section {
     background-color: var(--background-color);
     border-radius: 30px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    padding: 24px 24px 24px 24px;
+    /* padding: 24px 24px 24px 24px; */                                                         /* marc */
     font-size: 24px;
 }
 
@@ -555,6 +574,17 @@ section.task_section {
         width: 50%;
     }
 
+    .form_actions {
+        padding-bottom: 20px;
+    }
+
+    .task_dialog{
+        padding: 0 2px;
+    }
+
+    .task_modal_shell{
+        padding: 16px;
+    }
 }
 
 @media (max-width: 880px) {
@@ -693,7 +723,7 @@ section.task_section {
 
     .edit_mode, 
     #EditTaskModalHost form {
-        width: 90% !important;
+        /* width: 90% !important; */
         display: flex;
         flex-direction: column;
     }

@@ -21,17 +21,21 @@
     "form_actions form_actions";
 }
 
-.add_task_form.edit_mode {
+.add_task_form.edit_mode {                                                      /* marc */
   display: grid;
-  grid-template-columns: 500px;
-  grid-template-rows: 65px 445px 500px;
+  grid-template-columns: 100%; 
+  /* ÄNDERUNG: Nutze auto statt fester Pixelwerte */
+  grid-template-rows: auto auto auto auto; 
   grid-template-areas:
     "add_task_titel"
     "add_task_form_left"
     "add_task_form_right"
     "form_actions";
-  /* padding: 16px 16px 16px 16px; */
-  max-height: 770px;
+  max-height: none; /* Entferne die Begrenzung hier */
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
+    box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
 }
 
 .add_task_titel {
@@ -458,6 +462,10 @@
   font-weight: 600;
 }
 
+.priority_buttons_container{
+  justify-content: space-between;
+}
+
 @media (max-width: 1340px) {
   .add_task_main {
     padding: 60px 20px;
@@ -465,7 +473,7 @@
 
   /* ÄNDERUNG: Buttons flexibel machen statt fester 80px */
   .priority_buttons_container {
-    gap: 8px;
+    gap: 30px;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -514,6 +522,16 @@
 }
 
 @media (max-width: 880px) {
+  .priority_buttons_container {
+    gap: 8px;
+  }
+
+
+  .add_task_form.edit_mode {                                                      /* marc */
+    padding: 6px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
+    box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
+}
+
   .add_task_form {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
