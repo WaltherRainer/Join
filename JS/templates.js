@@ -69,19 +69,17 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
 }
 
 function taskItemTemplate(task, users, isDraggable) {
-  const dragAttrs = isDraggable 
-    ? `draggable="true" ondragstart="startDragTask('${task.id}')" ondragend="endDragTask(event, '${task.id}')"` 
-    : '';
+  const dragAttrs = isDraggable ? `draggable="true" ondragstart="startDragTask('${task.id}')" ondragend="endDragTask(event, '${task.id}')"` : "";
 
   const selectHtml = !isDraggable
     ? `<select class="task_status_select secondary-button" onchange="switchStatusContainer('${task.id}', this.value)" onclick="event.stopPropagation()">
-        <option value="0" ${task.status === 0 ? 'selected' : ''}>To Do</option>
-        <option value="1" ${task.status === 1 ? 'selected' : ''}>In progress</option>
-        <option value="2" ${task.status === 2 ? 'selected' : ''}>Await feedback</option>
-        <option value="3" ${task.status === 3 ? 'selected' : ''}>Done</option>
+        <option value="0" ${task.status === 0 ? "selected" : ""}>To Do</option>
+        <option value="1" ${task.status === 1 ? "selected" : ""}>In progress</option>
+        <option value="2" ${task.status === 2 ? "selected" : ""}>Await feedback</option>
+        <option value="3" ${task.status === 3 ? "selected" : ""}>Done</option>
       </select>`
-    : '';
-  
+    : "";
+
   return `
     <div class="t_task" ${dragAttrs} data-task-id="${task.id}">
       ${selectHtml}
@@ -109,8 +107,9 @@ function getTaskItemContent(task, users) {
               ${getTaskDialogPrioTempl(task.priority)}
             </div>
         </div>
-  `
+  `;
 }
+
 function getSubtasksCountAndTotalTemplate(done, total) {
   return `
     <span class="task_subtask_count">
@@ -119,50 +118,35 @@ function getSubtasksCountAndTotalTemplate(done, total) {
   `;
 }
 
-
 function noTaskTemplate(text) {
   return `
   <div class="no_task"><p>${text}</p></div>
   `;
 }
-// ${fillSubTasksBar(task.subTasks)}
 
 window.userListItemTemplate = userListItemTemplate;
 
-/**
- * Generates the HTML content for the personalized name greeting.
- *
- * This function returns the currently active user's name as a string.
- * The value is typically injected into the DOM by {@link writeGreetingName}.
- *
- * It relies on the existence of the external variable `activeUserName`,
- * which is expected to contain the display name of the active user.
- *
- * @function writeGreetingNameTemplate
- * @returns {string} A string containing the active user's name.
- */
 function writeGreetingNameTemplate() {
   return `${sessionStorage.userName}`;
 }
 
-
 function getTaskDialogPrioTempl(prio) {
   switch (prio) {
     case "medium":
-    return `
+      return `
       <span>Medium</span>
       <span class="svg-icon" data-icon="prioMedium" data-w="20" data-h="16"></span>
-    `
+    `;
     case "low":
-    return `
+      return `
       <span>Low</span>
       <span class="svg-icon" data-icon="prioLow" data-w="20" data-h="16"></span>
-    `
+    `;
     case "urgent":
-    return `
+      return `
       <span>Urgent</span>
       <span class="svg-icon" data-icon="prioUrgent" data-w="20" data-h="16"></span>
-    `
+    `;
   }
 }
 
@@ -172,7 +156,7 @@ function getTaskDialAssToTempl(initials, userName, bgColor) {
         <span class="sml_user_avatar" style="background-color: var(--user_c_${bgColor});">${initials}</span>
         <span>${userName}</span>
      </div>
-  `
+  `;
 }
 
 function getTaskDialSubtaskTempl(subTaskTitel, done, index) {
@@ -193,7 +177,6 @@ function getTaskDialSubtaskTempl(subTaskTitel, done, index) {
             </svg>
 
             <!-- checked -->
-
             
             <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/>
@@ -214,5 +197,5 @@ function getAssignedToTempl(initials, userName, bgColor) {
           <span class="sml_user_avatar" style="background-color: var(--user_c_${bgColor});">${initials}</span>
           <span>${userName}</span>
       </div>
-  `
+  `;
 }
