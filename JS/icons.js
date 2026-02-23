@@ -1,15 +1,30 @@
+/**
+ * Generates an SVG markup string with configurable size and content.
+ *
+ * If `content` is not provided but `paths` are given, the SVG body is built
+ * automatically from the path definitions (using `color` as default fill).
+ * Optional `<defs>` content can be injected as well.
+ *
+ * @function iconSvg
+ * @param {Object} [options={}] - SVG configuration options.
+ * @param {number} [options.width=20] - SVG width attribute.
+ * @param {number} [options.height=20] - SVG height attribute.
+ * @param {string} [options.viewBox="0 0 20 20"] - SVG viewBox attribute.
+ * @param {Array<{d: string, fill?: string}>|null} [options.paths=null] - Optional path definitions used to auto-generate content.
+ * @param {string} [options.color="currentColor"] - Default fill color for auto-generated paths.
+ * @param {string} [options.content=""] - Raw SVG inner markup (overrides auto-generated content).
+ * @param {string} [options.defs=""] - Raw SVG defs markup to be wrapped in `<defs>...</defs>`.
+ * @returns {string} SVG markup string.
+ */
 function iconSvg({
   width = 20,
   height = 20,
   viewBox = "0 0 20 20",
-  // ALT:
   paths = null,
   color = "currentColor",
-  // NEU:
   content = "",
   defs = "",
 } = {}) {
-  // Wenn keine "content"-Struktur angegeben ist, aber "paths" vorhanden sind -> baue content daraus
   const autoContent =
     Array.isArray(paths) && paths.length
       ? paths
@@ -452,30 +467,105 @@ const ICONS = {
   add,
 };
 
+// function renderIcons(root = document) {
+//   if (!root || !root.querySelectorAll) return;
+
+//   root.querySelectorAll("[data-icon]").forEach(el => {
+//     const name = el.dataset.icon;
+//     const fn = ICONS[name];
+//     if (typeof fn !== "function") {
+//       console.warn("Unknown icon:", name, el);
+//       return;
+//     }
+
+//     const width = Number(el.dataset.w) || undefined;
+//     const height = Number(el.dataset.h) || undefined;
+//     const args = {};
+//     if (width) args.width = width;
+//     if (height) args.height = height;
+
+//     if (el.querySelector("svg")) return;
+
+//     el.insertAdjacentHTML("beforeend", fn(args));
+
+//     const svg = el.querySelector("svg");
+//     if (svg) svg.setAttribute("aria-hidden", "true");
+//   });
+// }
+
+/**
+ * Renders all icons within a given DOM subtree.
+ *
+ * Searches the provided root element for nodes with the `[data-icon]`
+ * attribute and delegates the rendering of each icon to {@link renderIconInto}.
+ *
+ * @function renderIcons
+ * @param {ParentNode} [root=document] - DOM root to search within.
+ * @returns {void}
+ */
 function renderIcons(root = document) {
-  if (!root || !root.querySelectorAll) return;
+  if (!root?.querySelectorAll) return;
 
-  root.querySelectorAll("[data-icon]").forEach(el => {
-    const name = el.dataset.icon;
-    const fn = ICONS[name];
-    if (typeof fn !== "function") {
-      console.warn("Unknown icon:", name, el);
-      return;
-    }
+  root.querySelectorAll("[data-icon]").forEach(renderIconInto);
+}
 
-    const width = Number(el.dataset.w) || undefined;
-    const height = Number(el.dataset.h) || undefined;
-    const args = {};
-    if (width) args.width = width;
-    if (height) args.height = height;
+/**
+ * Injects an SVG icon into the given element based on its `data-icon` attribute.
+ *
+ * Looks up the icon render function in {@link ICONS}, prevents duplicate
+ * insertion if an SVG already exists, reads size arguments from the element's
+ * dataset, and appends the generated SVG markup. The inserted SVG is marked
+ * as decorative via ARIA attributes.
+ *
+ * @function renderIconInto
+ * @param {HTMLElement} el - Target element that provides `data-icon` and receives the SVG.
+ * @returns {void}
+ */
+function renderIconInto(el) {
+  const name = el.dataset.icon;
+  const fn = ICONS?.[name];
 
-    // wenn schon ein svg drin ist, nicht doppelt rendern
-    if (el.querySelector("svg")) return;
+  if (typeof fn !== "function") {
+    console.warn("Unknown icon:", name, el);
+    return;
+  }
+  
+  if (el.querySelector("svg")) return;
 
-    // NICHT überschreiben:
-    el.insertAdjacentHTML("beforeend", fn(args));
+  const args = readIconSizeArgs(el.dataset);
+  el.insertAdjacentHTML("beforeend", fn(args));
 
-    const svg = el.querySelector("svg");
-    if (svg) svg.setAttribute("aria-hidden", "true");
-  });
+  const svg = el.querySelector("svg");
+  if (svg) {
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+  }
+}
+
+/**
+ * Parses optional icon size arguments from a dataset object.
+ *
+ * Converts `dataset.w` and `dataset.h` to numbers and returns an args object
+ * containing `width` and/or `height` when the values are finite.
+ *
+ * @function readIconSizeArgs
+ * @param {DOMStringMap|Object} dataset - Dataset containing optional `w` and `h` values.
+ * @returns {{width?: number, height?: number}} Parsed size arguments for icon rendering.
+ */
+function readIconSizeArgs(dataset) {
+  const args = {};
+
+  const w = dataset.w;
+  if (w !== undefined) {
+    const width = Number(w);
+    if (Number.isFinite(width)) args.width = width;
+  }
+
+  const h = dataset.h;
+  if (h !== undefined) {
+    const height = Number(h);
+    if (Number.isFinite(height)) args.height = height;
+  }
+
+  return args;
 }
