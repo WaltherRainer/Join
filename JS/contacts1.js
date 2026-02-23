@@ -161,20 +161,15 @@ function initDeleteButton(userId) {
   });
 }
 
-/**
- * Initializes click handling for the contact list.
- *
- * Uses event delegation on the contact list container to detect clicks
- * on contact cards. When a card is selected, it is marked as active and
- * the corresponding contact details are rendered.
- *
- * @function initContactsClick
- * @param {Object<string, Object>} users - Object mapping user IDs to user data.
- * @returns {void}
- */
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
+
+  // verhindert Mehrfach-Bindings, falls initContactsClick öfter aufgerufen wird
+  if (list.dataset.clickBound === "1") return;
+  list.dataset.clickBound = "1";
+
+  const mqMobile = window.matchMedia("(max-width: 1100px)");
 
   list.addEventListener("click", (e) => {
     const card = e.target.closest(".contact_list_card");
@@ -182,8 +177,13 @@ function initContactsClick(users) {
 
     const userId = card.dataset.userId;
     if (!userId) return;
+
     setActiveContactCard(card);
     renderContactDetails(users, userId);
+
+    if (mqMobile.matches) {
+      document.querySelector(".contacts_layout")?.classList.add("is-details");
+    }
   });
 }
 

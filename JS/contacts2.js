@@ -334,3 +334,34 @@ function renderEditContactAvatar(userId, givenName) {
   avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
   avatarEl.innerHTML = initials;
 }
+const mqMobile = window.matchMedia("(max-width: 1100px)");
+
+function showDetailsView() {
+  document.querySelector(".contacts_layout")?.classList.add("is-details");
+}
+
+function showListView() {
+  document.querySelector(".contacts_layout")?.classList.remove("is-details");
+}
+
+document.querySelector(".contact_list_sect")?.addEventListener("click", (e) => {
+  const card = e.target.closest(".contact_list_card");
+  if (!card) return;
+
+  const userId = card.dataset.userId;
+
+  // deine bestehende Logik:
+  setActiveContactCard(card);
+  renderContactDetails(users, userId);
+
+  if (mqMobile.matches) showDetailsView();
+});
+
+document.querySelector(".back_to_list")?.addEventListener("click", () => {
+  showListView();
+});
+
+mqMobile.addEventListener("change", (e) => {
+  if (!e.matches) showListView(); // Desktop: beide Bereiche wieder wie normal
+});
+
