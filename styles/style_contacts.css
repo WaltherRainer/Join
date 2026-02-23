@@ -431,9 +431,9 @@ h4 {
     display: none;
   }
 
-  .user_avatar_large {
+  /* .user_avatar_large {
     display: none;
-  }
+  } */
 
   .user_avatar_large_responsive {
     display: inline-flex;
@@ -474,18 +474,21 @@ h4 {
   .add_contact_btn {
     display: none;
   }
-
   .title_box {
     display: none;
   }
-
+  .shadow {
+    display: none;
+  }
+  /* .contact_list_sect {
+    display: none;
+  } */
   .contact_details_sect {
     display: none;
   }
-
-  .contacts_layout {
+  /* .contacts_layout {
     display: block;
-  }
+  } */
 }
 
 @media (min-width: 1100px) {

@@ -1,8 +1,9 @@
 design/
 desktop.ini
-.env
-.vscode
+*.bak
+*.env
+*.vscode
+*.DS_Store
 _archive
-.DS_Store
 up.bat
 up.sh

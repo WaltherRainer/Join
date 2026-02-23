@@ -70,27 +70,26 @@ async function ensureTasksLoaded() {
 }
 
 /**
- * Initializes the global user data exactly once and returns a shared promise.
+ * Initializes loading of the global users collection exactly once and returns a shared promise.
  *
- * If the user data has not yet been loaded, this function triggers an
- * asynchronous request to fetch it and stores both the resulting data
- * and the associated promise on the global `window` object. Subsequent
- * calls return the same promise to prevent duplicate loading.
+ * If no pending/fulfilled load is cached in `window.usersReady`, this function starts an
+ * asynchronous fetch of `/users` via {@link loadData}. The result is normalized to a plain
+ * object (fallback `{}`) and stored on `window.users`. Subsequent calls return the same
+ * promise to avoid duplicate network requests.
  *
- * In case the loading process fails, the cached promise is reset so that
- * a future call can retry the initialization.
+ * If the load fails, the cached promise is cleared (`window.usersReady = null`) so a later
+ * call can retry, and the original error is re-thrown.
  *
  * @function initUsersLoading
- * @returns {Promise<Object>} A promise that resolves to the loaded users object.
+ * @returns {Promise<Object<string, Object>>} A promise that resolves to the loaded users object.
  *
- * @throws {Error} Propagates any error thrown by {@link loadData} during
- * the loading process.
+ * @throws {Error} Propagates any error thrown during loading (e.g. by {@link loadData}).
  */
 function initUsersLoading() {
   if (!window.usersReady) {
     window.usersReady = (async () => {
       const data = await loadData("/users");
-      window.users = data || {};
+      window.users = (data && typeof data === "object") ? data : {};
       return window.users;
     })().catch((err) => {
       window.usersReady = null;
