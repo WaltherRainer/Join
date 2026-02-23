@@ -46,15 +46,26 @@ function colorVarFromUserId(userId) {
   return `var(--user_c_${idx})`;
 }
 
+/**
+ * Checks whether a user with the given email exists in the global `window.users` collection.
+ *
+ * @function userExists
+ * @param {string} email - Email address to look up.
+ * @returns {boolean} `true` if a matching email is found, otherwise `false`.
+ */
 function userExists(email) {
   if (!window.users || typeof window.users !== "object") return false;
 
   return Object.values(window.users).some((user) => user?.email === email);
 }
 
+/**
+ * Logs the user out by clearing session storage and redirecting to the login page.
+ *
+ * @function userLogout
+ * @returns {void}
+ */
 function userLogout() {
   sessionStorage.clear();
   window.location.replace("index.html");
 }
-
-
