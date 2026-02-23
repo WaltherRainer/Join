@@ -1,21 +1,16 @@
 const BASE_URL = "https://jointest-9b595-default-rtdb.europe-west1.firebasedatabase.app";
 
 /**
- * Loads JSON data from the backend via HTTP and returns the parsed result.
+ * Fetches JSON data from the backend for the given path.
  *
- * Builds a request URL from the given path by normalizing leading slashes
- * and appending the `.json` extension. The function performs a `fetch`
- * request, validates the HTTP response, and parses the response body as JSON.
- *
- * If the request fails or the response is not OK, the error is logged and
- * the function resolves with `null` instead of throwing, allowing the caller
- * to handle missing data gracefully.
+ * Normalizes the path (removes leading slashes), builds the `.json` URL,
+ * performs a `fetch`, validates the response, and returns the parsed JSON.
+ * On any error, logs the issue and resolves with `null`.
  *
  * @async
  * @function loadData
- * @param {string} [path=""] - Relative API path (without leading slash or `.json` extension).
- * @returns {Promise<Object|null>} A promise that resolves to the parsed JSON object,
- * or `null` if an error occurred during fetching or parsing.
+ * @param {string} [path=""] - Relative API path (without leading slashes or `.json`).
+ * @returns {Promise<Object|null>} The parsed JSON response, or `null` on failure.
  */
 async function loadData(path = "") {
   const cleanPath = String(path || "").replace(/^\/+/, "");
@@ -35,31 +30,22 @@ async function loadData(path = "") {
 }
 
 /**
- * Uploads JSON-serializable data to the backend via an HTTP POST request.
+ * Sends JSON data to the backend via an HTTP POST request.
  *
- * Builds a request URL from the given path by normalizing leading slashes
- * and appending the `.json` extension. The provided data object is serialized
- * to JSON and sent in the request body with the appropriate content type.
- *
- * The function logs request and response details for debugging purposes.
- * If the server responds with a non-OK status, an error is thrown so the
- * caller can handle the failure explicitly.
+ * Normalizes the path (removes leading slashes), builds the `.json` URL,
+ * posts the serialized `dataObj`, validates the response, and returns the
+ * parsed JSON response body.
  *
  * @async
  * @function uploadData
- * @param {string} [path=""] - Relative API path (without leading slash or `.json` extension).
- * @param {Object} dataObj - The data object to be uploaded; must be JSON-serializable.
- * @returns {Promise<Object>} A promise that resolves to the parsed JSON response
- * returned by the server.
- *
- * @throws {Error} Throws an error if the HTTP request fails or the response
- * status is not OK.
+ * @param {string} [path=""] - Relative API path (without leading slashes or `.json`).
+ * @param {Object} dataObj - JSON-serializable payload to upload.
+ * @returns {Promise<Object>} The parsed JSON response from the server.
+ * @throws {Error} If the HTTP response status is not OK.
  */
 async function uploadData(path = "", dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}.json`;
-
-  // console.log(dataObj);
 
   const response = await fetch(url, {
     method: "POST",
@@ -68,79 +54,88 @@ async function uploadData(path = "", dataObj) {
     redirect: "follow",
   });
 
-  // console.log("FINAL response.url:", response.url);
-  // console.log("STATUS:", response.status);
-
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }
   return await response.json();
 }
 
+/**
+ * Updates an existing record on the backend via an HTTP PUT request.
+ *
+ * Normalizes the path, builds a resource URL including the given `dataId`,
+ * sends the JSON-serialized `dataObj`, validates the response, and returns
+ * the parsed JSON response body.
+ *
+ * @async
+ * @function editData
+ * @param {string} [path=""] - Base API path (without leading slashes or `.json`).
+ * @param {string} dataId - Identifier of the record to update.
+ * @param {Object} dataObj - JSON-serializable payload with updated fields.
+ * @returns {Promise<Object>} The parsed JSON response from the server.
+ * @throws {Error} If the HTTP response status is not OK.
+ */
 async function editData(path = "", dataId, dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
-
-  // console.log(dataObj);
-
   const response = await fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataObj),
     redirect: "follow",
   });
-
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }
   return await response.json();
 }
 
+/**
+ * Partially updates an existing record on the backend via an HTTP PATCH request.
+ *
+ * Normalizes the path, builds a resource URL including `dataId`, sends the
+ * JSON-serialized `partialObj`, validates the response, and returns the
+ * parsed JSON response body.
+ *
+ * @async
+ * @function patchData
+ * @param {string} [path=""] - Base API path (without leading slashes or `.json`).
+ * @param {string} dataId - Identifier of the record to patch.
+ * @param {Object} partialObj - JSON-serializable object containing only the fields to update.
+ * @returns {Promise<Object>} The parsed JSON response from the server.
+ * @throws {Error} If the HTTP response status is not OK.
+ */
 async function patchData(path = "", dataId, partialObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}/${dataId}.json`;
-
-  // console.log(partialObj);
-
   const response = await fetch(url, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(partialObj),
     redirect: "follow",
   });
-
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }
   return await response.json();
 }
 
-
 /**
  * Deletes data on the backend via an HTTP DELETE request.
  *
- * Constructs the request URL from the given path by removing leading slashes
- * and appending the `.json` extension. The function sends a DELETE request
- * to the backend endpoint and validates the HTTP response.
- *
- * If the server responds with a non-OK status, an error is thrown so that
- * the caller can handle the failure explicitly.
+ * Normalizes the path, builds the `.json` URL, sends a DELETE request,
+ * validates the response, and resolves to `true` on success.
  *
  * @async
  * @function deleteData
- * @param {string} [path=""] - Relative API path (without leading slash or `.json` extension).
- * @returns {Promise<boolean>} A promise that resolves to `true` if the delete
- * operation completed successfully.
- *
- * @throws {Error} Throws an error if the HTTP request fails or the response
- * status is not OK.
+ * @param {string} [path=""] - Relative API path (without leading slashes or `.json`).
+ * @returns {Promise<boolean>} `true` if the delete request succeeded.
+ * @throws {Error} If the HTTP response status is not OK.
  */
 async function deleteData(path = "") {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}.json`;
-
   const response = await fetch(url, { method: "DELETE" });
-
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }
