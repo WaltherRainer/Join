@@ -163,7 +163,7 @@
 
 .btn_close_modal {
     display: flex;
-    align-items: flex-end;
+    /* align-items: flex-end; */
     justify-content: space-evenly;
     width: 28px;
     height: 28px;

@@ -230,7 +230,7 @@ function syncAssignedToUI(form, usersObj) {
     .map((id) => usersObj?.[id]?.givenName)
     .filter(Boolean);
 
-  placeholder.assignedToInput = true;
+  placeholder.classList.add("is-hidden");      // Placeholder verstecken
   valueBox.assignedToInput = false;
   valueBox.textContent = names.length ? names.join(", ") : `${ids.length} selected`;
 
