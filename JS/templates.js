@@ -73,6 +73,7 @@ function taskItemTemplate(task, users, isDraggable) {
 
   const selectHtml = !isDraggable
     ? `<select class="task_status_select secondary-button" onchange="switchStatusContainer('${task.id}', this.value)" onclick="event.stopPropagation()">
+        <button class="caret select-btn"></button>
         <option value="0" ${task.status === 0 ? "selected" : ""}>To Do</option>
         <option value="1" ${task.status === 1 ? "selected" : ""}>In progress</option>
         <option value="2" ${task.status === 2 ? "selected" : ""}>Await feedback</option>

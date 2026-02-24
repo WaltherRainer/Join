@@ -533,21 +533,31 @@ section.task_section {
 
 .task_status_select {
     position: absolute;
-    top: 15px;
+    top: 22px;
     right: 15px;
-    width: 55px;
+    width: 25px;
     height: 25px;
     font-size: 12px;
     font-weight: 300;
-    padding: 0;
+    padding: 5px 6px 4px 5px;
     color: var(--text_color_grey);
     border-color: var(--board-light-grey);
     z-index: 1000;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    appearance: base-select;
+
+        &::picker(select) {
+            appearance: base-select;
+        }
+}
+
+.task_status_select::picker(select) {
+    border: 2px solid var(--board-light-grey);
+    border-radius: 10px;
+    color: var(--text_color_grey);
+}
+
+select.task_status_select option {
+    padding: 4px;
 }
 
 .checkbox_svg span{
