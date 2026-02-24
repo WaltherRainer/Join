@@ -1,54 +1,18 @@
 /**
- * Gets references to add task modal elements.
+ * Initializes the add task page.
  * 
- * @function getModalElements
- * @returns {Object} Object with modal elements.
- */
-function getModalElements() {
-  const modal = document.getElementById("addTaskModal");
-  const host = document.getElementById("addTaskModalHost");
-  const closeBtn = modal?.querySelector(".add_task_modal_close");
-  return { modal, host, closeBtn };
-}
-
-/**
- * Closes the add task modal window.
+ * Checks user authorization and binds the submit event
+ * handler to the add task form.
  * 
- * Clears the container content, removes the background class,
- * and closes the dialog window.
- * 
- * @function closeAddTaskModal
+ * @function initAddTask
  * @returns {void}
  */
-function closeAddTaskModal() {
-  const { modal, host } = getModalElements();
-  if (!modal) return;
-  if (host) host.innerHTML = "";
-  modal.classList.remove("is_background");
-  modal.close();
-}
-
-/**
- * Initializes the add task modal window once.
- * 
- * Checks that initialization hasn't been performed yet, then binds
- * event handlers for closing the modal (button and background click).
- * 
- * @function initAddTaskModalOnce
- * @returns {void}
- */
-function initAddTaskModalOnce() {
-  const { modal, closeBtn } = getModalElements();
-  if (!modal || !closeBtn) return;
-
-  if (modal.dataset.initOnce === "1") return;
-  modal.dataset.initOnce = "1";
-
-  closeBtn.addEventListener("click", closeAddTaskModal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeAddTaskModal();
-  });
+function initAddTask() {
+  checkIfUserIsLoggedIn();
+  const form = document.querySelector(".add_task_form");
+  if (form) {
+    form.addEventListener("submit", handleFormSubmit);
+  }
 }
 
 /**

@@ -8,23 +8,6 @@ const statusTypes = {
 };
 
 /**
- * Initializes the add task page.
- * 
- * Checks user authorization and binds the submit event
- * handler to the add task form.
- * 
- * @function initAddTask
- * @returns {void}
- */
-function initAddTask() {
-  checkIfUserIsLoggedIn();
-  const form = document.querySelector(".add_task_form");
-  if (form) {
-    form.addEventListener("submit", handleFormSubmit);
-  }
-}
-
-/**
  * Loads tasks and users from the server.
  * 
  * Retrieves the list of all tasks from the database and ensures
@@ -134,51 +117,4 @@ async function addTaskData(newTaskObj, { toastId = "task_success_overlay", after
       if (refreshAfter) loadTasks();
     },
   });
-}
-
-/**
- * Redirects the user to the task board page.
- * 
- * @function activateBoard
- * @returns {void}
- */
-function activateBoard() {
-  window.location.replace("board.html");
-}
-
-/**
- * Performs actions after adding a task via modal window.
- * 
- * Removes the background class from the modal, closes it,
- * reloads tasks from the server, and updates the task board.
- * 
- * @async
- * @function afterTaskAddedInModal
- * @returns {Promise<void>}
- */
-async function afterTaskAddedInModal() {
-  const modal = document.querySelector(".add_task_modal");
-  modal?.classList.remove("is_background");
-  closeAddTaskModal();
-
-  const newTasks = await loadData("/tasks");
-  saveTasksToSessionStorage(newTasks);
-
-  if (typeof loadTaskBoard === "function") {
-    const users = JSON.parse(sessionStorage.getItem("users") || "{}");
-    loadTaskBoard(newTasks, users);
-  }
-}
-
-/**
- * Brings the modal window to the background.
- * 
- * Adds a CSS class for visual display of the modal in the background.
- * 
- * @function bringModalToBackground
- * @returns {void}
- */
-function bringModalToBackground() {
-  const modal = document.getElementById("addTaskModal");
-  modal?.classList.add("is_background");
 }
