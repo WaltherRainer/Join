@@ -274,9 +274,59 @@ async function deleteContact(userId) {
     if (details) {
       details.innerHTML = "";
     }
+    await removeContactFromTasks(userId);
   } catch (err) {
     console.error("Delete failed:", err);
   }
+}
+
+/**
+ * Removes a contact from all tasks where they are assigned.
+ *
+ * Loads tasks from session storage, identifies tasks containing the user,
+ * removes the user from each task's assignedTo array, updates session storage,
+ * and syncs the changes to the server.
+ *
+ * @async
+ * @function removeContactFromTasks
+ * @param {string} userId - The ID of the user to remove from tasks.
+ * @returns {Promise<void>}
+ */
+async function removeContactFromTasks(userId) {
+  if (!userId) return;
+  const tasks = sessionStorage.getItem("tasks") ? JSON.parse(sessionStorage.getItem("tasks")) : {};
+  const updatedTaskIds = removeUserFromTasksAndCollectIds(tasks, userId);
+
+  if (updatedTaskIds.length === 0) return;
+
+  sessionStorage.setItem("tasks", JSON.stringify(tasks));
+
+  await Promise.all(
+    updatedTaskIds.map(taskId => editData("tasks", taskId, tasks[taskId]))
+  );
+}
+
+/**
+ * Identifies and removes a user from tasks, returning affected task IDs.
+ *
+ * Iterates over all tasks, checks if the user is in the assignedTo array,
+ * removes them if present, and collects the IDs of modified tasks.
+ *
+ * @function removeUserFromTasksAndCollectIds
+ * @param {Object<string, Object>} tasks - Object mapping task IDs to task data.
+ * @param {string} userId - The ID of the user to remove.
+ * @returns {string[]} Array of task IDs that were modified.
+ */
+function removeUserFromTasksAndCollectIds(tasks, userId) {
+  const updatedTaskIds = [];
+  for (const key of Object.keys(tasks)) {
+    const task = tasks[key];
+    if (Array.isArray(task.assignedTo) && task.assignedTo.includes(userId)) {
+      task.assignedTo = task.assignedTo.filter(id => id !== userId);
+      updatedTaskIds.push(key);
+    }
+  }
+  return updatedTaskIds;
 }
 
 /**
@@ -349,51 +399,4 @@ function bindContactModalCloseHandlers(modal, close, removeEsc) {
   modal.addEventListener("close", () => removeEsc?.(), { once: true });
 }
 
-/**
- * Opens the edit-contact modal and initializes its state.
- *
- * Ensures the modal is opened only once, preloads the form with the
- * current user data, renders the avatar preview, binds the submit
- * handler, and attaches close and cleanup listeners including Escape.
- *
- * @function openEditContactModal
- * @param {string} userId - The ID of the user being edited.
- * @param {string} givenName - The user's given name.
- * @param {string} email - The user's email address.
- * @param {string} [userPhone] - The user's phone number.
- * @returns {void}
- */
-function openEditContactModal(userId, givenName, email, userPhone) {
-  const modal = document.getElementById("edit_contact_modal");
-  if (!modal) return;
 
-  if (modal.open) return;
-
-  modal.showModal();
-
-  preloadEditFormData(givenName, email, userPhone);
-  renderEditContactAvatar(userId, givenName);
-
-  bindEditContactFormSubmitOnce(userId);
-
-  const removeEsc = listenEscapeFromModal(modal.id, (m) => closeEditContactModal(m));
-  const close = () => closeAndCleanupEditModal(modal, removeEsc);
-
-  bindEditModalHandlers(modal, userId, close, removeEsc);
-}
-
-/**
- * Closes the edit-contact modal and performs cleanup.
- *
- * Invokes the edit modal close routine and optionally removes the
- * Escape key listener associated with the modal.
- *
- * @function closeAndCleanupEditModal
- * @param {HTMLElement} modal - The edit modal element to close.
- * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
- * @returns {void}
- */
-function closeAndCleanupEditModal(modal, removeEsc) {
-  closeEditContactModal(modal);
-  removeEsc?.();
-}
