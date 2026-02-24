@@ -74,7 +74,18 @@ function updateTaskCard(taskId, tasks) {
   );
 
   cards.forEach(function(card) {
-    card.innerHTML = getTaskItemContent(task, users);
+    // if the card had a status dropdown (non-draggable mode), keep it
+    const selectEl = card.querySelector(".task_status_select");
+    const selectHtml = selectEl ? selectEl.outerHTML : "";
+    const wasDraggable = card.hasAttribute("draggable");
+
+    // rebuild inner content, preserving the select element when appropriate
+    card.innerHTML = (wasDraggable ? "" : selectHtml) + getTaskItemContent(task, users);
+
+    // newly inserted svg-icon placeholders need the icon library to process them
+    if (window.renderIcons) {
+      renderIcons(card);
+    }
   });
 }
 
