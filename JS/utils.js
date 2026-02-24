@@ -26,12 +26,11 @@ function initialsFromGivenName(givenName, fallback = "?") {
  * @returns {number} -Color index between 1 and USER_COLOR_COUNT
  */
 function colorIndexFromUserId(userId) {
-  // simple hash
   let hash = 0;
   for (let i = 0; i < userId.length; i++) {
-    hash = (hash * 31 + userId.charCodeAt(i)) >>> 0; // unsigned
+    hash = (hash * 31 + userId.charCodeAt(i)) >>> 0;
   }
-  return (hash % USER_COLOR_COUNT) + 1; // 1..15
+  return (hash % USER_COLOR_COUNT) + 1;
 }
 
 /**

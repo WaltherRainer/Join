@@ -137,7 +137,6 @@ function initEditButton(userId, givenName, email, userPhone) {
 
   editBtn.addEventListener("click", () => {
     openEditContactModal(userId, givenName, email, userPhone);
-    console.log(window.users);
   });
 }
 
@@ -368,7 +367,7 @@ function openEditContactModal(userId, givenName, email, userPhone) {
   const modal = document.getElementById("edit_contact_modal");
   if (!modal) return;
 
-  if (modal.open) return; // optional gegen Doppel-Open
+  if (modal.open) return;
 
   modal.showModal();
 
@@ -398,4 +397,3 @@ function closeAndCleanupEditModal(modal, removeEsc) {
   closeEditContactModal(modal);
   removeEsc?.();
 }
-

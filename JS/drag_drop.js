@@ -108,7 +108,6 @@ function reRenderTasksInOrder(tasksInStatus, tasks, users, status) {
 function removeDragPlaceholder(event) {
   if (event.target === event.currentTarget) {
     const dropZone = event.currentTarget;
-    console.log(dropZone)
     dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
   }
 }

@@ -102,7 +102,6 @@ function onSubtaskKeydown(state, e) {
  * @returns {void}
  */
 function renderSubtasks(state) {
-    console.log(state);
     state.subTaskUi.SubTaskListElem.innerHTML = "";
     state.subtasks.forEach((subtask, idx) => {
     state.subTaskUi.SubTaskListElem.appendChild(makeSubtaskLi(state, subtask, idx));

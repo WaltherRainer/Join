@@ -98,7 +98,7 @@ function initPasswordToggle(container) {
   const state = createPwToggleState(container);
   if (!state) return;
   wirePWEvents(state);
-  syncState(state); // initial
+  syncState(state);
 }
 
 /**
@@ -234,12 +234,10 @@ async function addUser() {
   if (userExists(email)) return;
   const dataObj = { email, givenName, password };
   const result = await uploadData("/users", dataObj);
-  // console.log("Firebase Key:", result?.name);
   window.usersReady = null;
   await initUsersLoading();
 
   showToastOverlay("signup_success_overlay", { onDone: activateLogIn });
-  // showSignupSuccessToast();
   resetSignupForm();
 }
 
@@ -266,20 +264,15 @@ function showSignupSuccessToast() {
   const overlay = document.getElementById("signup_success_overlay");
   if (!overlay) return;
 
-  // sichtbar + animieren
   overlay.classList.add("is_visible", "is_animating");
   overlay.setAttribute("aria-hidden", "false");
 
-  // nach "slide in" + 1s Pause Login aktivieren
   const slideMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
   const holdMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
 
   window.setTimeout(() => {
-    // optional: Toast wieder ausblenden
     overlay.classList.remove("is_animating", "is_visible");
     overlay.setAttribute("aria-hidden", "true");
-
-    // Login anzeigen
     if (typeof activateLogIn === "function") {
       activateLogIn();
     } else {
@@ -292,7 +285,6 @@ function resetSignupForm() {
   const form = document.querySelector(".sign_up_form form");
   if (!form) return;
 
-  // Inputs leeren
   form.querySelectorAll("input").forEach((input) => {
     if (input.type === "checkbox") {
       input.checked = false;
@@ -301,10 +293,8 @@ function resetSignupForm() {
     }
   });
 
-  // Error-Zustände entfernen
   form.querySelectorAll(".has_error").forEach((el) => el.classList.remove("has_error"));
 
-  // Warning-Text ausblenden
   const warning = form.querySelector("#warning_signup_failed");
   warning?.classList.remove("visible");
 }

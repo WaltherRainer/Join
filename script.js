@@ -4,9 +4,7 @@ let tasks = {};
 let activeUserName = "";
 let localSubtasks = {};
 const USER_COLOR_COUNT = 15;
-
-let joinSessionStorageObject = {}; // erzeugt object für SessionStorage
-
+let joinSessionStorageObject = {};
 let usersReady = null;
 
 function indexInit() {
@@ -14,8 +12,7 @@ function indexInit() {
 }
 
 function initSessionStorage() {
-  // sessionStorage.clear();
-  sessionStorage.setItem("userLoggedIn", false); // Wenn sich ein User eingeloggt, auch als Gast, dann 'true'
+  sessionStorage.setItem("userLoggedIn", false);
   sessionStorage.setItem("userId", "notLoggedIn");
 }
 
@@ -25,7 +22,6 @@ function saveSessionStorage(key, value) {
 
 function loadSessionStorage() {
   const tempArr = JSON.parse(sessionStorage.getItem("joinSessionStorageObject"));
-
   if (tempArr != null) {
     joinSessionStorageObject = tempArr;
   } else {
@@ -89,7 +85,7 @@ function initUsersLoading() {
   if (!window.usersReady) {
     window.usersReady = (async () => {
       const data = await loadData("/users");
-      window.users = (data && typeof data === "object") ? data : {};
+      window.users = data && typeof data === "object" ? data : {};
       return window.users;
     })().catch((err) => {
       window.usersReady = null;
@@ -144,22 +140,6 @@ function renderAssignedAvatars(selectedUserIds, usersData, container) {
     container.appendChild(moreAvatar);
   }
 }
-
-
-// function wireContactActionsGlobalOnce() {
-//   if (document.documentElement.dataset.contactsBound === "1") return;
-//   document.documentElement.dataset.contactsBound = "1";
-
-//   document.addEventListener("click", async (e) => {
-//     const btn = e.target.closest('button[data-action="delete"][data-user-id]');
-//     if (!btn) return;
-//     const inContacts = btn.closest(".contact_detail");
-//     if (!inContacts) return;
-//     const userId = btn.dataset.userId;
-//     if (!userId) return;
-//     await deleteContact(userId);
-//   });
-// }
 
 function listenEscapeFromModal(modalDOMId, onClose) {
   const handler = async (event) => {
@@ -242,20 +222,20 @@ window.initPage = async function initPage() {
       initContactsClick(usersDataObj);
       break;
 
-      case "add_task": {
-        const host = document.getElementById("addTaskInlineHost");
-        const form = await mountTaskForm(host, {
-          title: "Add Task",
-          preset: { titel: "", description: "", priority: "medium" },
-          toastId: "task_success_overlay",
-          afterSaved: () => activateBoard(),
-        });
-        initAssignedToDropdown(form, usersDataObj);
-        resetAssignedToDropdown(form);
-        initTaskTypeDropdown(form, TASK_CATEGORIES);
-        initSubtasksInput(form);
-        break;
-      }
+    case "add_task": {
+      const host = document.getElementById("addTaskInlineHost");
+      const form = await mountTaskForm(host, {
+        title: "Add Task",
+        preset: { titel: "", description: "", priority: "medium" },
+        toastId: "task_success_overlay",
+        afterSaved: () => activateBoard(),
+      });
+      initAssignedToDropdown(form, usersDataObj);
+      resetAssignedToDropdown(form);
+      initTaskTypeDropdown(form, TASK_CATEGORIES);
+      initSubtasksInput(form);
+      break;
+    }
     case "summary":
       await ensureTasksLoaded();
       break;
@@ -267,7 +247,6 @@ window.initPage = async function initPage() {
       break;
 
     default:
-      // optional: console.warn(`No initPage handler for page: ${page}`);
       break;
   }
   InitGlobalEventListener();
@@ -320,24 +299,19 @@ function showToastOverlay(overlayId, opts = {}) {
     return;
   }
 
-  // Hold: Options -> data-attr -> default
   const holdMs = Number.isFinite(opts.holdMs) ? opts.holdMs : parseInt(overlay.dataset.holdMs, 10) || 1000;
 
-  // laufende Timer/Listener sauber weg
   if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);
   if (overlay._toastCleanup) overlay._toastCleanup();
 
   overlay.setAttribute("aria-hidden", "false");
   overlay.classList.add(visibleClass);
 
-  // Reflow erzwingen, damit animation zuverlässig neu startet
-  // (wichtig wenn man denselben Toast schnell hintereinander zeigt)
   void box.offsetWidth;
 
   overlay.classList.add(animateClass);
 
   const onAnimEnd = (ev) => {
-    // Nur reagieren, wenn die Box-Animation fertig ist (nicht ggf. child animations)
     if (ev.target !== box) return;
 
     box.removeEventListener("animationend", onAnimEnd);
@@ -351,7 +325,6 @@ function showToastOverlay(overlayId, opts = {}) {
         return;
       }
 
-      // Optionaler Fallback: data-on-done="activateLogIn"
       const fnName = overlay.dataset.onDone;
       if (fnName && typeof window[fnName] === "function") {
         window[fnName]();
@@ -361,7 +334,6 @@ function showToastOverlay(overlayId, opts = {}) {
 
   box.addEventListener("animationend", onAnimEnd);
 
-  // Cleanup merken (falls Toast während Animation neu getriggert wird)
   overlay._toastCleanup = () => {
     box.removeEventListener("animationend", onAnimEnd);
   };
@@ -426,28 +398,21 @@ function resetInputValidation(element) {
   element.classList.remove("is-valid");
 }
 
-
 async function loadPartial(url) {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load partial: ${url} (${res.status})`);
   return await res.text();
 }
 
-async function mountTaskForm(hostEl, {
-    title = "Add Task",
-    preset = null,
-    mode = "page", // optional
-    toastId = "task_success_overlay",
-    taskStatus = 0,
-    afterSaved = null,
-    onSubmitData = null, 
-  } = {}) {
-
+async function mountTaskForm(
+  hostEl,
+  { title = "Add Task", preset = null, mode = "page", toastId = "task_success_overlay", taskStatus = 0, afterSaved = null, onSubmitData = null } = {},
+) {
   const html = await loadPartial("./partials/task_form.html");
   hostEl.innerHTML = html;
 
   if (window.renderIcons) {
-    window.renderIcons(hostEl); 
+    window.renderIcons(hostEl);
   }
 
   const form = hostEl.querySelector("form.add_task_form");
@@ -472,52 +437,51 @@ async function mountTaskForm(hostEl, {
     }
   }
 
-form.querySelectorAll(".standard_input_box[required]").forEach((input) => {
-  input.addEventListener("blur", () => {
-    if (!input.checkValidity()) setInputInValid(input, input);
-    else setInputValid(input, input);
-  });
-});
-
-form.querySelector("#task_cat_btn")?.addEventListener("blur", () => {
-  const hidden = form.querySelector("#task_cat");
-  const taskTypeDiv = form.querySelector("#task_cat_control");
-  const taskTypeOuterDiv = form.querySelector("#task_cat_select");
-  if (!hidden.value) setInputInValid(taskTypeDiv, taskTypeOuterDiv);
-  else setInputValid(taskTypeDiv, taskTypeOuterDiv);
-});
-
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  if (!validateAddTaskForm(form)) return;
-
-  const data = {
-    titel: form.querySelector("#task_titel")?.value?.trim() || "",
-    description: form.querySelector("#task_descr")?.value?.trim() || "",
-    finishDate: form.querySelector("#task_due_date")?.value || "",
-    priority: form.querySelector('input[name="priority"]:checked')?.value || "",
-    type: form.querySelector("#task_cat")?.value || "",
-    assignedTo: getAssignedToIds(form),
-    subTasks: getSubtasksArray(form),
-  };
-
-  if (typeof onSubmitData === "function") {
-    await onSubmitData(data, form);
-    return;
-  }
-
-  const newTaskObj = { ...data, status: taskStatus };
-
-  await addTaskData(newTaskObj, {
-    toastId,
-    afterDone: () => typeof afterSaved === "function" && afterSaved(newTaskObj),
-    refreshAfter: false,
+  form.querySelectorAll(".standard_input_box[required]").forEach((input) => {
+    input.addEventListener("blur", () => {
+      if (!input.checkValidity()) setInputInValid(input, input);
+      else setInputValid(input, input);
+    });
   });
 
-  clearTaskForm(form);
-});
+  form.querySelector("#task_cat_btn")?.addEventListener("blur", () => {
+    const hidden = form.querySelector("#task_cat");
+    const taskTypeDiv = form.querySelector("#task_cat_control");
+    const taskTypeOuterDiv = form.querySelector("#task_cat_select");
+    if (!hidden.value) setInputInValid(taskTypeDiv, taskTypeOuterDiv);
+    else setInputValid(taskTypeDiv, taskTypeOuterDiv);
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!validateAddTaskForm(form)) return;
+
+    const data = {
+      titel: form.querySelector("#task_titel")?.value?.trim() || "",
+      description: form.querySelector("#task_descr")?.value?.trim() || "",
+      finishDate: form.querySelector("#task_due_date")?.value || "",
+      priority: form.querySelector('input[name="priority"]:checked')?.value || "",
+      type: form.querySelector("#task_cat")?.value || "",
+      assignedTo: getAssignedToIds(form),
+      subTasks: getSubtasksArray(form),
+    };
+
+    if (typeof onSubmitData === "function") {
+      await onSubmitData(data, form);
+      return;
+    }
+
+    const newTaskObj = { ...data, status: taskStatus };
+
+    await addTaskData(newTaskObj, {
+      toastId,
+      afterDone: () => typeof afterSaved === "function" && afterSaved(newTaskObj),
+      refreshAfter: false,
+    });
+
+    clearTaskForm(form);
+  });
 
   return form;
 }

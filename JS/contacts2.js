@@ -132,7 +132,6 @@ function bindContactFormSubmitOnce() {
   if (!form) return;
   if (form.dataset.submitBound === "1") return;
   form.dataset.submitBound = "1";
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
@@ -160,7 +159,6 @@ function bindEditContactFormSubmitOnce(userId) {
   if (!form) return;
   if (form.dataset.submitBound === "1") return;
   form.dataset.submitBound = "1";
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     try {
@@ -230,7 +228,6 @@ function readNewUserForm() {
   const email = document.getElementById("user_email")?.value?.trim() ?? "";
   const givenName = document.getElementById("user_name")?.value?.trim() ?? "";
   const userPhone = document.getElementById("user_phone")?.value?.trim() ?? "";
-
   if (!email || !givenName || !userPhone) return null;
   return { email, givenName, userPhone };
 }
@@ -286,11 +283,8 @@ async function editUser(userId) {
   const modal = document.getElementById("edit_contact_modal");
   const payload = readEditUserForm();
   if (!payload) return;
-
   await window.editData("/users", userId, payload);
-
   const users = await refreshUsersUI(userId);
-
   if (modal) closeEditContactModal(modal);
 }
 
@@ -308,9 +302,7 @@ function readEditUserForm() {
   const email = document.getElementById("edit_user_email")?.value?.trim() ?? "";
   const givenName = document.getElementById("edit_user_name")?.value?.trim() ?? "";
   const userPhone = document.getElementById("edit_user_phone")?.value?.trim() ?? "";
-
   if (!email || !givenName || !userPhone) return null;
-
   return { email, givenName, userPhone };
 }
 
@@ -330,14 +322,11 @@ function readEditUserForm() {
 async function refreshUsersUI(activeUserId) {
   window.usersReady = null;
   const users = await initUsersLoading();
-
   saveUsersToSessionStorage(users);
   renderContacts(users);
-
   if (activeUserId) {
     renderContactDetails(users, activeUserId);
   }
-
   return users;
 }
 
@@ -356,10 +345,8 @@ async function refreshUsersUI(activeUserId) {
 function renderEditContactAvatar(userId, givenName) {
   const avatarEl = document.getElementById("user_avatar_edit");
   if (!avatarEl) return;
-
   const initials = initialsFromGivenName(givenName);
   const bgColor = colorIndexFromUserId(userId);
-
   avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
   avatarEl.innerHTML = initials;
 }
@@ -404,12 +391,9 @@ function showListView() {
 document.querySelector(".contact_list_sect")?.addEventListener("click", (e) => {
   const card = e.target.closest(".contact_list_card");
   if (!card) return;
-
   const userId = card.dataset.userId;
-
   setActiveContactCard(card);
   renderContactDetails(users, userId);
-
   if (mqMobile.matches) showDetailsView();
 });
 

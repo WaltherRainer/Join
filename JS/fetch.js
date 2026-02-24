@@ -21,7 +21,6 @@ async function loadData(path = "") {
       throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
     }
     let data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Fehler beim Abrufen der Daten:", error);

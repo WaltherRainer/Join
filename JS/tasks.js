@@ -9,8 +9,6 @@ const statusTypes = {
 
 function initAddTask() {
   checkIfUserIsLoggedIn();
-  
-  // HIER DEN CODE EINFÜGEN:
   const form = document.querySelector(".add_task_form");
   if (form) {
     form.addEventListener("submit", handleFormSubmit);
@@ -28,37 +26,29 @@ async function addTaskData(newTaskObj, { toastId = "task_success_overlay", after
     return;
   }
 
-  // Ensure the new task appears at the top of its status column.
-  // 1) Load current tasks
-  const allTasks = await loadData("/tasks") || {};
+  const allTasks = (await loadData("/tasks")) || {};
   const status = typeof newTaskObj.status === "number" ? newTaskObj.status : 0;
 
-  // 2) Bump order of existing tasks in the same status (increment by 1)
   const patches = [];
   Object.entries(allTasks).forEach(([id, t]) => {
     if (t && Number(t.status) === status) {
       const newOrder = (t.order || 0) + 1;
-      // update local copy
       t.order = newOrder;
-      // prepare patch to persist
-      patches.push(patchData("tasks", id, { order: newOrder }).catch((e) => {
-        console.error("failed to patch order for", id, e);
-      }));
+      patches.push(
+        patchData("tasks", id, { order: newOrder }).catch((e) => {
+          console.error("failed to patch order for", id, e);
+        }),
+      );
     }
   });
 
-  // wait for order patches to complete (best-effort)
   await Promise.all(patches);
 
-  // 3) Set new task order to 0 (top) and upload
   newTaskObj.order = 0;
   const result = await uploadData("tasks", newTaskObj);
-  console.log("Firebase Key:", result?.name);
 
-  // 4) Refresh session storage and show toast
   const refreshed = await loadData("/tasks");
   saveTasksToSessionStorage(refreshed || {});
-  // Also update global tasks variable so ensureTasksLoaded() gets fresh data
   tasks = refreshed || {};
 
   showToastOverlay(toastId, {
@@ -77,12 +67,10 @@ async function afterTaskAddedInModal() {
   const modal = document.querySelector(".add_task_modal");
   modal?.classList.remove("is_background");
   closeAddTaskModal();
-  
-  // load ne task from DB and update session storage
+
   const newTasks = await loadData("/tasks");
   saveTasksToSessionStorage(newTasks);
-  
-  // reload board if function exists
+
   if (typeof loadTaskBoard === "function") {
     const users = JSON.parse(sessionStorage.getItem("users") || "{}");
     loadTaskBoard(newTasks, users);
@@ -93,7 +81,6 @@ function bringModalToBackground() {
   const modal = document.getElementById("addTaskModal");
   modal?.classList.add("is_background");
 }
-
 
 function getModalElements() {
   const modal = document.getElementById("addTaskModal");
@@ -110,7 +97,6 @@ function closeAddTaskModal() {
   modal.close();
 }
 
-
 function initAddTaskModalOnce() {
   const { modal, closeBtn } = getModalElements();
   if (!modal || !closeBtn) return;
@@ -123,7 +109,6 @@ function initAddTaskModalOnce() {
   modal.addEventListener("click", (e) => {
     if (e.target === modal) closeAddTaskModal();
   });
-
 }
 
 function clearTaskForm(form) {
@@ -140,7 +125,7 @@ function clearTaskForm(form) {
   setVal("#task_cat", "");
   setVal("#input_subtasks", "");
   setVal("#subtasks_list_input", "[]");
-  setVal("#subtasks_json", "[]"); 
+  setVal("#subtasks_json", "[]");
 
   const list = form.querySelector("#subtasks_list");
   if (list) list.innerHTML = "";
@@ -219,29 +204,25 @@ async function handleFormSubmit(e) {
   e.preventDefault();
   const form = e.target;
 
-  // 1. Validierung prüfen
   if (!validateAddTaskForm(form)) {
-    return; // Stoppt hier, wenn Felder leer sind
+    return;
   }
 
-  // 2. Daten für die Datenbank vorbereiten (Mapping)
   const newTask = {
     titel: form.querySelector("#task_titel").value,
     description: form.querySelector("#task_descr").value,
-    finishDate: form.querySelector("#task_due_date").value, // Mapping auf finishDate
-    type: form.querySelector("#task_cat").value,           // Mapping auf type
+    finishDate: form.querySelector("#task_due_date").value,
+    type: form.querySelector("#task_cat").value,
     priority: form.querySelector('input[name="priority"]:checked')?.value || "medium",
     subTasks: JSON.parse(form.querySelector("#subtasks_list_input").value || "[]"),
-    status: 0
+    status: 0,
   };
 
-  // 3. Datenbank-Upload aufrufen
   await addTaskData(newTask, {
-    afterDone: () => window.location.href = "board.html"
+    afterDone: () => (window.location.href = "board.html"),
   });
 }
 
-// Hilfsfunktionen für die Optik der Fehlermeldungen
 function setInputInValid(el, root) {
   root.classList.add("is-invalid");
 }

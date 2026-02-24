@@ -89,7 +89,7 @@ function prioUrgentBig({ size = 60 } = {}) {
 
   return iconCircleWrapper({
     size,
-    circleFill: "#FF3D00", // bei dir fix
+    circleFill: "#FF3D00",
     defs: `
       <clipPath id="${clipId}">
         <rect width="34.186" height="25.1163" fill="white" transform="translate(12.5581 16.0464)" />
@@ -466,32 +466,6 @@ const ICONS = {
   search,
   add,
 };
-
-// function renderIcons(root = document) {
-//   if (!root || !root.querySelectorAll) return;
-
-//   root.querySelectorAll("[data-icon]").forEach(el => {
-//     const name = el.dataset.icon;
-//     const fn = ICONS[name];
-//     if (typeof fn !== "function") {
-//       console.warn("Unknown icon:", name, el);
-//       return;
-//     }
-
-//     const width = Number(el.dataset.w) || undefined;
-//     const height = Number(el.dataset.h) || undefined;
-//     const args = {};
-//     if (width) args.width = width;
-//     if (height) args.height = height;
-
-//     if (el.querySelector("svg")) return;
-
-//     el.insertAdjacentHTML("beforeend", fn(args));
-
-//     const svg = el.querySelector("svg");
-//     if (svg) svg.setAttribute("aria-hidden", "true");
-//   });
-// }
 
 /**
  * Renders all icons within a given DOM subtree.

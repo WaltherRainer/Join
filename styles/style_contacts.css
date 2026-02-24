@@ -127,16 +127,8 @@ h4 {
 }
 
 .add_contact_btn {
-  /* width: 445px;
-    position: fixed;
-    height: 100px;
-    top: 76px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10; */
-  position: sticky; /* statt fixed */
-  top: 0; /* Abstand innerhalb der Liste */
+  position: sticky;
+  top: 0;
   height: 100px;
   display: flex;
   align-items: center;
@@ -308,8 +300,8 @@ h4 {
 }
 
 .toast_box {
-  width: 260px; /* oder var(--task_success_width) */
-  height: 56px; /* oder var(--task_success_height) */
+  width: 260px;
+  height: 56px;
   background: var(--dark-blue);
   color: white;
   border-radius: 12px;
@@ -525,18 +517,15 @@ h4 {
     display: flex;
   }
 
-  /* Mobile Grundlayout: 1 Spalte, volle Höhe */
   .contacts_layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    /* height: 100dvh; */
     min-height: 0;
     grid-template-areas:
       "contact_list"
       "contact_list";
   }
 
-  /* Default Mobile: nur Liste */
   .contacts_layout .title_box,
   .contacts_layout .contact_details_sect,
   .contacts_layout .shadow {
@@ -549,7 +538,6 @@ h4 {
     overflow: auto;
   }
 
-  /* Mobile Details-View: nur Header + Details */
   .contacts_layout.is-details {
     grid-template-areas:
       "contact_head"
@@ -565,16 +553,12 @@ h4 {
     display: none;
   }
 
-  /* Details-Layout auf Mobile aufräumen */
   .contacts_layout.is-details .contact_details_sect {
     display: grid;
     margin: 0;
     padding: 16px;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
-    /* grid-template-areas:
-      "contact_detail"
-      "contact_info"; */
     grid-template-areas:
       "avatar_large contact_detail"
       "contact_info contact_info";
