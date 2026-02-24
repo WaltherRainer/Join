@@ -368,6 +368,10 @@ h4 {
   display: none;
 }
 
+.contacts_subtitle_line_responsive {
+  display: none;
+}
+
 @media (max-width: 1250px) {
   .contact_modal_content {
     min-width: auto;
@@ -445,6 +449,10 @@ h4 {
     border: 4px solid #fff;
   }
 
+  main .user_avatar_large_modal {
+    display: none;
+  }
+
   .input-wrapper {
     margin-left: 16px;
   }
@@ -470,12 +478,58 @@ h4 {
   }
 }
 
+.user_avatar_details_responsive {
+  display: block;
+}
+
 @media (max-width: 1100px) {
+  .contacts_title {
+    border-width: 0;
+    border-right-style: none;
+    border-right-color: hsla(198, 76%, 52%, 1);
+  }
+
+  .contacts_subtitle {
+    padding-left: 0px;
+  }
+
+  .contacts_subtitle_line_responsive {
+    margin-top: 12px;
+    width: 90px;
+    display: block;
+    border-width: 3px;
+    border-bottom-style: solid;
+    border-bottom-color: #29abe2;
+  }
+
+  .contact_details_sect .user_avatar_large {
+    width: 80px;
+    height: 80px;
+    font-size: 27px;
+  }
+
+  .contact_detail {
+    margin: 0 0 0 8px;
+  }
+
+  .contact_detail h2 {
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  .contact_information h3 {
+    margin-top: 16px;
+  }
+
+  .user_avatar_details_responsive {
+    display: flex;
+  }
+
   /* Mobile Grundlayout: 1 Spalte, volle Höhe */
   .contacts_layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    height: 100dvh;
+    /* height: 100dvh; */
     min-height: 0;
     grid-template-areas:
       "contact_list"
@@ -513,13 +567,17 @@ h4 {
 
   /* Details-Layout auf Mobile aufräumen */
   .contacts_layout.is-details .contact_details_sect {
+    display: grid;
     margin: 0;
     padding: 16px;
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
-    grid-template-areas:
+    /* grid-template-areas:
       "contact_detail"
-      "contact_info";
+      "contact_info"; */
+    grid-template-areas:
+      "avatar_large contact_detail"
+      "contact_info contact_info";
   }
 
   .contacts_layout.is-details .title_box {
@@ -529,6 +587,9 @@ h4 {
   .contacts_layout.is-details .back_to_list {
     display: inline-flex;
     margin-right: 12px;
+  }
+  .add_contact_btn {
+    display: none;
   }
 }
 
@@ -552,6 +613,7 @@ h4 {
   }
   .contact_list_card {
     margin-left: 24px;
+    width: auto;
   }
   aside h4 {
     font-size: 16px;

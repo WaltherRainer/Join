@@ -1,4 +1,38 @@
 /**
+ * Binds one-time event handlers for closing and actions within the edit modal.
+ *
+ * Attaches listeners to the close button, delete button, and modal backdrop.
+ * Ensures the modal closes appropriately and that the Escape key listener
+ * is removed once the modal is closed.
+ *
+ * @function bindEditModalHandlers
+ * @param {HTMLElement} modal - The edit modal element.
+ * @param {string} userId - The ID of the user associated with the modal.
+ * @param {Function} close - Callback that closes the modal and performs cleanup.
+ * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
+ * @returns {void}
+ */
+function bindEditModalHandlers(modal, userId, close, removeEsc) {
+  document.getElementById("edit_modal_close")?.addEventListener("click", close, { once: true });
+  document.getElementById("delete_contact_btn")?.addEventListener(
+    "click",
+    async () => {
+      await deleteContact(userId);
+      close();
+    },
+    { once: true },
+  );
+  modal.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === modal) close();
+    },
+    { once: true },
+  );
+  modal.addEventListener("close", () => removeEsc?.(), { once: true });
+}
+
+/**
  * Preloads the edit contact form with existing user data.
  *
  * Sets the values of the corresponding form fields so the user can
@@ -171,17 +205,12 @@ async function addNewUser() {
   const modal = document.getElementById("add_contact_modal");
   const payload = readNewUserForm();
   if (!payload) return;
-
   const users = await initUsersLoading();
   if (userExistsIn(users, payload.email)) return;
-
   await uploadData("/users", { ...payload, password: "12345" });
-
   const updatedUsers = await refreshUsers();
-
   resetContactForm();
   if (modal) closeContactModal(modal);
-
   renderContacts(updatedUsers);
   initContactsClick(updatedUsers);
   showToastOverlay("toast_contact_added");
@@ -334,23 +363,50 @@ function renderEditContactAvatar(userId, givenName) {
   avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
   avatarEl.innerHTML = initials;
 }
+
 const mqMobile = window.matchMedia("(max-width: 1100px)");
 
+/**
+ * Switches the contacts layout into "details" view mode.
+ *
+ * Adds the `is-details` class to the `.contacts_layout` container if it exists.
+ *
+ * @function showDetailsView
+ * @returns {void}
+ */
 function showDetailsView() {
   document.querySelector(".contacts_layout")?.classList.add("is-details");
 }
 
+/**
+ * Switches the contacts layout back to "list" view mode.
+ *
+ * Removes the `is-details` class from the `.contacts_layout` container if it exists.
+ *
+ * @function showListView
+ * @returns {void}
+ */
 function showListView() {
   document.querySelector(".contacts_layout")?.classList.remove("is-details");
 }
 
+/**
+ * Handles contact card selection via event delegation on the contact list.
+ *
+ * Detects clicks on `.contact_list_card` elements, marks the clicked card as active,
+ * renders the corresponding contact details, and switches to the details view on
+ * mobile breakpoints.
+ *
+ * @listens HTMLElement#click
+ * @param {MouseEvent} e - Click event from the contact list container.
+ * @returns {void}
+ */
 document.querySelector(".contact_list_sect")?.addEventListener("click", (e) => {
   const card = e.target.closest(".contact_list_card");
   if (!card) return;
 
   const userId = card.dataset.userId;
 
-  // deine bestehende Logik:
   setActiveContactCard(card);
   renderContactDetails(users, userId);
 
@@ -362,6 +418,5 @@ document.querySelector(".back_to_list")?.addEventListener("click", () => {
 });
 
 mqMobile.addEventListener("change", (e) => {
-  if (!e.matches) showListView(); // Desktop: beide Bereiche wieder wie normal
+  if (!e.matches) showListView();
 });
-

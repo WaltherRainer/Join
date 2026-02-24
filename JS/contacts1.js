@@ -161,30 +161,78 @@ function initDeleteButton(userId) {
   });
 }
 
+/**
+ * Initializes one-time click handling for the contacts list.
+ *
+ * Uses a bind-once guard to avoid duplicate listeners, creates a mobile
+ * media query, and delegates click events to {@link handleContactCardClick}.
+ *
+ * @function initContactsClick
+ * @param {Object<string, Object>} users - Object mapping user IDs to user data.
+ * @returns {void}
+ */
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
-
-  // verhindert Mehrfach-Bindings, falls initContactsClick öfter aufgerufen wird
-  if (list.dataset.clickBound === "1") return;
-  list.dataset.clickBound = "1";
+  if (!bindOnce(list, "clickBound")) return;
 
   const mqMobile = window.matchMedia("(max-width: 1100px)");
 
-  list.addEventListener("click", (e) => {
-    const card = e.target.closest(".contact_list_card");
-    if (!card) return;
+  list.addEventListener("click", (e) => handleContactCardClick(e, users, mqMobile));
+}
 
-    const userId = card.dataset.userId;
-    if (!userId) return;
+/**
+ * Ensures an element is only bound/initialized once using a data-flag.
+ *
+ * Checks `el.dataset[flag]` for a marker value and sets it to `"1"` if not present.
+ *
+ * @function bindOnce
+ * @param {HTMLElement} el - Element used to store the binding flag.
+ * @param {string} flag - Dataset key used as the one-time marker.
+ * @returns {boolean} `true` if binding should proceed, otherwise `false`.
+ */
+function bindOnce(el, flag) {
+  if (el.dataset[flag] === "1") return false;
+  el.dataset[flag] = "1";
+  return true;
+}
 
-    setActiveContactCard(card);
-    renderContactDetails(users, userId);
+/**
+ * Handles a click on a contact card: activates it, renders details, and toggles mobile view.
+ *
+ * Resolves the clicked user ID, marks the corresponding card as active, renders the
+ * contact details, and switches to the details view on mobile breakpoints.
+ *
+ * @function handleContactCardClick
+ * @param {MouseEvent} e - Click event from the contact list.
+ * @param {Object<string, Object>} users - Object mapping user IDs to user data.
+ * @param {MediaQueryList} mqMobile - Media query used to detect mobile layout.
+ * @returns {void}
+ */
+function handleContactCardClick(e, users, mqMobile) {
+  const userId = getClickedUserId(e);
+  if (!userId) return;
 
-    if (mqMobile.matches) {
-      document.querySelector(".contacts_layout")?.classList.add("is-details");
-    }
-  });
+  const card = e.target.closest(".contact_list_card");
+  setActiveContactCard(card);
+  renderContactDetails(users, userId);
+
+  if (mqMobile.matches) showDetailsView();
+}
+
+/**
+ * Extracts the clicked contact's user ID from a click event.
+ *
+ * Finds the nearest `.contact_list_card` element and returns its `data-user-id`
+ * value, or `null` if the click was not on a contact card.
+ *
+ * @function getClickedUserId
+ * @param {MouseEvent} e - Click event to inspect.
+ * @returns {string|null} The clicked user's ID, or `null` if none was found.
+ */
+function getClickedUserId(e) {
+  const card = e.target.closest(".contact_list_card");
+  return card?.dataset?.userId ?? null;
 }
 
 /**
@@ -351,36 +399,3 @@ function closeAndCleanupEditModal(modal, removeEsc) {
   removeEsc?.();
 }
 
-/**
- * Binds one-time event handlers for closing and actions within the edit modal.
- *
- * Attaches listeners to the close button, delete button, and modal backdrop.
- * Ensures the modal closes appropriately and that the Escape key listener
- * is removed once the modal is closed.
- *
- * @function bindEditModalHandlers
- * @param {HTMLElement} modal - The edit modal element.
- * @param {string} userId - The ID of the user associated with the modal.
- * @param {Function} close - Callback that closes the modal and performs cleanup.
- * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
- * @returns {void}
- */
-function bindEditModalHandlers(modal, userId, close, removeEsc) {
-  document.getElementById("edit_modal_close")?.addEventListener("click", close, { once: true });
-  document.getElementById("delete_contact_btn")?.addEventListener(
-    "click",
-    async () => {
-      await deleteContact(userId);
-      close();
-    },
-    { once: true },
-  );
-  modal.addEventListener(
-    "click",
-    (e) => {
-      if (e.target === modal) close();
-    },
-    { once: true },
-  );
-  modal.addEventListener("close", () => removeEsc?.(), { once: true });
-}
