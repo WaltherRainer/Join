@@ -137,6 +137,7 @@ async function enterTaskEditMode(users) {
       exitEditMode();
       const ui = getTaskUi();
       renderTaskModal(taskId, ui, tasks, users);
+      loadTaskBoard(tasks, users);
     },
   });
 
