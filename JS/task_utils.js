@@ -4,6 +4,13 @@ const TASK_CATEGORIES = [
 ];
 
 
+/**
+ * Gets the label and color for a task category.
+ * 
+ * @function getTaskCatLabel
+ * @param {string} value - Category value (technical_task, user_story).
+ * @returns {Object} Object with label and color properties.
+ */
 function getTaskCatLabel(value) {
   let taskObj = {};
   
@@ -22,6 +29,13 @@ function getTaskCatLabel(value) {
   return taskObj;
 }
 
+/**
+ * Truncates a description if it exceeds maximum length.
+ * 
+ * @function checkOverflow
+ * @param {string} description - Description text to check.
+ * @returns {string} Truncated description with "..." or original string.
+ */
 function checkOverflow(description) {
   if (!description || description == "") return "";
   if (typeof description !== "string") return "";
@@ -32,12 +46,26 @@ function checkOverflow(description) {
   return description;
 }
 
+/**
+ * Generates subtasks counter display.
+ * 
+ * @function subtasksCounter
+ * @param {Object} task - Task object with subTasks array.
+ * @returns {string} HTML template string or empty string.
+ */
 function subtasksCounter(task) {
   const subtaskcount = countSubtasksDone(task);
   if (subtaskcount.counter === 0) return "";
   return getSubtasksCountAndTotalTemplate(subtaskcount.done, subtaskcount.counter);
 }
 
+/**
+ * Counts completed and total subtasks.
+ * 
+ * @function countSubtasksDone
+ * @param {Object} task - Task object with subTasks array.
+ * @returns {Object} Object with done and counter properties.
+ */
 function countSubtasksDone(task) {
   let returnObj = {"done" : 0, "counter" : 0};
   let counter = 0;
@@ -54,6 +82,13 @@ function countSubtasksDone(task) {
   return returnObj;
 }
 
+/**
+ * Calculates progress bar percentage for subtasks.
+ * 
+ * @function fillSubTasksBar
+ * @param {Object} task - Task object with subTasks array.
+ * @returns {number} Percentage value for progress bar (0-40).
+ */
 function fillSubTasksBar(task) {
   const subtaskcount = countSubtasksDone(task);
   const total = subtaskcount.counter;
@@ -65,6 +100,14 @@ function fillSubTasksBar(task) {
   return percentage;
 }
 
+/**
+ * Updates task card HTML in the DOM.
+ * 
+ * @function updateTaskCard
+ * @param {string} taskId - Task ID to update.
+ * @param {Object} tasks - Object containing all tasks.
+ * @returns {void}
+ */
 function updateTaskCard(taskId, tasks) {
   const users = loadUsersFromSession();
   const task = tasks[taskId];
@@ -72,23 +115,25 @@ function updateTaskCard(taskId, tasks) {
   const cards = document.querySelectorAll(
     `.t_task[data-task-id="${taskId}"]`
   );
-
   cards.forEach(function(card) {
-    // if the card had a status dropdown (non-draggable mode), keep it
     const selectEl = card.querySelector(".task_status_select");
     const selectHtml = selectEl ? selectEl.outerHTML : "";
     const wasDraggable = card.hasAttribute("draggable");
-
-    // rebuild inner content, preserving the select element when appropriate
     card.innerHTML = (wasDraggable ? "" : selectHtml) + getTaskItemContent(task, users);
-
-    // newly inserted svg-icon placeholders need the icon library to process them
     if (window.renderIcons) {
       renderIcons(card);
     }
   });
 }
 
+/**
+ * Initializes the assigned users dropdown.
+ * 
+ * @function initAssignedToDropdown
+ * @param {HTMLFormElement} form - Form element containing the dropdown.
+ * @param {Object} usersData - Object with user data keyed by user ID.
+ * @returns {void}
+ */
 function initAssignedToDropdown(form, usersData) {
   const ui = getAssignedToUi(form);
   if (!ui.root || isInitialized(ui.root)) return;
@@ -102,6 +147,46 @@ function initAssignedToDropdown(form, usersData) {
   renderUserList(state);
 }
 
+/**
+ * Initializes all task form controls.
+ * 
+ * @function initTaskFormControls
+ * @param {HTMLFormElement} form - Form element to initialize.
+ * @param {Object} usersData - Object with user data.
+ * @returns {void}
+ */
+function initTaskFormControls(form, usersData) {
+  initAssignedToDropdown(form, usersData);
+  resetAssignedToDropdown(form);
+  initTaskTypeDropdown(form, TASK_CATEGORIES);
+  initSubtasksInput(form);
+}
+
+/**
+ * Sets up event handlers for the task modal.
+ * 
+ * @function setupModalEventHandlers
+ * @param {HTMLElement} modal - Modal dialog element.
+ * @returns {void}
+ */
+function setupModalEventHandlers(modal) {
+  renderIcons(modal);
+  modal.showModal();
+
+  const removeEsc = listenEscapeFromModal("addTaskModal", async () => {
+    closeAddTaskModal();
+  });
+  modal.addEventListener("close", removeEsc, { once: true });
+}
+
+/**
+ * Opens the add task modal window.
+ * 
+ * @async
+ * @function openAddTaskModal
+ * @param {number} [taskStatus=0] - Initial status for the new task.
+ * @returns {Promise<void>}
+ */
 async function openAddTaskModal(taskStatus = 0) {
   const modalHost = document.getElementById("addTaskModalHost");
   const modal = document.getElementById("addTaskModal");
@@ -118,63 +203,85 @@ async function openAddTaskModal(taskStatus = 0) {
     afterSaved: afterTaskAddedInModal, 
   });
 
-  initAssignedToDropdown(form, usersDataObj);
-  resetAssignedToDropdown(form);
-  initTaskTypeDropdown(form, TASK_CATEGORIES);
-  initSubtasksInput(form);
-
-  renderIcons(modal);
-  modal.showModal();
-
-  const removeEsc = listenEscapeFromModal("addTaskModal", async () => {
-    closeAddTaskModal();
-  });
-  modal.addEventListener("close", removeEsc, { once: true });
+  initTaskFormControls(form, usersDataObj);
+  setupModalEventHandlers(modal);
 }
 
-
-
+/**
+ * Checks if an element is already initialized.
+ * 
+ * @function isInitialized
+ * @param {HTMLElement} root - Root element to check.
+ * @returns {boolean} true if already initialized, false otherwise.
+ */
 function isInitialized(root) {
   if (root.dataset.initialized === "1") return true;
   root.dataset.initialized = "1";
   return false;
 }
 
+/**
+ * Gets UI element references for assigned users dropdown.
+ * 
+ * @function getAssignedToUi
+ * @param {HTMLFormElement} form - Form containing the dropdown.
+ * @returns {Object} Object with UI element references.
+ */
 function getAssignedToUi(form) {
   const root = form.querySelector("#assigned_to");
   if (!root) return { root: null };
 
   const toggleBtn = root.querySelector("#assigned_to_toggle");
+  const control = root.querySelector(".multi_select__control");
+  const dropdown = root.querySelector("#assigned_to_dropdown");
+  const list = root.querySelector("#assigned_to_list");
+  const caret = toggleBtn?.querySelector(".caret");
 
-  return {
-    root,
-    control: root.querySelector(".multi_select__control"),
-    toggleBtn,
-    dropdown: root.querySelector("#assigned_to_dropdown"),
-    list: root.querySelector("#assigned_to_list"),
-    caret: toggleBtn?.querySelector(".caret"),
-    assignedToPlaceholder: root.querySelector("#assigned_to_placeholder"),
-    valueEl: root.querySelector("#assigned_to_value"),
-    assignedToInput: root.querySelector("#assigned_to_input"),
-    assignedToassignedToFilterInput: root.querySelector("#assigned_to_filter"),
-    avatarContainer: form.querySelector("#assigned_avatar_container"),
-  };
+  return buildAssignedToUiObject(root, control, toggleBtn, dropdown, list, caret, form);
+}
+
+/**
+ * Builds the complete UI object for assigned users dropdown.
+ * 
+ * @function buildAssignedToUiObject
+ * @param {HTMLElement} root - Root element.
+ * @param {HTMLElement} control - Control element.
+ * @param {HTMLElement} toggleBtn - Toggle button element.
+ * @param {HTMLElement} dropdown - Dropdown element.
+ * @param {HTMLElement} list - List element.
+ * @param {HTMLElement} caret - Caret icon element.
+ * @param {HTMLFormElement} form - Parent form element.
+ * @returns {Object} Complete UI object with all element references.
+ */
+function buildAssignedToUiObject(root, control, toggleBtn, dropdown, list, caret, form) {
+  const assignedToPlaceholder = root.querySelector("#assigned_to_placeholder");
+  const valueEl = root.querySelector("#assigned_to_value");
+  const assignedToInput = root.querySelector("#assigned_to_input");
+  const assignedToassignedToFilterInput = root.querySelector("#assigned_to_filter");
+  const avatarContainer = form.querySelector("#assigned_avatar_container");
+
+  return { root, control, toggleBtn, dropdown, list, caret, assignedToPlaceholder, 
+    valueEl, assignedToInput, assignedToassignedToFilterInput, avatarContainer };
 }
 
 
+/**
+ * Wires filter input event handlers.
+ * 
+ * @function wireFilterEvents
+ * @param {Object} state - State object with UI and data.
+ * @returns {void}
+ */
 function wireFilterEvents(state) {
   const { ui } = state;
   if (!ui.assignedToassignedToFilterInput) return;
-
   ui.assignedToassignedToFilterInput.addEventListener("input", (e) => {
     state.query = e.target.value || "";
     renderUserList(state);
   });
-
   ui.assignedToassignedToFilterInput.addEventListener("click", (e) => {
     e.stopPropagation();
   });
-
   ui.assignedToassignedToFilterInput.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       closeDropdown(ui);
@@ -183,6 +290,13 @@ function wireFilterEvents(state) {
   });
 }
 
+/**
+ * Resets the assigned users dropdown to initial state.
+ * 
+ * @function resetAssignedToDropdown
+ * @param {HTMLFormElement} form - Form containing the dropdown.
+ * @returns {void}
+ */
 function resetAssignedToDropdown(form) {
   const ui = getAssignedToUi(form);
   if (!ui.root) return;
@@ -198,11 +312,16 @@ function resetAssignedToDropdown(form) {
     renderAssignedAvatars(state.selected, state.usersData, state.ui.avatarContainer);
     return;
   }
-
   if (ui.avatarContainer) ui.avatarContainer.innerHTML = "";
 }
 
-
+/**
+ * Renders the user list in the dropdown.
+ * 
+ * @function renderUserList
+ * @param {Object} state - State object with users data and UI.
+ * @returns {void}
+ */
 function renderUserList(state) {
   const { list } = state.ui;
   list.innerHTML = "";
@@ -217,6 +336,15 @@ function renderUserList(state) {
   }
 }
 
+/**
+ * Creates a list item element for a user.
+ * 
+ * @function createUserListItem
+ * @param {Object} state - State object.
+ * @param {string} userId - User ID.
+ * @param {Object} userObj - User data object.
+ * @returns {HTMLElement} List item element.
+ */
 function createUserListItem(state, userId, userObj) {
   const nameRaw = userObj?.givenName ?? "(no name)";
   const name = escapeHtml(nameRaw);
@@ -231,11 +359,29 @@ function createUserListItem(state, userId, userObj) {
   return li;
 }
 
+/**
+ * Handles user selection toggle.
+ * 
+ * @function onUserToggle
+ * @param {Object} state - State object.
+ * @param {HTMLElement} li - List item element.
+ * @param {string} userId - User ID.
+ * @returns {void}
+ */
 function onUserToggle(state, li, userId) {
   const isSelected = li.classList.toggle("is-selected");
   updateSelection(state, userId, isSelected);
 }
 
+/**
+ * Updates selection state and UI.
+ * 
+ * @function updateSelection
+ * @param {Object} state - State object.
+ * @param {string} userId - User ID.
+ * @param {boolean} isChecked - Whether user is selected.
+ * @returns {void}
+ */
 function updateSelection(state, userId, isChecked) {
   const { selected, usersData, ui } = state;
   isChecked ? selected.add(userId) : selected.delete(userId);
@@ -247,6 +393,16 @@ function updateSelection(state, userId, isChecked) {
   state.form?._markDirty?.();
 }
 
+/**
+ * Applies selection changes to the UI.
+ * 
+ * @function applySelectionUi
+ * @param {Object} ui - UI elements object.
+ * @param {Array<string>} names - Array of selected user names.
+ * @param {Set} selected - Set of selected user IDs.
+ * @param {Object} usersData - User data object.
+ * @returns {void}
+ */
 function applySelectionUi(ui, names, selected, usersData) {
   if (names.length === 0) {
     ui.assignedToPlaceholder.hidden = false;
@@ -262,209 +418,3 @@ function applySelectionUi(ui, names, selected, usersData) {
   ui.assignedToInput.value = JSON.stringify([...selected]);
   renderAssignedAvatars(selected, usersData, ui.avatarContainer);
 }
-
-function wireDropdownEvents(state) {
-  const { ui } = state;
-
-  function afterToggleSync() {
-    const isOpen = !ui.dropdown.hidden;
-
-    if (ui.assignedToassignedToFilterInput) {
-      ui.assignedToassignedToFilterInput.hidden = !isOpen;
-      if (isOpen) {
-        ui.assignedToassignedToFilterInput.focus();
-        ui.assignedToassignedToFilterInput.select();
-      } else {
-        ui.assignedToassignedToFilterInput.value = "";
-        state.query = "";
-        renderUserList(state);
-      }
-    }
-    if (isOpen) ui.assignedToPlaceholder.hidden = true;
-    else {
-      if (state.selected.size === 0) ui.assignedToPlaceholder.hidden = false;
-    }
-  }
-
-  ui.toggleBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    toggleDropdown(ui);
-    afterToggleSync();
-  });
-
-  ui.control.addEventListener("click", (e) => {
-    if (e.target === ui.toggleBtn || ui.toggleBtn.contains(e.target)) return;
-
-    toggleDropdown(ui);
-    afterToggleSync();
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!ui.root.contains(e.target)) {
-      closeDropdown(ui);
-      afterToggleSync();
-    }
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeDropdown(ui);
-      afterToggleSync();
-    }
-  });
-}
-
-function toggleDropdown(ui) {
-  ui.dropdown.hidden ? openDropdown(ui) : closeDropdown(ui);
-}
-
-function openDropdown(ui) {
-  ui.dropdown.hidden = false;
-  ui.control.setAttribute("aria-expanded", "true");
-  ui.caret?.classList.add("caret_rotate");
-}
-
-function closeDropdown(ui) {
-  ui.dropdown.hidden = true;
-  ui.control.setAttribute("aria-expanded", "false");
-  ui.caret?.classList.remove("caret_rotate");
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function getSubtasksArray() {
-  const hidden = document.querySelector("#subtasks_list_input");
-  if (!hidden || !hidden.value) return [];
-  try {
-    const arr = JSON.parse(hidden.value);
-    if (!Array.isArray(arr)) return [];
-    return arr
-      .filter(x => x && typeof x === "object")
-      .map(x => ({ title: String(x.title ?? "").trim(), done: Boolean(x.done) }))
-      .filter(x => x.title.length > 0);
-  } catch {
-    return [];
-  }
-}
-
-function getAssignedToIds() {
-  const hidden = document.getElementById("assigned_to_input");
-  if (!hidden || !hidden.value) return [];
-  try {
-    const arr = JSON.parse(hidden.value);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
-  }
-}
-
-function initTaskTypeDropdown(form, categories) {
-  const root = form.querySelector("#task_cat_select");
-  if (!root || isInitialized(root)) return;
-  const ui = getTaskCatUi(root);
-  renderTaskCatOptions(ui, categories);
-  wireTaskCatEvents(ui);
-}
-
-function getTaskCatUi(root) {
-  return {
-    root,
-    control: root.querySelector(".single_select__control"),
-    dropdown: root.querySelector(".single_select__dropdown"),
-    list: root.querySelector(".single_select__list"),
-    valueEl: root.querySelector(".single_select__value"),
-    placeholder: root.querySelector(".single_select__placeholder"),
-    assignedToInput: root.querySelector("#task_cat"),
-    caret: root.querySelector(".caret"),
-  };
-}
-
-function renderTaskCatOptions(ui, categories) {
-  ui.list.innerHTML = "";
-  categories.forEach((cat) => {
-    const li = document.createElement("li");
-    li.className = "single_select__item";
-    li.textContent = cat.label;
-    li.addEventListener("click", () => selectTaskCat(ui, cat));
-    ui.list.appendChild(li);
-  });
-}
-
-function selectTaskCat(ui, cat) {
-  ui.assignedToInput.value = cat.value;
-  ui.valueEl.textContent = cat.label;
-  ui.valueEl.hidden = false;
-  ui.placeholder.hidden = true;
-  closeTaskCatDropdown(ui);
-
-  const taskTypeDiv = ui.root.querySelector("#task_cat_control");
-  const taskTypeOuterDiv = ui.root; 
-  if (taskTypeDiv && taskTypeOuterDiv) {
-    setInputValid(taskTypeDiv, taskTypeOuterDiv);
-  }
-  ui.root.closest("form")?._markDirty?.();
-}
-
-
-function wireTaskCatEvents(ui) {
-  ui.control.addEventListener("click", () => toggleTaskCatDropdown(ui));
-
-  document.addEventListener("click", (e) => {
-    if (!ui.root.contains(e.target)) closeTaskCatDropdown(ui);
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeTaskCatDropdown(ui);
-  });
-}
-
-function toggleTaskCatDropdown(ui) {
-  ui.dropdown.hidden ? openTaskCatDropdown(ui) : closeTaskCatDropdown(ui);
-}
-
-function openTaskCatDropdown(ui) {
-  ui.dropdown.hidden = false;
-  ui.caret.classList.add("caret_rotate");
-}
-
-function closeTaskCatDropdown(ui) {
-  ui.dropdown.hidden = true;
-  ui.caret.classList.remove("caret_rotate");
-}
-
-function resetPriorityButtons(form) {
-  const urgent = form.querySelector('input[name="priority"][value="urgent"]');
-  const medium = form.querySelector('input[name="priority"][value="medium"]');
-  const low = form.querySelector('input[name="priority"][value="low"]');
-
-  if (urgent) urgent.checked = false;
-  if (medium) medium.checked = true;
-  if (low) low.checked = false;
-}
-
-
-function resetTaskCatDropdownUi(form) {
-  const root = form.querySelector("#task_cat_select");
-  if (!root) return;
-
-  const valueEl = root.querySelector(".single_select__value");
-  const placeholder = root.querySelector(".single_select__placeholder");
-  const assignedToInput = form.querySelector("#task_cat");
-
-  if (valueEl) {
-    valueEl.hidden = true;
-    valueEl.textContent = "";
-  }
-  if (placeholder) placeholder.hidden = false;
-  if (assignedToInput) assignedToInput.value = "";
-}
-
-
-window.initAssignedToDropdown = initAssignedToDropdown;
