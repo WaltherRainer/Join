@@ -114,17 +114,49 @@ async function deleteTask(taskId) {
 
 
 async function enterTaskEditMode(users) {
+  // 1. Collect data and elements
+  const { modal, host, wrapper, task, taskId } = getEditModeContext();
+  if (!modal || !host || !wrapper || !task) return;
+
+  // 2. Prepare DOM for edit mode
+  prepareEditModeDOM(wrapper, host);
+
+  // 3. Create and mount the form
+  const form = await createEditTaskForm(host, task, taskId, users);
+
+  // 4. Initialize dropdown controls
+  initializeEditFormControls(form, users);
+
+  // 5. Hydrate preset values into the controls
+  hydrateEditFormValues(form, task, users);
+
+  // 6. Synchronize visual representations
+  syncEditFormDisplay(form, users);
+
+  // 7. Apply edit mode styling and behavior
+  setupEditModeUI(form, modal);
+
+  // 8. Set focus to title field
+  form.querySelector("#task_titel")?.focus();
+}
+
+function getEditModeContext() {
   const modal = document.getElementById("show_task_modal");
   const host = document.getElementById("EditTaskModalHost");
   const wrapper = document.getElementById("task_dialog_content_wrapper");
-  const taskId = String(modal.dataset.taskId || "");
+  const taskId = String(modal?.dataset.taskId || "");
   const tasks = loadTasksFromSession();
   const task = tasks[taskId];
-  if (!modal || !host || !wrapper || !task) return;
+  return { modal, host, wrapper, task, taskId };
+}
 
+function prepareEditModeDOM(wrapper, host) {
   wrapper.classList.add("is-hidden");
   host.innerHTML = "";
+}
 
+async function createEditTaskForm(host, task, taskId, users) {
+  const tasks = loadTasksFromSession();
   const form = await mountTaskForm(host, {
     title: "Task bearbeiten",
     preset: task,
@@ -140,22 +172,43 @@ async function enterTaskEditMode(users) {
       loadTaskBoard(tasks, users);
     },
   });
+  return form;
+}
 
+function initializeEditFormControls(form, users) {
   initAssignedToDropdown(form, users);
-  // resetAssignedToDropdown(form);
   initTaskTypeDropdown(form, TASK_CATEGORIES);
   initSubtasksInput(form);
+}
 
+function hydrateEditFormValues(form, task, users) {
+  const hidden = form.querySelector("#assigned_to_input");
+  if (hidden && hidden.value) {
+    try {
+      const ids = JSON.parse(hidden.value);
+      const ui = getAssignedToUi(form);
+      const state = ui.root?._assignedState;
+      if (state && Array.isArray(ids)) {
+        ids.forEach(id => state.selected.add(id));
+        renderUserList(state);
+        applySelectionUi(state.ui, ids.map(id => users[id]?.givenName).filter(Boolean), state.selected, users);
+      }
+    } catch (e) {
+      console.warn("hydrateEditFormValues: failed to parse assignedTo preset", e);
+    }
+  }
+}
+
+function syncEditFormDisplay(form, users) {
   syncTaskCatUI(form);
   syncAssignedToUI(form, users);
+}
 
-  renderIcons(modal);
-
+function setupEditModeUI(form, modal) {
   form.classList.add("edit_mode");
+  renderIcons(modal);
   installEditDirtyTracking(form);
 
-
-  form.classList.add("edit_mode");
   const cancelBtn = form.querySelector("#clear_task_form_btn");
   cancelBtn?.classList.add("is-hidden");
 
@@ -163,17 +216,13 @@ async function enterTaskEditMode(users) {
   submitBtn.querySelector(".btn_label").textContent = "OK";
 
   const actionBtn = form.querySelector(".form_actions");
-  actionBtn.classList.add("edit_mode");
+  actionBtn?.classList.add("edit_mode");
 
   const addTaskFormRight = form.querySelector(".add_task_form_right");
-  addTaskFormRight.classList.add("edit_mode");
+  addTaskFormRight?.classList.add("edit_mode");
 
   const addTaskFormLeft = form.querySelector(".add_task_form_left");
-  addTaskFormLeft.classList.add("edit_mode");
-
-
-  form.querySelector("#task_titel")?.focus();
-
+  addTaskFormLeft?.classList.add("edit_mode");
 }
 
 function exitEditMode() {
@@ -195,18 +244,20 @@ function syncTaskCatUI(form) {
 
   const val = String(taskCat.value || "").trim();
   if (!val) {
+    // no category selected -> show placeholder, hide value element
     valueEl.textContent = "";
-    valueEl.taskCat = true;
-    placeholder.taskCat = false;
+    valueEl.hidden = true;
+    placeholder.hidden = false;
     return;
   }
 
   const cat = (Array.isArray(TASK_CATEGORIES) ? TASK_CATEGORIES : [])
     .find(c => c.value === val);
 
+  // show the chosen label (or raw value if category list changed)
   valueEl.textContent = cat?.label || val;
-  valueEl.taskCat = false;
-  placeholder.taskCat = true;
+  valueEl.hidden = false;
+  placeholder.hidden = true;
 }
 
 

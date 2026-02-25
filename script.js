@@ -417,7 +417,6 @@ async function mountTaskForm(
 
   const form = hostEl.querySelector("form.add_task_form");
   form.querySelector(".add_task_titel").textContent = title;
-
   if (preset) {
     if (preset.titel != null) form.elements.task_titel.value = preset.titel;
     if (preset.description != null) form.elements.task_descr.value = preset.description;
