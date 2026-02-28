@@ -21,11 +21,12 @@
     "form_actions form_actions";
 }
 
-.add_task_form.edit_mode {                                                      /* marc */
+.add_task_form.edit_mode {
+  /* marc */
   display: grid;
-  grid-template-columns: 100%; 
+  grid-template-columns: 100%;
   /* ÄNDERUNG: Nutze auto statt fester Pixelwerte */
-  grid-template-rows: auto auto auto auto; 
+  grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "add_task_titel"
     "add_task_form_left"
@@ -35,7 +36,7 @@
   justify-content: center;
   gap: 16px;
   padding: 24px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
-    box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
+  box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
 }
 
 .add_task_titel {
@@ -78,9 +79,9 @@
    Form rows / inputs
 ========================= */
 
-.form_div_descr {
-  /* margin-top: 64px; */
-}
+/* .form_div_descr {
+  margin-top: 64px;
+} */
 
 .form_row {
   display: grid;
@@ -144,27 +145,27 @@
    Priority buttons (checked)
 ========================= */
 
-.priority_urgent input:checked+span,
-.priority_medium input:checked+span,
-.priority_low input:checked+span {
+.priority_urgent input:checked + span,
+.priority_medium input:checked + span,
+.priority_low input:checked + span {
   color: var(--white-text-color);
   font-weight: 700;
   box-shadow: none;
 }
 
-.priority_btn input:checked+span:hover {
+.priority_btn input:checked + span:hover {
   box-shadow: none;
 }
 
-.priority_urgent input:checked+span {
+.priority_urgent input:checked + span {
   background-color: var(--prio-urgent);
 }
 
-.priority_medium input:checked+span {
+.priority_medium input:checked + span {
   background-color: var(--prio-medium);
 }
 
-.priority_low input:checked+span {
+.priority_low input:checked + span {
   background-color: var(--prio-low);
 }
 
@@ -184,7 +185,6 @@
 .form_actions.edit_mode {
   margin-right: 54px;
 }
-
 
 /* =========================
    Multi select
@@ -462,7 +462,7 @@
   font-weight: 600;
 }
 
-.priority_buttons_container{
+.priority_buttons_container {
   justify-content: space-between;
 }
 
@@ -512,12 +512,12 @@
 
 @media (max-width: 960px) {
   .priority_btn .svg-icon {
-    gap: 4px; 
+    gap: 4px;
   }
 
   .priority_btn .svg-icon svg {
-    width: 16px !important;  
-    height: auto !important; 
+    width: 16px !important;
+    height: auto !important;
   }
 }
 
@@ -526,11 +526,11 @@
     gap: 8px;
   }
 
-
-  .add_task_form.edit_mode {                                                      /* marc */
+  .add_task_form.edit_mode {
+    /* marc */
     padding: 6px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
     box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
-}
+  }
 
   .add_task_form {
     grid-template-columns: 1fr;
@@ -574,7 +574,7 @@
     gap: 24px;
   }
 
-  .add_task_form>* {
+  .add_task_form > * {
     min-width: 0;
     max-width: 100%;
   }
@@ -618,5 +618,10 @@
   .add_task_titel {
     font-size: 47px !important;
   }
+}
 
+.error-message {
+  color: #d32f2f;
+  font-size: 12px;
+  margin-top: 6px;
 }

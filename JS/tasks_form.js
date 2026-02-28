@@ -1,9 +1,9 @@
 /**
  * Initializes the add task page.
- * 
+ *
  * Checks user authorization and binds the submit event
  * handler to the add task form.
- * 
+ *
  * @function initAddTask
  * @returns {void}
  */
@@ -17,10 +17,10 @@ function initAddTask() {
 
 /**
  * Clears all input fields of the add task form.
- * 
+ *
  * Resets the values of fields: title, description, date, category,
  * subtasks, and JSON subtask lists.
- * 
+ *
  * @function clearFormInputFields
  * @param {HTMLFormElement} form - Form to clear.
  * @returns {void}
@@ -42,9 +42,9 @@ function clearFormInputFields(form) {
 
 /**
  * Clears UI elements of the add task form.
- * 
+ *
  * Clears the subtask list and assigned users avatar container.
- * 
+ *
  * @function clearFormUIElements
  * @param {HTMLFormElement} form - Form to clear.
  * @returns {void}
@@ -59,10 +59,10 @@ function clearFormUIElements(form) {
 
 /**
  * Resets the state of the add task form.
- * 
+ *
  * Resets priority buttons, assignment dropdown,
  * category UI, and removes all error messages.
- * 
+ *
  * @function resetFormState
  * @param {HTMLFormElement} form - Form to reset.
  * @returns {void}
@@ -76,10 +76,10 @@ function resetFormState(form) {
 
 /**
  * Completely clears the add task form.
- * 
+ *
  * Calls sequentially the functions for clearing fields, UI elements,
  * and resetting state.
- * 
+ *
  * @function clearTaskForm
  * @param {HTMLFormElement} form - Form to clear.
  * @returns {void}
@@ -93,10 +93,10 @@ function clearTaskForm(form) {
 
 /**
  * Clears the editable subtask input field.
- * 
+ *
  * Finds the input field in edit mode, clears it,
  * and sets focus on it.
- * 
+ *
  * @function clearEditInput
  * @param {Object} state - State object with UI elements.
  * @returns {void}
@@ -109,10 +109,10 @@ function clearEditInput(state) {
 
 /**
  * Validates the task title field.
- * 
+ *
  * Checks the field using checkValidity(), sets
  * corresponding error classes.
- * 
+ *
  * @function validateTitleField
  * @param {HTMLFormElement} form - Form with field to validate.
  * @returns {boolean} true if the field is valid.
@@ -129,10 +129,10 @@ function validateTitleField(form) {
 
 /**
  * Validates the task due date field.
- * 
+ *
  * Checks the field using checkValidity(), sets
  * corresponding error classes.
- * 
+ *
  * @function validateDueDateField
  * @param {HTMLFormElement} form - Form with field to validate.
  * @returns {boolean} true if the field is valid.
@@ -149,10 +149,10 @@ function validateDueDateField(form) {
 
 /**
  * Validates the task category field.
- * 
+ *
  * Checks that a category is selected, sets
  * corresponding error classes on control elements.
- * 
+ *
  * @function validateCategoryField
  * @param {HTMLFormElement} form - Form with field to validate.
  * @returns {boolean} true if a category is selected.
@@ -172,10 +172,10 @@ function validateCategoryField(form) {
 
 /**
  * Sets focus on the first invalid field of the form.
- * 
+ *
  * Finds the first element with the is-invalid class and sets focus on it.
  * For category, focuses the button instead of the hidden field.
- * 
+ *
  * @function focusFirstInvalidField
  * @param {HTMLFormElement} form - Form with invalid fields.
  * @returns {void}
@@ -191,10 +191,10 @@ function focusFirstInvalidField(form) {
 
 /**
  * Validates the entire add task form.
- * 
+ *
  * Calls validations for each required field (title, date, category)
  * and sets focus on the first invalid field if there are errors.
- * 
+ *
  * @function validateAddTaskForm
  * @param {HTMLFormElement} form - Form to validate.
  * @returns {boolean} true if all fields are valid.
@@ -215,9 +215,9 @@ function validateAddTaskForm(form) {
 
 /**
  * Creates an object to update a task from form data.
- * 
+ *
  * Extracts the necessary fields for updating an existing task.
- * 
+ *
  * @function buildTaskPatchFromFormData
  * @param {Object} data - Object with data from the form.
  * @returns {Object} Object with fields to update.
@@ -236,10 +236,10 @@ function buildTaskPatchFromFormData(data) {
 
 /**
  * Extracts new task data from the form.
- * 
+ *
  * Collects values from all form fields: title, description, date,
  * category, priority, and subtasks. Sets status to 0 (To Do).
- * 
+ *
  * @function extractFormData
  * @param {HTMLFormElement} form - Form with task data.
  * @returns {Object} Object with new task data.
@@ -258,10 +258,10 @@ function extractFormData(form) {
 
 /**
  * Handles the add task form submission.
- * 
+ *
  * Prevents default form submission, performs validation,
  * extracts data, adds the task, and redirects to board.html.
- * 
+ *
  * @async
  * @function handleFormSubmit
  * @param {Event} event - Form submission event.
@@ -284,9 +284,9 @@ async function handleFormSubmit(event) {
 
 /**
  * Marks a form element as invalid.
- * 
+ *
  * Adds the 'is-invalid' CSS class to the root element.
- * 
+ *
  * @function setInputInValid
  * @param {HTMLElement} el - Input element (not used).
  * @param {HTMLElement} root - Root element to add the class to.
@@ -298,9 +298,9 @@ function setInputInValid(el, root) {
 
 /**
  * Removes the invalid mark from a form element.
- * 
+ *
  * Removes the 'is-invalid' CSS class from the root element.
- * 
+ *
  * @function setInputValid
  * @param {HTMLElement} el - Input element (not used).
  * @param {HTMLElement} root - Root element to remove the class from.

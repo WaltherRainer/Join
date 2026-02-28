@@ -18,7 +18,6 @@
     <script src="./JS/fetch.js" defer></script>
     <script src="./JS/icons.js" defer></script>
     <script src="./JS/templates.js" defer></script>
-    <!-- <script src="./JS/tasks.js" defer></script> -->
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <title>Join - Contacts</title>
 </head>
@@ -62,11 +61,6 @@
 
                     <div class="contact_list_card d_none">
                         <div class="contact_list_content">
-                            <!-- <span class="user__avatar">AM</span>
-                            <div class="user_contact">
-                                <span>Anton Mayer</span>
-                                <p><a href="mailto:anonm@gmail.com">anton@gmail.com</a></p>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -133,35 +127,28 @@
                     <span class="svg-icon" data-icon="person" data-w="42" data-h="42"></span>
                 </div>
 
-                <form id="contact_form" class="edit_contact_fields" action="/contacts" method="post">
-
+                <form id="contact_form" class="edit_contact_fields" action="/contacts" method="post" novalidate>
                     <div class="input-wrapper">
                         <input class="standard_input_box" type="text" id="user_name" name="user_name" placeholder="Name"
                             required>
-
                         <span class="svg-icon is-muted input_icon" data-icon="person" data-w="24" data-h="24"></span>
                     </div>
-
                     <div class="input-wrapper">
                         <input class="standard_input_box" type="email" id="user_email" name="user_email"
                             placeholder="Email" required>
-
                         <span class="svg-icon is-muted input_icon" data-icon="mail" data-w="24" data-h="20"></span>
                     </div>
-
                     <div class="input-wrapper">
                         <input class="standard_input_box" type="tel" id="user_phone" name="user_phone"
                             placeholder="Phone" required>
                         <span class="svg-icon is-muted input_icon" data-icon="phone" data-w="24" data-h="24"></span>
                     </div>
                     <div class="edit_contact_btn">
-                        <button id="clear_contact_form" class="clear_button">Cancel</button>
-                        <button type="submit" class="default_button">
-                            Create Contact
+                        <button id="clear_contact_form" class="clear_button" type="button">Cancel</button>
+                        <button type="submit" class="default_button">Create Contact
                             <span class="button_icon" data-icon="checkMark" data-w="15" data-h="11"></span>
                         </button>
                     </div>
-
                 </form>
             </main>
         </div>
@@ -170,7 +157,8 @@
     <dialog class="overlay_backdrop modal" id="edit_contact_modal">
         <div class="edit_contact_overlay contact_modal_content" id="edit_contact_modal_host">
             <aside class="overlay_left">
-                <span class="svg-icon is-muted contacts_modal_icon" data-icon="join_logo" data-w="54" data-h="66"></span>
+                <span class="svg-icon is-muted contacts_modal_icon" data-icon="join_logo" data-w="54"
+                    data-h="66"></span>
                 <h2>Edit Contact</h2>
                 <div class="divider"></div>
             </aside>

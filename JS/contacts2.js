@@ -117,12 +117,11 @@ function closeEditContactModal(modal) {
 }
 
 /**
- * Binds the submit handler for the add-contact form exactly once.
+ * Binds the add-contact form submit and input handlers exactly once.
  *
- * Uses a `data-submit-bound` flag on the form element to prevent
- * duplicate event registrations across multiple modal openings.
- * On submit, the default form action is prevented and {@link addNewUser}
- * is executed asynchronously; errors are caught and logged.
+ * Uses {@link bindOnce} to prevent duplicate event registrations, then attaches
+ * the submit handler factory {@link onContactFormSubmit} and the shared input
+ * handler {@link onContactFormInput}.
  *
  * @function bindContactFormSubmitOnce
  * @returns {void}
@@ -130,16 +129,105 @@ function closeEditContactModal(modal) {
 function bindContactFormSubmitOnce() {
   const form = document.getElementById("contact_form");
   if (!form) return;
-  if (form.dataset.submitBound === "1") return;
-  form.dataset.submitBound = "1";
-  form.addEventListener("submit", async (e) => {
+  if (!bindOnce(form, "submitBound")) return;
+
+  form.addEventListener("submit", onContactFormSubmit(form));
+  form.addEventListener("input", onContactFormInput);
+}
+
+/**
+ * Marks an element as initialized once using a dataset flag.
+ *
+ * If `el.dataset[flag]` is already `"1"`, binding should be skipped; otherwise
+ * the flag is set and binding may proceed.
+ *
+ * @function bindOnce
+ * @param {HTMLElement} el - Element that stores the one-time marker in `dataset`.
+ * @param {string} flag - Dataset key used as the marker (e.g. `"submitBound"`).
+ * @returns {boolean} `true` if the caller should bind handlers now, otherwise `false`.
+ */
+function bindOnce(el, flag) {
+  if (el.dataset[flag] === "1") return false;
+  el.dataset[flag] = "1";
+  return true;
+}
+
+/**
+ * Creates a submit event handler for the add-contact form.
+ *
+ * Prevents the default submit behavior, validates required fields, and
+ * triggers {@link addNewUser}. Errors are caught and logged.
+ *
+ * @function onContactFormSubmit
+ * @param {HTMLFormElement} form - The form element to validate on submit.
+ * @returns {(e: SubmitEvent) => Promise<void>} Async submit handler function.
+ */
+function onContactFormSubmit(form) {
+  return async (e) => {
     e.preventDefault();
+
+    if (!validateRequiredFields(form)) return;
+
     try {
       await addNewUser();
     } catch (err) {
       console.error("addUser failed", err);
     }
+  };
+}
+
+/**
+ * Handles input events on required fields to clear validation errors.
+ *
+ * When a required input receives a non-empty value, removes the `input-invalid`
+ * class and deletes any associated `.field-error` message in the input's parent.
+ *
+ * @function onContactFormInput
+ * @param {Event} e - Input event from the form.
+ * @returns {void}
+ */
+function onContactFormInput(e) {
+  const input = e.target.closest("input[required]");
+  if (!input) return;
+
+  if (input.value.trim()) {
+    input.classList.remove("input-invalid");
+    input.parentElement?.querySelector(".field-error")?.remove();
+  }
+}
+
+/**
+ * Validates all required inputs in a form and renders inline error messages.
+ *
+ * Clears previous validation UI, checks each `input[required]` for a non-empty
+ * trimmed value, marks invalid inputs with `input-invalid`, appends a
+ * `.field-error` message, and returns whether the form is valid.
+ *
+ * @function validateRequiredFields
+ * @param {HTMLFormElement} form - Form element containing required inputs.
+ * @returns {boolean} `true` if all required fields are filled, otherwise `false`.
+ */
+function validateRequiredFields(form) {
+  form.querySelectorAll(".field-error").forEach((el) => el.remove());
+  form.querySelectorAll(".input-invalid").forEach((el) => el.classList.remove("input-invalid"));
+
+  const inputs = form.querySelectorAll("input[required]");
+  let ok = true;
+
+  inputs.forEach((input) => {
+    if (!input.value.trim()) {
+      ok = false;
+      input.classList.add("input-invalid");
+
+      const msg = document.createElement("div");
+      msg.className = "field-error";
+      msg.textContent = "Field required";
+
+      input.parentElement.appendChild(msg);
+    }
   });
+
+  return ok;
 }
 
 /**
@@ -305,102 +393,3 @@ function readEditUserForm() {
   if (!email || !givenName || !userPhone) return null;
   return { email, givenName, userPhone };
 }
-
-/**
- * Reloads users, updates the contacts list, and optionally re-renders the active user's details.
- *
- * Clears the cached users-loading promise, fetches the latest users via
- * {@link initUsersLoading}, persists them to session storage, and re-renders
- * the contacts list. If an `activeUserId` is provided, the contact details
- * view is rendered for that user.
- *
- * @async
- * @function refreshUsersUI
- * @param {string} [activeUserId] - Optional user ID whose details should remain visible after refresh.
- * @returns {Promise<Object<string, Object>>} A promise that resolves to the refreshed users collection.
- */
-async function refreshUsersUI(activeUserId) {
-  window.usersReady = null;
-  const users = await initUsersLoading();
-  saveUsersToSessionStorage(users);
-  renderContacts(users);
-  if (activeUserId) {
-    renderContactDetails(users, activeUserId);
-  }
-  return users;
-}
-
-/**
- * Renders the avatar preview in the edit contact form.
- *
- * Computes the user's initials and a color index, then applies the
- * corresponding background color and initials to the avatar element.
- * If the avatar element is not present, the function exits silently.
- *
- * @function renderEditContactAvatar
- * @param {string} userId - The ID of the user used to derive the color.
- * @param {string} givenName - The user's given name used to compute initials.
- * @returns {void}
- */
-function renderEditContactAvatar(userId, givenName) {
-  const avatarEl = document.getElementById("user_avatar_edit");
-  if (!avatarEl) return;
-  const initials = initialsFromGivenName(givenName);
-  const bgColor = colorIndexFromUserId(userId);
-  avatarEl.style.backgroundColor = `var(--user_c_${bgColor})`;
-  avatarEl.innerHTML = initials;
-}
-
-const mqMobile = window.matchMedia("(max-width: 1100px)");
-
-/**
- * Switches the contacts layout into "details" view mode.
- *
- * Adds the `is-details` class to the `.contacts_layout` container if it exists.
- *
- * @function showDetailsView
- * @returns {void}
- */
-function showDetailsView() {
-  document.querySelector(".contacts_layout")?.classList.add("is-details");
-}
-
-/**
- * Switches the contacts layout back to "list" view mode.
- *
- * Removes the `is-details` class from the `.contacts_layout` container if it exists.
- *
- * @function showListView
- * @returns {void}
- */
-function showListView() {
-  document.querySelector(".contacts_layout")?.classList.remove("is-details");
-}
-
-/**
- * Handles contact card selection via event delegation on the contact list.
- *
- * Detects clicks on `.contact_list_card` elements, marks the clicked card as active,
- * renders the corresponding contact details, and switches to the details view on
- * mobile breakpoints.
- *
- * @listens HTMLElement#click
- * @param {MouseEvent} e - Click event from the contact list container.
- * @returns {void}
- */
-document.querySelector(".contact_list_sect")?.addEventListener("click", (e) => {
-  const card = e.target.closest(".contact_list_card");
-  if (!card) return;
-  const userId = card.dataset.userId;
-  setActiveContactCard(card);
-  renderContactDetails(users, userId);
-  if (mqMobile.matches) showDetailsView();
-});
-
-document.querySelector(".back_to_list")?.addEventListener("click", () => {
-  showListView();
-});
-
-mqMobile.addEventListener("change", (e) => {
-  if (!e.matches) showListView();
-});

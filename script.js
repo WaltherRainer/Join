@@ -7,19 +7,54 @@ const USER_COLOR_COUNT = 15;
 let joinSessionStorageObject = {};
 let usersReady = null;
 
+/**
+ * Initializes the index page.
+ *
+ * Currently sets up session storage via {@link initSessionStorage}.
+ *
+ * @function indexInit
+ * @returns {void}
+ */
 function indexInit() {
   initSessionStorage();
 }
 
+/**
+ * Initializes default session storage values for the login state.
+ *
+ * Sets `userLoggedIn` to `false` and initializes `userId` with a placeholder.
+ *
+ * @function initSessionStorage
+ * @returns {void}
+ */
 function initSessionStorage() {
   sessionStorage.setItem("userLoggedIn", false);
   sessionStorage.setItem("userId", "notLoggedIn");
 }
 
+/**
+ * Stores a value in session storage as JSON.
+ *
+ * Serializes the provided value with `JSON.stringify` and writes it under the given key.
+ *
+ * @function saveSessionStorage
+ * @param {string} key - Session storage key to write.
+ * @param {*} value - Value to serialize and store.
+ * @returns {void}
+ */
 function saveSessionStorage(key, value) {
   sessionStorage.setItem(key, JSON.stringify(value));
 }
 
+/**
+ * Loads the persisted `joinSessionStorageObject` from session storage.
+ *
+ * Reads the JSON value stored under `joinSessionStorageObject` and assigns it to the
+ * global `joinSessionStorageObject` variable. Logs an error if no data is found.
+ *
+ * @function loadSessionStorage
+ * @returns {void}
+ */
 function loadSessionStorage() {
   const tempArr = JSON.parse(sessionStorage.getItem("joinSessionStorageObject"));
   if (tempArr != null) {
@@ -65,22 +100,6 @@ async function ensureTasksLoaded() {
   return tasks;
 }
 
-/**
- * Initializes loading of the global users collection exactly once and returns a shared promise.
- *
- * If no pending/fulfilled load is cached in `window.usersReady`, this function starts an
- * asynchronous fetch of `/users` via {@link loadData}. The result is normalized to a plain
- * object (fallback `{}`) and stored on `window.users`. Subsequent calls return the same
- * promise to avoid duplicate network requests.
- *
- * If the load fails, the cached promise is cleared (`window.usersReady = null`) so a later
- * call can retry, and the original error is re-thrown.
- *
- * @function initUsersLoading
- * @returns {Promise<Object<string, Object>>} A promise that resolves to the loaded users object.
- *
- * @throws {Error} Propagates any error thrown during loading (e.g. by {@link loadData}).
- */
 function initUsersLoading() {
   if (!window.usersReady) {
     window.usersReady = (async () => {
@@ -267,21 +286,6 @@ function setActiveNavLink() {
   });
 }
 
-/**
- * Universeller Overlay-Toast: visible -> slide-in animation -> hold -> hide -> callback
- *
- * Erwartet:
- * - overlay bekommt Klassen: is_visible, is_animating
- * - "box" im Overlay animiert per CSS, wenn overlay.is_animating gesetzt ist
- *
- * @param {string} overlayId
- * @param {object} [opts]
- * @param {string} [opts.boxSelector]   - CSS selector für die Box im Overlay (default: "[data-toast-box], .signup_success_box, .task_success_box")
- * @param {number} [opts.holdMs]        - Standzeit nach Slide-In (default: data-hold-ms am Overlay oder 1000)
- * @param {Function} [opts.onDone]      - Callback nach dem Ausblenden (z.B. activateLogIn)
- * @param {string} [opts.visibleClass]  - default "is_visible"
- * @param {string} [opts.animateClass]  - default "is_animating"
- */
 function showToastOverlay(overlayId, opts = {}) {
   const overlay = document.getElementById(overlayId);
   if (!overlay) {
