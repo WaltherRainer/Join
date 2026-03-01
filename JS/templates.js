@@ -192,6 +192,14 @@ function getTaskDialSubtaskTempl(subTaskTitel, done, index) {
   `;
 }
 
+function renderSingleAvatar(initials, bgColor) {
+  return `<span class="user_avatar_small" style="background-color: var(--user_c_${bgColor});">${escapeHtml(initials)}</span>`;
+}
+
+function renderRemainingCount(remaining) {
+  return `\n      <span class="user_avatar_more">+${remaining}</span>`;
+}
+
 function getAssignedToTempl(initials, userName, bgColor) {
   return `
       <div class="tsk_dlg_assgnd"> <!-- Avatar und Name -->
