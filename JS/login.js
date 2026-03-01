@@ -1,16 +1,21 @@
 const signInContainer = document.getElementById("sign_up_form");
 const logInContainer = document.getElementById("login_wrapper");
 const indexHeader = document.getElementById("index_header");
-const form = document.getElementById("register_form");
-const registerBtn = document.getElementById("register_btn");
-const privacyCheckbox = document.getElementById("terms_accepted");
-const inputs = form.querySelectorAll("input[required]:not([type='checkbox'])");
 const ICON = Object.freeze({
   LOCK: "lock",
   EYE_CLOSED: "eye_closed",
   EYE_OPEN: "eye_open",
 });
 
+/**
+ * Sets the password field icon (lock, eye closed, or eye open).
+ *
+ * Updates the data-icon attribute and re-renders the icon if the renderer is available.
+ *
+ * @param {HTMLElement} button - The button element containing the icon.
+ * @param {string} iconName - The name of the icon to display (LOCK, EYE_CLOSED, EYE_OPEN).
+ * @returns {void}
+ */
 function setPwIcon(button, iconName) {
   const holder = button.querySelector("[data-icon]");
   if (!holder) return;
@@ -18,13 +23,16 @@ function setPwIcon(button, iconName) {
   if (window.renderIcons) window.renderIcons(button);
 }
 
-async function guestLogin() {
-  let dataObj = await loadData("/users");
-  saveUserToSessionStorage("guest", "Guest", dataObj);
-  sessionStorage.setItem("userLoggedIn", true);
-  window.location.replace("summary.html");
-}
-
+/**
+ * Sets the ARIA label for the password toggle button based on input state.
+ *
+ * Provides appropriate accessibility labels for screen readers depending on whether
+ * the password field is empty, hidden, or visible.
+ *
+ * @param {HTMLInputElement} input - The password input element.
+ * @param {HTMLElement} btn - The password toggle button element.
+ * @returns {void}
+ */
 function setAriaLabel(input, btn) {
   const hasValue = input.value.length > 0;
   if (!hasValue) btn.setAttribute("aria-label", "Passwortfeld ist leer");
@@ -32,16 +40,46 @@ function setAriaLabel(input, btn) {
   else btn.setAttribute("aria-label", "Passwort verbergen");
 }
 
+/**
+ * Updates the password field icon and ARIA label.
+ *
+ * Updates the state object, sets the new icon, and updates the accessibility label.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLElement} state.button - The toggle button element.
+ * @param {HTMLInputElement} state.input - The password input element.
+ * @param {string} nextIcon - The icon name to render.
+ * @returns {void}
+ */
 function renderIcon(state, nextIcon) {
   state.currentIcon = nextIcon;
   setPwIcon(state.button, nextIcon);
   setAriaLabel(state.input, state.button);
 }
 
+/**
+ * Toggles the pointer CSS class on the button based on clickability.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLElement} state.button - The toggle button element.
+ * @param {boolean} clickable - Whether the button should be clickable.
+ * @returns {void}
+ */
 function setClickable(state, clickable) {
   state.button.classList.toggle("pointer", clickable);
 }
 
+/**
+ * Synchronizes the password field state (icon, clickability, type).
+ *
+ * When the field is empty, shows a lock icon and disables the button.
+ * When the field has content, shows an eye icon and enables the button.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLElement} state.button - The toggle button element.
+ * @param {HTMLInputElement} state.input - The password input element.
+ * @returns {void}
+ */
 function syncState(state) {
   const hasValue = state.input.value.length > 0;
 
@@ -56,6 +94,17 @@ function syncState(state) {
   renderIcon(state, state.input.type === "password" ? ICON.EYE_CLOSED : ICON.EYE_OPEN);
 }
 
+/**
+ * Maintains the cursor position in the password input field.
+ *
+ * Uses requestAnimationFrame to ensure the input is focused and the caret
+ * is positioned at the specified location.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLInputElement} state.input - The password input element.
+ * @param {number} pos - The desired cursor position.
+ * @returns {void}
+ */
 function keepCaret(state, pos) {
   requestAnimationFrame(() => {
     state.input.focus();
@@ -65,6 +114,17 @@ function keepCaret(state, pos) {
   });
 }
 
+/**
+ * Toggles the visibility of the password field.
+ *
+ * Switches the input type between 'password' and 'text', updates the icon,
+ * and preserves the cursor position.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLInputElement} state.input - The password input element.
+ * @param {HTMLElement} state.button - The toggle button element.
+ * @returns {void}
+ */
 function toggleVisibility(state) {
   if (state.input.value.length === 0) return;
 
@@ -76,10 +136,30 @@ function toggleVisibility(state) {
   keepCaret(state, pos);
 }
 
+/**
+ * Prevents the button from losing focus when clicked.
+ *
+ * Prevents the default mousedown behavior to keep focus on the input field
+ * while interacting with the password toggle button.
+ *
+ * @param {HTMLElement} btn - The password toggle button element.
+ * @returns {void}
+ */
 function preventBlurOnMouseDown(btn) {
   btn.addEventListener("mousedown", (e) => e.preventDefault());
 }
 
+/**
+ * Attaches event listeners for password field interactions.
+ *
+ * Wires up click, input, and change event handlers to manage password visibility
+ * toggling and state synchronization.
+ *
+ * @param {Object} state - The password toggle state object.
+ * @param {HTMLElement} state.button - The toggle button element.
+ * @param {HTMLInputElement} state.input - The password input element.
+ * @returns {void}
+ */
 function wirePWEvents(state) {
   preventBlurOnMouseDown(state.button);
   state.button.addEventListener("click", () => toggleVisibility(state));
@@ -87,6 +167,15 @@ function wirePWEvents(state) {
   state.input.addEventListener("change", () => syncState(state));
 }
 
+/**
+ * Creates a password toggle state object from a container element.
+ *
+ * Queries the container for password input and toggle button elements,
+ * and initializes the state with these references.
+ *
+ * @param {HTMLElement} container - The form field container.
+ * @returns {Object|null} State object with container, input, button, and currentIcon properties, or null if elements not found.
+ */
 function createPwToggleState(container) {
   const input = container.querySelector("[data-password]");
   const button = container.querySelector("[data-password-toggle]");
@@ -94,11 +183,107 @@ function createPwToggleState(container) {
   return { container, input, button, currentIcon: ICON.LOCK };
 }
 
+/**
+ * Initializes password visibility toggle functionality for a form field.
+ *
+ * Creates the state object, attaches event handlers, and synchronizes the initial state.
+ *
+ * @param {HTMLElement} container - The form field container with password input and toggle button.
+ * @returns {void}
+ */
 function initPasswordToggle(container) {
   const state = createPwToggleState(container);
   if (!state) return;
   wirePWEvents(state);
   syncState(state);
+}
+
+/**
+ * Extracts and sanitizes email and password from the login form.
+ *
+ * Retrieves the values from the form inputs, trims whitespace,
+ * and returns the inputs along with the warning element.
+ *
+ * @param {HTMLFormElement} form - The login form element.
+ * @returns {Object|null} Object with email, password, and warningElement properties, or null if required fields not found.
+ */
+function extractFormInputs(form) {
+  const emailInput = form.querySelector("#email");
+  const passwordInput = form.querySelector("input[data-password]");
+  const warningLogin = form.querySelector("#warning_login_failed");
+
+  if (!emailInput || !passwordInput) return null;
+
+  return {
+    email: emailInput.value.trim(),
+    password: passwordInput.value.trim(),
+    warningElement: warningLogin,
+  };
+}
+
+/**
+ * Handles post-login success actions.
+ *
+ * Saves the login status to session storage and redirects to the summary page.
+ *
+ * @returns {void}
+ */
+function handleLoginSuccess() {
+  saveSessionStorage("userIsGuest", false);
+  sessionStorage.setItem("userLoggedIn", true);
+  window.location.replace("summary.html");
+}
+
+/**
+ * Displays the login error message.
+ *
+ * Adds the 'visible' class to the warning element to show the error message to the user.
+ *
+ * @param {HTMLElement|null} warningElement - The warning message element.
+ * @returns {void}
+ */
+function handleLoginError(warningElement) {
+  warningElement?.classList.add("visible");
+}
+
+/**
+ * Enables automatic error clearing when user inputs form data.
+ *
+ * Attaches input event listeners to all form fields that remove the 'has_error' class
+ * from all input boxes when the user starts typing.
+ *
+ * @param {HTMLFormElement} formElement - The form element containing input boxes.
+ * @returns {void}
+ */
+function enableFormErrorReset(formElement) {
+  if (!formElement) return;
+
+  const inputBoxes = formElement.querySelectorAll(".input_box");
+
+  inputBoxes.forEach((box) => {
+    const input = box.querySelector("input, textarea, select");
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+      inputBoxes.forEach((b) => b.classList.remove("has_error"));
+    });
+  });
+}
+
+/**
+ * Handles guest login functionality.
+ *
+ * Loads user data from the server, saves guest session to storage, and redirects to the summary page.
+ *
+ * @async
+ * @function guestLogin
+ * @returns {Promise<void>} Resolves when the guest login process is complete.
+ */
+async function guestLogin() {
+  let dataObj = await loadData("/users");
+  saveUserToSessionStorage("guest", "Guest", dataObj);
+  sessionStorage.setItem("userLoggedIn", true);
+  window.location.replace("summary.html");
 }
 
 /**
@@ -121,19 +306,16 @@ async function userLogin(e) {
   e.preventDefault();
   const form = e.currentTarget;
   if (!form) return;
+  
   await initUsersLoading();
-  const emailInput = form.querySelector("#email");
-  const passwordInput = form.querySelector("input[data-password]");
-  const warningLogin = form.querySelector("#warning_login_failed");
-  if (!emailInput || !passwordInput) return;
-  const emailValue = emailInput.value.trim();
-  const passwordValue = passwordInput.value.trim();
-  if (accessGranted(emailValue, passwordValue)) {
-    saveSessionStorage("userIsGuest", false);
-    sessionStorage.setItem("userLoggedIn", true);
-    window.location.replace("summary.html");
+  
+  const inputs = extractFormInputs(form);
+  if (!inputs) return;
+  
+  if (accessGranted(inputs.email, inputs.password)) {
+    handleLoginSuccess();
   } else {
-    warningLogin?.classList.add("visible");
+    handleLoginError(inputs.warningElement);
   }
 }
 
@@ -159,30 +341,29 @@ function accessGranted(email, password) {
   return false;
 }
 
-/** resets the error when user is typing in something the input box */
-function enableFormErrorReset(formElement) {
-  const inputBoxes = formElement.querySelectorAll(".input_box");
-
-  inputBoxes.forEach((box) => {
-    const input = box.querySelector("input, textarea, select");
-    if (!input) return;
-
-    input.addEventListener("input", () => {
-      inputBoxes.forEach((b) => b.classList.remove("has_error"));
-    });
-  });
-}
-
 const loginForm = document.querySelector(".login_form form");
 enableFormErrorReset(loginForm);
 
-/** Activates Sign In Form */
+/**
+ * Displays the signup/registration form and hides the login form.
+ *
+ * Adds 'enable' class to signup container and 'disable' class to login elements.
+ *
+ * @returns {void}
+ */
 function activateSignIn() {
   signInContainer.classList.add("enable");
   logInContainer.classList.add("disable");
   indexHeader.classList.add("disable");
 }
-/** Activates Log In Form */
+/**
+ * Displays the login form and hides the signup form.
+ *
+ * Removes 'enable/disable' classes from form containers and reinitializes
+ * the error reset handlers for the login form.
+ *
+ * @returns {void}
+ */
 function activateLogIn() {
   signInContainer.classList.remove("enable");
   logInContainer.classList.remove("disable");
@@ -213,103 +394,3 @@ document.addEventListener("DOMContentLoaded", () => {
     initPasswordToggle(box);
   });
 });
-
-/**
- * This Function is used to add a User to the path users in the Database
- *
- */
-async function addUser() {
-  if (!passwordsMatch()) {
-    showSignupPasswordError();
-    return;
-  }
-  const emailEl = document.getElementById("email_sign_up");
-  const pwEl = document.getElementById("new_user_password");
-  const nameEl = document.getElementById("given_name");
-  const email = emailEl?.value?.trim() || "";
-  const password = pwEl?.value || "";
-  const givenName = nameEl?.value?.trim() || "";
-  if (!email || !password || !givenName) return;
-  await initUsersLoading();
-  if (userExists(email)) return;
-  const dataObj = { email, givenName, password };
-  const result = await uploadData("/users", dataObj);
-  window.usersReady = null;
-  await initUsersLoading();
-
-  showToastOverlay("signup_success_overlay", { onDone: activateLogIn });
-  resetSignupForm();
-}
-
-function passwordsMatch() {
-  const passwordInput = document.getElementById("new_user_password");
-  const confirmInput = document.getElementById("confirm_user_password");
-  if (!passwordInput || !confirmInput) return false;
-  return passwordInput.value === confirmInput.value;
-}
-
-function showSignupPasswordError() {
-  const passwordInput = document.getElementById("new_user_password");
-  const confirmInput = document.getElementById("confirm_user_password");
-  const warningSignup = document.getElementById("warning_signup_failed");
-  if (!passwordInput || !confirmInput) return;
-  const passwordBox = passwordInput.closest(".input_box");
-  const confirmBox = confirmInput.closest(".input_box");
-  passwordBox?.classList.add("has_error");
-  confirmBox?.classList.add("has_error");
-  warningSignup?.classList.add("visible");
-}
-
-function showSignupSuccessToast() {
-  const overlay = document.getElementById("signup_success_overlay");
-  if (!overlay) return;
-
-  overlay.classList.add("is_visible", "is_animating");
-  overlay.setAttribute("aria-hidden", "false");
-
-  const slideMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
-  const holdMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
-
-  window.setTimeout(() => {
-    overlay.classList.remove("is_animating", "is_visible");
-    overlay.setAttribute("aria-hidden", "true");
-    if (typeof activateLogIn === "function") {
-      activateLogIn();
-    } else {
-      console.warn("activateLogIn() ist nicht definiert.");
-    }
-  }, slideMs + holdMs);
-}
-
-function resetSignupForm() {
-  const form = document.querySelector(".sign_up_form form");
-  if (!form) return;
-
-  form.querySelectorAll("input").forEach((input) => {
-    if (input.type === "checkbox") {
-      input.checked = false;
-    } else {
-      input.value = "";
-    }
-  });
-
-  form.querySelectorAll(".has_error").forEach((el) => el.classList.remove("has_error"));
-
-  const warning = form.querySelector("#warning_signup_failed");
-  warning?.classList.remove("visible");
-}
-
-function checkForm() {
-  const allFilled = [...inputs].every((input) => input.value.trim() !== "");
-  const privacyAccepted = privacyCheckbox.checked;
-
-  const isValid = allFilled && privacyAccepted;
-
-  registerBtn.classList.toggle("is-disabled", !isValid);
-  registerBtn.setAttribute("aria-disabled", String(!isValid));
-}
-
-inputs.forEach((input) => input.addEventListener("input", checkForm));
-privacyCheckbox.addEventListener("change", checkForm);
-
-checkForm();
