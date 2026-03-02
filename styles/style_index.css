@@ -4,6 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 1920px;
 }
 
 body.is_loaded {
@@ -175,20 +176,14 @@ body.is_loaded {
   border-radius: 3px;
 }
 
-/* ---------- Logo ---------- */
-
 .logo_container {
-  /* position: fixed; */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
   transform-origin: top left;
   z-index: 1000;
-
   color: var(--background-color);
-  /* steuert SVG-Farbe */
-
   transition:
     top 0.8s ease,
     left 0.8s ease,
@@ -213,8 +208,6 @@ body.is_loaded {
   fill-rule: evenodd;
   clip-rule: evenodd;
 }
-
-/* ---------- Content ---------- */
 
 .page_content {
   opacity: 0;
@@ -326,14 +319,12 @@ body.is_loaded {
   --signup_success_hold_duration: 1000ms;
 }
 
-/* overlay sitzt über allem und zentriert */
 .signup_success_overlay {
   position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
   pointer-events: none;
-  /* blockiert keine Klicks */
   z-index: 2000;
 
   opacity: 0;
@@ -357,13 +348,10 @@ body.is_loaded {
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.2px;
-
-  /* Start: unten außerhalb */
   transform: translateY(60vh);
   opacity: 0;
 }
 
-/* Animation: von unten in die Mitte */
 .signup_success_overlay.is_animating .signup_success_box {
   animation: signup_success_slide_in var(--signup_success_slide_duration) ease forwards;
 }
@@ -399,8 +387,6 @@ body.is_loaded {
   .logo_container.is_in_corner {
     top: var(--corner_offset);
     left: var(--corner_offset);
-
-    /* 64px Ziel / 274px Ist-Zustand */
     transform: translate(0, 0) scale(calc(64 / 274));
     color: var(--logo-light-blue);
   }
@@ -436,8 +422,7 @@ body.is_loaded {
     padding: 80px 24px 20px;
     box-sizing: border-box;
   }
-
-  /* Die Login Box nach oben */
+  
   .login_wrapper {
     order: 1;
     position: relative;
@@ -446,8 +431,7 @@ body.is_loaded {
     height: auto;
     margin-bottom: 20px;
   }
-
-  /* Den Sign-Up Header unter die Box schieben */
+  
   .index_header {
     order: 2;
     position: relative;
@@ -470,8 +454,7 @@ body.is_loaded {
     font-size: 18px;
     padding-right: 0;
   }
-
-  /* Footer ganz nach unten pinnen */
+  
   .index_footer {
     order: 3;
     position: relative;
@@ -479,7 +462,7 @@ body.is_loaded {
     justify-content: center;
     gap: 20px;
     padding: 20px 0 0 0;
-    margin-top: auto; /* Schiebt den Footer an den unteren Rand von 100vh */
+    margin-top: auto;
   }
 
   .login_size,
@@ -487,7 +470,7 @@ body.is_loaded {
     width: 100%;
     max-width: 400px;
     height: auto;
-    min-height: 400px; /* Leicht reduziert für 100vh Layouts */
+    min-height: 400px;
   }
 
   .login_wrapper .form_box.login {
@@ -524,8 +507,7 @@ body.is_loaded {
   .login_header a {
     transform: translateY(10px) translateX(0px);
   }
-
-  /* Logo-Fix für 64px (wie zuvor besprochen) */
+  
   .logo_container.is_in_corner {
     transform: translate(0, 0) scale(calc(78 / 274));
     top: 20px;

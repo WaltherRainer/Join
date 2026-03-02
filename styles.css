@@ -15,7 +15,7 @@
   --border_color: #d1d1d1;
   --warning_red: #e60026;
   --line-color: #e0e0e0;
-  --shadow-soft: rgba(0, 0, 0, 0.1); /* entspricht ungefähr #0000001A */
+  --shadow-soft: rgba(0, 0, 0, 0.1);
   --shadow-hover: rgba(0, 0, 0, 0.25);
   --accent-pink: #ff8190;
   --prio-urgent: #ff3d00;
@@ -80,7 +80,6 @@ html {
 body {
   min-height: 100vh;
   background: var(--background-color);
-  /* max-width: 1920px; */
   width: 100%;
   margin: 0;
 }
@@ -117,8 +116,8 @@ svg {
   grid-template-areas:
     "nav header"
     "nav main";
-  height: 100dvh; /* besser als 100vh auf Mobile */
-  overflow: hidden; /* verhindert, dass der Body scrollt */
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .navbar_shell {
@@ -129,7 +128,6 @@ svg {
   flex-direction: column;
 }
 
-/* Firefox Fallback */
 ::-moz-placeholder {
   color: var(--border_color);
   font-size: 20px;
@@ -137,7 +135,6 @@ svg {
   opacity: 1;
 }
 
-/* IE/Edge Legacy (kannst du weglassen, falls modern) */
 :-ms-input-placeholder {
   color: var(--border_color);
   font-size: 20px;
@@ -291,8 +288,6 @@ svg {
   animation: slideInFromRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* ============ Slide-in Animation (1s von rechts in die Mitte) ============ */
-/* Keyframes */
 @keyframes slideInFromRight {
   from {
     transform: translateX(100vw);
@@ -304,7 +299,6 @@ svg {
   }
 }
 
-/* Optional: auf kleineren Screens skalieren, damit’s nicht überläuft */
 @media (max-width: 1200px) {
   .add_task_modal_content {
     width: min(1116px, 92vw);
@@ -340,7 +334,7 @@ svg {
 }
 
 .nav_link.active {
-  background-color: var(--dark-blue); /* #091931 */
+  background-color: var(--dark-blue);
 }
 
 .nav_link.active .nav_icon {
@@ -382,8 +376,8 @@ svg {
 }
 
 .task_success_box {
-  width: 260px; /* oder var(--task_success_width) */
-  height: 56px; /* oder var(--task_success_height) */
+  width: 260px;
+  height: 56px;
   background: var(--dark-blue);
   color: white;
   border-radius: 12px;
@@ -413,7 +407,6 @@ svg {
   margin: 32px;
 }
 
-/* Standardmäßig die Landscape-Meldung verstecken */
 .landscape-message {
   display: none;
   position: fixed;
@@ -427,13 +420,12 @@ svg {
   padding-top: 20%;
 }
 
-/* Zuerst den Landscape-Bereich definieren */
 @media (orientation: landscape) and (max-width: 926px) {
   .landscape-message {
-    display: block; /* Meldung anzeigen */
+    display: block;
   }
   body > * {
-    display: none; /* Restlichen Inhalt ausblenden */
+    display: none;
   }
 }
 
@@ -446,7 +438,6 @@ svg {
       "header"
       "main"
       "nav";
-    /* height: calc(100dvh - 12px); */
   }
 
   .navbar_shell {
