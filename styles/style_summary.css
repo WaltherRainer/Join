@@ -334,6 +334,28 @@
   }
 }
 
+@media (max-width: 880px) {
+  .greeting {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    margin-left: 0;
+    margin: 0;
+    background-color: var(--secondary-background-color);
+    z-index: 100;
+    transition: opacity 1s ease;
+  }
+
+  .greeting.hide {
+    opacity: 0;
+}
+}
+
 @media (max-width: 430px) {
   .todo_done_box, .task_boxes {
     width: 286px;
@@ -367,5 +389,13 @@
   
   .task_boxes {
     margin-bottom: 20px;
+  }
+
+  .greeting {
+    font-size: 24px;
+  }
+
+  .greeting_name {
+    font-size: 32px;
   }
 }

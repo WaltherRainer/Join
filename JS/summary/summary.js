@@ -1,4 +1,31 @@
 /**
+ * Shows the greeting overlay and hides it after 1 second with fade-out effect.
+ *
+ * Only works on mobile devices (screen width <= 880px).
+ * Displays the greeting with fixed positioning, adds 'hide' class after 1 second
+ * (which triggers opacity: 0 transition), then sets display: none after transition ends.
+ *
+ * @function showAndHideGreeting
+ * @returns {void}
+ */
+function showAndHideGreeting() {
+  if (window.innerWidth > 880) return;
+  
+  const greeting = document.querySelector(".greeting");
+  if (!greeting) return;
+  
+  greeting.style.display = "flex";
+  
+  setTimeout(() => {
+    greeting.classList.add("hide");
+    greeting.addEventListener("transitionend", () => {
+      greeting.style.display = "none";
+      greeting.classList.remove("hide");
+    }, { once: true });
+  }, 1000);
+}
+
+/**
  * Initializes the summary view.
  *
  * Schedules itself to run again after 150 ms, checks login state, updates
@@ -12,6 +39,13 @@ function initSummary() {
   checkIfUserIsLoggedIn();
   writeGreetingDay();
   writeGreetingName();
+  
+  // Show and hide greeting only after fresh login
+  if (sessionStorage.getItem("justLoggedIn")) {
+    showAndHideGreeting();
+    sessionStorage.removeItem("justLoggedIn");
+  }
+  
   writeToDoNumbersInSummary();
 }
 

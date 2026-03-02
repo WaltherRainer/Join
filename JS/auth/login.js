@@ -231,6 +231,7 @@ function extractFormInputs(form) {
 function handleLoginSuccess() {
   saveSessionStorage("userIsGuest", false);
   sessionStorage.setItem("userLoggedIn", true);
+  sessionStorage.setItem("justLoggedIn", true);
   window.location.replace("summary.html");
 }
 
@@ -283,6 +284,7 @@ async function guestLogin() {
   let dataObj = await loadData("/users");
   saveUserToSessionStorage("guest", "Guest", dataObj);
   sessionStorage.setItem("userLoggedIn", true);
+  sessionStorage.setItem("justLoggedIn", true);
   window.location.replace("summary.html");
 }
 
