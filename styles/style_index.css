@@ -296,18 +296,13 @@ body.is_loaded {
 }
 
 .warning_text {
-  display: block;
-  min-height: 18px;
-  /* reserviert Platz, auch wenn leer */
+  display: none;
   margin-top: 6px;
   color: var(--warning_red);
   font-size: 13px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
 }
 
 .warning_text.visible {
-  opacity: 1;
   display: block;
 }
 

@@ -104,7 +104,7 @@
                         <h2>Sign up</h2>
                         <div class="underline_sign_up"></div>
                     </div>
-                    <form onsubmit="addUser(); return false" id="register_form">
+                    <form onsubmit="addUser(); return false" id="register_form" novalidate>
                         <div class="input_box">
                             <input id="given_name" type="text" required placeholder=" ">
                             <label for="given_name">Name</label>
@@ -113,10 +113,11 @@
                         </div>
 
                         <div class="input_box">
-                            <input id="email_sign_up" type="email" required autocomplete="email" placeholder=" ">
+                            <input id="email_sign_up" type="text" required autocomplete="email" placeholder=" ">
                             <label for="email_sign_up">Email</label>
                             <span class="svg-icon is-muted input_icon" data-icon="mail" data-w="20" data-h="16"></span>
                         </div>
+                        <span class="warning_text" id="warning_email_invalid">Please enter a valid email address.</span>
 
                         <div class="input_box">
                             <input id="new_user_password" type="password" required data-password placeholder=" "
