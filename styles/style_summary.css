@@ -241,8 +241,13 @@
 
 @media (max-width: 880px) {
   .summary_main {
-    padding-left: 16px;
+    padding-top: 50px;
+    padding-left: 0;
     height: auto;
+  }
+
+  .content_div {
+    margin: 0 auto;
   }
 
   .title_box_summary {
@@ -271,12 +276,13 @@
   }
 
   .todo_done_box {
+    width: 392px;;
     font-size: 16px;
     gap: 24px;
   }
 
   .todo_done_boxes {
-    width: 186px;
+    width: 181px;
     height: 110px;
     padding: 0;
     justify-content: center;
@@ -284,7 +290,7 @@
 
   .urgent_box_main {
     justify-content: center;
-    width: 396px;
+    width: 392px;
     height: 110px;
     padding: 0;
   }
@@ -316,6 +322,7 @@
   }
 
   .task_boxes {
+    width: 392px;;
     font-size: 16px;
     gap: 24px;
   }
@@ -327,8 +334,9 @@
   }
 }
 
-@media (max-width: 420px) {
-  .todo_done_box {
+@media (max-width: 430px) {
+  .todo_done_box, .task_boxes {
+    width: 286px;
     gap: 8px;
   }
 
@@ -336,12 +344,8 @@
     width: 139px;
   }
 
-  .task_boxes {
-    gap: 8px;
-  }
-
   .urgent_box_main {
-    width: 278px;
+    width: 286px;
   }
 
   .urgent_box_left {
@@ -359,5 +363,9 @@
 
   .summary_box {
     width: 90px;
+  }
+  
+  .task_boxes {
+    margin-bottom: 20px;
   }
 }
