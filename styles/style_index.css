@@ -1,3 +1,15 @@
+.index_body {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.is_loaded {
+  background-color: var(--secondary-background-color);
+}
+
 .sign_up_size {
   width: 598px;
   height: 630px;
@@ -166,7 +178,8 @@
 /* ---------- Logo ---------- */
 
 .logo_container {
-  position: fixed;
+  /* position: fixed; */
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
@@ -213,16 +226,10 @@
   opacity: 1;
 }
 
-/* ---------- Nach Transition ---------- */
-
-body.is_loaded {
-  background-color: var(--secondary-background-color);
-}
-
 .index_header {
-  position: fixed;
-  top: 65px;
-  right: 65px;
+  position: absolute;
+  top: var(--corner_offset);
+  right: var(--corner_offset);
 }
 
 .sign_up_box span {
@@ -241,12 +248,6 @@ body.is_loaded {
   position: fixed;
   bottom: 32px;
   min-width: 246px;
-}
-
-.index_body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .check_box {
@@ -295,18 +296,13 @@ body.is_loaded {
 }
 
 .warning_text {
-  display: block;
-  min-height: 18px;
-  /* reserviert Platz, auch wenn leer */
+  display: none;
   margin-top: 6px;
   color: var(--warning_red);
   font-size: 13px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
 }
 
 .warning_text.visible {
-  opacity: 1;
   display: block;
 }
 

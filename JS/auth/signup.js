@@ -68,7 +68,7 @@ function completeSignup() {
 /**
  * Handles the user signup process.
  *
- * Validates password match, extracts form inputs, checks if user already exists,
+ * Validates email format and password match, extracts form inputs, checks if user already exists,
  * creates a new user in the database, and displays a success message.
  *
  * @async
@@ -76,12 +76,17 @@ function completeSignup() {
  * @returns {Promise<void>} Resolves when the signup process has completed.
  */
 async function addUser() {
+  const { email, password, givenName } = extractSignupFormInputs();
+
+  if (!isValidEmail(email)) {
+    showEmailError();
+    return;
+  }
+
   if (!passwordsMatch()) {
     showSignupPasswordError();
     return;
   }
-
-  const { email, password, givenName } = extractSignupFormInputs();
 
   if (!validateSignupInputs(email, password, givenName)) {
     return;
@@ -99,6 +104,18 @@ async function addUser() {
 }
 
 /**
+ * Validates email format by checking for @ symbol and basic email structure.
+ *
+ * @param {string} email - The email address to validate.
+ * @returns {boolean} True if email has valid format, false otherwise.
+ */
+function isValidEmail(email) {
+  if (!email) return false;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
  * Compares password and password confirmation fields.
  *
  * @returns {boolean} True if password and confirmation match, false otherwise.
@@ -108,6 +125,23 @@ function passwordsMatch() {
   const confirmInput = document.getElementById("confirm_user_password");
   if (!passwordInput || !confirmInput) return false;
   return passwordInput.value === confirmInput.value;
+}
+
+/**
+ * Displays email validation error in the signup form.
+ *
+ * Adds 'has_error' class to email field and shows the warning message
+ * to indicate that email format is invalid.
+ *
+ * @returns {void}
+ */
+function showEmailError() {
+  const emailInput = document.getElementById("email_sign_up");
+  const warningEmail = document.getElementById("warning_email_invalid");
+  if (!emailInput) return;
+  const emailBox = emailInput.closest(".input_box");
+  emailBox?.classList.add("has_error");
+  warningEmail?.classList.add("visible");
 }
 
 /**
@@ -183,8 +217,10 @@ function resetSignupForm() {
 
   form.querySelectorAll(".has_error").forEach((el) => el.classList.remove("has_error"));
 
-  const warning = form.querySelector("#warning_signup_failed");
-  warning?.classList.remove("visible");
+  const warningPassword = form.querySelector("#warning_signup_failed");
+  const warningEmail = form.querySelector("#warning_email_invalid");
+  warningPassword?.classList.remove("visible");
+  warningEmail?.classList.remove("visible");
 }
 
 /**
@@ -205,8 +241,30 @@ function checkForm() {
   registerBtn?.setAttribute("aria-disabled", String(!isValid));
 }
 
+/**
+ * Clears error states when user starts typing in a field.
+ *
+ * @param {Event} event - The input event.
+ * @returns {void}
+ */
+function clearFieldError(event) {
+  const input = event.target;
+  const inputBox = input.closest(".input_box");
+  inputBox?.classList.remove("has_error");
+  
+  // Hide related warning message
+  if (input.id === "email_sign_up") {
+    document.getElementById("warning_email_invalid")?.classList.remove("visible");
+  } else if (input.id === "new_user_password" || input.id === "confirm_user_password") {
+    document.getElementById("warning_signup_failed")?.classList.remove("visible");
+  }
+}
+
 if (signupInputs.length && privacyCheckbox) {
-  signupInputs.forEach((input) => input.addEventListener("input", checkForm));
+  signupInputs.forEach((input) => {
+    input.addEventListener("input", checkForm);
+    input.addEventListener("input", clearFieldError);
+  });
   privacyCheckbox.addEventListener("change", checkForm);
   checkForm();
 }
