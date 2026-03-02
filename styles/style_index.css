@@ -254,6 +254,7 @@ body.is_loaded {
   height: 16px;
   width: 16px;
   margin-right: 16px;
+  cursor: pointer;
 }
 
 .terms_div {
@@ -411,13 +412,14 @@ body.is_loaded {
 
   .logo_svg,
   .logo_container svg {
-    width: 274px;
+    width: 150px;
     height: auto;
     display: block;
   }
 }
 
 @media (max-width: 680px) {
+
   .index_body {
     display: flex;
     flex-direction: column;
@@ -425,7 +427,6 @@ body.is_loaded {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
     justify-content: flex-start;
     align-items: center;
   }
@@ -439,11 +440,6 @@ body.is_loaded {
     width: 100%;
     padding: 80px 24px 20px;
     box-sizing: border-box;
-  }
-
-  .page_content.is_visible {
-    display: flex;
-    flex-direction: column;
   }
 
   /* Die Login Box nach oben */
@@ -487,7 +483,7 @@ body.is_loaded {
     width: 100%;
     justify-content: center;
     gap: 20px;
-    padding: 20px 0;
+    padding: 20px 0 0 0;
     margin-top: auto; /* Schiebt den Footer an den unteren Rand von 100vh */
   }
 
@@ -500,23 +496,24 @@ body.is_loaded {
   }
 
   .login_wrapper .form_box.login {
-    padding: 32px 24px;
+    padding: 24px 22px;
     position: relative;
   }
 
   .form_box h2 {
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .underline_login,
   .underline_sign_up {
     transform: none;
-    margin: 12px auto 0 auto;
+    margin: 0 auto 0 auto;
   }
 
   .btn_div {
     flex-direction: column;
     gap: 16px;
+    padding-top: 5px;
     align-items: center;
   }
 
@@ -535,7 +532,7 @@ body.is_loaded {
 
   /* Logo-Fix für 64px (wie zuvor besprochen) */
   .logo_container.is_in_corner {
-    transform: translate(0, 0) scale(calc(64 / 274));
+    transform: translate(0, 0) scale(calc(78 / 274));
     top: 20px;
     left: 20px;
   }
