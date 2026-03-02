@@ -1,3 +1,7 @@
+body {
+    background-color: var(--secondary-background-color);
+}
+
 .board_help_div {
     grid-area: main;
     overflow: auto;
@@ -6,6 +10,8 @@
     /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
     min-width: 0;
     /* optional, hilft bei langen Inhalten */
+    max-width: calc(1920px - 232px);
+    background-color: var(--secondary-background-color);
 }
 
 .board {
