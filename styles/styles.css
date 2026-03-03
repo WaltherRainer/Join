@@ -53,13 +53,13 @@
 
 @font-face {
   font-family: "Inter";
-  src: url(./assets/font/static/Inter_18pt-Medium.ttf) format("truetype");
+  src: url(../assets/font/static/Inter_18pt-Medium.ttf) format("truetype");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "Inter";
-  src: url(./assets/font/static/Inter_24pt-Bold.ttf) format("truetype");
+  src: url(../assets/font/static/Inter_24pt-Bold.ttf) format("truetype");
   font-weight: 700;
   font-style: bold;
 }
@@ -79,7 +79,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: var(--background-color);
+  background: var(--secondary-background-color);
   width: 100%;
   margin: 0;
 }
