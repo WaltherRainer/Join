@@ -90,6 +90,9 @@ function taskItemTemplate(task, users, isDraggable) {
 }
 
 function getTaskItemContent(task, users) {
+  const doneSubtasks = Array.isArray(task.subTasks)
+    ? task.subTasks.filter((subTask) => subTask?.done === true).length
+    : 0;
   return `
     <div class="t_category">
       <p style="background-color: ${getTaskCatLabel(task.type).color};" >${getTaskCatLabel(task.type).label}</p>
@@ -98,10 +101,10 @@ function getTaskItemContent(task, users) {
             <p class="t_title">${task.titel}</p>
             <p class="t_description">${checkOverflow(task.description)}</p>
         </div>
-          <div class="t_sub_tasks">
+          ${doneSubtasks > 0 ? `<div class="t_sub_tasks">
             <div class="t_sub_task_bar" style="width: ${fillSubTasksBar(task)}%;"></div>
             ${subtasksCounter(task)}
-        </div>
+        </div>` : ''}
         <div class="t_assigned_priotity">
             <div class="t_assigned_to">${mapAssignedTo(task.assignedTo, users)}</div>
             <div class="t_priority">
