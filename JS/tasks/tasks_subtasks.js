@@ -267,6 +267,18 @@ function enterEditMode(state, idx) {
 
 
 /**
+ * Exits edit mode by clearing the editing index and re-rendering the subtasks list.
+ *
+ * @param {Object} state - Subtasks UI state object.
+ * @returns {void}
+ */
+function exitEditMode(state) {
+    state.editingIndex = null;
+    renderSubtasks(state);
+}
+
+
+/**
  * Commits the current edit (if valid) to the subtask title:
  * - Validates the editing index and the presence of the edit input.
  * - Trims the new title and updates the corresponding subtask.

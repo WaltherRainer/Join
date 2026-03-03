@@ -515,7 +515,6 @@
   }
 }
 
-/* 990px: Switch to single column, use same optimizations as 1070px */
 @media (max-width: 990px){
   .add_task_form {
     grid-template-columns: 1fr;
