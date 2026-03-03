@@ -154,7 +154,7 @@
 .pure_btn {
     outline: none;
     border: none;
-    background-color: var(--background-color);
+    background-color: var(--secondary-background-color);
 }
 
 .btn_wide {
