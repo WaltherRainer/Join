@@ -82,6 +82,8 @@
   padding: 0;
   font-size: 0.9em;
   color: var(--blue);
+  max-height: 145px;
+  overflow: auto;
 }
 
 .subtasks_list li {

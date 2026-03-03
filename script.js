@@ -420,6 +420,9 @@ async function mountTaskForm(
   }
 
   const form = hostEl.querySelector("form.add_task_form");
+  const clearBtn = form.querySelector("#clear_task_form_btn");
+  clearBtn.addEventListener("click", () => clearTaskForm(form));
+
   form.querySelector(".add_task_titel").textContent = title;
   if (preset) {
     if (preset.titel != null) form.elements.task_titel.value = preset.titel;
