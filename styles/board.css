@@ -364,6 +364,10 @@ section.task_section {
     font-size: 20px;
 }
 
+.tsk_dlg_assgnd_div {
+    max-height: 300px;
+    overflow: auto;
+}
 
 .tsk_dlg_assgnd {
     margin-top: 20px;
@@ -426,7 +430,10 @@ section.task_section {
 }
 
 .subtasks_check_list {
-    list-style-type: none
+    list-style-type: none;
+    max-height: 80px;
+    overflow: auto;
+    min-width: 300px;
 }
 
 .subtask_action button:focus {
