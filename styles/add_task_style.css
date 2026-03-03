@@ -22,21 +22,19 @@
 }
 
 .add_task_form.edit_mode {
-  /* marc */
   display: grid;
   grid-template-columns: 100%;
-  /* ÄNDERUNG: Nutze auto statt fester Pixelwerte */
   grid-template-rows: auto auto auto auto;
   grid-template-areas:
     "add_task_titel"
     "add_task_form_left"
     "add_task_form_right"
     "form_actions";
-  max-height: none; /* Entferne die Begrenzung hier */
+  max-height: none;
   justify-content: center;
   gap: 16px;
-  padding: 24px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
-  box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
+  padding: 24px 0px;
+  box-sizing: border-box;
 }
 
 .add_task_titel {
@@ -68,20 +66,15 @@
   padding-left: 0px;
 }
 
-/* (optional/legacy) Trennlinie – meist redundant wegen border-right oben */
 .line {
   height: 424px;
   margin: 0 48px;
   border: 1px solid var(--line-color);
 }
 
-/* =========================
-   Form rows / inputs
-========================= */
-
-/* .form_div_descr {
-  margin-top: 64px;
-} */
+.form_div_descr {
+  /* margin-top: 64px; */
+}
 
 .form_row {
   display: grid;
@@ -110,7 +103,6 @@
 .task_descr_textarea {
   height: 120px;
   margin-top: 4px;
-  /* margin-bottom: 32px; */
   padding: 18px 0 0 21px;
   border: 1px solid var(--border_color);
   border-radius: 10px;
@@ -471,8 +463,7 @@
     padding: 60px 20px;
   }
 
-  /* ÄNDERUNG: Buttons flexibel machen statt fester 80px */
-  .priority_buttons_container {
+.priority_buttons_container {
     gap: 30px;
     display: flex;
     justify-content: space-between;
@@ -481,23 +472,18 @@
 
   .priority_btn {
     flex: 1;
-    /* Jeder Button nimmt gleich viel Platz ein */
     display: flex;
   }
 
   .priority_btn span {
     width: 100%;
-    /* Füllt den flexiblen Container aus */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
     padding: 8px 4px;
-    /* Kompakteres Padding für kleine Screens */
     font-size: 18px !important;
   }
-
-  /* Deine bisherigen Schrift-Anpassungen */
   .add_task_main,
   .add_task_main *,
   .add_task_main input::placeholder,
@@ -507,6 +493,48 @@
 
   .add_task_titel {
     font-size: 61px !important;
+  }
+}
+
+@media (max-width: 1070px){
+  .add_task_form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .add_task_form_left {
+    padding-right: 8px;
+  }
+
+  .add_task_form_right {
+    padding-left: 8px;
+  }
+  
+  .add_task_main {
+    padding: 20px;
+  }
+}
+
+/* 990px: Switch to single column, use same optimizations as 1070px */
+@media (max-width: 990px){
+  .add_task_form {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "add_task_titel"
+      "add_task_form_left"
+      "add_task_form_right"
+      "form_actions";
+    gap: 32px;
+  }
+
+  .add_task_form_left {
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .add_task_form_right {
+    padding-left: 0;
   }
 }
 
@@ -527,9 +555,8 @@
   }
 
   .add_task_form.edit_mode {
-    /* marc */
-    padding: 6px 0px; /* Oben/Unten 24px, Links/Rechts 40px */
-    box-sizing: border-box; /* Wichtig, damit das Padding die Breite nicht vergrößert */
+    padding: 6px 0px;
+    box-sizing: border-box;
   }
 
   .add_task_form {
