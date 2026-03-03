@@ -1,3 +1,4 @@
+let contactClickHandler = null;
 /**
  * Initializes the contacts view by verifying the login state
  * and attaching contact-related event listeners.
@@ -161,23 +162,32 @@ function initDeleteButton(userId) {
 }
 
 /**
- * Initializes one-time click handling for the contacts list.
+ * Initializes click handling for the contacts list.
  *
- * Uses a bind-once guard to avoid duplicate listeners, creates a mobile
- * media query, and delegates click events to {@link handleContactCardClick}.
+ * Removes any previously attached click handler, creates a new handler with
+ * the current users data and mobile media query, stores it in the global
+ * {@link contactClickHandler} to allow later removal, and attaches it to
+ * the contacts list container. This pattern allows updating the users data
+ * when new contacts are added without accumulating multiple listeners.
  *
  * @function initContactsClick
  * @param {Object<string, Object>} users - Object mapping user IDs to user data.
  * @returns {void}
  */
+
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
-  if (!bindOnce(list, "clickBound")) return;
 
   const mqMobile = window.matchMedia("(max-width: 1100px)");
 
-  list.addEventListener("click", (e) => handleContactCardClick(e, users, mqMobile));
+  if (contactClickHandler) {
+    list.removeEventListener("click", contactClickHandler);
+  }
+
+  contactClickHandler = (e) => handleContactCardClick(e, users, mqMobile);
+
+  list.addEventListener("click", contactClickHandler);
 }
 
 /**
@@ -204,7 +214,6 @@ function bindOnce(el, flag) {
  *
  * @function handleContactCardClick
  * @param {MouseEvent} e - Click event from the contact list.
- * @param {Object<string, Object>} users - Object mapping user IDs to user data.
  * @param {MediaQueryList} mqMobile - Media query used to detect mobile layout.
  * @returns {void}
  */

@@ -300,6 +300,7 @@ async function addNewUser() {
   renderContacts(updatedUsers);
   initContactsClick(updatedUsers);
   showToastOverlay("toast_contact_added");
+  window.users = updatedUsers;
 }
 
 /**
