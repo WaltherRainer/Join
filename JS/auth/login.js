@@ -215,6 +215,8 @@ function extractFormInputs(form) {
   if (!emailInput || !passwordInput) return null;
 
   return {
+    emailInput,
+    passwordInput,
     email: emailInput.value.trim(),
     password: passwordInput.value.trim(),
     warningElement: warningLogin,
@@ -244,7 +246,7 @@ function handleLoginSuccess() {
  * @returns {void}
  */
 function handleLoginError(warningElement) {
-  warningElement?.classList.add("visible");
+  window.loginValidation?.showAuthError(warningElement);
 }
 
 /**
@@ -257,18 +259,7 @@ function handleLoginError(warningElement) {
  * @returns {void}
  */
 function enableFormErrorReset(formElement) {
-  if (!formElement) return;
-
-  const inputBoxes = formElement.querySelectorAll(".input_box");
-
-  inputBoxes.forEach((box) => {
-    const input = box.querySelector("input, textarea, select");
-    if (!input) return;
-
-    input.addEventListener("input", () => {
-      inputBoxes.forEach((b) => b.classList.remove("has_error"));
-    });
-  });
+  window.loginValidation?.enableErrorReset(formElement);
 }
 
 /**
@@ -308,11 +299,13 @@ async function userLogin(e) {
   e.preventDefault();
   const form = e.currentTarget;
   if (!form) return;
-  
-  await initUsersLoading();
-  
+
   const inputs = extractFormInputs(form);
   if (!inputs) return;
+
+  if (!window.loginValidation?.validate(inputs)) return;
+
+  await initUsersLoading();
   
   if (accessGranted(inputs.email, inputs.password)) {
     handleLoginSuccess();
