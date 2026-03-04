@@ -413,7 +413,7 @@ section.task_section {
 }
 
 .tsk_dlg_sbtsk {
-    /* margin-top: 16px; */
+    margin-top: 16px;
     display: flex;
     align-items: center;
     gap: 24px;
