@@ -1,230 +1,109 @@
-let users = {};
-let activeUserId = "";
-let tasks = {};
-let activeUserName = "";
-let localSubtasks = {};
-const USER_COLOR_COUNT = 15;
-let joinSessionStorageObject = {};
-let usersReady = null;
+/**
+ * Page-specific initialization helpers.
+ * These are the only functions kept in script.js after splitting.
+ */
 
 /**
- * Initializes the index page.
+ * Initializes the contacts page.
+ * Renders the contacts list and sets up click handlers.
  *
- * Currently sets up session storage via {@link initSessionStorage}.
- *
- * @function indexInit
- * @returns {void}
+ * @async
+ * @function initializeContactsPage
+ * @param {Object} usersDataObj - Users data object
+ * @returns {Promise<void>}
  */
-function indexInit() {
-  initSessionStorage();
+async function initializeContactsPage(usersDataObj) {
+  renderContacts(usersDataObj);
+  initContactsClick(usersDataObj);
 }
 
 /**
- * Initializes default session storage values for the login state.
+ * Initializes the add task page.
+ * Mounts the task form and initializes all form controls.
  *
- * Sets `userLoggedIn` to `false` and initializes `userId` with a placeholder.
- *
- * @function initSessionStorage
- * @returns {void}
+ * @async
+ * @function initializeAddTaskPage
+ * @param {Object} usersDataObj - Users data object
+ * @returns {Promise<void>}
  */
-function initSessionStorage() {
-  sessionStorage.setItem("userLoggedIn", false);
-  sessionStorage.setItem("userId", "notLoggedIn");
+async function initializeAddTaskPage(usersDataObj) {
+  const host = document.getElementById("addTaskInlineHost");
+  const form = await mountTaskForm(host, {
+    title: "Add Task",
+    preset: { titel: "", description: "", priority: "medium" },
+    toastId: "task_success_overlay",
+    afterSaved: () => activateBoard(),
+  });
+  initAssignedToDropdown(form, usersDataObj);
+  resetAssignedToDropdown(form);
+  initTaskTypeDropdown(form, TASK_CATEGORIES);
+  initSubtasksInput(form);
 }
 
 /**
- * Stores a value in session storage as JSON.
+ * Initializes the summary page.
+ * Summary page requires data to be loaded but no additional initialization.
  *
- * Serializes the provided value with `JSON.stringify` and writes it under the given key.
- *
- * @function saveSessionStorage
- * @param {string} key - Session storage key to write.
- * @param {*} value - Value to serialize and store.
- * @returns {void}
+ * @async
+ * @function initializeSummaryPage
+ * @returns {Promise<void>}
  */
-function saveSessionStorage(key, value) {
-  sessionStorage.setItem(key, JSON.stringify(value));
+async function initializeSummaryPage() {
+  // Summary page is initialized by data loading
 }
 
 /**
- * Loads the persisted `joinSessionStorageObject` from session storage.
+ * Initializes the board page.
+ * Renders the task board and sets up the add task modal.
  *
- * Reads the JSON value stored under `joinSessionStorageObject` and assigns it to the
- * global `joinSessionStorageObject` variable. Logs an error if no data is found.
- *
- * @function loadSessionStorage
- * @returns {void}
+ * @async
+ * @function initializeBoardPage
+ * @param {Object} tasksDataObj - Tasks data object
+ * @param {Object} usersDataObj - Users data object
+ * @returns {Promise<void>}
  */
-function loadSessionStorage() {
-  const tempArr = JSON.parse(sessionStorage.getItem("joinSessionStorageObject"));
-  if (tempArr != null) {
-    joinSessionStorageObject = tempArr;
-  } else {
-    console.error("Error loading data from session storage");
+async function initializeBoardPage(tasksDataObj, usersDataObj) {
+  loadTaskBoard(tasksDataObj, usersDataObj);
+  initAddTaskModalOnce();
+}
+
+/**
+ * Routes to the appropriate page initialization function.
+ * Dispatches initialization based on the current page type.
+ *
+ * @async
+ * @function initializePageContent
+ * @param {string} page - The page identifier
+ * @param {Object} usersDataObj - Users data object
+ * @param {Object} tasksDataObj - Tasks data object
+ * @returns {Promise<void>}
+ */
+async function initializePageContent(page, usersDataObj, tasksDataObj) {
+  switch (page) {
+    case "contacts":
+      await initializeContactsPage(usersDataObj);
+      break;
+
+    case "add_task":
+      await initializeAddTaskPage(usersDataObj);
+      break;
+
+    case "summary":
+      await initializeSummaryPage();
+      break;
+
+    case "board":
+      await initializeBoardPage(tasksDataObj, usersDataObj);
+      break;
+
+    default:
+      break;
   }
-}
-
-function saveUserToSessionStorage(userId, userName, users) {
-  sessionStorage.setItem("userId", userId);
-  sessionStorage.setItem("userName", userName);
-  sessionStorage.setItem("users", JSON.stringify(users));
-}
-
-function ensureTasksAreLoaded() {
-  if (tasks && Object.keys(tasks).length > 0) return tasks;
-}
-
-function getUserIdFromSessionStorage() {
-  return sessionStorage.getItem("userId");
-}
-
-function getUserNameFromSessionStorage() {
-  return sessionStorage.getItem("userName");
-}
-
-async function ensureUsersLoaded() {
-  if (users && Object.keys(users).length > 0) return users;
-  const dataObj = JSON.parse(sessionStorage.getItem("users"));
-  if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
-  users = (await loadData("/users")) || {};
-  sessionStorage.setItem("users", JSON.stringify(users));
-  return users;
-}
-
-async function ensureTasksLoaded() {
-  if (tasks && Object.keys(tasks).length > 0) return tasks;
-  const dataObj = JSON.parse(sessionStorage.getItem("tasks"));
-  if (dataObj && Object.keys(dataObj).length > 0) return dataObj;
-  tasks = (await loadData("/tasks")) || {};
-  sessionStorage.setItem("tasks", JSON.stringify(tasks));
-  return tasks;
-}
-
-function initUsersLoading() {
-  if (!window.usersReady) {
-    window.usersReady = (async () => {
-      const data = await loadData("/users");
-      window.users = data && typeof data === "object" ? data : {};
-      return window.users;
-    })().catch((err) => {
-      window.usersReady = null;
-      throw err;
-    });
-  }
-  return window.usersReady;
-}
-
-function toggleUserMenu() {
-  let userMenu = document.getElementById("user_menu");
-  if (!userMenu) return;
-  userMenu.classList.toggle("d_none");
-}
-
-function showUserDialog() {
-  const dialog = document.getElementById("user_menu");
-  openBtn.addEventListener("click", () => {
-    dialog.showModal();
-  });
-}
-
-function renderAssignedAvatars(selectedUserIds, usersData, container) {
-  if (!container) return;
-
-  container.innerHTML = "";
-  const idsArray = Array.isArray(selectedUserIds) ? selectedUserIds : Array.from(selectedUserIds);
-
-  const MAX_VISIBLE = 4;
-  const visibleUsers = idsArray.slice(0, MAX_VISIBLE);
-  const extraCount = idsArray.length - MAX_VISIBLE;
-
-  visibleUsers.forEach((userId) => {
-    const user = usersData[userId];
-    if (!user) return;
-
-    const initials = initialsFromGivenName(user.givenName);
-    const bgColor = colorVarFromUserId(userId);
-
-    const avatar = document.createElement("span");
-    avatar.className = "user__avatar avatar_wrap";
-    avatar.style.background = bgColor;
-    avatar.textContent = initials;
-
-    container.appendChild(avatar);
-  });
-
-  if (extraCount > 0) {
-    const moreAvatar = document.createElement("span");
-    moreAvatar.className = "user__avatar avatar_wrap avatar_more";
-    moreAvatar.textContent = `+${extraCount}`;
-    container.appendChild(moreAvatar);
-  }
-}
-
-function listenEscapeFromModal(modalDOMId, onClose) {
-  const handler = async (event) => {
-    if (event.key !== "Escape") return;
-
-    const modal = document.getElementById(modalDOMId);
-    if (!modal) return;
-
-    const isOpen = modal.open === true || modal.classList.contains("active");
-    if (!isOpen) return;
-
-    if (typeof onClose === "function") {
-      await onClose(modal);
-    } else {
-      modal.close?.();
-      modal.classList.remove("active");
-    }
-  };
-  document.addEventListener("keydown", handler);
-  return () => document.removeEventListener("keydown", handler);
-}
-
-function InitGlobalEventListener() {
-  const btn = document.getElementById("open_user_dialog");
-  const menu = document.getElementById("user_dialog");
-
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    toggleUserMenu();
-  });
-
-  document.addEventListener("click", (e) => {
-    if (menu.hidden) return;
-
-    if (!menu.contains(e.target) && !btn.contains(e.target)) {
-      closeUserMenuDialog();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeUserMenuDialog();
-    }
-  });
-
-  function toggleUserMenu() {
-    if (menu.hidden) openUserMenuDialog();
-    else closeUserMenuDialog();
-  }
-}
-
-function openUserMenuDialog() {
-  const menu = document.getElementById("user_dialog");
-  menu.hidden = false;
-
-  const firstLink = menu.querySelector("a, button");
-  firstLink?.focus();
-}
-
-function closeUserMenuDialog() {
-  const menu = document.getElementById("user_dialog");
-  menu.hidden = true;
 }
 
 /**
  * Initializes page-specific logic based on the current page identifier.
+ * Orchestrates all initialization steps and global event listeners.
  *
  * @async
  * @function initPage
@@ -235,42 +114,16 @@ window.initPage = async function initPage() {
   renderActiveUserAvatar();
   const usersDataObj = await ensureUsersLoaded();
   const tasksDataObj = await ensureTasksLoaded();
-  switch (page) {
-    case "contacts":
-      renderContacts(usersDataObj);
-      initContactsClick(usersDataObj);
-      break;
-
-    case "add_task": {
-      const host = document.getElementById("addTaskInlineHost");
-      const form = await mountTaskForm(host, {
-        title: "Add Task",
-        preset: { titel: "", description: "", priority: "medium" },
-        toastId: "task_success_overlay",
-        afterSaved: () => activateBoard(),
-      });
-      initAssignedToDropdown(form, usersDataObj);
-      resetAssignedToDropdown(form);
-      initTaskTypeDropdown(form, TASK_CATEGORIES);
-      initSubtasksInput(form);
-      break;
-    }
-    case "summary":
-      await ensureTasksLoaded();
-      break;
-
-    case "board":
-      await ensureTasksLoaded();
-      loadTaskBoard(tasksDataObj, usersDataObj);
-      initAddTaskModalOnce();
-      break;
-
-    default:
-      break;
-  }
+  await initializePageContent(page, usersDataObj, tasksDataObj);
   InitGlobalEventListener();
 };
 
+/**
+ * Update the avatar shown for the active user using stored session values.
+ *
+ * @function renderActiveUserAvatar
+ * @returns {void}
+ */
 function renderActiveUserAvatar() {
   const color = colorVarFromUserId(sessionStorage.userId);
   document.documentElement.style.setProperty("--user_c_active", color);
@@ -278,6 +131,12 @@ function renderActiveUserAvatar() {
   document.getElementById("active_user_avatar").innerHTML = initials;
 }
 
+/**
+ * Highlights the current navigation link based on the path.
+ *
+ * @function setActiveNavLink
+ * @returns {void}
+ */
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");
 
@@ -286,229 +145,12 @@ function setActiveNavLink() {
   });
 }
 
-function showToastOverlay(overlayId, opts = {}) {
-  const overlay = document.getElementById(overlayId);
-  if (!overlay) {
-    console.warn("Overlay nicht gefunden:", overlayId);
-    return;
-  }
-
-  const visibleClass = opts.visibleClass || "is_visible";
-  const animateClass = opts.animateClass || "is_animating";
-  const boxSelector = opts.boxSelector || "[data-toast-box], .signup_success_box, .task_success_box";
-
-  const box = overlay.querySelector(boxSelector);
-  if (!box) {
-    console.warn("Toast-Box nicht gefunden in:", overlayId, "Selector:", boxSelector);
-    return;
-  }
-
-  const holdMs = Number.isFinite(opts.holdMs) ? opts.holdMs : parseInt(overlay.dataset.holdMs, 10) || 1000;
-
-  if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);
-  if (overlay._toastCleanup) overlay._toastCleanup();
-
-  overlay.setAttribute("aria-hidden", "false");
-  overlay.classList.add(visibleClass);
-
-  void box.offsetWidth;
-
-  overlay.classList.add(animateClass);
-
-  const onAnimEnd = (ev) => {
-    if (ev.target !== box) return;
-
-    box.removeEventListener("animationend", onAnimEnd);
-
-    overlay._toastTimer = window.setTimeout(() => {
-      overlay.classList.remove(animateClass, visibleClass);
-      overlay.setAttribute("aria-hidden", "true");
-
-      if (typeof opts.onDone === "function") {
-        opts.onDone();
-        return;
-      }
-
-      const fnName = overlay.dataset.onDone;
-      if (fnName && typeof window[fnName] === "function") {
-        window[fnName]();
-      }
-    }, holdMs);
-  };
-
-  box.addEventListener("animationend", onAnimEnd);
-
-  overlay._toastCleanup = () => {
-    box.removeEventListener("animationend", onAnimEnd);
-  };
-}
-
-function w3includeHTML(cb) {
-  var z, i, elmnt, file, xhttp;
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            elmnt.innerHTML = this.responseText;
-          }
-          if (this.status == 404) {
-            elmnt.innerHTML = "Page not found.";
-          }
-          elmnt.removeAttribute("w3-include-html");
-          w3includeHTML(cb);
-        }
-      };
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      return;
-    }
-  }
-  if (cb) cb();
-}
-
-function checkIfUserIsLoggedIn() {
-  const userLoggedIn = sessionStorage.getItem("userLoggedIn");
-  if (userLoggedIn !== "true") {
-    window.location.replace("index.html");
-  }
-}
-
-function removeAllInputErrors(form) {
-  const reqInputFields = form.querySelectorAll(".required_input");
-  reqInputFields.forEach(resetInputValidation);
-}
-
-function setInputInValid(element, errorElement) {
-  const error = errorElement.nextElementSibling;
-  element.classList.add("is-invalid");
-  element.classList.remove("is-valid");
-  error.innerText = "This field is required";
-}
-
-function setInputValid(element, errorElement) {
-  const error = errorElement.nextElementSibling;
-  element.classList.add("is-valid");
-  element.classList.remove("is-invalid");
-  error.innerText = "";
-}
-
-function resetInputValidation(element) {
-  element.classList.remove("is-invalid");
-  element.classList.remove("is-valid");
-}
-
-async function loadPartial(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Failed to load partial: ${url} (${res.status})`);
-  return await res.text();
-}
-
-async function mountTaskForm(
-  hostEl,
-  { title = "Add Task", preset = null, mode = "page", toastId = "task_success_overlay", taskStatus = 0, afterSaved = null, onSubmitData = null } = {},
-) {
-  const html = await loadPartial("./partials/task_form.html");
-  hostEl.innerHTML = html;
-
-  if (window.renderIcons) {
-    window.renderIcons(hostEl);
-  }
-
-  const form = hostEl.querySelector("form.add_task_form");
-  const clearBtn = form.querySelector("#clear_task_form_btn");
-  clearBtn.addEventListener("click", () => clearTaskForm(form));
-
-  form.querySelector(".add_task_titel").textContent = title;
-  if (preset) {
-    if (preset.titel != null) form.elements.task_titel.value = preset.titel;
-    if (preset.description != null) form.elements.task_descr.value = preset.description;
-    if (preset.finishDate != null) form.elements.task_due_date.value = preset.finishDate;
-    if (preset.priority != null) {
-      const radio = form.querySelector(`input[name="priority"][value="${preset.priority}"]`);
-      if (radio) radio.checked = true;
-    }
-    if (preset.type != null) form.elements.task_cat.value = preset.type;
-    if (preset?.assignedTo != null) {
-      const hiddenAssigned = form.querySelector("#assigned_to_input");
-      if (hiddenAssigned) hiddenAssigned.value = JSON.stringify(preset.assignedTo);
-    }
-    if (preset?.subTasks != null) {
-      const hidden = form.querySelector("#subtasks_list_input");
-      if (hidden) hidden.value = JSON.stringify(preset.subTasks);
-    }
-  }
-
-  form.querySelectorAll(".standard_input_box[required]").forEach((input) => {
-    input.addEventListener("blur", () => {
-      if (!input.checkValidity()) setInputInValid(input, input);
-      else setInputValid(input, input);
-    });
-  });
-
-  form.querySelector("#task_cat_btn")?.addEventListener("blur", () => {
-    const hidden = form.querySelector("#task_cat");
-    const taskTypeDiv = form.querySelector("#task_cat_control");
-    const taskTypeOuterDiv = form.querySelector("#task_cat_select");
-    if (!hidden.value) setInputInValid(taskTypeDiv, taskTypeOuterDiv);
-    else setInputValid(taskTypeDiv, taskTypeOuterDiv);
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (!validateAddTaskForm(form)) return;
-
-    const data = {
-      titel: form.querySelector("#task_titel")?.value?.trim() || "",
-      description: form.querySelector("#task_descr")?.value?.trim() || "",
-      finishDate: form.querySelector("#task_due_date")?.value || "",
-      priority: form.querySelector('input[name="priority"]:checked')?.value || "",
-      type: form.querySelector("#task_cat")?.value || "",
-      assignedTo: getAssignedToIds(form),
-      subTasks: getSubtasksArray(form),
-    };
-
-    if (typeof onSubmitData === "function") {
-      await onSubmitData(data, form);
-      return;
-    }
-
-    const newTaskObj = { ...data, status: taskStatus };
-
-    await addTaskData(newTaskObj, {
-      toastId,
-      afterDone: () => typeof afterSaved === "function" && afterSaved(newTaskObj),
-      refreshAfter: false,
-    });
-
-    clearTaskForm(form);
-  });
-
-  return form;
-}
-
-function safeParseArray(str) {
-  try {
-    const v = JSON.parse(str || "[]");
-    return Array.isArray(v) ? v : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveUsersToSessionStorage(users) {
-  sessionStorage.setItem("users", JSON.stringify(users));
-}
-
-function saveTasksToSessionStorage(tasks) {
-  sessionStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
+/**
+ * Adjusts visibility of privacy/legal notice links for logged-out users.
+ *
+ * @function initPrivacyPoliceOrLegalNotice
+ * @returns {void}
+ */
 function initPrivacyPoliceOrLegalNotice() {
   const userInfo = document.getElementById("user_info_top_menu");
   const userLoggedIn = sessionStorage.getItem("userLoggedIn");
