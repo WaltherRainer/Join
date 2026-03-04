@@ -138,8 +138,8 @@ function onSubtaskListClick(state, e) {
     const idx = Number(li.dataset.index);
     const btn = e.target.closest("button[data-action]");
 
-    if (!btn) return enterEditMode(state, idx);
-    if (btn.dataset.action === "edit") return enterEditMode(state, idx);
+    if (!btn) return enterSubtaskEditMode(state, idx);
+    if (btn.dataset.action === "edit") return enterSubtaskEditMode(state, idx);
     if (btn.dataset.action === "delete") return deleteSubtask(state, idx);
 }
 
@@ -156,7 +156,7 @@ function onSubtaskListClick(state, e) {
 function onSubtaskListKeydown(state, e) {
     if (state.editingIndex === null) return;
     if (e.key === "Enter") { e.preventDefault(); commitEdit(state); }
-    if (e.key === "Escape") exitEditMode(state);
+    if (e.key === "Escape") exitSubtaskEditMode(state);
 }
 
 
@@ -259,7 +259,7 @@ function makeDivider() {
  * @param {number} idx - Index to edit.
  * @returns {void}
  */
-function enterEditMode(state, idx) {
+function enterSubtaskEditMode(state, idx) {
     state.editingIndex = idx;
     renderSubtasks(state);
     focusEditInputEnd(state);
@@ -272,7 +272,7 @@ function enterEditMode(state, idx) {
  * @param {Object} state - Subtasks UI state object.
  * @returns {void}
  */
-function exitEditMode(state) {
+function exitSubtaskEditMode(state) {
     state.editingIndex = null;
     renderSubtasks(state);
 }
@@ -290,17 +290,17 @@ function exitEditMode(state) {
 function commitEdit(state) {
     const idx = state.editingIndex;
     if (typeof idx !== "number" || idx < 0 || idx >= state.subtasks.length) {
-        return exitEditMode(state);
+        return exitSubtaskEditMode(state);
     }
 
     const input = state.subTaskUi.SubTaskListElem.querySelector("li.is-editing input.subtask_edit");
-    if (!input) return exitEditMode(state);
+    if (!input) return exitSubtaskEditMode(state);
 
     const title = input.value.trim();
     if (!title) return;
     state.subtasks[idx].title = title;
 
-    exitEditMode(state);
+    exitSubtaskEditMode(state);
     syncSubtasksListInp(state);
 }
 

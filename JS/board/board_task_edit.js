@@ -98,7 +98,7 @@ async function handleEditTaskFormSubmit(data, formEl, tasks, taskId, users) {
   tasks[taskId] = { ...tasks[taskId], ...patch };
   saveTasksToSessionStorage(tasks);
   await patchData("tasks", taskId, patch);
-  exitEditMode();
+  exitTaskEditMode();
   const ui = getTaskUi();
   renderTaskModal(taskId, ui, tasks, users);
   loadTaskBoard(tasks, users);
@@ -210,7 +210,7 @@ function setupEditModeUI(form, modal) {
 /**
  * Exits edit mode and restores original view.
  */
-function exitEditMode() {
+function exitTaskEditMode() {
   document.getElementById("EditTaskModalHost").innerHTML = "";
   document.getElementById("task_dialog_content_wrapper").classList.remove("is-hidden");
 }
