@@ -1,4 +1,5 @@
 let contactClickHandler = null;
+
 /**
  * Initializes the contacts view by verifying the login state
  * and attaching contact-related event listeners.
@@ -310,9 +311,7 @@ async function removeContactFromTasks(userId) {
 
   sessionStorage.setItem("tasks", JSON.stringify(tasks));
 
-  await Promise.all(
-    updatedTaskIds.map(taskId => editData("tasks", taskId, tasks[taskId]))
-  );
+  await Promise.all(updatedTaskIds.map((taskId) => editData("tasks", taskId, tasks[taskId])));
 }
 
 /**
@@ -331,7 +330,7 @@ function removeUserFromTasksAndCollectIds(tasks, userId) {
   for (const key of Object.keys(tasks)) {
     const task = tasks[key];
     if (Array.isArray(task.assignedTo) && task.assignedTo.includes(userId)) {
-      task.assignedTo = task.assignedTo.filter(id => id !== userId);
+      task.assignedTo = task.assignedTo.filter((id) => id !== userId);
       updatedTaskIds.push(key);
     }
   }
@@ -351,13 +350,10 @@ function removeUserFromTasksAndCollectIds(tasks, userId) {
 function openContactModal() {
   const modal = document.getElementById("add_contact_modal");
   if (!modal) return;
-
   modal.showModal();
   bindContactFormSubmitOnce();
-
   const removeEsc = listenEscapeFromModal(modal.id, (m) => closeContactModal(m));
   const close = () => closeAndCleanup(modal, removeEsc);
-
   bindContactModalCloseHandlers(modal, close, removeEsc);
 }
 
@@ -393,10 +389,8 @@ function closeAndCleanup(modal, removeEsc) {
 function bindContactModalCloseHandlers(modal, close, removeEsc) {
   const closeBtn = document.getElementById("modal_close");
   closeBtn?.addEventListener("click", close, { once: true });
-
   const clearBtn = document.getElementById("clear_contact_form");
   clearBtn?.addEventListener("click", close, { once: true });
-
   modal.addEventListener(
     "click",
     (e) => {
@@ -404,8 +398,5 @@ function bindContactModalCloseHandlers(modal, close, removeEsc) {
     },
     { once: true },
   );
-
   modal.addEventListener("close", () => removeEsc?.(), { once: true });
 }
-
-
