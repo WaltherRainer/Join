@@ -102,7 +102,9 @@ function getTaskItemContent(task, users) {
             <p class="t_description">${checkOverflow(task.description)}</p>
         </div>
           ${doneSubtasks > 0 ? `<div class="t_sub_tasks">
-            <div class="t_sub_task_bar" style="width: ${fillSubTasksBar(task)}%;"></div>
+            <div class="progress_bar_container">
+              <div class="t_sub_task_bar" style="width: ${fillSubTasksBar(task)}%;">
+            </div></div>
             ${subtasksCounter(task)}
         </div>` : ''}
         <div class="t_assigned_priotity">

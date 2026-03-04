@@ -95,7 +95,7 @@ function fillSubTasksBar(task) {
   const done = subtaskcount.done;
   let percentage = 0;
   if (total > 0) {
-    percentage = (done / total) * 40;
+    percentage = (done / total) * 100;
   }
   return percentage;
 }
