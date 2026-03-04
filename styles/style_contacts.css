@@ -374,6 +374,26 @@ h4 {
   border-color: #d32f2f !important;
 }
 
+.warning_text {
+  display: none;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  color: var(--warning_red);
+  font-size: 13px;
+}
+
+.input-wrapper + .warning_text {
+  margin-top: -14px;
+}
+
+.warning_text.visible {
+  display: block;
+}
+
+.input-wrapper.has_error input {
+  border: 1.5px solid var(--warning_red);
+}
+
 @media (max-width: 1250px) {
   .contact_modal_content {
     min-width: auto;

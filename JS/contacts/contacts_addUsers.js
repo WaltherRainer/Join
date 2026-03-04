@@ -80,6 +80,7 @@ function setValueById(id, value) {
 function closeContactModal(modal) {
   modal.removeEventListener("submit", addNewUser);
   modal.close();
+  resetContactForm();
 }
 
 /**
@@ -132,7 +133,7 @@ function bindContactFormSubmitOnce() {
   if (!bindOnce(form, "submitBound")) return;
 
   form.addEventListener("submit", onContactFormSubmit(form));
-  form.addEventListener("input", onContactFormInput);
+  window.contactFormValidation?.enableErrorReset(form);
 }
 
 /**
@@ -166,7 +167,7 @@ function onContactFormSubmit(form) {
   return async (e) => {
     e.preventDefault();
 
-    if (!validateRequiredFields(form)) return;
+    if (!window.contactFormValidation?.validateAddForm()) return;
 
     try {
       await addNewUser();
@@ -174,60 +175,6 @@ function onContactFormSubmit(form) {
       console.error("addUser failed", err);
     }
   };
-}
-
-/**
- * Handles input events on required fields to clear validation errors.
- *
- * When a required input receives a non-empty value, removes the `input-invalid`
- * class and deletes any associated `.field-error` message in the input's parent.
- *
- * @function onContactFormInput
- * @param {Event} e - Input event from the form.
- * @returns {void}
- */
-function onContactFormInput(e) {
-  const input = e.target.closest("input[required]");
-  if (!input) return;
-
-  if (input.value.trim()) {
-    input.classList.remove("input-invalid");
-    input.parentElement?.querySelector(".field-error")?.remove();
-  }
-}
-
-/**
- * Validates all required inputs in a form and renders inline error messages.
- *
- * Clears previous validation UI, checks each `input[required]` for a non-empty
- * trimmed value, marks invalid inputs with `input-invalid`, appends a
- * `.field-error` message, and returns whether the form is valid.
- *
- * @function validateRequiredFields
- * @param {HTMLFormElement} form - Form element containing required inputs.
- * @returns {boolean} `true` if all required fields are filled, otherwise `false`.
- */
-function validateRequiredFields(form) {
-  form.querySelectorAll(".field-error").forEach((el) => el.remove());
-  form.querySelectorAll(".input-invalid").forEach((el) => el.classList.remove("input-invalid"));
-
-  const inputs = form.querySelectorAll("input[required]");
-  let ok = true;
-
-  inputs.forEach((input) => {
-    if (!input.value.trim()) {
-      ok = false;
-      input.classList.add("input-invalid");
-
-      const msg = document.createElement("div");
-      msg.className = "field-error";
-      msg.textContent = "Field required";
-
-      input.parentElement.appendChild(msg);
-    }
-  });
-
-  return ok;
 }
 
 /**
@@ -247,8 +194,14 @@ function bindEditContactFormSubmitOnce(userId) {
   if (!form) return;
   if (form.dataset.submitBound === "1") return;
   form.dataset.submitBound = "1";
+
+  window.contactFormValidation?.enableErrorReset(form);
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (!window.contactFormValidation?.validateEditForm()) return;
+
     try {
       await editUser(userId);
     } catch (err) {
@@ -260,7 +213,8 @@ function bindEditContactFormSubmitOnce(userId) {
 /**
  * Resets the add-contact form fields to empty strings.
  *
- * Clears the name, email, and phone input values using {@link setValueById}.
+ * Clears the name, email, and phone input values using {@link setValueById}
+ * and removes any error states and messages.
  *
  * @function resetContactForm
  * @returns {void}
@@ -269,6 +223,7 @@ function resetContactForm() {
   setValueById("user_name", "");
   setValueById("user_email", "");
   setValueById("user_phone", "");
+  window.contactFormValidation?.clearAddErrors();
 }
 
 /**
