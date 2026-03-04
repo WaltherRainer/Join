@@ -413,12 +413,12 @@ section.task_section {
 }
 
 .tsk_dlg_sbtsk {
-    margin-top: 16px;
+    /* margin-top: 16px; */
     display: flex;
     align-items: center;
     gap: 24px;
     font-size: 24px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 
 .tsk_dlg_sbtsk span {
@@ -444,9 +444,10 @@ section.task_section {
 
 .subtasks_check_list {
     list-style-type: none;
-    max-height: 80px;
+    max-height: 100px;
     overflow: auto;
     min-width: 300px;
+    width: 100%;
 }
 
 .subtask_action button:focus {
@@ -475,6 +476,10 @@ section.task_section {
 
 .checkbox_checked {
     display: none;
+}
+
+.subtask_li_elements{
+    margin-bottom: 10px;
 }
 
 .subtask_li_elements.is-done .checkbox_checked {
