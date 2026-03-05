@@ -16,6 +16,7 @@ async function refreshUsersUI(activeUserId) {
   const users = await initUsersLoading();
   saveUsersToSessionStorage(users);
   renderContacts(users);
+  initContactsClick(users);
   if (activeUserId) {
     renderContactDetails(users, activeUserId);
   }
@@ -69,25 +70,7 @@ function showListView() {
   document.querySelector(".contacts_layout")?.classList.remove("is-details");
 }
 
-/**
- * Handles contact card selection via event delegation on the contact list.
- *
- * Detects clicks on `.contact_list_card` elements, marks the clicked card as active,
- * renders the corresponding contact details, and switches to the details view on
- * mobile breakpoints.
- *
- * @listens HTMLElement#click
- * @param {MouseEvent} e - Click event from the contact list container.
- * @returns {void}
- */
-document.querySelector(".contact_list_sect")?.addEventListener("click", (e) => {
-  const card = e.target.closest(".contact_list_card");
-  if (!card) return;
-  const userId = card.dataset.userId;
-  setActiveContactCard(card);
-  renderContactDetails(users, userId);
-  if (mqMobile.matches) showDetailsView();
-});
+
 
 document.querySelector(".back_to_list")?.addEventListener("click", () => {
   showListView();
