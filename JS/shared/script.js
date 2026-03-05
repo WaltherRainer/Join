@@ -155,7 +155,7 @@ function initPrivacyPoliceOrLegalNotice() {
   const userInfo = document.getElementById("user_info_top_menu");
   const userLoggedIn = sessionStorage.getItem("userLoggedIn");
   if (userLoggedIn !== "true") {
-    userInfo.classList.add("d_none");
+    if (userInfo) userInfo.classList.add("d_none");
     document.querySelectorAll(".nav_link").forEach((el) => el.classList.toggle("d_none"));
   }
 }
