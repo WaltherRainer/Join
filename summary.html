@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="styles/button.css">
     <link rel="stylesheet" href="styles/style_contacts.css">
     <link rel="stylesheet" href="styles/style_summary.css">
+    <script src="./JS/shared/script.js" defer></script>
     <script src="./JS/shared/storage.js" defer></script>
     <script src="./JS/shared/ui-helpers.js" defer></script>
     <script src="./JS/shared/ui-toasts.js" defer></script>
     <script src="./JS/tasks/task-form.js" defer></script>
-    <script src="./script.js" defer></script>
     <script src="./JS/shared/fetch.js" defer></script>
     <script src="./JS/shared/icons_functions.js" defer></script>
     <script src="./JS/shared/icons_svg.js" defer></script>
@@ -34,93 +34,95 @@
 
         <main class="summary_main">
             <div class="content_div">
-            <div class="title_box_summary">
-                <div class="summary_title">Join 360</div>
-                <div class="summary_subtitle">Key Metrics at a glance</div>
-                <div class="summary_subtitle_line"></div>
-            </div>
+                <div class="title_box_summary">
+                    <div class="summary_title">Join 360</div>
+                    <div class="summary_subtitle">Key Metrics at a glance</div>
+                    <div class="summary_subtitle_line"></div>
+                </div>
 
-            <div class="container_of_a_lot_boxes">
-                <!-- linker teil -->
-                <div class="summary_left_part">
-                    <!-- to do & done -->
-                    <div class="todo_done_box">
-                        <!-- To-do box -->
-                        <a href="./board.html">
-                            <div class="todo_done_boxes hover_card" style="background-color: var(--div_hover_main);">
-                                <span class="svg-icon svg_summary" data-icon="editPencilBig" data-w="69"
-                                    data-h="69"></span>
-                                <div class="todo_box">
-                                    <p class="big_numbers" id="toDo"></p>
-                                    <p>To-do</p>
+                <div class="container_of_a_lot_boxes">
+                    <!-- linker teil -->
+                    <div class="summary_left_part">
+                        <!-- to do & done -->
+                        <div class="todo_done_box">
+                            <!-- To-do box -->
+                            <a href="./board.html">
+                                <div class="todo_done_boxes hover_card"
+                                    style="background-color: var(--div_hover_main);">
+                                    <span class="svg-icon svg_summary" data-icon="editPencilBig" data-w="69"
+                                        data-h="69"></span>
+                                    <div class="todo_box">
+                                        <p class="big_numbers" id="toDo"></p>
+                                        <p>To-do</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                        <a href="./board.html">
-                            <div class="todo_done_boxes hover_card" style="background-color: var(--div_hover_main);">
-                                <span class="svg-icon svg_summary" data-icon="confTickBig" data-w="69"
-                                    data-h="69"></span>
-                                <div class="todo_box">
-                                    <p class="big_numbers" id="toDoDone"></p>
-                                    <p>Done</p>
+                            </a>
+                            <a href="./board.html">
+                                <div class="todo_done_boxes hover_card"
+                                    style="background-color: var(--div_hover_main);">
+                                    <span class="svg-icon svg_summary" data-icon="confTickBig" data-w="69"
+                                        data-h="69"></span>
+                                    <div class="todo_box">
+                                        <p class="big_numbers" id="toDoDone"></p>
+                                        <p>Done</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-
-                    <!-- Urgent box -->
-                    <a href="./board.html">
-                        <div class="urgent_box_main hover_card" style="background-color: var(--div_hover_main);">
-                            <div class="urgent_box_left">
-                                <span class="svg-icon svg_summary" data-icon="prioUrgentBig" data-w="60"
-                                    data-h="60"></span>
-                                <div class="urgent_box">
-                                    <p class="big_numbers" id="toDoUrgent"></p>
-                                    <p>Urgent</p>
-                                </div>
-                            </div>
-                            <div class="urgent_box_right">
-                                <p class="deadline" id="toDoUrgentDeadline"></p>
-                                <p>Upcoming Deadline</p>
-                            </div>
+                            </a>
                         </div>
-                    </a>
-                    <!-- 3 Tasks boxes -->
-                    <div class="task_boxes">
+
+                        <!-- Urgent box -->
                         <a href="./board.html">
-                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers" id="tasksInBoard"></p>
-                                <p>Tasks in</p>
-                                <p>Board</p>
+                            <div class="urgent_box_main hover_card" style="background-color: var(--div_hover_main);">
+                                <div class="urgent_box_left">
+                                    <span class="svg-icon svg_summary" data-icon="prioUrgentBig" data-w="60"
+                                        data-h="60"></span>
+                                    <div class="urgent_box">
+                                        <p class="big_numbers" id="toDoUrgent"></p>
+                                        <p>Urgent</p>
+                                    </div>
+                                </div>
+                                <div class="urgent_box_right">
+                                    <p class="deadline" id="toDoUrgentDeadline"></p>
+                                    <p>Upcoming Deadline</p>
+                                </div>
                             </div>
                         </a>
-                        <a href="./board.html">
-                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers" id="tasksInProgress"></p>
-                                <p>Tasks in</p>
-                                <p>Progress</p>
-                            </div>
-                        </a>
-                        <a href="./board.html">
-                            <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
-                                <p class="big_numbers" id="tasksAwaitingFeedback"></p>
-                                <p>Awaiting</p>
-                                <p>feedback</p>
-                            </div>
-                        </a>
+                        <!-- 3 Tasks boxes -->
+                        <div class="task_boxes">
+                            <a href="./board.html">
+                                <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
+                                    <p class="big_numbers" id="tasksInBoard"></p>
+                                    <p>Tasks in</p>
+                                    <p>Board</p>
+                                </div>
+                            </a>
+                            <a href="./board.html">
+                                <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
+                                    <p class="big_numbers" id="tasksInProgress"></p>
+                                    <p>Tasks in</p>
+                                    <p>Progress</p>
+                                </div>
+                            </a>
+                            <a href="./board.html">
+                                <div class="summary_box hover_card" style="background-color: var(--div_hover_main);">
+                                    <p class="big_numbers" id="tasksAwaitingFeedback"></p>
+                                    <p>Awaiting</p>
+                                    <p>feedback</p>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="greeting">
-                    <p id="greetingDay"></p>
-                    <p class="greeting_name" id="greetingName"></p>
-                </div>
+                    <div class="greeting">
+                        <p id="greetingDay"></p>
+                        <p class="greeting_name" id="greetingName"></p>
+                    </div>
 
-                <div class="landscape-message">
-                    <p>For the best experience, please rotate your device to landscape mode.</p>
-                </div>
+                    <div class="landscape-message">
+                        <p>For the best experience, please rotate your device to landscape mode.</p>
+                    </div>
 
-            </div>
+                </div>
             </div>
         </main>
     </div>
