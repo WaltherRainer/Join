@@ -1,3 +1,4 @@
+let editFormSubmitHandler = null;
 /**
  * Binds one-time event handlers for closing and actions within the edit modal.
  *
@@ -192,22 +193,22 @@ function onContactFormSubmit(form) {
 function bindEditContactFormSubmitOnce(userId) {
   const form = document.getElementById("edit_contact_form");
   if (!form) return;
-  if (form.dataset.submitBound === "1") return;
-  form.dataset.submitBound = "1";
-
+  if (editFormSubmitHandler) {
+    form.removeEventListener("submit", editFormSubmitHandler);
+  }
   window.contactFormValidation?.enableErrorReset(form);
 
-  form.addEventListener("submit", async (e) => {
+  editFormSubmitHandler = async (e) => {
     e.preventDefault();
-
     if (!window.contactFormValidation?.validateEditForm()) return;
-
     try {
       await editUser(userId);
     } catch (err) {
       console.error("EditUser failed", err);
     }
-  });
+  };
+  form.addEventListener("submit", editFormSubmitHandler);
+
 }
 
 /**
@@ -328,7 +329,7 @@ async function editUser(userId) {
   const payload = readEditUserForm();
   if (!payload) return;
   await window.editData("/users", userId, payload);
-  const users = await refreshUsersUI(userId);
+  window.users = await refreshUsersUI(userId);
   if (modal) closeEditContactModal(modal);
 }
 
