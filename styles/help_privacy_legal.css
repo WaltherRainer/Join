@@ -1,0 +1,152 @@
+.help_main, .privacy_policy_main, .legal_notice_main {
+  grid-area: main;
+  overflow: auto; /* NUR dieser Bereich scrollt */
+  min-height: 0; /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
+  min-width: 0; /* optional, hilft bei langen Inhalten */
+  margin-left: 96px;
+  padding-top: 110px;
+  padding-right: 128px;
+  padding-bottom: 55px;
+  color: var(--text-color);
+  width: 100%;
+  max-width: 1920px;
+}
+
+.help_headline {
+  font-size: 61px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.help_joinText {
+  color: var(--light-blue);
+}
+
+.help_container {
+  display: grid;
+  grid-template-areas:
+    "number headline"
+    "number content";
+    grid-template-columns: 56px auto;
+  padding-bottom: 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.help_container div.number {
+  grid-area: number;
+  font-weight: 700;
+  font-size: 27px;
+}
+
+.help_container div.headline {
+  grid-area: headline;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.help_container div.content {
+  grid-area: content;
+}
+
+.help_container a {
+  color: var(--light-blue);
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding-bottom: 24px;
+}
+
+span.margin {
+  display: block;
+  margin-top: 12px;
+}
+
+.legal_notice_main h3 {
+  padding-bottom: 16px;
+  padding-top: 20px;
+}
+
+@media (max-width: 1080px) {
+  .help_main, .privacy_policy_main, .legal_notice_main {
+    margin: 0;
+    padding: 55px;
+  }
+
+  .help_headline {
+    font-size: 52px;
+    margin-bottom: 5px;
+  }
+
+  .help_container div.number {
+    font-size: 28px;
+    width: 32px;
+    text-align: start;
+  }
+}
+
+
+@media (max-width: 880px) {
+  .help_main, .privacy_policy_main, .legal_notice_main {
+    margin-left: 15px;
+    padding: 30px;
+  }
+
+  .help_headline {
+    font-size: 48px;
+    margin-bottom: 0;
+  }
+
+  .legal_notice_main h3 {
+    padding-bottom: 12px;
+    padding-top: 20px;
+  }
+
+  span.margin {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .help_container div.number {
+    width: 32px;
+    text-align: start;
+  }
+  
+  .help_container {
+      grid-template-columns: 44px auto;
+  }
+}
+
+
+@media (max-width: 450px) {
+  .help_main, .privacy_policy_main, .legal_notice_main {
+    margin-left: 10px;
+    padding: 20px;
+  }
+
+  .help_main h2, .privacy_policy_main h2, .legal_notice_main h2 {
+    padding-bottom: 10px;
+    padding-top: 8px;
+  }
+
+  .help_headline {
+    font-size: 38px;
+    padding-bottom: 20px;
+  }
+
+  .help_container div.number {
+    font-size: 24px;
+    width: 32px;
+    text-align: start;
+  }
+  
+  .help_container {
+      grid-template-columns: 36px auto;
+  }
+}

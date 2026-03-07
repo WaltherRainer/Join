@@ -391,22 +391,6 @@ svg {
   opacity: 0;
 }
 
-.privacy_policy_main {
-  grid-area: main;
-  overflow: auto;
-  min-height: 0;
-  min-width: 0;
-  margin: 32px;
-}
-
-.legal_notice_main {
-  grid-area: main;
-  overflow: auto;
-  min-height: 0;
-  min-width: 0;
-  margin: 32px;
-}
-
 .landscape-message {
   display: none;
   position: fixed;
