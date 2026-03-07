@@ -13,9 +13,24 @@
 }
 
 .help_headline {
+  display: inline-flex;
   font-size: 61px;
   font-weight: bold;
   margin-bottom: 16px;
+  width: 90%;
+}
+
+button.inline {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-self: flex-end;
+}
+
+ button.mobil_only {
+  display: none; /* Standardmäßig versteckt, wird in Media Queries angezeigt */
 }
 
 .help_joinText {
@@ -102,6 +117,15 @@ span.margin {
     font-size: 48px;
     margin-bottom: 0;
   }
+
+  button.inline {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-self: flex-end;
+}
 
   .legal_notice_main h3 {
     padding-bottom: 12px;
