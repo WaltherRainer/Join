@@ -880,7 +880,7 @@ select.task_status_select option {
     #addTaskModal h1,
     #show_task_modal h1,
     #tsk_dlg_h1 {
-        font-size: 42px !important;
+        font-size: 36px !important;
         word-wrap: break-word;
     }
 
