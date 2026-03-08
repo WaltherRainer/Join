@@ -111,7 +111,7 @@ async function addUser() {
  */
 function isValidEmail(email) {
   if (!email) return false;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[a-zA-Z][a-zA-Z.-]*\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
 }
 
