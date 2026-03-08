@@ -290,7 +290,9 @@ body.is_loaded {
 
 .warning_text {
   display: none;
-  margin-top: 6px;
+  position: absolute;
+  margin-top: 0px;
+  padding-left: 4px;
   color: var(--warning_red);
   font-size: 13px;
 }
