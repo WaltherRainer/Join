@@ -47,6 +47,106 @@ function renderEditContactAvatar(userId, givenName) {
 const mqMobile = window.matchMedia("(max-width: 1100px)");
 
 /**
+ * Closes the mobile edit/delete popup menu.
+ *
+ * Removes the open state class and updates related ARIA attributes.
+ *
+ * @function closeMobileEditDeleteMenu
+ * @returns {void}
+ */
+function closeMobileEditDeleteMenu() {
+  const menu = document.getElementById("mobile_edit_delete_menu");
+  const trigger = document.getElementById("open_edit_delete_menu");
+  if (!menu || !trigger) return;
+
+  menu.classList.remove("is-open");
+  menu.setAttribute("aria-hidden", "true");
+  trigger.setAttribute("aria-expanded", "false");
+}
+
+/**
+ * Initializes the mobile edit/delete popup menu interactions.
+ *
+ * Wires the options FAB to toggle a popup and forwards menu actions to the
+ * existing detail-view edit/delete buttons so current handlers are reused.
+ *
+ * @function initMobileEditDeleteMenu
+ * @returns {void}
+ */
+function getMobileEditDeleteMenuElements() {
+  const trigger = document.getElementById("open_edit_delete_menu");
+  const menu = document.getElementById("mobile_edit_delete_menu");
+  const editAction = document.getElementById("mobile_menu_edit");
+  const deleteAction = document.getElementById("mobile_menu_delete");
+  if (!trigger || !menu || !editAction || !deleteAction) return null;
+  return { trigger, menu, editAction, deleteAction };
+}
+
+function setMobileMenuTriggerA11y(trigger) {
+  trigger.setAttribute("aria-haspopup", "true");
+  trigger.setAttribute("aria-controls", "mobile_edit_delete_menu");
+  trigger.setAttribute("aria-expanded", "false");
+}
+
+function toggleMobileEditDeleteMenu(menu, trigger) {
+  const willOpen = !menu.classList.contains("is-open");
+  menu.classList.toggle("is-open", willOpen);
+  menu.setAttribute("aria-hidden", String(!willOpen));
+  trigger.setAttribute("aria-expanded", String(willOpen));
+}
+
+function bindMobileMenuTriggerToggle(trigger, menu) {
+  trigger.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleMobileEditDeleteMenu(menu, trigger);
+  });
+}
+
+function bindMobileMenuOutsideClose(menu, trigger) {
+  document.addEventListener("click", (event) => {
+    if (!menu.classList.contains("is-open")) return;
+    if (menu.contains(event.target) || trigger.contains(event.target)) return;
+    closeMobileEditDeleteMenu();
+  });
+}
+
+function bindMobileMenuEscapeClose() {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeMobileEditDeleteMenu();
+  });
+}
+
+function clickContactActionButton(buttonId) {
+  document.getElementById(buttonId)?.click();
+}
+
+function bindMobileMenuAction(actionButton, targetButtonId) {
+  actionButton.addEventListener("click", () => {
+    closeMobileEditDeleteMenu();
+    clickContactActionButton(targetButtonId);
+  });
+}
+
+function bindMobileMenuActions(editAction, deleteAction) {
+  bindMobileMenuAction(editAction, "edit_user");
+  bindMobileMenuAction(deleteAction, "btn_delete_user");
+}
+
+function initMobileEditDeleteMenu() {
+  const elements = getMobileEditDeleteMenuElements();
+  if (!elements) return;
+
+  const { trigger, menu, editAction, deleteAction } = elements;
+  if (!bindOnce(trigger, "mobileMenuBound")) return;
+
+  setMobileMenuTriggerA11y(trigger);
+  bindMobileMenuTriggerToggle(trigger, menu);
+  bindMobileMenuOutsideClose(menu, trigger);
+  bindMobileMenuEscapeClose();
+  bindMobileMenuActions(editAction, deleteAction);
+}
+
+/**
  * Switches the contacts layout into "details" view mode.
  *
  * Adds the `is-details` class to the `.contacts_layout` container if it exists.
@@ -68,6 +168,7 @@ function showDetailsView() {
  */
 function showListView() {
   document.querySelector(".contacts_layout")?.classList.remove("is-details");
+  closeMobileEditDeleteMenu();
 }
 
 
@@ -79,6 +180,8 @@ document.querySelector(".back_to_list")?.addEventListener("click", () => {
 mqMobile.addEventListener("change", (e) => {
   if (!e.matches) showListView();
 });
+
+initMobileEditDeleteMenu();
 
 /**
  * Opens the edit-contact modal and initializes its state.
@@ -128,3 +231,4 @@ function closeAndCleanupEditModal(modal, removeEsc) {
   closeEditContactModal(modal);
   removeEsc?.();
 }
+
