@@ -35,14 +35,14 @@
 
         <main class="main_content contacts_layout">
             <div class="title_box">
-                <button type="button" class="back_to_list" aria-label="Back">
+                <div class="contacts_title">Contacts</div>
+                <button type="button" class="back_to_list inline mobil_only" aria-label="Back">
                     <svg width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M5.05757 9.78471H22.2349C23.0841 9.78471 23.7725 10.4731 23.7725 11.3222C23.7725 12.1714 23.0841 12.8598 22.2349 12.8598H5.05757L12.2179 20.0201C12.8182 20.6205 12.8182 21.5938 12.2179 22.1942C11.6175 22.7945 10.6442 22.7945 10.0438 22.1942L0.586088 12.7365C-0.19496 11.9554 -0.19496 10.6891 0.586088 9.90803L10.0438 0.45032C10.6442 -0.150035 11.6175 -0.150035 12.2179 0.45032C12.8182 1.05068 12.8182 2.02404 12.2179 2.6244L5.05757 9.78471Z"
                             fill="#29ABE2" />
                     </svg>
                 </button>
-                <div class="contacts_title">Contacts</div>
                 <div class="contacts_subtitle">Better with a team</div>
                 <div class="contacts_subtitle_line_responsive"></div>
             </div>
@@ -102,6 +102,42 @@
                             <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
                             <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_71395_11112" />
                             <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_71395_11112"
+                                result="shape" />
+                        </filter>
+                    </defs>
+                </svg>
+            </button>
+
+            <button id="open_edit_delete_menu" class="add_contact_btn_responsive mobile_contact_menu" type="button" aria-label="Options">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_d_71395_11113)">
+                        <rect x="1" width="56" height="56" rx="27" fill="#2A3647" shape-rendering="crispEdges" />
+                        <rect x="4.5" y="1" width="53.125" height="54.5" rx="28" stroke="#2A3647"
+                            shape-rendering="crispEdges" />
+                        <mask id="mask0_71395_11113" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="16" y="12"
+                            width="32" height="32">
+                            <rect x="16" y="12" width="32" height="32" fill="#D9D9D9" />
+                        </mask>
+                        <g mask="url(#mask0_71395_11113)">
+                            <g transform="translate(28, 16) scale(1, 1)">
+                                <path
+                                    d="M2.66667 21.3333C1.93333 21.3333 1.30556 21.0722 0.783333 20.55C0.261111 20.0278 0 19.4 0 18.6667C0 17.9333 0.261111 17.3056 0.783333 16.7833C1.30556 16.2611 1.93333 16 2.66667 16C3.4 16 4.02778 16.2611 4.55 16.7833C5.07222 17.3056 5.33333 17.9333 5.33333 18.6667C5.33333 19.4 5.07222 20.0278 4.55 20.55C4.02778 21.0722 3.4 21.3333 2.66667 21.3333ZM2.66667 13.3333C1.93333 13.3333 1.30556 13.0722 0.783333 12.55C0.261111 12.0278 0 11.4 0 10.6667C0 9.93333 0.261111 9.30556 0.783333 8.7833C1.30556 8.26111 1.93333 8 2.66667 8C3.4 8 4.02778 8.26111 4.55 8.7833C5.07222 9.30556 5.33333 9.93333 5.33333 10.6667C5.33333 11.4 5.07222 12.0278 4.55 12.55C4.02778 13.0722 3.4 13.3333 2.66667 13.3333ZM2.66667 5.33333C1.93333 5.33333 1.30556 5.07222 0.783333 4.55C0.261111 4.02778 0 3.4 0 2.66667C0 1.93333 0.261111 1.30556 0.783333 0.783333C1.30556 0.261111 1.93333 0 2.66667 0C3.4 0 4.02778 0.261111 4.55 0.783333C5.07222 1.30556 5.33333 1.93333 5.33333 2.66667C5.33333 3.4 5.07222 4.02778 4.55 4.55C4.02778 5.07222 3.4 5.33333 2.66667 5.33333Z"
+                                    fill="white" />
+                            </g>
+                        </g>
+                    </g>
+                    <defs>
+                        <filter id="filter0_d_71395_11113" x="0" y="0" width="64" height="64"
+                            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feColorMatrix in="SourceAlpha" type="matrix"
+                                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                            <feOffset dy="4" />
+                            <feGaussianBlur stdDeviation="2" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_71395_11113" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_71395_11113"
                                 result="shape" />
                         </filter>
                     </defs>
