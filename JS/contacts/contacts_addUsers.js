@@ -64,8 +64,9 @@ function preloadEditFormData(givenName, email, userPhone) {
  */
 function setValueById(id, value) {
   const el = document.getElementById(id);
-  if (el) el.value = value;
-}
+  if (!el) return; 
+    el.value = value ?? "";
+  }
 
 /**
  * Closes the add-contact modal and removes its submit handler.
