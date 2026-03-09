@@ -64,14 +64,12 @@
                     <form id="login_form" novalidate>
 
                         <div class="input_box">
-                            <input id="email" type="text" required placeholder=" " autocomplete="email">
-                            <label for="email">Email</label>
+                            <input id="email" type="text" required placeholder="Email" autocomplete="email">
                             <span class="svg-icon is-muted input_icon" data-icon="mail" data-w="20" data-h="16"></span>
                         </div>
 
                         <div class="input_box">
-                            <input type="password" required data-password placeholder=" " autocomplete="current-password">
-                            <label for="password">Password</label>
+                            <input type="password" required data-password placeholder="Password" autocomplete="current-password">
                             <button type="button" class="password_svg" data-password-toggle
                                 aria-label="Passwort anzeigen">
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
@@ -107,31 +105,27 @@
                     </div>
                     <form onsubmit="addUser(); return false" id="register_form" novalidate>
                         <div class="input_box">
-                            <input id="given_name" type="text" required placeholder=" ">
-                            <label for="given_name">Name</label>
+                            <input id="given_name" type="text" required placeholder="Name">
                             <span class="svg-icon is-muted input_icon" data-icon="person" data-w="16"
                                 data-h="16"></span>
                         </div>
 
                         <div class="input_box">
-                            <input id="email_sign_up" type="text" required autocomplete="email" placeholder=" ">
-                            <label for="email_sign_up">Email</label>
+                            <input id="email_sign_up" type="text" required autocomplete="email" placeholder="Email">
                             <span class="svg-icon is-muted input_icon" data-icon="mail" data-w="20" data-h="16"></span>
                         </div>
                         <span class="warning_text" id="warning_email_invalid">Please enter a valid email address.</span>
 
                         <div class="input_box">
-                            <input id="new_user_password" type="password" required data-password placeholder=" "
+                            <input id="new_user_password" type="password" required data-password placeholder="Password"
                                 autocomplete="new-password">
-                            <label for="password">Password</label>
                             <button type="button" class="password_svg" data-password-toggle>
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
                             </button>
                         </div>
                         <div class="input_box">
-                            <input type="password" required placeholder=" " data-password id="confirm_user_password"
+                            <input type="password" required placeholder="Confirm Password" data-password id="confirm_user_password"
                                 autocomplete="new-password">
-                            <label for="confirm_user_password">Confirm Password</label>
                             <button type="button" class="password_svg" data-password-toggle>
                                 <span class="svg-icon is-muted" data-icon="lock" data-w="21" data-h="21"></span>
                             </button>
