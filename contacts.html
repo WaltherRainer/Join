@@ -268,6 +268,20 @@
         </div>
     </dialog>
 
+    <dialog class="overlay_backdrop modal" id="confirm_delete_contact_modal" aria-labelledby="confirm_delete_contact_title">
+        <div class="delete_confirm_modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm_delete_contact_title"
+            aria-describedby="confirm_delete_contact_text">
+            <button type="button" class="modal_close btn_close_modal" id="confirm_delete_contact_close"
+                aria-label="Close">x</button>
+            <h3 id="confirm_delete_contact_title">Delete contact?</h3>
+            <p id="confirm_delete_contact_text">This action cannot be undone.</p>
+            <div class="delete_confirm_actions">
+                <button type="button" class="clear_button" id="cancel_delete_contact_btn">Cancel</button>
+                <button type="button" class="default_button delete_confirm_btn" id="confirm_delete_contact_btn">Delete</button>
+            </div>
+        </div>
+    </dialog>
+
     <div id="toast_contact_added" class="toast_overlay" aria-hidden="true" data-hold-ms="3500">
         <div class="toast_box" data-toast-box>
             Contact succesfully created

@@ -298,6 +298,49 @@ h4 {
   color: var(--text-color);
 }
 
+.delete_confirm_modal {
+  width: min(460px, 92vw);
+  background: var(--background-color);
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  padding: 32px;
+  position: relative;
+}
+
+.delete_confirm_modal h3 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.delete_confirm_modal p {
+  font-size: 18px;
+  color: var(--text-color);
+  margin-bottom: 28px;
+}
+
+.delete_confirm_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.delete_confirm_actions .clear_button {
+  display: inline-flex;
+  width: auto;
+  min-width: 120px;
+  margin-right: 0;
+}
+
+.delete_confirm_btn {
+  min-width: 120px;
+  background-color: var(--warning_red);
+}
+
+.delete_confirm_btn:hover {
+  background-color: #ff2d55;
+}
+
 .toast_overlay {
   position: fixed;
   inset: 0;
@@ -455,6 +498,10 @@ h4 {
 @media (max-width: 1250px) {
   .contact_modal_content {
     min-width: auto;
+  }
+
+  .delete_confirm_actions .clear_button {
+    display: inline-flex;
   }
 
   .contacts_modal_icon {
@@ -691,6 +738,15 @@ h4 {
     height: 80px;
     font-size: 28px;
   }
+
+  main.overlay_right {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .edit_contact_btn {
+    margin-top: 8px;
+  }
 }
 
 @media (min-width: 1101px) {
@@ -717,11 +773,10 @@ h4 {
     position: fixed;
     right: 30px;
     bottom: 168px;
-    width: 156px;
+    width: 110px;
     background: #ffffff;
-    border: 1px solid #d1d1d1;
-    border-radius: 14px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    border-radius: 14px 14px 0 14px;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     z-index: 1001;
   }
@@ -745,11 +800,11 @@ h4 {
     cursor: pointer;
   }
 
-  .mobile_menu_item + .mobile_menu_item {
-    border-top: 1px solid #ededed;
+  .mobile_menu_item:hover {
+    color: var(--light-blue);
   }
 
-  .mobile_menu_item.is-delete {
+  .mobile_menu_item.is-delete:hover {
     color: #d32f2f;
   }
 
@@ -820,5 +875,10 @@ button#edit_user, button#btn_delete_user {
     left: calc(50% - 50px);
     width: 100px;
     height: 100px;
+  }
+  
+  .modal[open] {
+    padding: 0;
+    margin: 15px auto;
   }
 }

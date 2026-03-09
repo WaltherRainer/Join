@@ -260,6 +260,61 @@ function setActiveContactCard(cardEl) {
 }
 
 /**
+ * Opens a custom confirmation dialog before deleting a contact.
+ *
+ * Uses the dedicated contacts delete-confirmation modal and resolves with
+ * `true` only when the user explicitly confirms deletion.
+ *
+ * @async
+ * @function requestDeleteContactConfirmation
+ * @returns {Promise<boolean>} `true` when deletion is confirmed, otherwise `false`.
+ */
+function requestDeleteContactConfirmation() {
+  const modal = document.getElementById("confirm_delete_contact_modal");
+  const closeBtn = document.getElementById("confirm_delete_contact_close");
+  const cancelBtn = document.getElementById("cancel_delete_contact_btn");
+  const confirmBtn = document.getElementById("confirm_delete_contact_btn");
+
+  if (!modal || !closeBtn || !cancelBtn || !confirmBtn) return Promise.resolve(false);
+
+  return new Promise((resolve) => {
+    let isSettled = false;
+
+    const finalize = (result) => {
+      if (isSettled) return;
+      isSettled = true;
+      teardown();
+      if (modal.open) modal.close();
+      resolve(result);
+    };
+
+    const onConfirm = () => finalize(true);
+    const onCancel = () => finalize(false);
+    const onBackdrop = (event) => {
+      if (event.target === modal) finalize(false);
+    };
+    const onClose = () => finalize(false);
+
+    const teardown = () => {
+      confirmBtn.removeEventListener("click", onConfirm);
+      cancelBtn.removeEventListener("click", onCancel);
+      closeBtn.removeEventListener("click", onCancel);
+      modal.removeEventListener("click", onBackdrop);
+      modal.removeEventListener("close", onClose);
+    };
+
+    confirmBtn.addEventListener("click", onConfirm);
+    cancelBtn.addEventListener("click", onCancel);
+    closeBtn.addEventListener("click", onCancel);
+    modal.addEventListener("click", onBackdrop);
+    modal.addEventListener("close", onClose);
+
+    modal.showModal();
+    confirmBtn.focus();
+  });
+}
+
+/**
  * Deletes a contact and refreshes the UI state.
  *
  * Sends a delete request for the specified user ID, reloads the updated
@@ -270,10 +325,13 @@ function setActiveContactCard(cardEl) {
  * @async
  * @function deleteContact
  * @param {string} userId - The ID of the user to delete.
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} `true` when the contact was deleted, otherwise `false`.
  */
 async function deleteContact(userId) {
-  if (!userId) return;
+  if (!userId) return false;
+  const shouldDelete = await requestDeleteContactConfirmation();
+  if (!shouldDelete) return false;
+
   try {
     await deleteData(`/users/${userId}`);
     users = (await loadData("/users")) || {};
@@ -284,9 +342,20 @@ async function deleteContact(userId) {
     if (details) {
       details.innerHTML = "";
     }
+
+    if (window.matchMedia("(max-width: 1100px)").matches) {
+      if (typeof showListView === "function") {
+        showListView();
+      } else {
+        document.querySelector(".contacts_layout")?.classList.remove("is-details");
+      }
+    }
+
     await removeContactFromTasks(userId);
+    return true;
   } catch (err) {
     console.error("Delete failed:", err);
+    return false;
   }
 }
 
@@ -337,66 +406,3 @@ function removeUserFromTasksAndCollectIds(tasks, userId) {
   return updatedTaskIds;
 }
 
-/**
- * Opens the add-contact modal and initializes its behavior.
- *
- * Displays the modal dialog, ensures the submit handler is bound once,
- * registers an Escape key listener, and attaches close handlers that
- * properly clean up when the modal is dismissed.
- *
- * @function openContactModal
- * @returns {void}
- */
-function openContactModal() {
-  const modal = document.getElementById("add_contact_modal");
-  if (!modal) return;
-  modal.showModal();
-  bindContactFormSubmitOnce();
-  const removeEsc = listenEscapeFromModal(modal.id, (m) => closeContactModal(m));
-  const close = () => closeAndCleanup(modal, removeEsc);
-  bindContactModalCloseHandlers(modal, close, removeEsc);
-}
-
-/**
- * Closes a modal dialog and performs related cleanup.
- *
- * Invokes the modal close routine and optionally removes the
- * previously registered Escape key listener.
- *
- * @function closeAndCleanup
- * @param {HTMLElement} modal - The modal element to close.
- * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
- * @returns {void}
- */
-function closeAndCleanup(modal, removeEsc) {
-  closeContactModal(modal);
-  removeEsc?.();
-}
-
-/**
- * Binds one-time close and cleanup handlers to the contact modal.
- *
- * Attaches click listeners to the modal’s close and clear buttons,
- * closes the modal when clicking on the backdrop, and ensures the
- * Escape key listener is removed once the modal is closed.
- *
- * @function bindContactModalCloseHandlers
- * @param {HTMLElement} modal - The modal element to attach handlers to.
- * @param {Function} close - Callback that closes the modal and performs cleanup.
- * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
- * @returns {void}
- */
-function bindContactModalCloseHandlers(modal, close, removeEsc) {
-  const closeBtn = document.getElementById("modal_close");
-  closeBtn?.addEventListener("click", close, { once: true });
-  const clearBtn = document.getElementById("clear_contact_form");
-  clearBtn?.addEventListener("click", close, { once: true });
-  modal.addEventListener(
-    "click",
-    (e) => {
-      if (e.target === modal) close();
-    },
-    { once: true },
-  );
-  modal.addEventListener("close", () => removeEsc?.(), { once: true });
-}

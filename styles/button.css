@@ -290,3 +290,30 @@ button.inline {
     }
     
 }
+
+@media (max-width: 480px) {
+    .default-button, .secondary-button {
+        font-size: 14px;
+        padding: 12px 20px;
+    }
+    
+    .priority_btn span {
+        width: 120px;
+        height: 48px;
+        font-size: 16px;
+    }
+    
+    .priority_buttons_container {
+        gap: 12px;
+    }
+    
+    .clear_button {
+        width: 100px;
+        padding: 12px 12px;
+        font-size: 16px;
+    }
+    
+    button.mobil_only {
+        display: inline-flex; /* Auf Mobilgeräten anzeigen */
+    }
+}

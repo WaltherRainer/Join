@@ -232,3 +232,66 @@ function closeAndCleanupEditModal(modal, removeEsc) {
   removeEsc?.();
 }
 
+/**
+ * Opens the add-contact modal and initializes its behavior.
+ *
+ * Displays the modal dialog, ensures the submit handler is bound once,
+ * registers an Escape key listener, and attaches close handlers that
+ * properly clean up when the modal is dismissed.
+ *
+ * @function openContactModal
+ * @returns {void}
+ */
+function openContactModal() {
+  const modal = document.getElementById("add_contact_modal");
+  if (!modal) return;
+  modal.showModal();
+  bindContactFormSubmitOnce();
+  const removeEsc = listenEscapeFromModal(modal.id, (m) => closeContactModal(m));
+  const close = () => closeAndCleanup(modal, removeEsc);
+  bindContactModalCloseHandlers(modal, close, removeEsc);
+}
+
+/**
+ * Closes a modal dialog and performs related cleanup.
+ *
+ * Invokes the modal close routine and optionally removes the
+ * previously registered Escape key listener.
+ *
+ * @function closeAndCleanup
+ * @param {HTMLElement} modal - The modal element to close.
+ * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
+ * @returns {void}
+ */
+function closeAndCleanup(modal, removeEsc) {
+  closeContactModal(modal);
+  removeEsc?.();
+}
+
+/**
+ * Binds one-time close and cleanup handlers to the contact modal.
+ *
+ * Attaches click listeners to the modal’s close and clear buttons,
+ * closes the modal when clicking on the backdrop, and ensures the
+ * Escape key listener is removed once the modal is closed.
+ *
+ * @function bindContactModalCloseHandlers
+ * @param {HTMLElement} modal - The modal element to attach handlers to.
+ * @param {Function} close - Callback that closes the modal and performs cleanup.
+ * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
+ * @returns {void}
+ */
+function bindContactModalCloseHandlers(modal, close, removeEsc) {
+  const closeBtn = document.getElementById("modal_close");
+  closeBtn?.addEventListener("click", close, { once: true });
+  const clearBtn = document.getElementById("clear_contact_form");
+  clearBtn?.addEventListener("click", close, { once: true });
+  modal.addEventListener(
+    "click",
+    (e) => {
+      if (e.target === modal) close();
+    },
+    { once: true },
+  );
+  modal.addEventListener("close", () => removeEsc?.(), { once: true });
+}

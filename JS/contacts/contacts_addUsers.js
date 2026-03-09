@@ -18,8 +18,8 @@ function bindEditModalHandlers(modal, userId, close, removeEsc) {
   document.getElementById("delete_contact_btn")?.addEventListener(
     "click",
     async () => {
-      await deleteContact(userId);
-      close();
+      const wasDeleted = await deleteContact(userId);
+      if (wasDeleted) close();
     },
     { once: true },
   );
