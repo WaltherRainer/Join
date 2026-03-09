@@ -140,7 +140,7 @@ const contactFormValidation = (() => {
    */
   function isValidEmail(email) {
     if (!email) return false;
-    const emailRegex = /^[a-zA-Z][a-zA-Z.-]*@[a-zA-Z][a-zA-Z.-]*\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[^\s@]+@[a-zA-Z][a-zA-Z.-]*\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   }
 
