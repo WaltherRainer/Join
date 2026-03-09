@@ -621,7 +621,6 @@
   }
 
   .add_task_titel {
-    font-size: 47px !important;
     padding-bottom: 20px;
   }
 
@@ -686,10 +685,6 @@
   .add_task_main input::placeholder,
   .add_task_main textarea::placeholder {
     font-size: 16px !important;
-  }
-
-  .add_task_titel {
-    font-size: 47px !important;
   }
 
   .required_input,
