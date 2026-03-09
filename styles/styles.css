@@ -71,6 +71,31 @@
   scroll-behavior: smooth;
   font-family: Inter, sans-serif;
   text-decoration: none;
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8a8 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #a8a8a8;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 html {
@@ -269,6 +294,34 @@ svg {
   box-shadow: 0 8px 24px var(--shadow-color);
   position: relative;
   overflow: auto;
+  isolation: isolate;
+  scrollbar-width: thin;
+  scrollbar-color: #a8a8a8 transparent;
+}
+
+.add_task_modal_content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.add_task_modal_content::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.add_task_modal_content::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 18px 0;
+  border-radius: 0px;
+}
+
+.add_task_modal_content::-webkit-scrollbar-thumb {
+  background: #a8a8a8;
+  border-radius: 0px;
+}
+
+.add_task_modal_content::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .add_task_modal_close {
@@ -414,6 +467,19 @@ svg {
 }
 
 @media (max-width: 880px) {
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+label {
+  font-size: 16px;
+}
+
+::placeholder {
+  font-size: 16px;
+}
   .display_grid {
     display: grid;
     grid-template-columns: 1fr;

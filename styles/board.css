@@ -118,14 +118,6 @@ section.task_section {
     gap: 4px;
 }
 
-#addTaskModalHost {
-    padding-top: 40px;
-    display: flex;
-    /* flex-direction: column; */
-    /* align-items: center; */
-    justify-content: center;
-}
-
 .task_list_div {
     width: 25%;
     overflow-y: hidden;
@@ -145,7 +137,7 @@ section.task_section {
     padding: 6px 10px 0 14px;
     width: 100%;
     height: 93%;
-    scrollbar-color: transparent transparent;
+    scrollbar-color: #a8a8a8 transparent;
     scrollbar-width: thin;
     scrollbar-gutter: stable;
 }
@@ -156,7 +148,7 @@ section.task_section {
 
 .task_list:hover,
 .task-list:focus {
-    scrollbar-color: var(--policy-link-color) var(--secondary-background-color);
+    scrollbar-color: #a8a8a8 transparent;
 }
 
 .drag-placeholder {
@@ -384,6 +376,7 @@ section.task_section {
 
 .tsk_dlg_assgnd_div {
     max-height: 300px;
+    padding-left: 15px;
     overflow: auto;
 }
 
@@ -454,6 +447,7 @@ section.task_section {
     overflow: auto;
     min-width: 300px;
     width: 100%;
+    padding-left: 15px;
 }
 
 .subtask_action button:focus {
@@ -610,12 +604,7 @@ select.task_status_select option {
     #show_task_modal .task_modal_header {
     right: 10px;       
     }
-
-
-    .priority_btn span{
-        height: 44px;
-    }
-
+    
     .form_row{
         margin-bottom: 8px;
     }
@@ -695,6 +684,7 @@ select.task_status_select option {
     .t_description {
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         font-size: 16px;
@@ -707,24 +697,6 @@ select.task_status_select option {
     .form_actions {
         padding-bottom: 20px;
         margin-top: 14px!important;
-    }
-
-    .task_dialog {
-        padding: 0 2px;
-    }
-
-    .task_modal_shell {
-        padding: 16px;
-    }
-
-    .task_modal_shell,
-    .add_task_modal_content {
-        padding: 0px 34px !important;
-    }
-
-    .tsk_dlg_h1,
-    .add_task_titel {
-        font-size: 36px!important;
     }
 
     .tsk_dlg_type {
@@ -851,50 +823,6 @@ select.task_status_select option {
         flex-direction: column;
     }
 
-    #addTaskModal,
-    #addTaskModal *,
-    #show_task_modal,
-    #show_task_modal *,
-    .add_task_modal_content,
-    .add_task_modal_content *,
-    #addTaskModal input,
-    #addTaskModal textarea,
-    #addTaskModal select,
-    #addTaskModal input::placeholder,
-    #addTaskModal textarea::placeholder,
-    .search_task::placeholder {
-        font-size: 16px !important;
-    }
-
-
-    .task_modal_shell,
-    .add_task_modal_content {
-        width: auto !important;
-        margin-left: 16px !important;
-        margin-right: 16px !important;
-        margin-bottom: 20px !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        padding: 0px 32px !important;
-        box-sizing: border-box;
-        border-radius: 20px;
-    }
-
-    .add_task_modal_content h1,
-    #addTaskModalHost h1,
-    #addTaskModal h1,
-    #show_task_modal h1,
-    #tsk_dlg_h1 {
-        font-size: 36px !important;
-        word-wrap: break-word;
-    }
-
-    .checkbox_svg,
-    .subtask_action button svg {
-        flex-shrink: 0;
-        min-width: 18px;
-        min-height: 18px;
-    }
 }
 
 @media (max-width:380px){
