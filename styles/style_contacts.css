@@ -48,7 +48,7 @@ h4 {
 .input-wrapper {
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 26px;
 }
 
 .input-wrapper input {
@@ -424,14 +424,13 @@ h4 {
 
 .warning_text {
   display: none;
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
   margin-top: 0px;
-  margin-bottom: 10px;
+  padding-left: 4px;
   color: var(--warning_red);
   font-size: 13px;
-}
-
-.input-wrapper + .warning_text {
-  margin-top: -14px;
 }
 
 .warning_text.visible {
@@ -891,5 +890,9 @@ button#edit_user, button#btn_delete_user {
   .modal[open] {
     padding: 0;
     margin: 15px auto;
+  }
+
+  .warning_text {
+    font-size: 11px;
   }
 }
