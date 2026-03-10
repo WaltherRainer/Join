@@ -14,7 +14,7 @@
 .add_task_form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 500px));
-  grid-template-rows: 130px 1fr 130px;
+  grid-template-rows: 130px 1fr 160px;
   grid-template-areas:
     "add_task_titel add_task_titel"
     "add_task_form_left add_task_form_right"
@@ -47,6 +47,9 @@
 
 .add_task_form_left {
   grid-area: add_task_form_left;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
   padding-right: 48px;
   border-right: 1px solid var(--line-color);
 }
@@ -116,9 +119,17 @@
   margin-bottom: 0;
 }
 
+#input_subtasks::placeholder,
+.required_input::placeholder {
+  font-size: 20px;
+}
+
 /* Native date fields do not use ::placeholder; style empty state explicitly. */
 #task_due_date:required:invalid {
   color: var(--border_color);
+}
+legend.blue_text {
+    color: var(--blue);
 }
 
 #task_due_date:required:valid,
@@ -178,9 +189,11 @@
 .form_actions {
   grid-area: form_actions;
   display: flex;
+  flex-direction: row;
+  align-items: end;
   justify-content: flex-end;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 0px;
   margin-right: 4px;
 }
 
@@ -478,15 +491,14 @@
 }
 
 #addTaskModalHost {
-    padding-top: 40px;
-    display: flex;
-    justify-content: center;
+  padding-top: 40px;
+  display: flex;
+  justify-content: center;
 }
 
-#clear_task_form_btn.clear_button, 
+#clear_task_form_btn.clear_button,
 #submit_task_form_btn.create_button {
-    max-height: 56px;
-    margin-top: 50px;
+  max-height: 56px;
 }
 
 @media (max-width: 1340px) {
@@ -527,10 +539,10 @@
 }
 
 @media (max-width: 1070px) {
-    .tsk_dlg_h1,
-    .add_task_titel {
-        font-size: 48px;
-    }
+  .tsk_dlg_h1,
+  .add_task_titel {
+    font-size: 48px;
+  }
 
   .add_task_form {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -549,18 +561,18 @@
     padding: 20px;
   }
 
-    .task_dialog {
-        padding: 0 2px;
-    }
+  .task_dialog {
+    padding: 0 2px;
+  }
 
-    .task_modal_shell {
-        padding: 16px;
-    }
+  .task_modal_shell {
+    padding: 16px;
+  }
 
-    .task_modal_shell,
-    .add_task_modal_content {
-        padding: 0px 34px;
-    }
+  .task_modal_shell,
+  .add_task_modal_content {
+    padding: 0px 34px;
+  }
 }
 
 @media (max-width: 990px) {
@@ -577,6 +589,7 @@
 
   .add_task_form_left {
     padding-right: 0;
+    gap: 0px;
     border-right: none;
   }
 
@@ -586,10 +599,6 @@
 }
 
 @media (max-width: 960px) {
-  .priority_btn .svg-icon {
-    gap: 4px;
-  }
-
   .priority_btn .svg-icon svg {
     width: 16px !important;
     height: auto !important;
@@ -597,11 +606,10 @@
 }
 
 @media (max-width: 880px) {
-
-    .tsk_dlg_h1,
-    .add_task_titel {
-        font-size: 36px;
-    }
+  .tsk_dlg_h1,
+  .add_task_titel {
+    font-size: 36px;
+  }
 
   .add_task_form.edit_mode {
     padding: 6px 0px;
@@ -629,6 +637,10 @@
     border-right: none;
   }
 
+  .add_task_form_left .form_div_descr {
+    margin-top: 0;
+  }
+
   .add_task_form_right {
     padding-left: 0;
   }
@@ -649,16 +661,16 @@
     min-width: 0;
     max-width: 100%;
   }
-  
-#clear_task_form_btn.clear_button, 
-#submit_task_form_btn.create_button {
+
+  #clear_task_form_btn.clear_button,
+  #submit_task_form_btn.create_button {
     font-size: 18px;
     padding-right: 10px;
     padding-left: 10px;
     padding-bottom: 6px;
     padding-top: 6px;
     margin-top: 0px;
-}
+  }
 
   .form_actions {
     gap: 4px;
@@ -680,11 +692,15 @@
     margin-bottom: 12px;
   }
 
+  .priority_buttons_container legend,
   .add_task_main,
-  .add_task_main *,
+  .subtasks_input_wrap,
+  .subtasks_input_wrap .input_subtasks,
+  .add_task_main legend,
   .add_task_main input::placeholder,
-  .add_task_main textarea::placeholder {
-    font-size: 16px !important;
+  .add_task_main textarea::placeholder,
+  .subtasks_input_wrap .input_subtasks::placeholder {
+    font-size: 16px;
   }
 
   .required_input,
@@ -692,71 +708,89 @@
   .single_select__control .single_select__placeholder {
     font-size: 16px;
   }
-    #addTaskModal,
-    #show_task_modal,
-    #show_task_modal *,
-    .add_task_modal_content label,
-    .add_task_modal_content input,
-    .add_task_modal_content legend,
-    .add_task_modal_content textarea,
-    .add_task_modal_content button,
-    #addTaskModal input::placeholder,
-    #addTaskModal textarea::placeholder,
-    .search_task::placeholder {
-        font-size: 16px;
-    }
 
-    .priority_buttons_container .priority_btn span.svg-icon {
-        font-size: 16px;
-    }
+  #addTaskModal,
+  #show_task_modal,
+  #show_task_modal,
+  .add_task_modal_content label,
+  .add_task_modal_content input,
+  .add_task_modal_content textarea,
+  .add_task_modal_content button,
+  #input_subtasks::placeholder,
+  #addTaskModal input::placeholder,
+  #addTaskModal textarea::placeholder,
+  .search_task::placeholder {
+    font-size: 16px;
+  }
 
-    .add_task_modal_content button.add_task_modal_close {
-        font-size: 24px;
-    }
+  .priority_buttons_container .priority_btn span.svg-icon {
+    font-size: 16px;
+  }
 
-    dialog#addTaskModal,
-    dialog#show_task_modal {
-        padding: 0;
-        margin: 0;
-        width: 100%;
-    }
+  .add_task_modal_content button.add_task_modal_close {
+    font-size: 24px;
+  }
 
-    dialog .add_task_modal_content {
-      margin: auto;
-    }
+  dialog#addTaskModal,
+  dialog#show_task_modal {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
 
-    .add_task_modal_content h1,
-    #addTaskModalHost h1,
-    #addTaskModal h1,
-    #show_task_modal h1,
-    #tsk_dlg_h1 {
-        font-size: 36px;
-        word-wrap: break-word;
-    }
+  dialog .add_task_modal_content {
+    margin: auto;
+  }
 
-    main h1.tsk_dlg_h1 {
-        font-size: 36px;
-    }
+  .add_task_modal_content h1,
+  #addTaskModalHost h1,
+  #addTaskModal h1,
+  #show_task_modal h1,
+  #tsk_dlg_h1 {
+    font-size: 36px;
+    word-wrap: break-word;
+  }
 
-    .checkbox_svg,
-    .subtask_action button svg {
-        flex-shrink: 0;
-        min-width: 18px;
-        min-height: 18px;
-    }
+  main h1.tsk_dlg_h1 {
+    font-size: 36px;
+  }
 
-    .assigned_avatar {
-        min-height: 0;
-    }
+  .checkbox_svg,
+  .subtask_action button svg {
+    flex-shrink: 0;
+    min-width: 18px;
+    min-height: 18px;
+  }
+
+  .assigned_avatar {
+    min-height: 0;
+  }
 }
 
 @media (max-width: 450px) {
-  #addTaskModal.modal, #show_task_modal.modal {
+  .standard_input_box.required_input,
+  .priority_btn span {
+    height: 40px;
+  }
+
+  .multi_select__control,
+  .single_select__control,
+  .subtasks_input_wrap {
+    height: 40px;
+  }
+
+  .task_descr_textarea {
+    font-size: 16px;
+    height: 90px;
+  }
+
+  #addTaskModal.modal,
+  #show_task_modal.modal {
     height: auto;
   }
-  
+
   .add_task_modal_content {
-    padding: 18px; 
+    padding: 18px;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -774,23 +808,27 @@
   .priority_buttons_container {
     gap: 10px;
   }
-  .priority_btn, .priority_btn span {
+  .priority_btn .svg-icon {
+    gap: 4px;
+  }
+
+  .priority_btn,
+  .priority_btn span {
     padding: 2px;
   }
 
-  .default-button .btn_label, 
+  .default-button .btn_label,
   button#clear_task_form_btn {
     padding: 2px 4px;
     font-size: 16px;
   }
-  
 }
 
 @media (max-width: 350px) {
   h1.add_task_titel {
     font-size: 28px !important;
   }
-  
+
   .add_task_modal_content {
     padding: 12px;
   }
@@ -798,7 +836,6 @@
   .priority_buttons_container {
     gap: 5px;
   }
-  
 }
 
 .error-message {

@@ -595,6 +595,10 @@ select.task_status_select option {
     padding: 4px;
 }
 
+#input_subtasks::placeholder {
+  font-size: 20px;
+}
+
 .checkbox_svg span {
     text-align: left;
 }
@@ -700,19 +704,6 @@ select.task_status_select option {
     }
 
     .tsk_dlg_type {
-        font-size: 16px;
-    }
-
-     #tsk_dlg_h2,
-    .tsk_dlg_due_date_sec,
-    .tsk_dlg_prio_sec,
-    .tsk_dlg_assgnd_sec,
-    .tsk_dlg_assgnd,
-    .tsk_dlg_assgnd span,
-    .tsk_dlg_sbtsk_sec,
-    .tsk_dlg_sbtsk span,
-    .tsk_dlg_due_date_sec span:nth-child(1),
-    #input_subtasks::placeholder{
         font-size: 16px;
     }
 }

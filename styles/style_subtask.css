@@ -8,11 +8,15 @@
 }
 
 .subtasks_input_wrap .input_subtasks {
+  font-size: 20px;
   width: 100%;
   border: 0;
   outline: none;
   background: transparent;
-  font: inherit;
+}
+
+.subtasks_input_wrap input.input_subtasks::placeholder {
+  font-size: 20px;
 }
 
 .subtasks_actions {

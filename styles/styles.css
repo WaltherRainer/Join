@@ -114,13 +114,15 @@ textarea,
 select {
   font-size: 20px;
   font-weight: 400;
-  color: var(--text-color);
 }
 
 label {
   font-size: 20px;
   font-weight: 400;
-  color: var(--text-color);
+}
+
+.blue_text {
+    color: var(--blue);
 }
 
 svg {
