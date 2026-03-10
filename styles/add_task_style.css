@@ -192,6 +192,7 @@ legend.blue_text {
   flex-direction: row;
   align-items: end;
   justify-content: flex-end;
+  min-heigt: 80px;
   gap: 16px;
   margin-top: 0px;
   margin-right: 4px;
@@ -499,6 +500,8 @@ legend.blue_text {
 #clear_task_form_btn.clear_button,
 #submit_task_form_btn.create_button {
   max-height: 56px;
+  min-height: 38px;
+  margin-top: 5px;
 }
 
 @media (max-width: 1340px) {
@@ -529,11 +532,6 @@ legend.blue_text {
     align-items: center;
     gap: 8px;
     padding: 8px 4px;
-    font-size: 18px;
-  }
-  .add_task_main,
-  .add_task_main input::placeholder,
-  .add_task_main textarea::placeholder {
     font-size: 18px;
   }
 }
@@ -576,6 +574,10 @@ legend.blue_text {
 }
 
 @media (max-width: 990px) {
+  .add_task_titel {
+    margin-bottom: 15px;
+  }
+
   .add_task_form {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -584,7 +586,8 @@ legend.blue_text {
       "add_task_form_left"
       "add_task_form_right"
       "form_actions";
-    gap: 32px;
+    gap: 0px;
+    width: 100%;
   }
 
   .add_task_form_left {
@@ -595,6 +598,11 @@ legend.blue_text {
 
   .add_task_form_right {
     padding-left: 0;
+  }
+
+  .priority_btn span {
+    font-size: 18px;
+    height: 48px;
   }
 }
 
@@ -669,7 +677,7 @@ legend.blue_text {
     padding-left: 10px;
     padding-bottom: 6px;
     padding-top: 6px;
-    margin-top: 0px;
+    margin-top: 5px;
   }
 
   .form_actions {
@@ -699,16 +707,10 @@ legend.blue_text {
   .add_task_main legend,
   .add_task_main input::placeholder,
   .add_task_main textarea::placeholder,
-  .subtasks_input_wrap .input_subtasks::placeholder {
-    font-size: 16px;
-  }
-
+  .subtasks_input_wrap .input_subtasks::placeholder,
   .required_input,
   .multi_select__control .multi_select__placeholder,
-  .single_select__control .single_select__placeholder {
-    font-size: 16px;
-  }
-
+  .single_select__control .single_select__placeholder,
   #addTaskModal,
   #show_task_modal,
   #show_task_modal,
@@ -719,9 +721,11 @@ legend.blue_text {
   #input_subtasks::placeholder,
   #addTaskModal input::placeholder,
   #addTaskModal textarea::placeholder,
-  .search_task::placeholder {
-    font-size: 16px;
+  .search_task::placeholder
+   {
+    font-size: 18px;
   }
+  
 
   .priority_buttons_container .priority_btn span.svg-icon {
     font-size: 16px;
@@ -815,6 +819,32 @@ legend.blue_text {
   .priority_btn,
   .priority_btn span {
     padding: 2px;
+  }
+
+  .priority_buttons_container legend,
+  .add_task_main,
+  .subtasks_input_wrap,
+  .subtasks_input_wrap .input_subtasks,
+  .add_task_main legend,
+  .add_task_main input::placeholder,
+  .add_task_main textarea::placeholder,
+  .subtasks_input_wrap .input_subtasks::placeholder,
+  .required_input,
+  .multi_select__control .multi_select__placeholder,
+  .single_select__control .single_select__placeholder,
+  #addTaskModal,
+  #show_task_modal,
+  #show_task_modal,
+  .add_task_modal_content label,
+  .add_task_modal_content input,
+  .add_task_modal_content textarea,
+  .add_task_modal_content button,
+  #input_subtasks::placeholder,
+  #addTaskModal input::placeholder,
+  #addTaskModal textarea::placeholder,
+  .search_task::placeholder
+   {
+    font-size: 16px;
   }
 
   .default-button .btn_label,

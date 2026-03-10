@@ -472,15 +472,15 @@ svg {
 input,
 textarea,
 select {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 label {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 ::placeholder {
-  font-size: 16px;
+  font-size: 18px;
 }
   .display_grid {
     display: grid;
@@ -532,4 +532,20 @@ label {
   .legal_notice_main {
     margin: 16px 0 16px 8px;
   }
+}
+
+@media (max-width: 450px) {
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+label {
+  font-size: 16px;
+}
+
+::placeholder {
+  font-size: 16px;
+}
 }
