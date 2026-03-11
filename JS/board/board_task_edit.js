@@ -357,8 +357,8 @@ function getAssignedToUIElements(form) {
  * @param {HTMLElement} placeholder - The placeholder element.
  */
 function renderEmptyAssignedState(valueBox, placeholder) {
-  placeholder.assignedToInput = false;
-  valueBox.assignedToInput = true;
+  placeholder.hidden = false;
+  valueBox.hidden = true;
   valueBox.textContent = "";
 }
 
@@ -374,13 +374,8 @@ function renderEmptyAssignedState(valueBox, placeholder) {
  * @param {HTMLElement} avatarContainer - Container for avatars.
  */
 function renderPopulatedAssignedState(ids, valueBox, placeholder, usersObj, avatarContainer) {
-  const names = ids
-    .map((id) => usersObj?.[id]?.givenName)
-    .filter(Boolean);
-
-  placeholder.classList.add("is-hidden");
-  valueBox.assignedToInput = false;
-  valueBox.textContent = names.length ? names.join(", ") : `${ids.length} selected`;
+  // Keep placeholder visible on modal open, even when users are assigned.
+  renderEmptyAssignedState(valueBox, placeholder);
   renderAssignedAvatars(ids, usersObj, avatarContainer);
 }
 

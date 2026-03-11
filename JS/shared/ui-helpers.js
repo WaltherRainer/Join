@@ -46,7 +46,7 @@ function normalizeUserIds(selectedUserIds) {
  * @param {number} maxVisible - Maximum number of avatars to display
  * @returns {Object} Object with visibleUsers array and extraCount number
  */
-function calculateVisibleAvatars(idsArray, maxVisible = 4) {
+function calculateVisibleAvatars(idsArray, maxVisible = 5) {
   return {
     visibleUsers: idsArray.slice(0, maxVisible),
     extraCount: idsArray.length - maxVisible,
