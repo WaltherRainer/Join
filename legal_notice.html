@@ -90,11 +90,13 @@
     </div>
 
     <script>
-        w3.includeHTML(() => {
-            if (window.renderIcons) window.renderIcons(document);
-            if (window.initPage) window.initPage();
-            if (window.setActiveNavLink) window.setActiveNavLink();
-            if (window.initPrivacyPoliceOrLegalNotice) window.initPrivacyPoliceOrLegalNotice();
+        window.addEventListener("load", () => {
+            w3.includeHTML(() => {
+                window.renderIcons(document);
+                window.initPage();
+                window.setActiveNavLink();
+                window.initPrivacyPoliceOrLegalNotice();
+            });
         });
     </script>
 </body>
