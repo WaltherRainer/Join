@@ -174,3 +174,30 @@ span.margin {
       grid-template-columns: 36px auto;
   }
 }
+
+@media (max-width: 450px) {
+  .help_main, .privacy_policy_main, .legal_notice_main {
+    margin-left: 10px;
+    padding: 20px;
+  }
+
+  .help_main h2, .privacy_policy_main h2, .legal_notice_main h2 {
+    padding-bottom: 10px;
+    padding-top: 8px;
+  }
+
+  .help_headline {
+    font-size: 32px;
+    width: 85%;
+  }
+
+  .help_container div.number {
+    font-size: 24px;
+    width: 32px;
+    text-align: start;
+  }
+  
+  .help_container {
+      grid-template-columns: 36px auto;
+  }
+}

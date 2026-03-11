@@ -612,11 +612,6 @@ legend.blue_text {
     font-size: 36px;
   }
 
-  .add_task_form.edit_mode {
-    padding: 6px 0px;
-    box-sizing: border-box;
-  }
-
   .add_task_form {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
@@ -706,9 +701,11 @@ legend.blue_text {
   .add_task_modal_content button,
   #input_subtasks::placeholder,
   #addTaskModal input::placeholder,
+  #show_task_modal input::placeholder,
   #addTaskModal textarea::placeholder,
   .search_task::placeholder,
-  .single_select__value {
+  .single_select__value,
+  .task_descr_textarea {
     font-size: 18px;
   }
 
@@ -770,12 +767,13 @@ legend.blue_text {
 
   .task_descr_textarea {
     font-size: 16px;
-    height: 90px;
+    height: 85px;
   }
 
   #addTaskModal.modal,
   #show_task_modal.modal {
-    height: auto;
+    height: 100%;
+    margin: 0;
   }
 
   .add_task_modal_content {
@@ -784,6 +782,7 @@ legend.blue_text {
     height: 100%;
     margin: 0;
     border-radius: 15px;
+    background-color: var(--secondary-background-color);
   }
 
   #addTaskModalHost {
@@ -826,6 +825,7 @@ legend.blue_text {
   .add_task_modal_content button,
   #input_subtasks::placeholder,
   #addTaskModal input::placeholder,
+  #show_task_modal input::placeholder,
   #addTaskModal textarea::placeholder,
   .search_task::placeholder,
   .single_select__value {
@@ -837,16 +837,35 @@ legend.blue_text {
     padding: 2px 4px;
     font-size: 16px;
   }
+
+  .add_task_form .add_task_form_right {
+    padding-bottom: 0px;
+  }
+
+  .add_task_form .form_actions {
+    position: sticky;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    background-color: var(--secondary-background-color);
+  }
 }
 
 @media (max-width: 350px) {
-  h1.add_task_titel {
-    font-size: 28px !important;
+  h1.add_task_titel,
+  #tsk_dlg_h1.add_task_form h1,
+  .edit_mode .add_task_titel,
+  #show_task_modal h1 {
+    font-size: 28px;
   }
 
   .add_task_modal_content {
     padding: 12px;
   }
+
+  .task_descr_textarea {
+        height: 80px;
+    }
 
   .priority_buttons_container {
     gap: 5px;
