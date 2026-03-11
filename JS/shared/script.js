@@ -63,6 +63,7 @@ async function initializeSummaryPage() {
  * @returns {Promise<void>}
  */
 async function initializeBoardPage(tasksDataObj, usersDataObj) {
+  initBoard();
   loadTaskBoard(tasksDataObj, usersDataObj);
   initAddTaskModalOnce();
 }
