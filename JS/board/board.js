@@ -152,7 +152,7 @@ function renderItems(items, containers, users) {
 
   // Sortiere Tasks nach ihrer Reihenfolge innerhalb der Kategorie
   const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
-  const isDraggable = window.innerWidth > 880;
+  const isDraggable = window.innerWidth > 1260;
   sortedItems.forEach((task) => {
     const taskHTML = taskItemTemplate(task, users, isDraggable);
     const target = statusContainerFor(task.status, containers);

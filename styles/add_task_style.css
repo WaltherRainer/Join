@@ -187,7 +187,7 @@ legend.blue_text {
   flex-direction: row;
   align-items: end;
   justify-content: flex-end;
-  min-heigt: 80px;
+  min-height: 80px;
   gap: 16px;
   margin-top: 0px;
   margin-right: 4px;
@@ -207,14 +207,6 @@ legend.blue_text {
 }
 
 .multi_select__control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px;
-  border: 1px solid var(--border_color);
-  border-radius: 10px;
-  background: var(--background-color);
   cursor: text;
 }
 
@@ -298,7 +290,7 @@ legend.blue_text {
   background-color: var(--dark-blue);
 }
 
-.multi_select__item input[type="checkbox"] {
+.multi_select__item div.multi_checkbox_svg {
   width: 16px;
   height: 16px;
 }
@@ -324,7 +316,7 @@ legend.blue_text {
 }
 
 .avatar_wrap {
-  margin-left: -20px;
+  margin-left: -5px;
   border: 1px solid var(--white-text-color);
 }
 
@@ -364,6 +356,18 @@ legend.blue_text {
   margin-left: 20px;
 }
 
+.single_select__control,
+.multi_select__control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 10px 10px 20px;
+  border: 1px solid var(--border_color);
+  border-radius: 10px;
+  background: var(--background-color);
+}
+
 /* =========================
    Single select
 ========================= */
@@ -381,14 +385,6 @@ legend.blue_text {
 }
 
 .single_select__control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 10px;
-  border: 1px solid var(--border_color);
-  border-radius: 10px;
-  background: var(--background-color);
   cursor: pointer;
 }
 

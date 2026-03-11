@@ -492,11 +492,6 @@ ul.subtasks_check_list li {
     width: 100%;
 }
 
-.icon_btn div.checkbox_svg svg {
-    width: 20px;
-    height: 20px;
-}
-
 .subtask_li_elements.is-done .checkbox_checked {
     display: inline;
 }
@@ -551,16 +546,11 @@ ul.subtasks_check_list li {
 }
 
 #show_task_modal .task_modal_header {
-    position: absolute; /* Ändern von sticky auf absolute */
-    top: 14px;          /* Abstand von oben */
-    right: 14px;        /* Abstand von rechts */
+    position: absolute; 
+    top: 14px;         
+    right: 14px;       
     z-index: 30;
     display: flex;
-    /* justify-content: flex-end; */
-    /* padding: 16px 12px 10px 0px;
-    background: var(--background-color); */
-    /* margin-right: -6px; */
-    /* horizontaler scrollbalken weg */
 }
 
 .task_modal_shell {
@@ -568,8 +558,6 @@ ul.subtasks_check_list li {
     background-color: var(--background-color);
     border-radius: 30px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-    /* padding: 24px 24px 24px 24px; */
-    /* marc */
     font-size: 20px;
 }
 
@@ -614,17 +602,23 @@ select.task_status_select option {
   font-size: 20px;
 }
 
-.checkbox_svg span {
+.single_checkbox_svg span {
+    text-align: left;
+    width: 90%;
+    padding-left: 5px;
+}
+
+.single_checkbox_svg {
+    display: grid;
+    grid-template-columns: auto 100%;
+    width: 100%;
     text-align: left;
 }
 
-.checkbox_svg svg {
-    width: 10%;
-    text-align: left;
-}
-
-.checkbox_svg span {
-    width: 80%;
+.single_checkbox_svg svg {
+    width: 22px;
+    height: 22px;
+    padding-top: 5px;
 }
 
 

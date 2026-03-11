@@ -7,7 +7,7 @@ function userListItemTemplate({ bgColor, initials, name }) {
       <span class="user_name">${name}</span>
     </div>
 
-    <div class="checkbox_svg" aria-hidden="true">
+    <div class="checkbox_svg multi_checkbox_svg" aria-hidden="true">
       <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
         <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
       </svg>
@@ -175,7 +175,7 @@ function getTaskDialSubtaskTempl(subTaskTitel, done, index) {
           data-action="toggle"
           aria-pressed="${done}"
         >
-          <div class="checkbox_svg">
+          <div class="checkbox_svg single_checkbox_svg">
             
             <!-- unchecked -->
             <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
