@@ -34,7 +34,7 @@ function syncDropdownPlaceholder(ui, isOpen, selectedSize) {
   if (isOpen) {
     ui.assignedToPlaceholder.hidden = true;
   } else {
-    if (selectedSize === 0) ui.assignedToPlaceholder.hidden = false;
+    if (!isOpen) ui.assignedToPlaceholder.hidden = false;
   }
 }
 

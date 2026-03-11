@@ -6,15 +6,15 @@
   /* wichtig: erlaubt dem Grid-Item zu schrumpfen */
   min-width: 0;
   /* optional, hilft bei langen Inhalten */
-  /* height: calc(100dvh - 96px); */
   padding: 60px;
+  margin-left: 25px;
   background-color: var(--secondary-background-color);
 }
 
 .add_task_form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 500px));
-  grid-template-rows: 130px 1fr 160px;
+  grid-template-rows: 110px 1fr 180px;
   grid-template-areas:
     "add_task_titel add_task_titel"
     "add_task_form_left add_task_form_right"
@@ -47,9 +47,6 @@
 
 .add_task_form_left {
   grid-area: add_task_form_left;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
   padding-right: 48px;
   border-right: 1px solid var(--line-color);
 }
@@ -80,11 +77,9 @@
   grid-template-columns: auto;
   grid-template-rows: 30px;
   align-items: center;
-  margin-bottom: 8px;
-}
-
-.form_row:has(textarea) {
-  align-items: start;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  gap: 4px;
 }
 
 .form_row label {
@@ -129,7 +124,7 @@
   color: var(--border_color);
 }
 legend.blue_text {
-    color: var(--blue);
+  color: var(--blue);
 }
 
 #task_due_date:required:valid,
@@ -223,12 +218,8 @@ legend.blue_text {
   cursor: text;
 }
 
-.multi_select__control .multi_select__placeholder::placeholder {
-  color: var(--border_color);
-}
-
 .multi_select__placeholder {
-  color: var(--border_color);
+  color: var(--text-color);
   user-select: none;
   font-size: 20px;
   font-weight: 400;
@@ -354,12 +345,6 @@ legend.blue_text {
   transform: rotate(180deg);
 }
 
-.checkbox_svg {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .checkbox_checked {
   display: none;
 }
@@ -376,7 +361,6 @@ legend.blue_text {
   display: flex;
   gap: 6px;
   margin: 8px 0;
-  min-height: 50px;
   margin-left: 20px;
 }
 
@@ -406,6 +390,10 @@ legend.blue_text {
   border-radius: 10px;
   background: var(--background-color);
   cursor: pointer;
+}
+
+.single_select__placeholder {
+  color: var(--text-color);
 }
 
 .single_select__dropdown {
@@ -486,11 +474,6 @@ legend.blue_text {
   justify-content: space-between;
 }
 
-.priority_buttons_container {
-  margin-bottom: 12px;
-  margin-top: 5px;
-}
-
 #addTaskModalHost {
   padding-top: 40px;
   display: flex;
@@ -537,6 +520,10 @@ legend.blue_text {
 }
 
 @media (max-width: 1070px) {
+  .add_task_main {
+    margin-left: 0;
+  }
+
   .tsk_dlg_h1,
   .add_task_titel {
     font-size: 48px;
@@ -604,6 +591,16 @@ legend.blue_text {
     font-size: 18px;
     height: 48px;
   }
+  
+  .priority_buttons_container {
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+
+    .form_actions {
+        padding-bottom: 20px;
+        margin-top: 14px!important;
+    }
 }
 
 @media (max-width: 960px) {
@@ -634,10 +631,6 @@ legend.blue_text {
       "form_actions";
     gap: 0;
     width: 100%;
-  }
-
-  .add_task_titel {
-    padding-bottom: 20px;
   }
 
   .add_task_form_left {
@@ -693,11 +686,8 @@ legend.blue_text {
   }
 
   .form_row {
-    margin-bottom: 12px;
-  }
-
-  .priority_buttons_container {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    gap: 0;
   }
 
   .priority_buttons_container legend,
@@ -721,11 +711,10 @@ legend.blue_text {
   #input_subtasks::placeholder,
   #addTaskModal input::placeholder,
   #addTaskModal textarea::placeholder,
-  .search_task::placeholder
-   {
+  .search_task::placeholder,
+  .single_select__value {
     font-size: 18px;
   }
-  
 
   .priority_buttons_container .priority_btn span.svg-icon {
     font-size: 16px;
@@ -806,7 +795,7 @@ legend.blue_text {
   }
 
   .add_task_titel {
-    padding-bottom: 15px;
+    padding-bottom: 0px;
   }
 
   .priority_buttons_container {
@@ -842,8 +831,8 @@ legend.blue_text {
   #input_subtasks::placeholder,
   #addTaskModal input::placeholder,
   #addTaskModal textarea::placeholder,
-  .search_task::placeholder
-   {
+  .search_task::placeholder,
+  .single_select__value {
     font-size: 16px;
   }
 
