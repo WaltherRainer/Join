@@ -351,7 +351,7 @@ legend.blue_text {
 
 .assigned_avatar {
   display: flex;
-  gap: 6px;
+  gap: 10px;
   margin: 8px 0;
   margin-left: 20px;
 }
@@ -587,16 +587,16 @@ legend.blue_text {
     font-size: 18px;
     height: 48px;
   }
-  
+
   .priority_buttons_container {
     margin-top: 0;
     margin-bottom: 12px;
   }
 
-    .form_actions {
-        padding-bottom: 20px;
-        margin-top: 14px!important;
-    }
+  .form_actions {
+    padding-bottom: 20px;
+    margin-top: 14px !important;
+  }
 }
 
 @media (max-width: 960px) {
@@ -850,6 +850,13 @@ legend.blue_text {
 
   .priority_buttons_container {
     gap: 5px;
+  }
+
+  .assigned_avatar {
+    display: flex;
+    gap: 8px;
+    margin: 5px 0;
+    margin-left: 18px;
   }
 }
 
