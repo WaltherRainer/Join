@@ -85,8 +85,9 @@ function resetInputValidation(element) {
 /**
  * Loads an HTML partial from a URL.
  *
- * Uses no-store caching and throws an error when
- * the request fails.
+ * Resolves the given URL against the current page URL, removes
+ * embedded credentials (`username`/`password`) from the request URL,
+ * and fetches the resource with `no-store` cache mode.
  *
  * @async
  * @function loadPartial
@@ -94,7 +95,12 @@ function resetInputValidation(element) {
  * @returns {Promise<string>} Loaded HTML markup.
  */
 async function loadPartial(url) {
-  const res = await fetch(url, { cache: "no-store" });
+  const resolvedUrl = new URL(url, window.location.href);
+  // Some hosting setups expose user:pass in the page URL, which fetch rejects.
+  resolvedUrl.username = "";
+  resolvedUrl.password = "";
+
+  const res = await fetch(resolvedUrl.toString(), { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load partial: ${url} (${res.status})`);
   return await res.text();
 }
