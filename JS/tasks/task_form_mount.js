@@ -37,7 +37,11 @@ function redirectToLoginPage() {
  */
 function enforceProtectedPageAuth() {
   if (!isProtectedPage()) return true;
-  if (hasActiveSession()) return true;
+  if (hasActiveSession()) {
+    document.documentElement.style.visibility = "visible";
+    return true;
+  }
+  document.documentElement.style.visibility = "hidden";
   redirectToLoginPage();
   return false;
 }
@@ -45,6 +49,12 @@ function enforceProtectedPageAuth() {
 // Re-check auth when a page is restored via browser back/forward cache.
 window.addEventListener("pageshow", () => {
   enforceProtectedPageAuth();
+});
+
+// Hide protected pages before they are cached to avoid brief stale content on back/forward.
+window.addEventListener("pagehide", () => {
+  if (!isProtectedPage()) return;
+  document.documentElement.style.visibility = "hidden";
 });
 
 enforceProtectedPageAuth();
