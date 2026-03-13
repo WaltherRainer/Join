@@ -331,7 +331,7 @@ section.task_section {
 }
 
 .task_dialog_header {
-  margin-top: 20px;
+  margin-top: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -551,9 +551,19 @@ ul.subtasks_check_list li {
   border-radius: 10px;
 }
 
+.task_modal_header {
+    position: relative;
+    padding: 16px 20px;
+    background: var(--background-color);
+    z-index: 2;          
+    min-height: 50px;
+    min-width: 96%;
+
+}
+
 #show_task_modal .task_modal_header {
   position: absolute;
-  top: 14px;
+  /* top: 14px; */
   right: 14px;
   z-index: 30;
   display: flex;

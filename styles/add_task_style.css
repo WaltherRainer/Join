@@ -55,6 +55,7 @@
   grid-area: add_task_form_left;
   padding-right: 0px;
   border-right: 0px solid var(--line-color);
+  margin-top: 36px;
 }
 
 .add_task_form_right {
@@ -190,12 +191,12 @@ legend.blue_text {
   min-height: 80px;
   gap: 16px;
   margin-top: 0px;
-  margin-right: 4px;
+  /* margin-right: 4px; */
 }
 
-.form_actions.edit_mode {
+/* .form_actions.edit_mode {
   margin-right: 54px;
-}
+} */
 
 /* =========================
    Multi select
