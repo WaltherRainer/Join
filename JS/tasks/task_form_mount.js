@@ -1,5 +1,54 @@
 // Task form loading, validation and submission helpers
 
+const PROTECTED_PAGE_KEYS = new Set(["summary", "board", "add_task", "contacts"]);
+
+/**
+ * Determines whether the current document is a protected app page.
+ *
+ * @returns {boolean} True when login is required for the current page.
+ */
+function isProtectedPage() {
+  const pageKey = document.body?.dataset?.page;
+  return PROTECTED_PAGE_KEYS.has(pageKey);
+}
+
+/**
+ * Returns whether a valid login flag exists in session storage.
+ *
+ * @returns {boolean} True when the user is currently logged in.
+ */
+function hasActiveSession() {
+  return sessionStorage.getItem("userLoggedIn") === "true";
+}
+
+/**
+ * Redirects to the login page using history-safe replace.
+ *
+ * @returns {void}
+ */
+function redirectToLoginPage() {
+  window.location.replace("index.html");
+}
+
+/**
+ * Enforces login for protected pages.
+ *
+ * @returns {boolean} True when access is allowed.
+ */
+function enforceProtectedPageAuth() {
+  if (!isProtectedPage()) return true;
+  if (hasActiveSession()) return true;
+  redirectToLoginPage();
+  return false;
+}
+
+// Re-check auth when a page is restored via browser back/forward cache.
+window.addEventListener("pageshow", () => {
+  enforceProtectedPageAuth();
+});
+
+enforceProtectedPageAuth();
+
 /**
  * Verifies whether the current user is logged in.
  *
@@ -10,10 +59,7 @@
  * @returns {void}
  */
 function checkIfUserIsLoggedIn() {
-  const userLoggedIn = sessionStorage.getItem("userLoggedIn");
-  if (userLoggedIn !== "true") {
-    window.location.replace("index.html");
-  }
+  enforceProtectedPageAuth();
 }
 
 /**
