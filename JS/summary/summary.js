@@ -9,7 +9,7 @@
  * @returns {void}
  */
 function showAndHideGreeting() {
-  if (window.innerWidth > 880) return;
+  if (window.innerWidth > 1100) return;
   
   const greeting = document.querySelector(".greeting");
   if (!greeting) return;

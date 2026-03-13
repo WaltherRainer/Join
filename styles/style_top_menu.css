@@ -140,6 +140,18 @@
     height: 40px;
     font-size: 16px;
   }
+}  
+
+@media (max-width: 420px) {
+  .top_menu {
+    height: 70px;
+  }
+}
+  
+@media (max-width: 350px) {
+  .top_menu {
+    height: 60px;
+  }
 }
 
 .d_none {
