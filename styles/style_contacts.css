@@ -520,7 +520,7 @@ h4 {
 
   #modal_close,
   #edit_modal_close {
-    color: var(--white-text-color);
+    --blue: var(--white-text-color);
   }
 
   .overlay_right {

@@ -245,7 +245,7 @@ section.task_section {
   background-color: blue;
   color: var(--white-text-color);
   width: fit-content;
-  padding: 4px 16px;
+  padding: 4px 12px;
   border-radius: 8px;
 }
 
@@ -578,12 +578,13 @@ ul.subtasks_check_list li {
   right: 10px;
   width: 25px;
   height: 25px;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 300;
-  padding: 5px 6px 4px 5px;
+  padding: 1px 5.5px 2px 2px;
   color: var(--text_color_grey);
   border-color: var(--board-light-grey);
   z-index: 1000;
+  margin-right: 12px;
   appearance: base-select;
 
   &::picker(select) {
@@ -890,8 +891,8 @@ select.task_status_select option {
     bottom: auto;
     width: auto;
     height: auto;
-    padding: 1px;
-  }
+    padding: 2px;
+}
 
   button.padding_right_top.position_fixed {
     top: 20px;

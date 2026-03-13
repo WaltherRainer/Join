@@ -164,7 +164,7 @@ function addCross({ width = 16, height = 16, color = "var(--blue)" } = {}) {
   return iconSvg({
     width,
     height,
-    viewBox: "0 0 16 16",
+    viewBox: "0 0 18 16",
     color,
     paths: [
       {
@@ -355,7 +355,7 @@ function search({ width = 18, height = 18, color } = {}) {
 }
 
 function add({ width = 19, height = 19, color } = {}) {
-  return iconSvg({width, height, viewBox: "0 0 19 19", color, paths: [{ d: "M8 10.6667H0V8H8V0H10.6667V8H18.6667V10.6667H10.6667V18.6667H8V10.6667Z" }],});
+  return iconSvg({width, height, viewBox: "0 0 18 18", color, paths: [{ d: "M8 10.6667H0V8H8V0H10.6667V8H18.6667V10.6667H10.6667V18.6667H8V10.6667Z" }],});
 }
 
 function more_con({ width = 5, height = 21, color } = {}) {
