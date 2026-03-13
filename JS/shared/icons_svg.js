@@ -52,7 +52,7 @@ function delCross({ width = 18, height = 18, color = "var(--blue)" } = {}) {
   return iconSvg({
     width,
     height,
-    viewBox: "0 0 18 18",
+    viewBox: "0 0 18 20",
     color,
     paths: [
       {

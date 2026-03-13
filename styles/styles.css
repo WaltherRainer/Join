@@ -262,18 +262,6 @@ svg {
   border: none;
 }
 
-.add_task_modal_close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  border: 0;
-  background: transparent;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-  color: var(--text-color);
-}
-
 .modal {
   border: none;
   padding: 0;
@@ -328,9 +316,9 @@ svg {
 }
 
 .add_task_modal_close {
-  position: absolute;
+  /* position: absolute;
   top: 16px;
-  right: 16px;
+  right: 16px; */
   border: 0;
   background: transparent;
   font-size: 28px;
