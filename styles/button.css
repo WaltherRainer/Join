@@ -163,7 +163,6 @@
 
 .btn_close_modal {
     display: flex;
-    /* align-items: flex-end; */
     justify-content: space-evenly;
     width: 28px;
     height: 28px;
@@ -172,9 +171,8 @@
     background: transparent;
     cursor: pointer;
     transition: background 120ms ease;
-    /* padding-top: 1px;
-    padding-left: 1px; */
     font-size: 30px;
+    outline: none;
 }
 
 .btn_close_modal:hover {
