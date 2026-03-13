@@ -192,7 +192,8 @@ async function loadAndRenderTaskForm(hostEl) {
  * @returns {void}
  */
 function setTaskFormTitle(form, title) {
-  form.querySelector(".add_task_titel").textContent = title;
+  // form.querySelector(".add_task_titel").textContent = title;
+  form.querySelector(".add_task_titel").classList.add("d_none");
 }
 
 /**

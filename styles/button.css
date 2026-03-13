@@ -204,12 +204,10 @@
 
 .icon_text_btn.is-edit {
   color: var(--blue);
-
 }
 
 .icon_text_btn.is-edit:hover {
   color: var(--light-blue);
-  
 }
 
 .icon_text_btn.is-delete {
@@ -222,7 +220,6 @@
 
 .edit_contact_btn {
     display: flex;
-    
 }
 
 .default_button {
@@ -267,7 +264,6 @@
   opacity: 0.5;
   pointer-events: none;
 }
-
 
 button.inline {
   background: none;
