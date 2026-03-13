@@ -217,6 +217,10 @@ body.is_loaded {
 .index_footer a {
   color: var(--border_color);
 }
+.index_footer a:hover {
+  color: var(--light-blue);
+  font-weight: 700;
+}
 
 .index_footer {
   display: flex;
