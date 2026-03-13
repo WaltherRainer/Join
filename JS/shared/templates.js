@@ -119,7 +119,7 @@ function getTaskItemContent(task, users) {
 function getSubtasksCountAndTotalTemplate(done, total) {
   return `
     <span class="task_subtask_count">
-      ${done} / ${total} Subtasks
+      ${done}/${total} Subtasks
     </span>
   `;
 }

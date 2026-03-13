@@ -291,7 +291,7 @@
   .summary_title {
     padding: 0 0 clamp(5px, calc(-27.516px + 6.536vw), 10px) 0;
     border-right-style: none;
-    font-size: 46px;
+    font-size: 47px;
   }
 
   .summary_subtitle {
@@ -393,7 +393,6 @@
 
   .summary_title {
     padding: 0 0 clamp(2px, calc(-27.516px + 6.536vw), 5px) 0;
-    font-size: 44px;
   }
 
   .summary_subtitle {
@@ -444,17 +443,21 @@
 
 @media (max-width: 400px) {
   .summary_main {
-    padding-top: 20px;
+    padding-top: 30px;
   }
 
   .summary_title_box {
     margin-bottom: 40px;
    }
+
+  .summary_title {
+    font-size: 40px;
+  }
 }
 
 @media (max-width: 350px) {
   .summary_main {
-    padding-top: 0;
+    padding-top: 15px;
   }
 
   .summary-title {
@@ -462,7 +465,7 @@
   }
 
    .summary_subtitle {
-    font-size: clamp(1.25rem, calc(0.849rem + 1.525vw), 1.69rem);
+    font-size: 16px;
   }
 
   .summary_title_box {

@@ -896,3 +896,16 @@ button#edit_user, button#btn_delete_user {
     font-size: 11px;
   }
 }
+
+@media (max-width: 400px) {
+  .contacts_title {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 350px) {
+  .contacts_title {
+    font-size: 36px;
+  }
+}
+

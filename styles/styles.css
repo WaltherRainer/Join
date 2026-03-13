@@ -538,3 +538,15 @@ svg {
     font-size: 16px;
   }
 }
+
+@media (max-width: 400px) {
+  .display_grid {
+    grid-template-rows: 70px 1fr 80px;
+  }
+}
+
+@media (max-width: 350px) {
+  .display_grid {
+    grid-template-rows: 60px 1fr 80px;
+  }
+}
