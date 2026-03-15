@@ -23,6 +23,7 @@ function initSubtasksInput(form) {
   const state = { subtasks: [], editingIndex: null, subTaskUi };
 
   state.subtasks = safeParseArray(subTaskListInp.value);
+  form._subtaskState = state;
 
   btnClear.innerHTML = delCross({ width: 18, height: 18 });
   btnAdd.innerHTML = addCross({ width: 18, height: 18 });
@@ -318,6 +319,10 @@ function deleteSubtask(state, idx) {
     if (state.editingIndex === idx) state.editingIndex = null;
     renderSubtasks(state);
     syncSubtasksListInp(state);
+}
+
+function deleteSubtaskArray() {
+    
 }
 
 

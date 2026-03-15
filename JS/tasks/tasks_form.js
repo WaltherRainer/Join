@@ -76,7 +76,7 @@ function resetFormState(form) {
 
 /**
  * Completely clears the add task form.
- *
+ * Resets subtasks array index and it's state
  * Calls sequentially the functions for clearing fields, UI elements,
  * and resetting state.
  *
@@ -86,6 +86,12 @@ function resetFormState(form) {
  */
 function clearTaskForm(form) {
   if (!form) return;
+  const state = form._subtaskState;
+  if (state) {
+    state.subtasks = [];
+    state.editingIndex = null;
+    state.subTaskUi.inputSubTasks.value = "";
+  }
   clearFormInputFields(form);
   clearFormUIElements(form);
   resetFormState(form);
