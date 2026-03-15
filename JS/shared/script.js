@@ -34,6 +34,10 @@ async function initializeAddTaskPage(usersDataObj) {
     toastId: "task_success_overlay",
     afterSaved: () => activateBoard(),
   });
+
+  form.querySelector(".add_task_titel").classList.add("sec_backg_col");
+  form.querySelector(".form_actions").classList.add("sec_backg_col");
+
   initAssignedToDropdown(form, usersDataObj);
   resetAssignedToDropdown(form);
   initTaskTypeDropdown(form, TASK_CATEGORIES);

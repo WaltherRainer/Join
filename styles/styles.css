@@ -173,6 +173,10 @@ svg {
   display: none;
 }
 
+.sec_backg_col {
+  background-color: var(--secondary-background-color) !important;
+}
+
 .main_content {
   grid-area: main;
   overflow: auto;
@@ -249,19 +253,6 @@ svg {
   color: var(--policy-link-color);
 }
 
-.add_task_modal_content {
-  background: var(--background-color);
-  border-radius: 16px;
-  padding: 24px;
-  width: min(1064px, 92vw);
-  max-height: 90vh;
-  overflow: auto;
-  box-shadow: 0 8px 24px var(--shadow-color);
-  position: relative;
-  outline: none;
-  border: none;
-}
-
 .modal {
   border: none;
   padding: 0;
@@ -276,15 +267,17 @@ svg {
 }
 
 .add_task_modal_content {
-  width: 1116px;
+  width: min(1064px, 92vw);
   height: 870px;
+  max-height: 90vh;
+  padding: 24px;
   background: var(--background-color);
   border-radius: 30px;
   border: none;
   outline: none;
   box-shadow: 0 8px 24px var(--shadow-color);
   position: relative;
-  overflow: auto;
+  overflow: hidden;
   isolation: isolate;
   scrollbar-width: thin;
   scrollbar-color: #a8a8a8 transparent;

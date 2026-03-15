@@ -13,22 +13,23 @@
 
 .add_task_form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 500px));
-  grid-template-rows: 110px 1fr 180px;
+  grid-template-columns: minmax(0, 1000px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    "add_task_titel add_task_titel"
-    "add_task_form_left add_task_form_right"
-    "form_actions form_actions";
+    "add_task_titel"
+    "add_task_form_wrapper"
+    "form_actions";
+  min-height: 0;
+  height: 100%;
 }
 
 .add_task_form.edit_mode {
   display: grid;
   grid-template-columns: 100%;
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto;
   grid-template-areas:
     "add_task_titel"
-    "add_task_form_left"
-    "add_task_form_right"
+    "add_task_form_wrapper"
     "form_actions";
   max-height: none;
   justify-content: center;
@@ -43,12 +44,49 @@
   font-size: 61px;
   font-weight: 700;
   color: var(--text-color);
+
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background-color: var(--background-color);
+  padding-bottom: 16px;
+}
+
+.add_task_modal_close {
+  /* min-width: 100%; */
+  /* height: 60px; */
+  background-color: aqua;
+  display: flex;
+  /* position: sticky; */
+}
+
+.add_task_form_wrapper {
+  grid-area: add_task_form_wrapper;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "add_task_form_left add_task_form_right";
+  gap: 0;
+
+  overflow-y: auto;
+  min-height: 0;
+  min-width: 0;
+  padding-right: 8px; /* optional gegen Scrollbar-Überlappung */
+}
+
+.add_task_form_wrapper.edit_mode {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 2fr;
+  grid-template-areas: 
+  "add_task_form_left"
+  "add_task_form_right";
 }
 
 .add_task_form_left {
   grid-area: add_task_form_left;
   padding-right: 48px;
   border-right: 1px solid var(--line-color);
+  min-width: 0;
 }
 
 .add_task_form_left.edit_mode {
@@ -62,6 +100,7 @@
   grid-area: add_task_form_right;
   padding-left: 48px;
   min-height: 580px;
+  min-width: 0;
 }
 
 .add_task_form_right.edit_mode {
@@ -187,12 +226,17 @@ legend.blue_text {
   grid-area: form_actions;
   display: flex;
   flex-direction: row;
-  /* align-items: end; */
+  align-items: end;
   justify-content: flex-end;
   /* min-height: 80px; */
   gap: 16px;
   margin-top: 0px;
   margin-right: 4px;
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background-color: var(--background-color);
+  padding-top: 16px;
 }
 
 /* .form_actions.edit_mode {
@@ -483,6 +527,7 @@ legend.blue_text {
   max-height: 56px;
   min-height: 38px;
   margin-top: 5px;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 1340px) {
@@ -528,7 +573,7 @@ legend.blue_text {
   }
 
   .add_task_form {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* grid-template-columns: repeat(2, minmax(0, 1fr)); */
     gap: 12px;
   }
 
@@ -563,16 +608,27 @@ legend.blue_text {
     margin-bottom: 15px;
   }
 
+  .add_task_modal_content {
+    overflow-y: auto;
+  }
+
   .add_task_form {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: 110px 1fr 180px;
     grid-template-areas:
       "add_task_titel"
-      "add_task_form_left"
-      "add_task_form_right"
+      "add_task_form_wrapper"
       "form_actions";
     gap: 0px;
     width: 100%;
+    height: 100%;
+  }
+
+  .add_task_form_wrapper {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "add_task_form_left"
+      "add_task_form_right";
   }
 
   .add_task_form_left {
@@ -583,6 +639,7 @@ legend.blue_text {
 
   .add_task_form_right {
     padding-left: 0;
+    min-height: 0px;
   }
 
   .priority_btn span {
@@ -619,8 +676,7 @@ legend.blue_text {
     grid-template-rows: auto;
     grid-template-areas:
       "add_task_titel"
-      "add_task_form_left"
-      "add_task_form_right"
+      "add_task_form_wrapper"
       "form_actions";
     gap: 0;
     width: 100%;
@@ -671,7 +727,7 @@ legend.blue_text {
   }
 
   .add_task_form_right {
-    min-height: 550px;
+    min-height: 0px;
   }
 
   .form_div_descr {
@@ -849,7 +905,7 @@ legend.blue_text {
   }
 
   .add_task_form_right {
-    min-height: 520px;
+    min-height: 0px;
   }
 
   .add_task_form .form_actions {

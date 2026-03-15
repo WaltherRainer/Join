@@ -211,11 +211,13 @@
     </div>
 
     <dialog id="addTaskModal" class="modal">
+        <div class="add_task_modal_close">
+          <button type="button" class="add_task_modal_close btn_close_modal position_fixed padding_right_top" aria-label="Close">
+              <span class="svg-icon" data-icon="delCross" data-w="20" data-h="20"></span>
+          </button>
+        </div>
       <div class="add_task_modal_content">
-        <button type="button" class="add_task_modal_close btn_close_modal position_fixed padding_right_top" aria-label="Close">
-             <span class="svg-icon" data-icon="delCross" data-w="20" data-h="20"></span>
 
-        </button>
         <div id="addTaskModalHost"></div>
       </div>
 

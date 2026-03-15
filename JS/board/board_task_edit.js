@@ -205,6 +205,9 @@ function setupEditModeUI(form, modal) {
 
   const addTaskFormLeft = form.querySelector(".add_task_form_left");
   addTaskFormLeft?.classList.add("edit_mode");
+
+  const addTaskFormWrapper = form.querySelector(".add_task_form_wrapper");
+  addTaskFormWrapper?.classList.add("edit_mode");
 }
 
 /**
