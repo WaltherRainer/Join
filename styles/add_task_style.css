@@ -50,12 +50,12 @@
   z-index: 3;
   background-color: var(--background-color);
   padding-bottom: 16px;
+  top: -25px;
 }
 
 .add_task_modal_close {
   /* min-width: 100%; */
   /* height: 60px; */
-  background-color: aqua;
   display: flex;
   /* position: sticky; */
 }
@@ -853,6 +853,7 @@ legend.blue_text {
 
   .add_task_titel {
     padding-bottom: 0px;
+    background-color: var(--secondary-background-color);
   }
 
   .priority_buttons_container {
@@ -860,6 +861,10 @@ legend.blue_text {
   }
   .priority_btn .svg-icon {
     gap: 4px;
+  }
+
+  .position_fixed {
+    top: 12px !important;
   }
 
   .priority_btn,
@@ -908,18 +913,29 @@ legend.blue_text {
     min-height: 0px;
   }
 
+  .form_actions {
+    background-color: var(--secondary-background-color);
+  }
+
+  .position_fixed {
+    background-color: var(--secondary-background-color) !important;
+    right: 16px !important;
+  }
+
   .add_task_form .form_actions {
     position: sticky;
     bottom: -20px;
     left: 0;
     width: 100%;
-    /* background-color: var(--secondary-background-color); */
   }
 }
 
 @media (max-width: 400px) {
   .add_task_titel {
     font-size: 42px;
+    min-width: 110%;
+    margin-left: -16px;
+    padding-left: 16px;
   }
 }
 
