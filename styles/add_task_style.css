@@ -61,6 +61,7 @@
 .add_task_form_right {
   grid-area: add_task_form_right;
   padding-left: 48px;
+  min-height: 580px;
 }
 
 .add_task_form_right.edit_mode {
@@ -186,12 +187,12 @@ legend.blue_text {
   grid-area: form_actions;
   display: flex;
   flex-direction: row;
-  align-items: end;
+  /* align-items: end; */
   justify-content: flex-end;
-  min-height: 80px;
+  /* min-height: 80px; */
   gap: 16px;
   margin-top: 0px;
-  /* margin-right: 4px; */
+  margin-right: 4px;
 }
 
 /* .form_actions.edit_mode {
@@ -669,6 +670,10 @@ legend.blue_text {
     gap: 4px;
   }
 
+  .add_task_form_right {
+    min-height: 550px;
+  }
+
   .form_div_descr {
     margin-top: 12px;
   }
@@ -841,6 +846,10 @@ legend.blue_text {
 
   .add_task_form .add_task_form_right {
     padding-bottom: 0px;
+  }
+
+  .add_task_form_right {
+    min-height: 520px;
   }
 
   .add_task_form .form_actions {

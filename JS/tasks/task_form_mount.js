@@ -185,6 +185,7 @@ async function loadAndRenderTaskForm(hostEl) {
 
 /**
  * Sets the visible title of the mounted task form.
+ * Sets display none in Task Edit Mode
  *
  * @function setTaskFormTitle
  * @param {HTMLFormElement} form - Form whose title should be updated.
