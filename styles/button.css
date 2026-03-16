@@ -185,7 +185,7 @@
   gap: 8px;
   background: transparent;
   border: none;
-  padding: 6px 8px;
+  padding: 16px 8px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
@@ -305,5 +305,9 @@ button.inline {
     
     button.mobil_only {
         display: inline-flex; /* Auf Mobilgeräten anzeigen */
+    }
+
+    .form_actions.edit_mode {
+        background-color: var(--background-color);
     }
 }

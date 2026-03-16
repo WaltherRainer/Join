@@ -362,7 +362,7 @@ legend.blue_text {
 }
 
 .avatar_wrap {
-  margin-left: -5px;
+  margin-left: -20px;
   border: 1px solid var(--white-text-color);
 }
 
@@ -653,7 +653,7 @@ legend.blue_text {
   }
 
   .form_actions {
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */
     margin-top: 14px !important;
   }
 }
@@ -924,7 +924,7 @@ legend.blue_text {
 
   .add_task_form .form_actions {
     position: sticky;
-    bottom: -20px;
+    bottom: 0px;
     left: 0;
     width: 100%;
   }
