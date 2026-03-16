@@ -354,7 +354,7 @@ section.task_section {
 }
 
 .tsk_dlg_h1 {
-  font-size: 61px;
+  font-size: 48px;
 }
 
 .blue_text {
@@ -381,9 +381,10 @@ section.task_section {
 }
 
 .tsk_dlg_assgnd_div {
-  max-height: 300px;
+  max-height: 200px;
   padding-left: 15px;
   overflow: auto;
+  margin-top: 16px;
 }
 
 .tsk_dlg_assgnd {
@@ -451,7 +452,7 @@ section.task_section {
 
 .subtasks_check_list {
   list-style-type: none;
-  max-height: 100px;
+  max-height: 160px;
   overflow: auto;
   min-width: 300px;
   width: 100%;
@@ -646,12 +647,6 @@ select.task_status_select option {
   z-index: 1001;
 }
 
-@media (max-width: 1380px) {
-  .tsk_dlg_h1 {
-    font-size: 56px;
-  }
-}
-
 @media (max-width: 1260px) {
   .tsk_dlg_h1 {
     font-size: 48px;
@@ -750,9 +745,9 @@ select.task_status_select option {
     width: 50%;
   }
 
-  .tsk_dlg_type {
+  /* .tsk_dlg_type {
     font-size: 16px;
-  }
+  } */
 }
 
 @media (max-width: 880px) {
@@ -765,10 +760,11 @@ select.task_status_select option {
   }
   .task_list_head h2 {
     font-size: 27px;
-}
-.task_list_head {
+  }
+  
+  .task_list_head {
     padding: 0 20px 5px 12px;
-}
+  }
 .add_task_trigger span.add-task-icon {
   display: flex;
   width: 15px;
@@ -779,7 +775,6 @@ select.task_status_select option {
   width: 15px;
   height: 15px;
 }
-
 
 .task_list_head button {
   width: 30px;
@@ -898,7 +893,7 @@ select.task_status_select option {
 
   .position_fixed {
     position: absolute;
-    top: 2px;
+    top: 16px;
     right: 1px;
     left: auto;
     bottom: auto;
@@ -907,9 +902,39 @@ select.task_status_select option {
     padding: 2px;
 }
 
+.task_modal_header {
+    position: sticky;
+    min-width: 0px;
+}
+
+#show_task_modal .task_modal_header {
+  position: sticky;
+  top: 0px;
+  right: 10px;
+  z-index: 30;
+  display: flex;
+  min-width: 0px;
+}
+
+.add_task_form_left.edit_mode {
+    margin-top: -12px;
+}
+
   button.padding_right_top.position_fixed {
     top: 20px;
-    right: 64px;
+    right: 48px;
+  }
+
+  .add_task_titel {
+    position: sticky;
+    top: 0px;
+  }
+
+  .task_modal_header {
+    min-height: 24px;
+  }
+  .task_dialog_header {
+    margin-top: 16px;
   }
 }
 

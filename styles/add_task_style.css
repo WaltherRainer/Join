@@ -918,7 +918,7 @@ legend.blue_text {
   }
 
   .position_fixed {
-    background-color: var(--secondary-background-color) !important;
+    /* background-color: var(--secondary-background-color) !important; */
     right: 16px !important;
   }
 
