@@ -10,18 +10,17 @@
  */
 function showAndHideGreeting() {
   if (window.innerWidth > 1100) return;
-  
   const greeting = document.querySelector(".greeting");
   if (!greeting) return;
-  
   greeting.style.display = "flex";
-  
   setTimeout(() => {
     greeting.classList.add("hide");
     greeting.addEventListener("transitionend", () => {
-      greeting.style.display = "none";
-      greeting.classList.remove("hide");
-    }, { once: true });
+        greeting.style.display = "none";
+        greeting.classList.remove("hide");
+      },
+      { once: true },
+    );
   }, 1000);
 }
 
@@ -39,13 +38,13 @@ function initSummary() {
   checkIfUserIsLoggedIn();
   writeGreetingDay();
   writeGreetingName();
-  
+
   // Show and hide greeting only after fresh login
   if (sessionStorage.getItem("justLoggedIn")) {
     showAndHideGreeting();
     sessionStorage.removeItem("justLoggedIn");
   }
-  
+
   writeToDoNumbersInSummary();
 }
 
@@ -219,7 +218,6 @@ function buildUrgentDeadlineText(tasks) {
  */
 function countKeyValue(root, targetKey, targetValue) {
   let count = 0;
-
   if (Array.isArray(root)) {
     for (const item of root) {
       count += countKeyValue(item, targetKey, targetValue);
@@ -232,7 +230,6 @@ function countKeyValue(root, targetKey, targetValue) {
       count += countKeyValue(val, targetKey, targetValue);
     }
   }
-
   return count;
 }
 
