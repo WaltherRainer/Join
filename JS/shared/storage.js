@@ -1,5 +1,3 @@
-// Storage and data-loading helpers
-
 let users = {};
 let activeUserId = "";
 let tasks = {};

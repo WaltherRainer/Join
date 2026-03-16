@@ -1,9 +1,4 @@
 /**
- * Page-specific initialization helpers.
- * These are the only functions kept in script.js after splitting.
- */
-
-/**
  * Initializes the contacts page.
  * Renders the contacts list and sets up click handlers.
  *
@@ -88,19 +83,15 @@ async function initializePageContent(page, usersDataObj, tasksDataObj) {
     case "contacts":
       await initializeContactsPage(usersDataObj);
       break;
-
     case "add_task":
       await initializeAddTaskPage(usersDataObj);
       break;
-
     case "summary":
       await initializeSummaryPage();
       break;
-
     case "board":
       await initializeBoardPage(tasksDataObj, usersDataObj);
       break;
-
     default:
       break;
   }

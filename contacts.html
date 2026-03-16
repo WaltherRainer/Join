@@ -32,6 +32,7 @@
     <script src="./JS/shared/fetch.js" defer></script>
     <script src="./JS/shared/icons_functions.js" defer></script>
     <script src="./JS/shared/icons_svg.js" defer></script>
+    <script src="./JS/shared/icons_misc.js" defer></script>
     <script src="./JS/shared/templates.js" defer></script>
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <title>Join - Contacts</title>
@@ -119,7 +120,8 @@
                 </svg>
             </button>
 
-            <button id="open_edit_delete_menu" class="add_contact_btn_responsive mobile_contact_menu" type="button" aria-label="Options">
+            <button id="open_edit_delete_menu" class="add_contact_btn_responsive mobile_contact_menu" type="button"
+                aria-label="Options">
                 <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_d_71395_11113)">
                         <rect x="1" width="56" height="56" rx="27" fill="#2A3647" shape-rendering="crispEdges" />
@@ -267,7 +269,8 @@
                         <input class="standard_input_box" type="tel" id="edit_user_phone" name="user_phone"
                             placeholder="Phone" required>
                         <span class="svg-icon is-muted input_icon" data-icon="phone" data-w="24" data-h="24"></span>
-                        <span class="warning_text" id="warning_edit_phone_invalid">Please enter a valid phone number.</span>
+                        <span class="warning_text" id="warning_edit_phone_invalid">Please enter a valid phone
+                            number.</span>
                     </div>
                     <div class="edit_contact_btn">
                         <button id="delete_contact_btn" class="clear_button">Delete</button>
@@ -282,16 +285,18 @@
         </div>
     </dialog>
 
-    <dialog class="overlay_backdrop modal" id="confirm_delete_contact_modal" aria-labelledby="confirm_delete_contact_title">
-        <div class="delete_confirm_modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm_delete_contact_title"
-            aria-describedby="confirm_delete_contact_text">
+    <dialog class="overlay_backdrop modal" id="confirm_delete_contact_modal"
+        aria-labelledby="confirm_delete_contact_title">
+        <div class="delete_confirm_modal" role="alertdialog" aria-modal="true"
+            aria-labelledby="confirm_delete_contact_title" aria-describedby="confirm_delete_contact_text">
             <button type="button" class="modal_close btn_close_modal" id="confirm_delete_contact_close"
                 aria-label="Close">x</button>
             <h3 id="confirm_delete_contact_title">Delete contact?</h3>
             <p id="confirm_delete_contact_text">This action cannot be undone.</p>
             <div class="delete_confirm_actions">
                 <button type="button" class="clear_button" id="cancel_delete_contact_btn">Cancel</button>
-                <button type="button" class="default_button delete_confirm_btn" id="confirm_delete_contact_btn">Delete</button>
+                <button type="button" class="default_button delete_confirm_btn"
+                    id="confirm_delete_contact_btn">Delete</button>
             </div>
         </div>
     </dialog>

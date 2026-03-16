@@ -1,5 +1,3 @@
-// Toast overlay management and HTML include helper
-
 /**
  * Retrieves the overlay element by ID.
  * Returns null if not found.
@@ -193,40 +191,89 @@ function showToastOverlay(overlayId, opts = {}) {
 }
 
 /**
- * Recursively includes HTML fragments into elements marked with
- * `w3-include-html` attribute (mimics w3schools include behavior).
- * Calls optional callback after processing.
+ * Recursively loads and injects HTML partials for elements marked with `w3-include-html`.
+ *
+ * Finds the next include element, fetches its referenced file, writes the response into
+ * the element, removes the attribute, and continues until no includes remain. When all
+ * includes are processed, the optional callback is executed.
  *
  * @function w3includeHTML
- * @param {Function} [cb] - Optional callback executed once all includes done
+ * @param {Function} [cb] - Callback invoked after all includes have been processed.
  * @returns {void}
  */
 function w3includeHTML(cb) {
-  var z, i, elmnt, file, xhttp;
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-          if (this.status == 200) {
-            elmnt.innerHTML = this.responseText;
-          }
-          if (this.status == 404) {
-            elmnt.innerHTML = "Page not found.";
-          }
-          elmnt.removeAttribute("w3-include-html");
-          w3includeHTML(cb);
-        }
-      };
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      return;
-    }
-  }
-  if (cb) cb();
+  const el = findNextIncludeEl();
+  if (!el) return runCb(cb);
+
+  const file = el.getAttribute("w3-include-html");
+  if (!file) return w3includeHTML(cb);
+
+  requestInclude(file, (status, html) => {
+    writeIncludeResult(el, status, html);
+    el.removeAttribute("w3-include-html");
+    w3includeHTML(cb);
+  });
+}
+
+/**
+ * Finds the next element that requests an HTML include.
+ *
+ * Searches the document for the first element with the `w3-include-html` attribute.
+ *
+ * @function findNextIncludeEl
+ * @returns {Element|null} The next include element, or `null` if none exists.
+ */
+function findNextIncludeEl() {
+  return document.querySelector("[w3-include-html]");
+}
+
+/**
+ * Loads an HTML partial via XMLHttpRequest and returns the response.
+ *
+ * Performs an asynchronous GET request and calls the callback once the request
+ * completes, passing the HTTP status code and response text.
+ *
+ * @function requestInclude
+ * @param {string} url - URL of the file to load.
+ * @param {(status: number, html: string) => void} done - Callback invoked on completion.
+ * @returns {void}
+ */
+function requestInclude(url, done) {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState !== 4) return;
+    done(xhr.status, xhr.responseText);
+  };
+  xhr.open("GET", url, true);
+  xhr.send();
+}
+
+/**
+ * Writes the result of an HTML include request into a target element.
+ *
+ * Injects the loaded HTML on success (200) or displays a "Page not found."
+ * message when the request returns 404.
+ *
+ * @function writeIncludeResult
+ * @param {Element} el - Target element to receive the included content.
+ * @param {number} status - HTTP status code from the include request.
+ * @param {string} html - Response text containing the HTML partial.
+ * @returns {void}
+ */
+function writeIncludeResult(el, status, html) {
+  if (status === 200) el.innerHTML = html;
+  else if (status === 404) el.innerHTML = "Page not found.";
+}
+
+/**
+ * Safely executes a callback if it is a function.
+ *
+ * @function runCb
+ * @param {*} cb - Potential callback to invoke.
+ * @returns {void}
+ */
+function runCb(cb) {
+  if (typeof cb === "function") cb();
 }
 
 /**
@@ -243,7 +290,19 @@ function dismissToastOverlay(overlay, animateClass, visibleClass, opts) {
   hideToastOverlay(overlay, animateClass, visibleClass, opts);
 }
 
-
+/**
+ * Attaches a click handler to a toast overlay and stores a cleanup function.
+ *
+ * On click, dismisses the toast via {@link dismissToastOverlay}. Also assigns
+ * `_toastClickCleanup` on the overlay to remove the listener later.
+ *
+ * @function attachToastClickHandler
+ * @param {HTMLElement} overlay - Toast overlay element.
+ * @param {string} animateClass - CSS class used for the dismiss animation.
+ * @param {string} visibleClass - CSS class indicating the toast is visible.
+ * @param {Object} opts - Options forwarded to {@link dismissToastOverlay}.
+ * @returns {void}
+ */
 function attachToastClickHandler(overlay, animateClass, visibleClass, opts) {
   const onClick = () => {
     dismissToastOverlay(overlay, animateClass, visibleClass, opts);

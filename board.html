@@ -29,6 +29,7 @@
   <script src="./JS/shared/fetch.js" defer></script>
   <script src="./JS/shared/icons_functions.js" defer></script>
   <script src="./JS/shared/icons_svg.js" defer></script>
+  <script src="./JS/shared/icons_misc.js" defer></script>
   <script src="./JS/shared/templates.js" defer></script>
   <script src="./JS/contacts/contacts_addUsers.js" defer></script>
   <script src="./JS/contacts/contacts_init.js" defer></script>
@@ -76,7 +77,8 @@
             <div class="task_list_head">
               <h2>To do</h2>
               <button class="add_task_trigger" data-status="0">
-                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12" aria-label="add task"></span>
+                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12"
+                  aria-label="add task"></span>
               </button>
             </div>
             <div class="task_list_wrapper">
@@ -92,7 +94,8 @@
             <div class="task_list_head">
               <h2>In progress</h2>
               <button class="add_task_trigger" data-status="1">
-                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12" aria-label="add task"></span>
+                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12"
+                  aria-label="add task"></span>
               </button>
             </div>
             <div class="task_list_wrapper">
@@ -137,7 +140,8 @@
             <div class="task_list_head">
               <h2>Await feedback</h2>
               <button class="add_task_trigger" data-status="2">
-                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12" aria-label="add task"></span>
+                <span class="svg-icon add-task-icon" data-icon="add" data-w="12" data-h="12"
+                  aria-label="add task"></span>
               </button>
             </div>
             <div class="task_list_wrapper">
@@ -212,11 +216,12 @@
     </div>
 
     <dialog id="addTaskModal" class="modal">
-        <div class="add_task_modal_close">
-          <button type="button" class="add_task_modal_close btn_close_modal position_fixed padding_right_top" aria-label="Close">
-              <span class="svg-icon" data-icon="delCross" data-w="20" data-h="20"></span>
-          </button>
-        </div>
+      <div class="add_task_modal_close">
+        <button type="button" class="add_task_modal_close btn_close_modal position_fixed padding_right_top"
+          aria-label="Close">
+          <span class="svg-icon" data-icon="delCross" data-w="20" data-h="20"></span>
+        </button>
+      </div>
       <div class="add_task_modal_content">
 
         <div id="addTaskModalHost"></div>

@@ -110,6 +110,17 @@ function readIconSizeArgs(dataset) {
   return args;
 }
 
+/**
+ * Generates an SVG string for a large "edit pencil" icon wrapped in a circular background.
+ *
+ * Creates a unique mask ID to avoid DOM ID collisions when multiple icons are rendered,
+ * then delegates rendering to {@link iconCircleWrapper} with the required defs/content.
+ *
+ * @function editPencilBig
+ * @param {Object} [options={}]
+ * @param {number} [options.size=69] - Diameter of the circular icon wrapper in pixels.
+ * @returns {string} SVG markup string for the icon.
+ */
 function editPencilBig({ size = 69 } = {}) {
   const maskId = `mask-editPencil-${Math.random().toString(36).slice(2, 9)}`;
 
@@ -128,6 +139,17 @@ function editPencilBig({ size = 69 } = {}) {
   });
 }
 
+/**
+ * Generates an SVG string for a large "urgent priority" icon wrapped in a circular background.
+ *
+ * Creates a unique clipPath ID to avoid DOM ID collisions when multiple icons are rendered,
+ * then delegates rendering to {@link iconCircleWrapper} with the required defs/content.
+ *
+ * @function prioUrgentBig
+ * @param {Object} [options={}]
+ * @param {number} [options.size=60] - Diameter of the circular icon wrapper in pixels.
+ * @returns {string} SVG markup string for the icon.
+ */
 function prioUrgentBig({ size = 60 } = {}) {
   const clipId = `clip-prioUrgentBig-${Math.random().toString(36).slice(2, 9)}`;
   return iconCircleWrapper({ size, circleFill: "#FF3D00", defs: `

@@ -1,5 +1,3 @@
-// UI helper functions: menu toggles, avatar rendering, global listeners
-
 /**
  * Toggles the visibility of the user menu element by toggling CSS class.
  *
@@ -125,19 +123,15 @@ function appendAvatarToContainer(container, avatar) {
  */
 function renderAssignedAvatars(selectedUserIds, usersData, container) {
   if (!container) return;
-
   clearAvatarContainer(container);
   const idsArray = normalizeUserIds(selectedUserIds);
   const { visibleUsers, extraCount } = calculateVisibleAvatars(idsArray);
-
   visibleUsers.forEach((userId) => {
     const user = usersData[userId];
     if (!user) return;
-
     const avatar = createUserAvatar(userId, user);
     appendAvatarToContainer(container, avatar);
   });
-
   if (extraCount > 0) {
     const moreAvatar = createMoreAvatar(extraCount);
     appendAvatarToContainer(container, moreAvatar);
@@ -155,13 +149,10 @@ function renderAssignedAvatars(selectedUserIds, usersData, container) {
 function listenEscapeFromModal(modalDOMId, onClose) {
   const handler = async (event) => {
     if (event.key !== "Escape") return;
-
     const modal = document.getElementById(modalDOMId);
     if (!modal) return;
-
     const isOpen = modal.open === true || modal.classList.contains("active");
     if (!isOpen) return;
-
     if (typeof onClose === "function") {
       await onClose(modal);
     } else {
@@ -174,38 +165,106 @@ function listenEscapeFromModal(modalDOMId, onClose) {
 }
 
 /**
- * Sets up global listener on user dialog button and outside clicks.
+ * Initializes global event listeners for the user dialog/menu.
+ *
+ * Retrieves the required UI elements and binds handlers for toggling the dialog,
+ * closing on outside clicks, and closing via the Escape key.
  *
  * @function InitGlobalEventListener
  * @returns {void}
  */
 function InitGlobalEventListener() {
+  const ui = getUserDialogUI();
+  if (!ui) return;
+
+  bindUserDialogToggle(ui);
+  bindUserDialogOutsideClose(ui);
+  bindUserDialogEscapeClose();
+}
+
+/**
+ * Retrieves the UI elements required for the user dialog/menu.
+ *
+ * Looks up the open button and the dialog element and returns them as a bundle,
+ * or `null` if any element is missing.
+ *
+ * @function getUserDialogUI
+ * @returns {{btn: HTMLElement, menu: HTMLDialogElement} | null} UI bundle or `null` when incomplete.
+ */
+function getUserDialogUI() {
   const btn = document.getElementById("open_user_dialog");
   const menu = document.getElementById("user_dialog");
+  return btn && menu ? { btn, menu } : null;
+}
 
+/**
+ * Binds the click handler to toggle the user dialog.
+ *
+ * Prevents the default button behavior and toggles the dialog via {@link toggleUserDialog}.
+ *
+ * @function bindUserDialogToggle
+ * @param {{btn: HTMLElement, menu: HTMLDialogElement}} ui - UI bundle containing trigger button and dialog.
+ * @returns {void}
+ */
+function bindUserDialogToggle({ btn, menu }) {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
-    toggleUserMenu();
+    toggleUserDialog(menu);
   });
+}
 
+/**
+ * Closes the user dialog when clicking outside the dialog or its trigger button.
+ *
+ * Listens on the document for clicks and, when the dialog is visible, closes it
+ * if the click occurred outside both the dialog and the toggle button.
+ *
+ * @function bindUserDialogOutsideClose
+ * @param {{btn: HTMLElement, menu: HTMLDialogElement}} ui - UI bundle containing trigger button and dialog.
+ * @returns {void}
+ */
+function bindUserDialogOutsideClose({ btn, menu }) {
   document.addEventListener("click", (e) => {
     if (menu.hidden) return;
-
-    if (!menu.contains(e.target) && !btn.contains(e.target)) {
-      closeUserMenuDialog();
-    }
+    if (clickedOutside(e, menu, btn)) closeUserMenuDialog();
   });
+}
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeUserMenuDialog();
-    }
+/**
+ * Closes the user dialog when the Escape key is pressed.
+ *
+ * @function bindUserDialogEscapeClose
+ * @returns {void}
+ */
+function bindUserDialogEscapeClose() {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeUserMenuDialog();
   });
+}
 
-  function toggleUserMenu() {
-    if (menu.hidden) openUserMenuDialog();
-    else closeUserMenuDialog();
-  }
+/**
+ * Toggles the user dialog open or closed based on its current hidden state.
+ *
+ * @function toggleUserDialog
+ * @param {HTMLElement} menu - The user dialog element whose visibility is toggled.
+ * @returns {void}
+ */
+function toggleUserDialog(menu) {
+  menu.hidden ? openUserMenuDialog() : closeUserMenuDialog();
+}
+
+/**
+ * Checks whether an event target lies outside all provided elements.
+ *
+ * Returns `true` only if every element exists and does not contain `event.target`.
+ *
+ * @function clickedOutside
+ * @param {Event} event - Event containing the click target.
+ * @param {...HTMLElement} els - Elements to test against.
+ * @returns {boolean} `true` if the target is outside all elements, otherwise `false`.
+ */
+function clickedOutside(event, ...els) {
+  return els.every((el) => el && !el.contains(event.target));
 }
 
 /**
