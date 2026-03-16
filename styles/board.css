@@ -537,7 +537,7 @@ ul.subtasks_check_list li {
   overflow: auto;
   border-radius: 16px;
   isolation: isolate;
-  padding: 0 36px;
+  padding: 0 16px;
   margin: auto;
 }
 
@@ -760,7 +760,7 @@ select.task_status_select option {
   }
 
   #show_task_modal .task_modal_shell {
-    padding: 0 26px;
+    padding: 0 6px;
   }
   .task_list_head h2 {
     font-size: 27px;

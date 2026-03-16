@@ -51,6 +51,7 @@
   background-color: var(--background-color);
   padding-bottom: 16px;
   top: -25px;
+  padding-left: 16px;
 }
 
 .add_task_modal_close {
@@ -71,7 +72,7 @@
   overflow-y: auto;
   min-height: 0;
   min-width: 0;
-  padding-right: 8px; /* optional gegen Scrollbar-Überlappung */
+  padding: 16px; /* optional gegen Scrollbar-Überlappung */
 }
 
 .add_task_form_wrapper.edit_mode {
@@ -236,7 +237,7 @@ legend.blue_text {
   bottom: 0;
   z-index: 3;
   background-color: var(--background-color);
-  padding-top: 16px;
+  padding: 16px;
 }
 
 /* .form_actions.edit_mode {
@@ -536,7 +537,7 @@ legend.blue_text {
   }
 
   .add_task_main {
-    padding: 60px 20px;
+    padding: 16px 0px;
   }
 
   .priority_buttons_container {
@@ -585,9 +586,9 @@ legend.blue_text {
     padding-left: 8px;
   }
 
-  .add_task_main {
+  /* .add_task_main {
     padding: 20px;
-  }
+  } */
 
   .task_dialog {
     padding: 0 2px;
@@ -605,11 +606,15 @@ legend.blue_text {
 
 @media (max-width: 990px) {
   .add_task_titel {
-    margin-bottom: 15px;
+    margin-bottom: -6px;
   }
 
   .add_task_modal_content {
     overflow-y: auto;
+  }
+
+  .add_task_titel {
+    padding-bottom: 0px;
   }
 
   .add_task_form {
@@ -703,9 +708,9 @@ legend.blue_text {
     margin: 0;
   }
 
-  .add_task_main {
+  /* .add_task_main {
     padding: 20px;
-  }
+  } */
 
   .add_task_form > * {
     min-width: 0;
@@ -854,6 +859,8 @@ legend.blue_text {
   .add_task_titel {
     padding-bottom: 0px;
     background-color: var(--secondary-background-color);
+    position: sticky;
+    top: -16px;
   }
 
   .priority_buttons_container {
@@ -924,7 +931,7 @@ legend.blue_text {
 
   .add_task_form .form_actions {
     position: sticky;
-    bottom: 0px;
+    bottom: -25px;
     left: 0;
     width: 100%;
   }
@@ -933,8 +940,8 @@ legend.blue_text {
 @media (max-width: 400px) {
   .add_task_titel {
     font-size: 42px;
-    min-width: 110%;
-    margin-left: -16px;
+    /* min-width: 110%; */
+    /* margin-left: -16px; */
     padding-left: 16px;
   }
 }
