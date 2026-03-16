@@ -36,7 +36,12 @@ const FORM_CONFIGS = Object.freeze({
 });
 
 /**
- * Messages displayed when required fields are empty.
+ * Immutable map of required-field validation messages.
+ *
+ * Used to display consistent error text for missing contact form fields.
+ *
+ * @constant
+ * @type {Readonly<{name: string, email: string, phone: string}>}
  */
 const REQUIRED_MESSAGES = Object.freeze({
   name: "Please enter a name.",
@@ -45,7 +50,12 @@ const REQUIRED_MESSAGES = Object.freeze({
 });
 
 /**
- * Messages displayed when a field contains an invalid format.
+ * Immutable map of validation messages for invalid field formats.
+ *
+ * Used to display consistent error text when inputs fail format checks.
+ *
+ * @constant
+ * @type {Readonly<{email: string, phone: string}>}
  */
 const INVALID_MESSAGES = Object.freeze({
   email: "Please enter a valid email address.",
@@ -53,7 +63,12 @@ const INVALID_MESSAGES = Object.freeze({
 });
 
 /**
- * Field validation functions mapped by field type.
+ * Immutable map of field validator functions.
+ *
+ * Each validator receives the raw field value and returns `true` if valid.
+ *
+ * @constant
+ * @type {Readonly<{name: (value: string) => boolean, email: (value: string) => boolean, phone: (value: string) => boolean}>}
  */
 const VALIDATORS = Object.freeze({
   name: (value) => Boolean(value),
@@ -122,21 +137,17 @@ function validateFormByConfig(config) {
  */
 function validateField(config, fieldName) {
   let value = getTrimmedValue(config.fields[fieldName]);
-
   if (fieldName === "phone") {
     value = normalizePhone(value);
     updateInputValue(config.fields.phone, value);
   }
-
   if (!value) {
     showValidationError(config, fieldName, REQUIRED_MESSAGES[fieldName]);
     return false;
   }
-
   if (!VALIDATORS[fieldName](value)) {
     return handleInvalidFormat(config, fieldName);
   }
-
   return true;
 }
 
@@ -218,11 +229,7 @@ function updateInputValue(elementId, value) {
  * @param {string} message - Warning message to display.
  */
 function showValidationError(config, fieldName, message) {
-  showFieldValidationError(
-    config.fields[fieldName],
-    config.warnings[fieldName],
-    message
-  );
+  showFieldValidationError(config.fields[fieldName], config.warnings[fieldName], message);
 }
 
 /**

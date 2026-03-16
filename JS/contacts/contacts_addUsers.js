@@ -1,4 +1,5 @@
 let editFormSubmitHandler = null;
+
 /**
  * Binds one-time event handlers for closing and actions within the edit modal.
  *
@@ -64,9 +65,9 @@ function preloadEditFormData(givenName, email, userPhone) {
  */
 function setValueById(id, value) {
   const el = document.getElementById(id);
-  if (!el) return; 
-    el.value = value ?? "";
-  }
+  if (!el) return;
+  el.value = value ?? "";
+}
 
 /**
  * Closes the add-contact modal and removes its submit handler.
@@ -209,7 +210,6 @@ function bindEditContactFormSubmitOnce(userId) {
     }
   };
   form.addEventListener("submit", editFormSubmitHandler);
-
 }
 
 /**

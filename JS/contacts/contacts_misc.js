@@ -82,12 +82,33 @@ function getMobileEditDeleteMenuElements() {
   return { trigger, menu, editAction, deleteAction };
 }
 
+/**
+ * Applies accessibility (ARIA) attributes to the mobile menu trigger element.
+ *
+ * Configures the trigger as a popup controller for the `mobile_edit_delete_menu`
+ * and initializes `aria-expanded` to `false`.
+ *
+ * @function setMobileMenuTriggerA11y
+ * @param {HTMLElement} trigger - Element that opens the mobile edit/delete menu.
+ * @returns {void}
+ */
 function setMobileMenuTriggerA11y(trigger) {
   trigger.setAttribute("aria-haspopup", "true");
   trigger.setAttribute("aria-controls", "mobile_edit_delete_menu");
   trigger.setAttribute("aria-expanded", "false");
 }
 
+/**
+ * Toggles the mobile edit/delete menu and updates ARIA state.
+ *
+ * Opens or closes the menu by toggling the `is-open` class, sets `aria-hidden`
+ * on the menu, and updates `aria-expanded` on the trigger accordingly.
+ *
+ * @function toggleMobileEditDeleteMenu
+ * @param {HTMLElement} menu - The menu element to toggle.
+ * @param {HTMLElement} trigger - The element controlling the menu.
+ * @returns {void}
+ */
 function toggleMobileEditDeleteMenu(menu, trigger) {
   const willOpen = !menu.classList.contains("is-open");
   menu.classList.toggle("is-open", willOpen);
@@ -95,6 +116,17 @@ function toggleMobileEditDeleteMenu(menu, trigger) {
   trigger.setAttribute("aria-expanded", String(willOpen));
 }
 
+/**
+ * Binds the click handler for the mobile menu trigger.
+ *
+ * Stops event bubbling and toggles the edit/delete menu via
+ * {@link toggleMobileEditDeleteMenu}.
+ *
+ * @function bindMobileMenuTriggerToggle
+ * @param {HTMLElement} trigger - Element that toggles the menu.
+ * @param {HTMLElement} menu - The mobile edit/delete menu element.
+ * @returns {void}
+ */
 function bindMobileMenuTriggerToggle(trigger, menu) {
   trigger.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -102,6 +134,17 @@ function bindMobileMenuTriggerToggle(trigger, menu) {
   });
 }
 
+/**
+ * Closes the mobile edit/delete menu when clicking outside of it.
+ *
+ * Listens on the document for clicks and, when the menu is open, closes it
+ * unless the click occurred inside the menu or on its trigger.
+ *
+ * @function bindMobileMenuOutsideClose
+ * @param {HTMLElement} menu - The mobile edit/delete menu element.
+ * @param {HTMLElement} trigger - The element that toggles the menu.
+ * @returns {void}
+ */
 function bindMobileMenuOutsideClose(menu, trigger) {
   document.addEventListener("click", (event) => {
     if (!menu.classList.contains("is-open")) return;
@@ -110,16 +153,42 @@ function bindMobileMenuOutsideClose(menu, trigger) {
   });
 }
 
+/**
+ * Closes the mobile edit/delete menu when the Escape key is pressed.
+ *
+ * @function bindMobileMenuEscapeClose
+ * @returns {void}
+ */
 function bindMobileMenuEscapeClose() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeMobileEditDeleteMenu();
   });
 }
 
+/**
+ * Programmatically triggers a click on a contact action button by id.
+ *
+ * Looks up the element and calls `.click()` if it exists.
+ *
+ * @function clickContactActionButton
+ * @param {string} buttonId - The id of the button to click.
+ * @returns {void}
+ */
 function clickContactActionButton(buttonId) {
   document.getElementById(buttonId)?.click();
 }
 
+/**
+ * Binds a mobile menu action to close the menu and trigger a target button click.
+ *
+ * On action click, closes the mobile edit/delete menu and programmatically clicks
+ * the corresponding contact action button.
+ *
+ * @function bindMobileMenuAction
+ * @param {HTMLElement} actionButton - Menu item/button that initiates the action.
+ * @param {string} targetButtonId - ID of the target button to click.
+ * @returns {void}
+ */
 function bindMobileMenuAction(actionButton, targetButtonId) {
   actionButton.addEventListener("click", () => {
     closeMobileEditDeleteMenu();
@@ -127,11 +196,28 @@ function bindMobileMenuAction(actionButton, targetButtonId) {
   });
 }
 
+/**
+ * Binds the mobile menu edit and delete actions to their corresponding contact buttons.
+ *
+ * @function bindMobileMenuActions
+ * @param {HTMLElement} editAction - Mobile menu element that triggers edit.
+ * @param {HTMLElement} deleteAction - Mobile menu element that triggers delete.
+ * @returns {void}
+ */
 function bindMobileMenuActions(editAction, deleteAction) {
   bindMobileMenuAction(editAction, "edit_user");
   bindMobileMenuAction(deleteAction, "btn_delete_user");
 }
 
+/**
+ * Initializes the mobile edit/delete menu behavior once.
+ *
+ * Retrieves required DOM elements, guards against duplicate initialization,
+ * applies ARIA attributes, and binds toggle/close handlers plus edit/delete actions.
+ *
+ * @function initMobileEditDeleteMenu
+ * @returns {void}
+ */
 function initMobileEditDeleteMenu() {
   const elements = getMobileEditDeleteMenuElements();
   if (!elements) return;
@@ -171,12 +257,28 @@ function showListView() {
   closeMobileEditDeleteMenu();
 }
 
-
-
+/**
+ * Handles the "back to list" action in the contacts view.
+ *
+ * When the `.back_to_list` element is clicked, switches the layout back to the list view
+ * via {@link showListView}.
+ *
+ * @listens HTMLElement#click
+ * @returns {void}
+ */
 document.querySelector(".back_to_list")?.addEventListener("click", () => {
   showListView();
 });
 
+/**
+ * Resets the contacts layout to list view when leaving the mobile breakpoint.
+ *
+ * Listens for media query changes and switches to list view once the query no longer matches.
+ *
+ * @listens MediaQueryList#change
+ * @param {MediaQueryListEvent} e - Media query change event.
+ * @returns {void}
+ */
 mqMobile.addEventListener("change", (e) => {
   if (!e.matches) showListView();
 });

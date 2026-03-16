@@ -105,16 +105,13 @@ function createContactGroup(letter, groups, container) {
 function renderContactDetails(users, userId) {
   const u = users?.[userId];
   if (!u) return;
-
   const initials = initialsFromGivenName(u.givenName);
   const bgColor = colorIndexFromUserId(userId);
-
   const target = document.getElementById("contact_details_sect");
   if (!target) return;
   target.dataset.userId = userId;
   target.innerHTML = getContactDetailsTempl(bgColor, initials, u.givenName, u.email, u.userPhone || "-", userId);
   renderIcons(target);
-
   initEditButton(userId, u.givenName, u.email, u.userPhone);
   initDeleteButton(userId);
 }
@@ -260,149 +257,144 @@ function setActiveContactCard(cardEl) {
 }
 
 /**
- * Opens a custom confirmation dialog before deleting a contact.
+ * Requests user confirmation before deleting a contact.
  *
- * Uses the dedicated contacts delete-confirmation modal and resolves with
- * `true` only when the user explicitly confirms deletion.
+ * Retrieves the confirmation UI, opens the modal, binds the required handlers,
+ * and resolves with `true` (confirmed) or `false` (canceled / unavailable).
  *
- * @async
  * @function requestDeleteContactConfirmation
- * @returns {Promise<boolean>} `true` when deletion is confirmed, otherwise `false`.
+ * @returns {Promise<boolean>} Resolves to `true` if deletion is confirmed, otherwise `false`.
  */
 function requestDeleteContactConfirmation() {
-  const modal = document.getElementById("confirm_delete_contact_modal");
-  const closeBtn = document.getElementById("confirm_delete_contact_close");
-  const cancelBtn = document.getElementById("cancel_delete_contact_btn");
-  const confirmBtn = document.getElementById("confirm_delete_contact_btn");
-
-  if (!modal || !closeBtn || !cancelBtn || !confirmBtn) return Promise.resolve(false);
+  const ui = getDeleteConfirmUI();
+  if (!ui) return Promise.resolve(false);
 
   return new Promise((resolve) => {
-    let isSettled = false;
+    const state = { settled: false };
+    const finalize = (result) => finalizeConfirm(ui, state, result, resolve);
+    const handlers = makeDeleteConfirmHandlers(ui, finalize);
 
-    const finalize = (result) => {
-      if (isSettled) return;
-      isSettled = true;
-      teardown();
-      if (modal.open) modal.close();
-      resolve(result);
-    };
-
-    const onConfirm = () => finalize(true);
-    const onCancel = () => finalize(false);
-    const onBackdrop = (event) => {
-      if (event.target === modal) finalize(false);
-    };
-    const onClose = () => finalize(false);
-
-    const teardown = () => {
-      confirmBtn.removeEventListener("click", onConfirm);
-      cancelBtn.removeEventListener("click", onCancel);
-      closeBtn.removeEventListener("click", onCancel);
-      modal.removeEventListener("click", onBackdrop);
-      modal.removeEventListener("close", onClose);
-    };
-
-    confirmBtn.addEventListener("click", onConfirm);
-    cancelBtn.addEventListener("click", onCancel);
-    closeBtn.addEventListener("click", onCancel);
-    modal.addEventListener("click", onBackdrop);
-    modal.addEventListener("close", onClose);
-
-    modal.showModal();
-    confirmBtn.focus();
+    bindDeleteConfirmHandlers(ui, handlers);
+    openDeleteConfirmModal(ui);
   });
 }
 
 /**
- * Deletes a contact and refreshes the UI state.
+ * Collects and returns the required DOM elements for the delete-confirmation modal.
  *
- * Sends a delete request for the specified user ID, reloads the updated
- * users collection, persists it to session storage, and re-renders the
- * contact list. Any active selection is cleared and the contact details
- * panel is reset. Errors during the process are caught and logged.
+ * Looks up the modal and its close/cancel/confirm buttons. If any element is missing,
+ * returns `null`.
  *
- * @async
- * @function deleteContact
- * @param {string} userId - The ID of the user to delete.
- * @returns {Promise<boolean>} `true` when the contact was deleted, otherwise `false`.
+ * @function getDeleteConfirmUI
+ * @returns {{modal: HTMLDialogElement, closeBtn: HTMLElement, cancelBtn: HTMLElement, confirmBtn: HTMLElement} | null}
+ * UI element bundle or `null` when incomplete.
  */
-async function deleteContact(userId) {
-  if (!userId) return false;
-  const shouldDelete = await requestDeleteContactConfirmation();
-  if (!shouldDelete) return false;
-
-  try {
-    await deleteData(`/users/${userId}`);
-    users = (await loadData("/users")) || {};
-    saveUsersToSessionStorage(users);
-    renderContacts(users);
-    document.querySelectorAll(".contact_list_card.is-active").forEach((el) => el.classList.remove("is-active"));
-    const details = document.getElementById("contact_details_sect");
-    if (details) {
-      details.innerHTML = "";
-    }
-
-    if (window.matchMedia("(max-width: 1100px)").matches) {
-      if (typeof showListView === "function") {
-        showListView();
-      } else {
-        document.querySelector(".contacts_layout")?.classList.remove("is-details");
-      }
-    }
-
-    await removeContactFromTasks(userId);
-    return true;
-  } catch (err) {
-    console.error("Delete failed:", err);
-    return false;
-  }
+function getDeleteConfirmUI() {
+  const modal = document.getElementById("confirm_delete_contact_modal");
+  const closeBtn = document.getElementById("confirm_delete_contact_close");
+  const cancelBtn = document.getElementById("cancel_delete_contact_btn");
+  const confirmBtn = document.getElementById("confirm_delete_contact_btn");
+  return modal && closeBtn && cancelBtn && confirmBtn ? { modal, closeBtn, cancelBtn, confirmBtn } : null;
 }
 
 /**
- * Removes a contact from all tasks where they are assigned.
+ * Creates the event handler set for the delete-confirmation modal.
  *
- * Loads tasks from session storage, identifies tasks containing the user,
- * removes the user from each task's assignedTo array, updates session storage,
- * and syncs the changes to the server.
+ * Maps confirm/cancel/backdrop/close interactions to the shared `finalize`
+ * function, resolving with `true` on confirm and `false` otherwise.
  *
- * @async
- * @function removeContactFromTasks
- * @param {string} userId - The ID of the user to remove from tasks.
- * @returns {Promise<void>}
+ * @function makeDeleteConfirmHandlers
+ * @param {{modal: HTMLDialogElement}} ui - Delete-confirm modal UI bundle.
+ * @param {(result: boolean) => void} finalize - Finalizer that resolves the confirmation.
+ * @returns {{
+ *   onConfirm: () => void,
+ *   onCancel: () => void,
+ *   onBackdrop: (e: MouseEvent) => void,
+ *   onClose: () => void
+ * }} Handler functions for binding to UI events.
  */
-async function removeContactFromTasks(userId) {
-  if (!userId) return;
-  const tasks = sessionStorage.getItem("tasks") ? JSON.parse(sessionStorage.getItem("tasks")) : {};
-  const updatedTaskIds = removeUserFromTasksAndCollectIds(tasks, userId);
-
-  if (updatedTaskIds.length === 0) return;
-
-  sessionStorage.setItem("tasks", JSON.stringify(tasks));
-
-  await Promise.all(updatedTaskIds.map((taskId) => editData("tasks", taskId, tasks[taskId])));
+function makeDeleteConfirmHandlers(ui, finalize) {
+  return {
+    onConfirm: () => finalize(true),
+    onCancel: () => finalize(false),
+    onBackdrop: (e) => e.target === ui.modal && finalize(false),
+    onClose: () => finalize(false),
+  };
 }
 
 /**
- * Identifies and removes a user from tasks, returning affected task IDs.
+ * Binds event listeners for the delete-confirmation modal and stores a teardown hook.
  *
- * Iterates over all tasks, checks if the user is in the assignedTo array,
- * removes them if present, and collects the IDs of modified tasks.
+ * Attaches handlers for confirm/cancel/close button clicks, backdrop clicks, and the
+ * dialog `close` event. Also assigns a `_deleteConfirmTeardown` function on the modal
+ * to remove these listeners later via {@link teardownDeleteConfirmHandlers}.
  *
- * @function removeUserFromTasksAndCollectIds
- * @param {Object<string, Object>} tasks - Object mapping task IDs to task data.
- * @param {string} userId - The ID of the user to remove.
- * @returns {string[]} Array of task IDs that were modified.
+ * @function bindDeleteConfirmHandlers
+ * @param {{modal: HTMLDialogElement, closeBtn: HTMLElement, cancelBtn: HTMLElement, confirmBtn: HTMLElement}} ui
+ * UI element bundle for the confirmation modal.
+ * @param {{onConfirm: Function, onCancel: Function, onBackdrop: Function, onClose: Function}} h
+ * Handler functions to bind.
+ * @returns {void}
  */
-function removeUserFromTasksAndCollectIds(tasks, userId) {
-  const updatedTaskIds = [];
-  for (const key of Object.keys(tasks)) {
-    const task = tasks[key];
-    if (Array.isArray(task.assignedTo) && task.assignedTo.includes(userId)) {
-      task.assignedTo = task.assignedTo.filter((id) => id !== userId);
-      updatedTaskIds.push(key);
-    }
-  }
-  return updatedTaskIds;
+function bindDeleteConfirmHandlers(ui, h) {
+  ui.confirmBtn.addEventListener("click", h.onConfirm);
+  ui.cancelBtn.addEventListener("click", h.onCancel);
+  ui.closeBtn.addEventListener("click", h.onCancel);
+  ui.modal.addEventListener("click", h.onBackdrop);
+  ui.modal.addEventListener("close", h.onClose);
+  ui.modal._deleteConfirmTeardown = () => teardownDeleteConfirmHandlers(ui, h);
 }
 
+/**
+ * Removes previously bound event listeners from the delete-confirmation modal.
+ *
+ * Detaches all handlers added by {@link bindDeleteConfirmHandlers}.
+ *
+ * @function teardownDeleteConfirmHandlers
+ * @param {{modal: HTMLDialogElement, closeBtn: HTMLElement, cancelBtn: HTMLElement, confirmBtn: HTMLElement}} ui
+ * UI element bundle for the confirmation modal.
+ * @param {{onConfirm: Function, onCancel: Function, onBackdrop: Function, onClose: Function}} h
+ * Handler functions to remove.
+ * @returns {void}
+ */
+function teardownDeleteConfirmHandlers(ui, h) {
+  ui.confirmBtn.removeEventListener("click", h.onConfirm);
+  ui.cancelBtn.removeEventListener("click", h.onCancel);
+  ui.closeBtn.removeEventListener("click", h.onCancel);
+  ui.modal.removeEventListener("click", h.onBackdrop);
+  ui.modal.removeEventListener("close", h.onClose);
+}
+
+/**
+ * Finalizes the delete-confirmation flow exactly once and resolves the promise.
+ *
+ * Guards against multiple settlements, runs the stored teardown hook, closes the
+ * modal if still open, and resolves with the provided result.
+ *
+ * @function finalizeConfirm
+ * @param {{modal: HTMLDialogElement}} ui - Delete-confirm modal UI bundle.
+ * @param {{settled: boolean}} state - Mutable state used to prevent double finalize.
+ * @param {boolean} result - Confirmation result (`true` = confirmed, `false` = canceled).
+ * @param {(value: boolean) => void} resolve - Promise resolver.
+ * @returns {void}
+ */
+function finalizeConfirm(ui, state, result, resolve) {
+  if (state.settled) return;
+  state.settled = true;
+  ui.modal._deleteConfirmTeardown?.();
+  ui.modal._deleteConfirmTeardown = null;
+  if (ui.modal.open) ui.modal.close();
+  resolve(result);
+}
+
+/**
+ * Opens the delete-confirmation modal and focuses the confirm button.
+ *
+ * @function openDeleteConfirmModal
+ * @param {{modal: HTMLDialogElement, confirmBtn: HTMLElement}} ui - Delete-confirm modal UI bundle.
+ * @returns {void}
+ */
+function openDeleteConfirmModal(ui) {
+  ui.modal.showModal();
+  ui.confirmBtn.focus();
+}
