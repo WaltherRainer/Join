@@ -57,8 +57,20 @@ function getToastHoldDuration(overlay, opts) {
  * @returns {void}
  */
 function clearPreviousToastTimers(overlay) {
-  if (overlay._toastTimer) window.clearTimeout(overlay._toastTimer);
-  if (overlay._toastCleanup) overlay._toastCleanup();
+  if (overlay._toastTimer) {
+    window.clearTimeout(overlay._toastTimer);
+    overlay._toastTimer = null;
+  }
+
+  if (overlay._toastCleanup) {
+    overlay._toastCleanup();
+    overlay._toastCleanup = null;
+  }
+
+  if (overlay._toastClickCleanup) {
+    overlay._toastClickCleanup();
+    overlay._toastClickCleanup = null;
+  }
 }
 
 /**
@@ -176,6 +188,7 @@ function showToastOverlay(overlayId, opts = {}) {
   clearPreviousToastTimers(overlay);
   prepareOverlayForAnimation(overlay, visibleClass);
   startToastAnimation(overlay, box, animateClass);
+  attachToastClickHandler(overlay, animateClass, visibleClass, opts);
   attachToastAnimationEndHandler(overlay, box, animateClass, visibleClass, opts, holdMs);
 }
 
@@ -214,4 +227,31 @@ function w3includeHTML(cb) {
     }
   }
   if (cb) cb();
+}
+
+/**
+ * Immediately closes the toast and clears all related timers and handlers.
+ *
+ * @param {HTMLElement} overlay - The overlay element.
+ * @param {string} animateClass - CSS animation class.
+ * @param {string} visibleClass - CSS visibility class.
+ * @param {Object} opts - Options object.
+ * @returns {void}
+ */
+function dismissToastOverlay(overlay, animateClass, visibleClass, opts) {
+  clearPreviousToastTimers(overlay);
+  hideToastOverlay(overlay, animateClass, visibleClass, opts);
+}
+
+
+function attachToastClickHandler(overlay, animateClass, visibleClass, opts) {
+  const onClick = () => {
+    dismissToastOverlay(overlay, animateClass, visibleClass, opts);
+  };
+
+  overlay.addEventListener("click", onClick);
+
+  overlay._toastClickCleanup = () => {
+    overlay.removeEventListener("click", onClick);
+  };
 }
