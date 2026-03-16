@@ -931,7 +931,7 @@ select.task_status_select option {
 
   .add_task_titel {
     position: sticky;
-    top: 0px;
+    top: -16px;
   }
 
   .task_modal_header {
@@ -947,6 +947,10 @@ select.task_status_select option {
   .edit_mode .add_task_titel,
   #show_task_modal h1 {
     font-size: 36px;
+  }
+
+  .add_task_modal_close.btn_close_modal.position_fixed.padding_right_top {
+    background-color: var(--secondary-background-color);
   }
 
   #show_task_modal .task_modal_shell {
