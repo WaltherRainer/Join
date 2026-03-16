@@ -245,7 +245,7 @@ function isValidEmail(email) {
  */
 function isValidPhone(phone) {
   if (!phone) return false;
-  const phoneRegex = /^[\d\-+()]{4,}$/;
+  const phoneRegex = /^\+?\d{4,}$/;
   return phoneRegex.test(phone);
 }
 

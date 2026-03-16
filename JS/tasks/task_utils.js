@@ -3,7 +3,6 @@ const TASK_CATEGORIES = [
   { value: 'user_story', label: 'User Story' }
 ];
 
-
 /**
  * Gets the label and color for a task category.
  * 
@@ -13,7 +12,6 @@ const TASK_CATEGORIES = [
  */
 function getTaskCatLabel(value) {
   let taskObj = {};
-  
   switch (value) {
     case "technical_task":
       taskObj = {"label" : "Technical Task", "color" : "#0038FF"};
@@ -25,7 +23,6 @@ function getTaskCatLabel(value) {
       taskObj = {"label" : "Task", "color" : "#0038FF"};
       break;
   }
-
   return taskObj;
 }
 
@@ -138,10 +135,8 @@ function initAssignedToDropdown(form, usersData) {
   const ui = getAssignedToUi(form);
   if (!ui.root || isInitialized(ui.root)) return;
   if (!usersData || typeof usersData !== "object") return;
-
   const state = { form, usersData, selected: new Set(), ui };
   ui.root._assignedState = state;
-
   wireDropdownEvents(state);
   wireFilterEvents(state);
   renderUserList(state);
@@ -264,7 +259,6 @@ function buildAssignedToUiObject(root, control, toggleBtn, dropdown, list, caret
     valueEl, assignedToInput, assignedToassignedToFilterInput, avatarContainer };
 }
 
-
 /**
  * Wires filter input event handlers.
  * 
@@ -305,9 +299,7 @@ function resetAssignedToDropdown(form) {
 
   if (state) {
     state.selected.clear();
-
     state.ui.list?.querySelectorAll(".is-selected").forEach(li => li.classList.remove("is-selected"));
-
     applySelectionUi(state.ui, [], state.selected, state.usersData);
     renderAssignedAvatars(state.selected, state.usersData, state.ui.avatarContainer);
     return;
