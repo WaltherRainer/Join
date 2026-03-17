@@ -50,44 +50,61 @@ function groupUsersByFirstLetter(usersObj) {
 function renderContacts(users) {
   const container = document.querySelector(".contact_list_sect");
   if (!container) return;
-
   container.querySelectorAll(".contact_list_item").forEach((e) => e.remove());
   const groups = groupUsersByFirstLetter(users);
   const sortedLetters = Object.keys(groups).sort();
-
   for (const letter of sortedLetters) {
     createContactGroup(letter, groups, container);
   }
 }
 
 /**
- * Creates and appends a grouped contact list section for a specific letter.
+ * Creates and appends a contact group section for a given first letter.
  *
- * Builds a wrapper element containing the letter header and a list of
- * contact cards generated from the provided user group, then appends
- * the section to the given container.
+ * Builds the wrapper element, adds the letter header, appends all user cards
+ * from the provided groups map, and finally appends the wrapper to the container.
  *
  * @function createContactGroup
- * @param {string} letter - The group key representing the first letter.
- * @param {Object<string, Object[]>} groups - Object containing user arrays grouped by letter.
- * @param {HTMLElement} container - The DOM element to which the group should be appended.
+ * @param {string} letter - Group letter (e.g., "A", "B").
+ * @param {Object<string, Array>} groups - Map of letters to user arrays.
+ * @param {HTMLElement} container - Target container to append the group into.
  * @returns {void}
  */
 function createContactGroup(letter, groups, container) {
   const wrapper = document.createElement("div");
   wrapper.className = "contact_list_item";
+  wrapper.appendChild(createContactGroupHeader(letter));
+  (groups?.[letter] ?? []).forEach((user) => wrapper.appendChild(createContactCard(user)));
+  container?.appendChild(wrapper);
+}
+
+/**
+ * Creates the header element displaying the group letter.
+ *
+ * @function createContactGroupHeader
+ * @param {string} letter - Group letter to display.
+ * @returns {HTMLDivElement} Header element for the contact group.
+ */
+function createContactGroupHeader(letter) {
   const letterDiv = document.createElement("div");
   letterDiv.className = "first_letter";
   letterDiv.textContent = letter;
-  wrapper.appendChild(letterDiv);
-  groups[letter].forEach((user) => {
-    const card = document.createElement("div");
-    card.className = "contact_list_card";
-    card.dataset.userId = user.id;
-    card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
-    wrapper.appendChild(card);
-  });
-  container.appendChild(wrapper);
+  return letterDiv;
+}
+
+/**
+ * Creates a single contact card element for a user.
+ *
+ * @function createContactCard
+ * @param {{id:string|number,givenName:string,email:string}} user - User data.
+ * @returns {HTMLDivElement} Contact card element.
+ */
+function createContactCard(user) {
+  const card = document.createElement("div");
+  card.className = "contact_list_card";
+  card.dataset.userId = user.id;
+  card.innerHTML = getContactListTempl(user.id, user.givenName, user.email);
+  return card;
 }
 
 /**
@@ -133,7 +150,6 @@ function renderContactDetails(users, userId) {
 function initEditButton(userId, givenName, email, userPhone) {
   const editBtn = document.getElementById("edit_user");
   if (!editBtn) return;
-
   editBtn.addEventListener("click", () => {
     openEditContactModal(userId, givenName, email, userPhone);
   });
@@ -153,7 +169,6 @@ function initEditButton(userId, givenName, email, userPhone) {
 function initDeleteButton(userId) {
   const deleteBtn = document.getElementById("btn_delete_user");
   if (!deleteBtn) return;
-
   deleteBtn.addEventListener("click", () => {
     deleteContact(userId);
   });
@@ -176,15 +191,11 @@ function initDeleteButton(userId) {
 function initContactsClick(users) {
   const list = document.querySelector(".contact_list_sect");
   if (!list) return;
-
   const mqMobile = window.matchMedia("(max-width: 1100px)");
-
   if (contactClickHandler) {
     list.removeEventListener("click", contactClickHandler);
   }
-
   contactClickHandler = (e) => handleContactCardClick(e, users, mqMobile);
-
   list.addEventListener("click", contactClickHandler);
 }
 
@@ -218,11 +229,9 @@ function bindOnce(el, flag) {
 function handleContactCardClick(e, users, mqMobile) {
   const userId = getClickedUserId(e);
   if (!userId) return;
-
   const card = e.target.closest(".contact_list_card");
   setActiveContactCard(card);
   renderContactDetails(users, userId);
-
   if (mqMobile.matches) showDetailsView();
 }
 
@@ -268,12 +277,10 @@ function setActiveContactCard(cardEl) {
 function requestDeleteContactConfirmation() {
   const ui = getDeleteConfirmUI();
   if (!ui) return Promise.resolve(false);
-
   return new Promise((resolve) => {
     const state = { settled: false };
     const finalize = (result) => finalizeConfirm(ui, state, result, resolve);
     const handlers = makeDeleteConfirmHandlers(ui, finalize);
-
     bindDeleteConfirmHandlers(ui, handlers);
     openDeleteConfirmModal(ui);
   });
@@ -363,38 +370,4 @@ function teardownDeleteConfirmHandlers(ui, h) {
   ui.closeBtn.removeEventListener("click", h.onCancel);
   ui.modal.removeEventListener("click", h.onBackdrop);
   ui.modal.removeEventListener("close", h.onClose);
-}
-
-/**
- * Finalizes the delete-confirmation flow exactly once and resolves the promise.
- *
- * Guards against multiple settlements, runs the stored teardown hook, closes the
- * modal if still open, and resolves with the provided result.
- *
- * @function finalizeConfirm
- * @param {{modal: HTMLDialogElement}} ui - Delete-confirm modal UI bundle.
- * @param {{settled: boolean}} state - Mutable state used to prevent double finalize.
- * @param {boolean} result - Confirmation result (`true` = confirmed, `false` = canceled).
- * @param {(value: boolean) => void} resolve - Promise resolver.
- * @returns {void}
- */
-function finalizeConfirm(ui, state, result, resolve) {
-  if (state.settled) return;
-  state.settled = true;
-  ui.modal._deleteConfirmTeardown?.();
-  ui.modal._deleteConfirmTeardown = null;
-  if (ui.modal.open) ui.modal.close();
-  resolve(result);
-}
-
-/**
- * Opens the delete-confirmation modal and focuses the confirm button.
- *
- * @function openDeleteConfirmModal
- * @param {{modal: HTMLDialogElement, confirmBtn: HTMLElement}} ui - Delete-confirm modal UI bundle.
- * @returns {void}
- */
-function openDeleteConfirmModal(ui) {
-  ui.modal.showModal();
-  ui.confirmBtn.focus();
 }

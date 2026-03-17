@@ -12,7 +12,6 @@
 async function deleteContact(userId) {
   if (!userId) return false;
   if (!(await confirmDelete())) return false;
-
   try {
     await deleteUserAndRefreshUI(userId);
     await removeContactFromTasks(userId);
@@ -131,11 +130,8 @@ async function removeContactFromTasks(userId) {
   if (!userId) return;
   const tasks = sessionStorage.getItem("tasks") ? JSON.parse(sessionStorage.getItem("tasks")) : {};
   const updatedTaskIds = removeUserFromTasksAndCollectIds(tasks, userId);
-
   if (updatedTaskIds.length === 0) return;
-
   sessionStorage.setItem("tasks", JSON.stringify(tasks));
-
   await Promise.all(updatedTaskIds.map((taskId) => editData("tasks", taskId, tasks[taskId])));
 }
 
@@ -160,4 +156,38 @@ function removeUserFromTasksAndCollectIds(tasks, userId) {
     }
   }
   return updatedTaskIds;
+}
+
+/**
+ * Finalizes the delete-confirmation flow exactly once and resolves the promise.
+ *
+ * Guards against multiple settlements, runs the stored teardown hook, closes the
+ * modal if still open, and resolves with the provided result.
+ *
+ * @function finalizeConfirm
+ * @param {{modal: HTMLDialogElement}} ui - Delete-confirm modal UI bundle.
+ * @param {{settled: boolean}} state - Mutable state used to prevent double finalize.
+ * @param {boolean} result - Confirmation result (`true` = confirmed, `false` = canceled).
+ * @param {(value: boolean) => void} resolve - Promise resolver.
+ * @returns {void}
+ */
+function finalizeConfirm(ui, state, result, resolve) {
+  if (state.settled) return;
+  state.settled = true;
+  ui.modal._deleteConfirmTeardown?.();
+  ui.modal._deleteConfirmTeardown = null;
+  if (ui.modal.open) ui.modal.close();
+  resolve(result);
+}
+
+/**
+ * Opens the delete-confirmation modal and focuses the confirm button.
+ *
+ * @function openDeleteConfirmModal
+ * @param {{modal: HTMLDialogElement, confirmBtn: HTMLElement}} ui - Delete-confirm modal UI bundle.
+ * @returns {void}
+ */
+function openDeleteConfirmModal(ui) {
+  ui.modal.showModal();
+  ui.confirmBtn.focus();
 }

@@ -120,11 +120,9 @@ function clearEditErrors() {
  */
 function validateFormByConfig(config) {
   clearFormErrors(config.formId);
-
   const nameValid = validateField(config, "name");
   const emailValid = validateField(config, "email");
   const phoneValid = validateField(config, "phone");
-
   return nameValid && emailValid && phoneValid;
 }
 
@@ -161,7 +159,6 @@ function validateField(config, fieldName) {
 function handleInvalidFormat(config, fieldName) {
   const invalidMessage = INVALID_MESSAGES[fieldName];
   if (!invalidMessage) return true;
-
   showValidationError(config, fieldName, invalidMessage);
   return false;
 }
@@ -267,13 +264,10 @@ function showFieldValidationError(inputId, warningId, message) {
   const input = document.getElementById(inputId);
   const warning = document.getElementById(warningId);
   if (!input) return;
-
   input.closest(".input-wrapper")?.classList.add("has_error");
-
   if (warning && message) {
     warning.textContent = message;
   }
-
   warning?.classList.add("visible");
 }
 
@@ -285,7 +279,6 @@ function showFieldValidationError(inputId, warningId, message) {
 function clearFormErrors(formId) {
   const form = document.getElementById(formId);
   if (!form) return;
-
   removeClassFromElements(form, ".has_error", "has_error");
   removeClassFromElements(form, ".warning_text", "visible");
 }
@@ -310,7 +303,6 @@ function removeClassFromElements(root, selector, className) {
  */
 function enableErrorReset(form) {
   if (!form) return;
-
   form.querySelectorAll(".input-wrapper input").forEach((input) => {
     input.addEventListener("input", () => resetInputError(form, input));
   });
@@ -326,11 +318,9 @@ function resetInputError(form, input) {
   if (isPhoneInput(input)) {
     input.value = normalizePhone(input.value);
   }
-
   if (isEmailInput(input)) {
     input.value = normalizeEmail(input.value);
   }
-
   input.closest(".input-wrapper")?.classList.remove("has_error");
   hideWarnings(form);
 }
