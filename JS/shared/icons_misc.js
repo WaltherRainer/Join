@@ -1,3 +1,33 @@
+const ICONS = {
+  recyBin,
+  editPencil,
+  confTick,
+  addCross,
+  delCross,
+  mail,
+  lock,
+  eye_open,
+  eye_closed,
+  person,
+  join_logo,
+  nav_summary,
+  nav_add_task,
+  nav_board,
+  nav_contacts,
+  prioUrgent,
+  prioMedium,
+  prioLow,
+  editPencilBig,
+  prioUrgentBig,
+  confTickBig,
+  phone,
+  checkMark,
+  checkBoxChecked,
+  search,
+  add,
+  more_con,
+};
+
 /**
  * Generates an SVG string for an "eye open / visibility on" icon.
  *
@@ -363,33 +393,3 @@ function more_con({ width = 5, height = 21, color } = {}) {
     ],
   });
 }
-
-const ICONS = {
-  recyBin,
-  editPencil,
-  confTick,
-  addCross,
-  delCross,
-  mail,
-  lock,
-  eye_open,
-  eye_closed,
-  person,
-  join_logo,
-  nav_summary,
-  nav_add_task,
-  nav_board,
-  nav_contacts,
-  prioUrgent,
-  prioMedium,
-  prioLow,
-  editPencilBig,
-  prioUrgentBig,
-  confTickBig,
-  phone,
-  checkMark,
-  checkBoxChecked,
-  search,
-  add,
-  more_con,
-};

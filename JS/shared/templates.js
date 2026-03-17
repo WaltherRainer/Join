@@ -16,12 +16,10 @@ function userListItemTemplate({ bgColor, initials, name }) {
       </span>
       <span class="user_name">${name}</span>
     </div>
-
     <div class="checkbox_svg multi_checkbox_svg" aria-hidden="true">
       <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none">
         <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
       </svg>
-
       <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none">
         <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12"
               stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -83,7 +81,6 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
                   <span class="svg-icon" data-icon="editPencil" data-w="18" data-h="18"></span>
                   <span>Edit</span>
               </button>
-
             <button type="button"
                     class="icon_text_btn is-delete"
                     data-action="delete"
@@ -92,7 +89,6 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
               <span class="svg-icon" data-icon="recyBin" data-w="18" data-h="18"></span>
               <span>Delete</span>
             </button>
-
           </div>
       </div>
       <div class="contact_information">
@@ -120,7 +116,6 @@ function getContactDetailsTempl(bgColor, initials, givenName, userEmail, phoneNo
  */
 function taskItemTemplate(task, users, isDraggable) {
   const dragAttrs = isDraggable ? `draggable="true" ondragstart="startDragTask('${task.id}')" ondragend="endDragTask(event, '${task.id}')"` : "";
-
   const selectHtml = !isDraggable
     ? `<select class="task_status_select secondary-button" onchange="switchStatusContainer('${task.id}', this.value)" onclick="event.stopPropagation()">
         <button class="caret select-btn"></button>
@@ -130,7 +125,6 @@ function taskItemTemplate(task, users, isDraggable) {
         <option value="3" ${task.status === 3 ? "selected" : ""}>Done</option>
       </select>`
     : "";
-
   return `
     <div class="t_task" ${dragAttrs} data-task-id="${task.id}">
       ${selectHtml}
@@ -287,26 +281,15 @@ function getTaskDialSubtaskTempl(subTaskTitel, done, index) {
   return `
     <li class="subtask_li_elements ${done ? "is-done" : ""}" data-index="${index}">
       <div class="subtask_action">
-        <button 
-          type="button"
-          class="icon_btn icon_btn--nohovercircle"
-          data-action="toggle"
-          aria-pressed="${done}"
-        >
+        <button type="button" class="icon_btn icon_btn--nohovercircle" data-action="toggle" aria-pressed="${done}">
           <div class="checkbox_svg single_checkbox_svg">
-            
-            <!-- unchecked -->
             <svg class="checkbox_unchecked" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--blue)" stroke-width="2"/>
             </svg>
-
-            <!-- checked -->
-            
             <svg class="checkbox_checked" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M17 8V14C17 15.6569 15.6569 17 14 17H4C2.34315 17 1 15.6569 1 14V4C1 2.34315 2.34315 1 4 1H12" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/>
               <path d="M5 9L9 13L17 1.5" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-
             <span>${subTaskTitel}</span>
           </div>
         </button>

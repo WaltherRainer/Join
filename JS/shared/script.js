@@ -29,10 +29,8 @@ async function initializeAddTaskPage(usersDataObj) {
     toastId: "task_success_overlay",
     afterSaved: () => activateBoard(),
   });
-
   form.querySelector(".add_task_titel").classList.add("sec_backg_col");
   form.querySelector(".form_actions").classList.add("sec_backg_col");
-
   initAssignedToDropdown(form, usersDataObj);
   resetAssignedToDropdown(form);
   initTaskTypeDropdown(form, TASK_CATEGORIES);
@@ -56,30 +54,40 @@ async function initializeBoardPage(tasksDataObj, usersDataObj) {
 }
 
 /**
- * Routes to the appropriate page initialization function.
- * Dispatches initialization based on the current page type.
+ * Initializes the current page by dispatching to a page-specific initializer.
  *
- * @async
+ * Selects the correct init function based on the `page` identifier and awaits it.
+ * Uses {@link getPageInitializer} to resolve the handler.
+ *
  * @function initializePageContent
- * @param {string} page - The page identifier
- * @param {Object} usersDataObj - Users data object
- * @param {Object} tasksDataObj - Tasks data object
- * @returns {Promise<void>}
+ * @param {string} page - Page key (e.g. "contacts", "add_task", "board").
+ * @param {Object} usersDataObj - Loaded users data passed to page initializers.
+ * @param {Object} tasksDataObj - Loaded tasks data passed to page initializers.
+ * @returns {Promise<void>} Resolves when the page initialization has finished.
  */
 async function initializePageContent(page, usersDataObj, tasksDataObj) {
-  switch (page) {
-    case "contacts":
-      await initializeContactsPage(usersDataObj);
-      break;
-    case "add_task":
-      await initializeAddTaskPage(usersDataObj);
-      break;
-    case "board":
-      await initializeBoardPage(tasksDataObj, usersDataObj);
-      break;
-    default:
-      break;
-  }
+  const init = getPageInitializer(page);
+  if (!init) return;
+  await init(usersDataObj, tasksDataObj);
+}
+
+/**
+ * Returns an async initializer function for the given page key.
+ *
+ * The returned function has a normalized signature `(users, tasks)` so the
+ * caller can pass both data objects regardless of the page type.
+ *
+ * @function getPageInitializer
+ * @param {string} page - Page key to resolve.
+ * @returns {((users:Object, tasks:Object)=>Promise<void>)|null} Page initializer or null.
+ */
+function getPageInitializer(page) {
+  const map = {
+    contacts: (users) => initializeContactsPage(users),
+    add_task: (users) => initializeAddTaskPage(users),
+    board: (users, tasks) => initializeBoardPage(tasks, users),
+  };
+  return map[page] ?? null;
 }
 
 /**
@@ -120,7 +128,6 @@ function renderActiveUserAvatar() {
  */
 function setActiveNavLink() {
   const page = location.pathname.split("/").pop().replace(".html", "");
-
   document.querySelectorAll(".nav_link").forEach((link) => {
     link.classList.toggle("active", link.dataset.page === page);
   });

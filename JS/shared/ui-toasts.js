@@ -59,12 +59,10 @@ function clearPreviousToastTimers(overlay) {
     window.clearTimeout(overlay._toastTimer);
     overlay._toastTimer = null;
   }
-
   if (overlay._toastCleanup) {
     overlay._toastCleanup();
     overlay._toastCleanup = null;
   }
-
   if (overlay._toastClickCleanup) {
     overlay._toastClickCleanup();
     overlay._toastClickCleanup = null;
@@ -113,12 +111,10 @@ function startToastAnimation(overlay, box, animateClass) {
 function hideToastOverlay(overlay, animateClass, visibleClass, opts) {
   overlay.classList.remove(animateClass, visibleClass);
   overlay.setAttribute("aria-hidden", "true");
-
   if (typeof opts.onDone === "function") {
     opts.onDone();
     return;
   }
-
   const fnName = overlay.dataset.onDone;
   if (fnName && typeof window[fnName] === "function") {
     window[fnName]();
@@ -141,16 +137,12 @@ function hideToastOverlay(overlay, animateClass, visibleClass, opts) {
 function attachToastAnimationEndHandler(overlay, box, animateClass, visibleClass, opts, holdMs) {
   const onAnimEnd = (ev) => {
     if (ev.target !== box) return;
-
     box.removeEventListener("animationend", onAnimEnd);
-
     overlay._toastTimer = window.setTimeout(() => {
       hideToastOverlay(overlay, animateClass, visibleClass, opts);
     }, holdMs);
   };
-
   box.addEventListener("animationend", onAnimEnd);
-
   overlay._toastCleanup = () => {
     box.removeEventListener("animationend", onAnimEnd);
   };
@@ -173,16 +165,12 @@ function attachToastAnimationEndHandler(overlay, box, animateClass, visibleClass
 function showToastOverlay(overlayId, opts = {}) {
   const overlay = getOverlayElement(overlayId);
   if (!overlay) return;
-
   const visibleClass = opts.visibleClass || "is_visible";
   const animateClass = opts.animateClass || "is_animating";
   const boxSelector = opts.boxSelector || "[data-toast-box], .signup_success_box, .task_success_box";
-
   const box = getToastBox(overlay, boxSelector);
   if (!box) return;
-
   const holdMs = getToastHoldDuration(overlay, opts);
-
   clearPreviousToastTimers(overlay);
   prepareOverlayForAnimation(overlay, visibleClass);
   startToastAnimation(overlay, box, animateClass);
@@ -204,10 +192,8 @@ function showToastOverlay(overlayId, opts = {}) {
 function w3includeHTML(cb) {
   const el = findNextIncludeEl();
   if (!el) return runCb(cb);
-
   const file = el.getAttribute("w3-include-html");
   if (!file) return w3includeHTML(cb);
-
   requestInclude(file, (status, html) => {
     writeIncludeResult(el, status, html);
     el.removeAttribute("w3-include-html");
@@ -307,9 +293,7 @@ function attachToastClickHandler(overlay, animateClass, visibleClass, opts) {
   const onClick = () => {
     dismissToastOverlay(overlay, animateClass, visibleClass, opts);
   };
-
   overlay.addEventListener("click", onClick);
-
   overlay._toastClickCleanup = () => {
     overlay.removeEventListener("click", onClick);
   };
