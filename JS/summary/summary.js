@@ -1,30 +1,4 @@
 /**
- * Shows the greeting overlay and hides it after 1 second with fade-out effect.
- *
- * Only works on mobile devices (screen width <= 880px).
- * Displays the greeting with fixed positioning, adds 'hide' class after 1 second
- * (which triggers opacity: 0 transition), then sets display: none after transition ends.
- *
- * @function showAndHideGreeting
- * @returns {void}
- */
-function showAndHideGreeting() {
-  if (window.innerWidth > 1100) return;
-  const greeting = document.querySelector(".greeting");
-  if (!greeting) return;
-  greeting.style.display = "flex";
-  setTimeout(() => {
-    greeting.classList.add("hide");
-    greeting.addEventListener("transitionend", () => {
-        greeting.style.display = "none";
-        greeting.classList.remove("hide");
-      },
-      { once: true },
-    );
-  }, 1000);
-}
-
-/**
  * Initializes the summary view.
  *
  * Schedules itself to run again after 150 ms, checks login state, updates
@@ -38,39 +12,87 @@ function initSummary() {
   checkIfUserIsLoggedIn();
   writeGreetingDay();
   writeGreetingName();
-
   if (sessionStorage.getItem("justLoggedIn")) {
     showAndHideGreeting();
     sessionStorage.removeItem("justLoggedIn");
   }
-
   writeToDoNumbersInSummary();
 }
 
 /**
- * Writes a time-based greeting into the `greetingDay` element.
+ * Shows the greeting element on small screens and triggers its timed hide.
  *
- * Selects a greeting string based on the current hour and updates the
- * target element's text content. If the element is missing, it exits silently.
+ * Displays `.greeting` as flex only when the viewport width is <= 1100px,
+ * then delegates the hide transition scheduling to {@link hideGreetingAfterDelay}.
+ *
+ * @function showAndHideGreeting
+ * @returns {void}
+ */
+function showAndHideGreeting() {
+  if (window.innerWidth > 1100) return;
+  const greeting = document.querySelector(".greeting");
+  if (!greeting) return;
+  greeting.style.display = "flex";
+  hideGreetingAfterDelay(greeting, 1000);
+}
+
+/**
+ * Adds the hide class after a delay and removes the greeting from the layout
+ * after the CSS transition finishes.
+ *
+ * @function hideGreetingAfterDelay
+ * @param {HTMLElement} greetingEl - The greeting element to hide.
+ * @param {number} delayMs - Delay in milliseconds before starting the hide transition.
+ * @returns {void}
+ */
+function hideGreetingAfterDelay(greetingEl, delayMs) {
+  setTimeout(() => {
+    greetingEl.classList.add("hide");
+    greetingEl.addEventListener(
+      "transitionend",
+      () => {
+        greetingEl.style.display = "none";
+        greetingEl.classList.remove("hide");
+      },
+      { once: true },
+    );
+  }, delayMs);
+}
+
+/**
+ * Writes a time-of-day greeting into the element with ID "greetingDay".
+ *
+ * Looks up the target element and sets its text content based on the current
+ * local hour using {@link getGreetingByHour}.
  *
  * @function writeGreetingDay
- * @returns {void}
+ * @returns {void} Does not return a value.
  */
 function writeGreetingDay() {
   const el = document.getElementById("greetingDay");
   if (!el) return;
   const hour = new Date().getHours();
-  let greeting;
-  if (hour >= 5 && hour < 12) {
-    greeting = "Good morning,";
-  } else if (hour >= 12 && hour < 18) {
-    greeting = "Good afternoon,";
-  } else if (hour >= 18 && hour < 22) {
-    greeting = "Good evening,";
-  } else {
-    greeting = "Good night,";
-  }
-  el.textContent = greeting;
+  el.textContent = getGreetingByHour(hour);
+}
+
+/**
+ * Returns the appropriate greeting string for a given hour of the day.
+ *
+ * Time ranges:
+ * - 05:00–11:59 → "Good morning,"
+ * - 12:00–17:59 → "Good afternoon,"
+ * - 18:00–21:59 → "Good evening,"
+ * - 22:00–04:59 → "Good night,"
+ *
+ * @function getGreetingByHour
+ * @param {number} hour - Hour of day in 24h format (0–23).
+ * @returns {string} The greeting for the provided hour.
+ */
+function getGreetingByHour(hour) {
+  if (hour >= 5 && hour < 12) return "Good morning,";
+  if (hour >= 12 && hour < 18) return "Good afternoon,";
+  if (hour >= 18 && hour < 22) return "Good evening,";
+  return "Good night,";
 }
 
 /**
@@ -101,9 +123,7 @@ function writeGreetingName() {
 function writeToDoNumbersInSummary() {
   const tasks = readJsonFromSession("tasks", {});
   const counts = buildSummaryCounts(tasks);
-
   setTextByIdMap(counts);
-
   const deadlineText = buildUrgentDeadlineText(tasks);
   setTextById("toDoUrgentDeadline", deadlineText);
 }
@@ -204,59 +224,76 @@ function buildUrgentDeadlineText(tasks) {
 }
 
 /**
- * Recursively counts occurrences of a specific key/value pair in a nested structure.
+ * Counts how often a specific key-value pair occurs in a nested structure.
  *
- * Traverses arrays and plain objects and increments the counter whenever an
- * object property matches `targetKey` and `targetValue`.
+ * This is the public entry point and delegates the recursive traversal to
+ * {@link countKeyValueInNode}.
  *
  * @function countKeyValue
- * @param {*} root - Root value to traverse (object/array/nested data).
- * @param {string} targetKey - Property name to match.
- * @param {*} targetValue - Property value to match.
- * @returns {number} Number of matches found.
+ * @param {*} root - Root value to traverse (object, array, or primitive).
+ * @param {string} targetKey - Object key to match.
+ * @param {*} targetValue - Value to match for the given key.
+ * @returns {number} Number of occurrences of `targetKey: targetValue`.
  */
 function countKeyValue(root, targetKey, targetValue) {
+  return countKeyValueInNode(root, targetKey, targetValue);
+}
+
+/**
+ * Recursively traverses arrays and objects and accumulates matches for a key-value pair.
+ *
+ * @function countKeyValueInNode
+ * @param {*} node - Current node in the traversal.
+ * @param {string} targetKey - Object key to match.
+ * @param {*} targetValue - Value to match for the given key.
+ * @returns {number} Number of matches found in this node and its children.
+ */
+function countKeyValueInNode(node, targetKey, targetValue) {
   let count = 0;
-  if (Array.isArray(root)) {
-    for (const item of root) {
-      count += countKeyValue(item, targetKey, targetValue);
+  if (Array.isArray(node)) for (const item of node) count += countKeyValueInNode(item, targetKey, targetValue);
+  else if (node && typeof node === "object")
+    for (const [k, v] of Object.entries(node)) {
+      if (k === targetKey && v === targetValue) count++;
+      count += countKeyValueInNode(v, targetKey, targetValue);
     }
-  } else if (root && typeof root === "object") {
-    for (const [key, val] of Object.entries(root)) {
-      if (key === targetKey && val === targetValue) {
-        count++;
-      }
-      count += countKeyValue(val, targetKey, targetValue);
-    }
-  }
   return count;
 }
 
 /**
- * Recursively collects all `finishDate` string values from a nested structure.
+ * Collects all `finishDate` string values from a nested data structure.
  *
- * Traverses arrays and objects, pushing any property named `finishDate`
- * (when it is a string) into the provided result array.
+ * This is the public entry point and returns an array of date strings found
+ * anywhere inside nested objects/arrays by delegating to {@link walkFinishDates}.
  *
  * @function collectFinishDates
- * @param {*} value - Root value to traverse (object/array/nested data).
- * @param {string[]} [result=[]] - Accumulator array for collected date strings.
- * @returns {string[]} Array of collected `finishDate` values.
+ * @param {*} root - Root value to traverse (object, array, or primitive).
+ * @returns {string[]} Array of collected `finishDate` strings.
  */
-function collectFinishDates(value, result = []) {
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      collectFinishDates(item, result);
-    }
-  } else if (value && typeof value === "object") {
-    for (const [key, val] of Object.entries(value)) {
-      if (key === "finishDate" && typeof val === "string") {
-        result.push(val);
-      }
-      collectFinishDates(val, result);
-    }
-  }
+function collectFinishDates(root) {
+  const result = [];
+  walkFinishDates(root, result);
   return result;
+}
+
+/**
+ * Recursively traverses arrays and objects and pushes any `finishDate` string
+ * properties into the provided result array.
+ *
+ * @function walkFinishDates
+ * @param {*} node - Current node in the traversal.
+ * @param {string[]} result - Collector array to append found date strings to.
+ * @returns {void} Does not return a value.
+ */
+function walkFinishDates(node, result) {
+  if (Array.isArray(node)) {
+    for (const item of node) walkFinishDates(item, result);
+    return;
+  }
+  if (!node || typeof node !== "object") return;
+  for (const [key, val] of Object.entries(node)) {
+    if (key === "finishDate" && typeof val === "string") result.push(val);
+    walkFinishDates(val, result);
+  }
 }
 
 /**
@@ -271,7 +308,6 @@ function collectFinishDates(value, result = []) {
  */
 function getNearestFutureDate(dateStrings) {
   const now = new Date();
-
   return dateStrings
     .map((d) => new Date(d))
     .filter((d) => !isNaN(d) && d >= now)
@@ -291,7 +327,6 @@ function getNearestFutureDate(dateStrings) {
  */
 function formatDateEnglishLong(date) {
   if (!(date instanceof Date) || isNaN(date)) return "";
-
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "long",
