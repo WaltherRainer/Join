@@ -1,29 +1,6 @@
-/**
- * Root signup form element.
- *
- * @type {HTMLFormElement|null}
- */
 const signupFormElement = document.getElementById("register_form");
-
-/**
- * Submit button for user registration.
- *
- * @type {HTMLButtonElement|null}
- */
 const registerBtn = document.getElementById("register_btn");
-
-/**
- * Checkbox that confirms privacy/terms acceptance.
- *
- * @type {HTMLInputElement|null}
- */
 const privacyCheckbox = document.getElementById("terms_accepted");
-
-/**
- * All required non-checkbox signup inputs used for live form validation.
- *
- * @type {NodeListOf<HTMLInputElement>|Array<never>}
- */
 const signupInputs = signupFormElement?.querySelectorAll("input[required]:not([type='checkbox'])") || [];
 
 /**
@@ -38,7 +15,6 @@ function extractSignupFormInputs() {
   const emailEl = document.getElementById("email_sign_up");
   const pwEl = document.getElementById("new_user_password");
   const nameEl = document.getElementById("given_name");
-
   return {
     email: emailEl?.value?.trim() || "",
     password: pwEl?.value || "",
@@ -104,12 +80,10 @@ function validateSignupSubmission(email, password, givenName) {
     showEmailError();
     return false;
   }
-
   if (!passwordsMatch()) {
     showSignupPasswordError();
     return false;
   }
-
   return Boolean(validateSignupInputs(email, password, givenName));
 }
 
@@ -152,12 +126,9 @@ function buildSignupPayload(email, password, givenName) {
  */
 async function addUser() {
   const { email, password, givenName } = extractSignupFormInputs();
-
   if (!validateSignupSubmission(email, password, givenName)) return;
-
   const emailAvailable = await isSignupEmailAvailable(email);
   if (!emailAvailable) return;
-
   const dataObj = buildSignupPayload(email, password, givenName);
   await registerNewUser(dataObj);
   completeSignup();
@@ -243,11 +214,8 @@ function showSignupOverlay(overlay) {
  * @returns {{slideMs: number, holdMs: number}} Resolved slide and hold durations in milliseconds.
  */
 function getSignupSuccessToastTimings() {
-  const slideMs =
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
-  const holdMs =
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
-
+  const slideMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
+  const holdMs = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
   return { slideMs, holdMs };
 }
 
@@ -260,7 +228,6 @@ function getSignupSuccessToastTimings() {
 function hideSignupOverlayAndActivateLogin(overlay) {
   overlay.classList.remove("is_animating", "is_visible");
   overlay.setAttribute("aria-hidden", "true");
-
   if (typeof activateLogIn === "function") {
     activateLogIn();
   } else {
@@ -293,38 +260,54 @@ function scheduleSignupOverlayHide(overlay, slideMs, holdMs) {
 function showSignupSuccessToast() {
   const overlay = document.getElementById("signup_success_overlay");
   if (!overlay) return;
-
   showSignupOverlay(overlay);
   const { slideMs, holdMs } = getSignupSuccessToastTimings();
   scheduleSignupOverlayHide(overlay, slideMs, holdMs);
 }
 
 /**
- * Clears all fields and error states in the signup form.
+ * Resets the sign-up form inputs and clears all validation UI states.
  *
- * Resets input values, unchecks checkboxes, removes error classes,
- * and hides warning messages.
+ * Locates the sign-up form, clears input values/checkboxes, removes error classes,
+ * and delegates warning reset to {@link clearSignupWarnings}.
  *
+ * @function resetSignupForm
  * @returns {void}
  */
 function resetSignupForm() {
   const form = document.querySelector(".sign_up_form form");
   if (!form) return;
-
-  form.querySelectorAll("input").forEach((input) => {
-    if (input.type === "checkbox") {
-      input.checked = false;
-    } else {
-      input.value = "";
-    }
-  });
-
+  form.querySelectorAll("input").forEach(resetInputValue);
   form.querySelectorAll(".has_error").forEach((el) => el.classList.remove("has_error"));
+  clearSignupWarnings(form);
+}
 
-  const warningPassword = form.querySelector("#warning_signup_failed");
-  const warningEmail = form.querySelector("#warning_email_invalid");
-  warningPassword?.classList.remove("visible");
-  warningEmail?.classList.remove("visible");
+/**
+ * Clears sign-up warning messages inside the given form.
+ *
+ * Removes the `visible` class from known warning elements.
+ *
+ * @function clearSignupWarnings
+ * @param {HTMLFormElement} form - Sign-up form element containing warning nodes.
+ * @returns {void}
+ */
+function clearSignupWarnings(form) {
+  form.querySelector("#warning_signup_failed")?.classList.remove("visible");
+  form.querySelector("#warning_email_invalid")?.classList.remove("visible");
+}
+
+/**
+ * Resets a single input element to its default state.
+ *
+ * Unchecks checkboxes and clears the value for other input types.
+ *
+ * @function resetInputValue
+ * @param {HTMLInputElement} input - Input element to reset.
+ * @returns {void}
+ */
+function resetInputValue(input) {
+  if (input.type === "checkbox") input.checked = false;
+  else input.value = "";
 }
 
 /**
@@ -338,9 +321,7 @@ function resetSignupForm() {
 function checkForm() {
   const allFilled = [...signupInputs].every((input) => input.value.trim() !== "");
   const privacyAccepted = privacyCheckbox?.checked;
-
   const isValid = allFilled && privacyAccepted;
-
   registerBtn?.classList.toggle("is-disabled", !isValid);
   registerBtn?.setAttribute("aria-disabled", String(!isValid));
 }
@@ -356,7 +337,6 @@ function clearFieldError(event) {
   const input = event.target;
   const inputBox = input.closest(".input_box");
   inputBox?.classList.remove("has_error");
-  
   if (input.id === "email_sign_up") {
     document.getElementById("warning_email_invalid")?.classList.remove("visible");
   } else if (input.id === "new_user_password" || input.id === "confirm_user_password") {
@@ -374,7 +354,6 @@ function clearFieldError(event) {
  */
 function initializeSignupValidation() {
   if (!signupInputs.length || !privacyCheckbox) return;
-
   signupInputs.forEach((input) => {
     input.addEventListener("input", checkForm);
     input.addEventListener("input", clearFieldError);

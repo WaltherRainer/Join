@@ -1,20 +1,13 @@
 /**
- * Login validation utility module.
+ * Provides a small login validation module with a private scope.
  *
- * Provides input validation and UI error helpers for the login form.
+ * Exposes helper methods to validate required login fields and email format,
+ * display authentication/validation warnings, and reset error states while
+ * the user is typing.
  *
- * @type {{
- *   validate: (inputs: {emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: HTMLElement|null}) => boolean,
- *   showAuthError: (warningElement: HTMLElement|null) => void,
- *   enableErrorReset: (formElement: HTMLFormElement|null) => void
- * }}
+ * @type {{validate: (inputs: {emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: (HTMLElement|null)}) => boolean, showAuthError: (warningElement: (HTMLElement|null)) => void, enableErrorReset: (formElement: (HTMLFormElement|null)) => void}}
  */
 const loginValidation = (() => {
-  /**
-   * Immutable message set used by login validation feedback.
-   *
-   * @type {{REQUIRED: string, EMAIL_INVALID: string, AUTH_FAILED: string}}
-   */
   const LOGIN_MESSAGES = Object.freeze({
     REQUIRED: "Please enter email and password.",
     EMAIL_INVALID: "Please enter a valid email address.",
@@ -70,30 +63,43 @@ const loginValidation = (() => {
   }
 
   /**
-   * Validates login form inputs for required values and email format.
+   * Validates login inputs for required values and email format.
    *
-   * @param {{emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: HTMLElement|null}} inputs - Extracted login input values and elements.
+   * Clears previous warning/error states, then checks required fields and
+   * delegates required-field handling to {@link validateLoginRequiredFields}.
+   *
+   * @function validate
+   * @param {{emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: HTMLElement|null}} inputs
    * @returns {boolean} True when all login checks pass.
    */
   function validate(inputs) {
     clearWarning(inputs.warningElement);
     toggleInputError(inputs.emailInput, false);
     toggleInputError(inputs.passwordInput, false);
-
-    if (!inputs.email || !inputs.password) {
-      setWarning(inputs.warningElement, LOGIN_MESSAGES.REQUIRED);
-      if (!inputs.email) toggleInputError(inputs.emailInput, true);
-      if (!inputs.password) toggleInputError(inputs.passwordInput, true);
-      return false;
-    }
-
+    if (!validateLoginRequiredFields(inputs)) return false;
     if (!isValidEmail(inputs.email)) {
       toggleInputError(inputs.emailInput, true);
       setWarning(inputs.warningElement, LOGIN_MESSAGES.EMAIL_INVALID);
       return false;
     }
-
     return true;
+  }
+
+  /**
+   * Validates that email and password are present and sets UI warnings if not.
+   *
+   * Marks missing fields as invalid and shows the required-fields message.
+   *
+   * @function validateLoginRequiredFields
+   * @param {{emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: HTMLElement|null}} inputs
+   * @returns {boolean} True when both required fields are provided.
+   */
+  function validateLoginRequiredFields(inputs) {
+    if (inputs.email && inputs.password) return true;
+    setWarning(inputs.warningElement, LOGIN_MESSAGES.REQUIRED);
+    if (!inputs.email) toggleInputError(inputs.emailInput, true);
+    if (!inputs.password) toggleInputError(inputs.passwordInput, true);
+    return false;
   }
 
   /**
@@ -114,14 +120,11 @@ const loginValidation = (() => {
    */
   function enableErrorReset(formElement) {
     if (!formElement) return;
-
     const inputBoxes = formElement.querySelectorAll(".input_box");
     const warningElement = formElement.querySelector("#warning_login_failed");
-
     inputBoxes.forEach((box) => {
       const input = box.querySelector("input, textarea, select");
       if (!input) return;
-
       input.addEventListener("input", () => {
         inputBoxes.forEach((item) => item.classList.remove("has_error"));
         clearWarning(warningElement);
