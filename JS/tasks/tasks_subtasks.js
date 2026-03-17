@@ -402,6 +402,11 @@ function deleteSubtask(state, idx) {
     syncSubtasksListInp(state);
 }
 
+/**
+ * Placeholder for removing the complete subtask array.
+ *
+ * @returns {void}
+ */
 function deleteSubtaskArray() {
     
 }

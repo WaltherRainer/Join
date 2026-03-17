@@ -1,10 +1,25 @@
+/** @type {Object<string, Object>} In-memory cache of user records. */
 let users = {};
+
+/** @type {string} ID of the currently active user in the session. */
 let activeUserId = "";
+
+/** @type {Object<string, Object>} In-memory cache of task records. */
 let tasks = {};
+
+/** @type {string} Display name of the currently active user. */
 let activeUserName = "";
+
+/** @type {Object<string, Array|Object>} Locally staged subtasks before persistence. */
 let localSubtasks = {};
+
+/** @type {number} Available preset user colors. */
 const USER_COLOR_COUNT = 15;
+
+/** @type {Object<string, *>} Snapshot of session-scoped data. */
 let joinSessionStorageObject = {};
+
+/** @type {Promise<Object>|null} Promise cache for users loading state. */
 let usersReady = null;
 
 /**
