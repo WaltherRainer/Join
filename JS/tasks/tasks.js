@@ -1,4 +1,15 @@
+/**
+ * Temporarily stores a detached host element used by task UI flows.
+ *
+ * @type {HTMLElement|null}
+ */
 let parkedHost = null;
+
+/**
+ * Maps numeric task status codes to display labels.
+ *
+ * @type {{[key: number]: string}}
+ */
 const statusTypes = {
   0: "To Do",
   1: "In Progress",

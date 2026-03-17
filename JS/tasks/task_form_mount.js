@@ -46,12 +46,26 @@ function enforceProtectedPageAuth() {
   return false;
 }
 
-// Re-check auth when a page is restored via browser back/forward cache.
+/**
+ * Re-validates authentication on page show events.
+ *
+ * Ensures that protected pages are only visible when a valid session exists,
+ * and redirects to the login page if necessary.
+ *
+ * @returns {void}
+ */
 window.addEventListener("pageshow", () => {
   enforceProtectedPageAuth();
 });
 
-// Hide protected pages before they are cached to avoid brief stale content on back/forward.
+/**
+ * Hides the page content before it is cached by the browser.
+ *
+ * Listens for the `pagehide` event and sets the document visibility to hidden
+ * if the current page is protected, preventing cached snapshots from showing stale content.
+ * 
+ * @returns {void}
+ */
 window.addEventListener("pagehide", () => {
   if (!isProtectedPage()) return;
   document.documentElement.style.visibility = "hidden";
@@ -214,6 +228,65 @@ function initializeClearButton(form) {
 }
 
 /**
+ * Sets a form control value only when a value is provided.
+ *
+ * @function setFormValueIfPresent
+ * @param {HTMLFormElement} form - Form containing the target element.
+ * @param {string} fieldName - Name of the form control in `form.elements`.
+ * @param {*} value - Value to apply when not null/undefined.
+ * @returns {void}
+ */
+function setFormValueIfPresent(form, fieldName, value) {
+  if (value == null) return;
+  const field = form.elements[fieldName];
+  if (field) field.value = value;
+}
+
+/**
+ * Applies simple preset fields that map directly to form controls.
+ *
+ * @function applyBasicPresetFields
+ * @param {HTMLFormElement} form - Form to update.
+ * @param {Object} preset - Preset values object.
+ * @returns {void}
+ */
+function applyBasicPresetFields(form, preset) {
+  setFormValueIfPresent(form, "task_titel", preset.titel);
+  setFormValueIfPresent(form, "task_descr", preset.description);
+  setFormValueIfPresent(form, "task_due_date", preset.finishDate);
+  setFormValueIfPresent(form, "task_cat", preset.type);
+}
+
+/**
+ * Applies the preset priority by checking the matching radio input.
+ *
+ * @function applyPriorityPreset
+ * @param {HTMLFormElement} form - Form containing priority controls.
+ * @param {string|null|undefined} priority - Priority value to select.
+ * @returns {void}
+ */
+function applyPriorityPreset(form, priority) {
+  if (priority == null) return;
+  const radio = form.querySelector(`input[name="priority"][value="${priority}"]`);
+  if (radio) radio.checked = true;
+}
+
+/**
+ * Stores structured preset data into a hidden input as JSON.
+ *
+ * @function setHiddenJsonField
+ * @param {HTMLFormElement} form - Form containing the hidden field.
+ * @param {string} selector - CSS selector for the hidden field.
+ * @param {*|null|undefined} value - Value to serialize when present.
+ * @returns {void}
+ */
+function setHiddenJsonField(form, selector, value) {
+  if (value == null) return;
+  const hidden = form.querySelector(selector);
+  if (hidden) hidden.value = JSON.stringify(value);
+}
+
+/**
  * Applies preset task values to the form.
  *
  * Supports all major fields including title, description, due date,
@@ -227,26 +300,10 @@ function initializeClearButton(form) {
 function populateFormWithPreset(form, preset) {
   if (!preset) return;
 
-  if (preset.titel != null) form.elements.task_titel.value = preset.titel;
-  if (preset.description != null) form.elements.task_descr.value = preset.description;
-  if (preset.finishDate != null) form.elements.task_due_date.value = preset.finishDate;
-
-  if (preset.priority != null) {
-    const radio = form.querySelector(`input[name="priority"][value="${preset.priority}"]`);
-    if (radio) radio.checked = true;
-  }
-
-  if (preset.type != null) form.elements.task_cat.value = preset.type;
-
-  if (preset?.assignedTo != null) {
-    const hiddenAssigned = form.querySelector("#assigned_to_input");
-    if (hiddenAssigned) hiddenAssigned.value = JSON.stringify(preset.assignedTo);
-  }
-
-  if (preset?.subTasks != null) {
-    const hidden = form.querySelector("#subtasks_list_input");
-    if (hidden) hidden.value = JSON.stringify(preset.subTasks);
-  }
+  applyBasicPresetFields(form, preset);
+  applyPriorityPreset(form, preset.priority);
+  setHiddenJsonField(form, "#assigned_to_input", preset.assignedTo);
+  setHiddenJsonField(form, "#subtasks_list_input", preset.subTasks);
 }
 
 /**
@@ -308,6 +365,55 @@ function collectFormData(form) {
 }
 
 /**
+ * Executes a custom submit handler when one is provided.
+ *
+ * @async
+ * @function runCustomSubmitHandler
+ * @param {Function|null} onSubmitData - Optional custom submit callback.
+ * @param {Object} data - Normalized task data.
+ * @param {HTMLFormElement} form - Submitted form element.
+ * @returns {Promise<boolean>} True when submission was handled by the custom callback.
+ */
+async function runCustomSubmitHandler(onSubmitData, data, form) {
+  if (typeof onSubmitData !== "function") return false;
+  await onSubmitData(data, form);
+  return true;
+}
+
+/**
+ * Executes the optional callback after a task has been saved.
+ *
+ * @function invokeAfterSaved
+ * @param {Function|null} afterSaved - Optional callback to execute.
+ * @param {Object} task - Newly created task object.
+ * @returns {void}
+ */
+function invokeAfterSaved(afterSaved, task) {
+  if (typeof afterSaved === "function") afterSaved(task);
+}
+
+/**
+ * Saves a new task using the shared storage helper.
+ *
+ * @async
+ * @function submitTaskData
+ * @param {Object} data - Normalized task data.
+ * @param {number} taskStatus - Initial status for the created task.
+ * @param {string} toastId - Toast overlay id for success feedback.
+ * @param {Function|null} afterSaved - Optional callback executed after successful save.
+ * @returns {Promise<void>}
+ */
+async function submitTaskData(data, taskStatus, toastId, afterSaved) {
+  const newTaskObj = { ...data, status: taskStatus };
+
+  await addTaskData(newTaskObj, {
+    toastId,
+    afterDone: () => invokeAfterSaved(afterSaved, newTaskObj),
+    refreshAfter: false,
+  });
+}
+
+/**
  * Handles task form submission for page and modal contexts.
  *
  * Validates the form, collects form data, supports custom submit hooks,
@@ -331,18 +437,10 @@ async function handleTaskFormSubmit(event, form, { toastId, taskStatus, afterSav
 
   const data = collectFormData(form);
 
-  if (typeof onSubmitData === "function") {
-    await onSubmitData(data, form);
-    return;
-  }
+  const handledByCustomSubmit = await runCustomSubmitHandler(onSubmitData, data, form);
+  if (handledByCustomSubmit) return;
 
-  const newTaskObj = { ...data, status: taskStatus };
-
-  await addTaskData(newTaskObj, {
-    toastId,
-    afterDone: () => typeof afterSaved === "function" && afterSaved(newTaskObj),
-    refreshAfter: false,
-  });
+  await submitTaskData(data, taskStatus, toastId, afterSaved);
 
   clearTaskForm(form);
 }
@@ -392,7 +490,6 @@ async function mountTaskForm(
 
   initializeInputValidation(form);
   initializeTaskCategoryValidation(form);
-
   initializeFormSubmit(form, { toastId, taskStatus, afterSaved, onSubmitData });
 
   return form;

@@ -1,40 +1,121 @@
+/**
+ * Initializes the subtasks input module for a form.
+ *
+ * Guards against duplicate initialization, resolves required UI elements,
+ * creates the module state, wires event handlers, and renders initial subtasks.
+ *
+ * @param {HTMLFormElement|null} form - Form containing the subtasks controls.
+ * @returns {void}
+ */
 function initSubtasksInput(form) {
-  if (!form) return;
-  if (form.dataset.subtasksInit === "1") return;
-  form.dataset.subtasksInit = "1";
+    if (!shouldInitializeSubtasks(form)) return;
 
-  const inputSubTasks = form.querySelector("#input_subtasks");
-  const subTaskListElem = form.querySelector("#subtasks_list");
-  const subTaskListInp = form.querySelector("#subtasks_list_input");
+    const subTaskUi = getSubtaskUiElements(form);
+    if (!subTaskUi) return;
 
-  if (!inputSubTasks || !subTaskListElem || !subTaskListInp) return;
+    const actionButtons = getSubtaskActionButtons(form, subTaskUi.inputSubTasks);
+    if (!actionButtons) return;
 
-  const rowRoot = inputSubTasks.closest(".form_row") || form;
-  const btnClear = rowRoot.querySelector(".subtasks_clear");
-  const btnAdd = rowRoot.querySelector(".subtasks_add");
-  if (!btnClear || !btnAdd) return;
+    const state = createSubtaskState(subTaskUi);
+    form._subtaskState = state;
 
-  const subTaskUi = {
-    inputSubTasks,
-    SubTaskListElem: subTaskListElem,
-    SubTaskListInp: subTaskListInp
-  };
+    initializeSubtaskActionButtons(actionButtons);
+    wireSubtaskInputEvents(state, actionButtons);
+    wireSubtaskListEvents(state);
+    renderSubtasks(state);
+    syncSubtasksListInp(state);
+}
 
-  const state = { subtasks: [], editingIndex: null, subTaskUi };
 
-  state.subtasks = safeParseArray(subTaskListInp.value);
-  form._subtaskState = state;
+/**
+ * Checks whether subtasks initialization should run and marks the form as initialized.
+ *
+ * @param {HTMLFormElement|null} form - Candidate form.
+ * @returns {boolean} True when initialization should proceed.
+ */
+function shouldInitializeSubtasks(form) {
+    if (!form) return false;
+    if (form.dataset.subtasksInit === "1") return false;
+    form.dataset.subtasksInit = "1";
+    return true;
+}
 
-  btnClear.innerHTML = delCross({ width: 18, height: 18 });
-  btnAdd.innerHTML = addCross({ width: 18, height: 18 });
 
-  btnClear.onclick = () => clearSubtaskInput(state);
-  btnAdd.onclick = () => addSubtaskFromInput(state);
-  inputSubTasks.onkeydown = (e) => onSubtaskKeydown(state, e);
+/**
+ * Resolves required DOM elements for the subtasks module.
+ *
+ * @param {HTMLFormElement} form - Form containing subtask controls.
+ * @returns {{inputSubTasks: HTMLInputElement, SubTaskListElem: HTMLElement, SubTaskListInp: HTMLInputElement}|null} UI object or null when incomplete.
+ */
+function getSubtaskUiElements(form) {
+    const inputSubTasks = form.querySelector("#input_subtasks");
+    const subTaskListElem = form.querySelector("#subtasks_list");
+    const subTaskListInp = form.querySelector("#subtasks_list_input");
 
-  wireSubtaskListEvents(state);
-  renderSubtasks(state);
-  syncSubtasksListInp(state);
+    if (!inputSubTasks || !subTaskListElem || !subTaskListInp) return null;
+
+    return {
+        inputSubTasks,
+        SubTaskListElem: subTaskListElem,
+        SubTaskListInp: subTaskListInp,
+    };
+}
+
+
+/**
+ * Resolves the clear/add action buttons for subtask input.
+ *
+ * @param {HTMLFormElement} form - Parent form.
+ * @param {HTMLInputElement} inputSubTasks - Subtask input element.
+ * @returns {{btnClear: HTMLButtonElement, btnAdd: HTMLButtonElement}|null} Action buttons or null when missing.
+ */
+function getSubtaskActionButtons(form, inputSubTasks) {
+    const rowRoot = inputSubTasks.closest(".form_row") || form;
+    const btnClear = rowRoot.querySelector(".subtasks_clear");
+    const btnAdd = rowRoot.querySelector(".subtasks_add");
+    if (!btnClear || !btnAdd) return null;
+    return { btnClear, btnAdd };
+}
+
+
+/**
+ * Creates the internal subtasks state object.
+ *
+ * @param {{inputSubTasks: HTMLInputElement, SubTaskListElem: HTMLElement, SubTaskListInp: HTMLInputElement}} subTaskUi - Resolved UI references.
+ * @returns {{subtasks: Array<{title: string, done: boolean}>, editingIndex: number|null, subTaskUi: Object}} Initialized module state.
+ */
+function createSubtaskState(subTaskUi) {
+    return {
+        subtasks: safeParseArray(subTaskUi.SubTaskListInp.value),
+        editingIndex: null,
+        subTaskUi,
+    };
+}
+
+
+/**
+ * Renders the clear/add button icons.
+ *
+ * @param {{btnClear: HTMLButtonElement, btnAdd: HTMLButtonElement}} actionButtons - Subtask action buttons.
+ * @returns {void}
+ */
+function initializeSubtaskActionButtons(actionButtons) {
+    actionButtons.btnClear.innerHTML = delCross({ width: 18, height: 18 });
+    actionButtons.btnAdd.innerHTML = addCross({ width: 18, height: 18 });
+}
+
+
+/**
+ * Wires add/clear/keydown handlers for the subtasks input controls.
+ *
+ * @param {Object} state - Subtasks UI state object.
+ * @param {{btnClear: HTMLButtonElement, btnAdd: HTMLButtonElement}} actionButtons - Subtask action buttons.
+ * @returns {void}
+ */
+function wireSubtaskInputEvents(state, actionButtons) {
+    actionButtons.btnClear.onclick = () => clearSubtaskInput(state);
+    actionButtons.btnAdd.onclick = () => addSubtaskFromInput(state);
+    state.subTaskUi.inputSubTasks.onkeydown = (e) => onSubtaskKeydown(state, e);
 }
 
 
