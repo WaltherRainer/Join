@@ -14,21 +14,64 @@ async function deleteTask(taskId) {
   const users = modal?.__users;
 
   try {
-    await deleteData(`tasks/${id}`);
-    const tasks = loadTasksFromSession();
-    delete tasks[id];
-    saveTasksToSessionStorage(tasks);
-    dirtyTaskIds?.delete?.(id);
-    modal?.close?.();
-    if (users) {
-      loadTaskBoard(tasks, users);
-    } else {
-      console.warn("deleteTask: users missing on modal -> board not rerendered");
-    }
+    const tasks = await deleteTaskAndSyncLocalState(id);
+    closeTaskModal(modal);
+    rerenderBoardAfterDelete(tasks, users);
   } catch (err) {
-    console.error("deleteTask failed", err);
-    alert("Löschen fehlgeschlagen. Details in der Konsole.");
+    handleDeleteTaskError(err);
   }
+}
+
+/**
+ * Deletes a task on the server and synchronizes local session state.
+ *
+ * @async
+ * @param {string} id - ID of the task to delete.
+ * @returns {Promise<Object>} Updated tasks object after deletion.
+ */
+async function deleteTaskAndSyncLocalState(id) {
+  await deleteData(`tasks/${id}`);
+  const tasks = loadTasksFromSession();
+  delete tasks[id];
+  saveTasksToSessionStorage(tasks);
+  dirtyTaskIds?.delete?.(id);
+  return tasks;
+}
+
+/**
+ * Closes the task details modal if available.
+ *
+ * @param {HTMLDialogElement|null} modal - Task details modal element.
+ * @returns {void}
+ */
+function closeTaskModal(modal) {
+  modal?.close?.();
+}
+
+/**
+ * Re-renders the board after a task was deleted.
+ *
+ * @param {Object} tasks - Updated tasks object.
+ * @param {Object|undefined} users - Users data object.
+ * @returns {void}
+ */
+function rerenderBoardAfterDelete(tasks, users) {
+  if (users) {
+    loadTaskBoard(tasks, users);
+    return;
+  }
+  console.warn("deleteTask: users missing on modal -> board not rerendered");
+}
+
+/**
+ * Handles delete-task errors consistently.
+ *
+ * @param {unknown} err - Thrown error value.
+ * @returns {void}
+ */
+function handleDeleteTaskError(err) {
+  console.error("deleteTask failed", err);
+  alert("Löschen fehlgeschlagen. Details in der Konsole.");
 }
 
 /**
@@ -179,6 +222,57 @@ function syncEditFormDisplay(form, users) {
 }
 
 /**
+ * Applies base edit-mode setup on form and modal.
+ *
+ * @param {HTMLFormElement} form - The form element.
+ * @param {HTMLDialogElement} modal - The modal dialog element.
+ * @returns {void}
+ */
+function applyEditModeBase(form, modal) {
+  form.classList.add("edit_mode");
+  renderIcons(modal);
+  installEditDirtyTracking(form);
+}
+
+/**
+ * Hides the cancel button in edit mode.
+ *
+ * @param {HTMLFormElement} form - The form element.
+ * @returns {void}
+ */
+function hideEditModeCancelButton(form) {
+  const cancelBtn = form.querySelector("#clear_task_form_btn");
+  cancelBtn?.classList.add("is-hidden");
+}
+
+/**
+ * Sets the submit button label for edit mode.
+ *
+ * @param {HTMLFormElement} form - The form element.
+ * @returns {void}
+ */
+function applyEditModeSubmitLabel(form) {
+  setSubmitLabel(form, "OK");
+}
+
+/**
+ * Adds edit mode class to form layout sections.
+ *
+ * @param {HTMLFormElement} form - The form element.
+ * @returns {void}
+ */
+function applyEditModeLayoutClasses(form) {
+  [
+    ".form_actions",
+    ".add_task_form_right",
+    ".add_task_form_left",
+    ".add_task_form_wrapper",
+  ].forEach((selector) => {
+    form.querySelector(selector)?.classList.add("edit_mode");
+  });
+}
+
+/**
  * Sets up UI for edit mode.
  *
  * Adds edit mode classes and modifies button labels/visibility.
@@ -187,27 +281,10 @@ function syncEditFormDisplay(form, users) {
  * @param {HTMLDialogElement} modal - The modal dialog element.
  */
 function setupEditModeUI(form, modal) {
-  form.classList.add("edit_mode");
-  renderIcons(modal);
-  installEditDirtyTracking(form);
-
-  const cancelBtn = form.querySelector("#clear_task_form_btn");
-  cancelBtn?.classList.add("is-hidden");
-
-  const submitBtn = form.querySelector("#submit_task_form_btn");
-  submitBtn.querySelector(".btn_label").textContent = "OK";
-
-  const actionBtn = form.querySelector(".form_actions");
-  actionBtn?.classList.add("edit_mode");
-
-  const addTaskFormRight = form.querySelector(".add_task_form_right");
-  addTaskFormRight?.classList.add("edit_mode");
-
-  const addTaskFormLeft = form.querySelector(".add_task_form_left");
-  addTaskFormLeft?.classList.add("edit_mode");
-
-  const addTaskFormWrapper = form.querySelector(".add_task_form_wrapper");
-  addTaskFormWrapper?.classList.add("edit_mode");
+  applyEditModeBase(form, modal);
+  hideEditModeCancelButton(form);
+  applyEditModeSubmitLabel(form);
+  applyEditModeLayoutClasses(form);
 }
 
 /**

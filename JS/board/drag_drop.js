@@ -52,6 +52,55 @@ function findDropPosition(event, taskElements) {
 }
 
 /**
+ * Removes all currently visible drag placeholders from the board.
+ *
+ * @returns {void}
+ */
+function removeAllDragPlaceholders() {
+  document.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
+}
+
+/**
+ * Finds the task element before which the placeholder should be inserted.
+ *
+ * @param {DragEvent} event - The dragover event.
+ * @param {HTMLElement} dropZone - The target drop zone.
+ * @returns {HTMLElement|null} Task element to insert before, or null to append at end.
+ */
+function getInsertBeforeElement(event, dropZone) {
+  const taskElements = Array.from(dropZone.querySelectorAll(".t_task"));
+  const insertIndex = findDropPosition(event, taskElements);
+  return taskElements[insertIndex] || null;
+}
+
+/**
+ * Creates the drag placeholder element.
+ *
+ * @returns {HTMLDivElement} New placeholder element.
+ */
+function createDragPlaceholder() {
+  const placeholder = document.createElement("div");
+  placeholder.className = "drag-placeholder";
+  return placeholder;
+}
+
+/**
+ * Inserts the drag placeholder into the drop zone.
+ *
+ * @param {HTMLElement} dropZone - The target drop zone.
+ * @param {HTMLElement|null} insertBeforeElement - Element to insert before, or null to append.
+ * @param {HTMLDivElement} placeholder - Placeholder element to insert.
+ * @returns {void}
+ */
+function insertDragPlaceholder(dropZone, insertBeforeElement, placeholder) {
+  if (insertBeforeElement) {
+    insertBeforeElement.parentNode.insertBefore(placeholder, insertBeforeElement);
+  } else {
+    dropZone.appendChild(placeholder);
+  }
+}
+
+/**
  * Allows drop operation and shows visual placeholder.
  *
  * Prevents default behavior, removes old placeholders, and inserts new placeholder
@@ -62,24 +111,12 @@ function findDropPosition(event, taskElements) {
 function allowDrop(event) {
   event.preventDefault();
   const dropZone = event.currentTarget;
-  
-  document.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
-  
-  const taskElements = Array.from(dropZone.querySelectorAll(".t_task"));
 
-  dropZone.querySelectorAll(".drag-placeholder").forEach((el) => el.remove());
+  removeAllDragPlaceholders();
 
-  let insertBeforeElement = null;
-  insertBeforeElement = taskElements[findDropPosition(event, taskElements)];
-
-  const placeholder = document.createElement("div");
-  placeholder.className = "drag-placeholder";
-
-  if (insertBeforeElement) {
-    insertBeforeElement.parentNode.insertBefore(placeholder, insertBeforeElement);
-  } else {
-    dropZone.appendChild(placeholder);
-  }
+  const insertBeforeElement = getInsertBeforeElement(event, dropZone);
+  const placeholder = createDragPlaceholder();
+  insertDragPlaceholder(dropZone, insertBeforeElement, placeholder);
 }
 
 /**

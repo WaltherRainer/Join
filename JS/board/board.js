@@ -1,5 +1,22 @@
+/**
+ * Tracks task IDs with unsaved local changes.
+ *
+ * @type {Set<string>}
+ */
 const dirtyTaskIds = new Set();
+
+/**
+ * ID of the task currently being dragged.
+ *
+ * @type {string|null|undefined}
+ */
 let currentDraggedTaskId;
+
+/**
+ * Indicates whether Escape-key handling for the task modal is already bound.
+ *
+ * @type {boolean}
+ */
 let taskModalEscBound = false;
 
 /**
@@ -31,6 +48,66 @@ function loadUsersFromSession() {
 }
 
 /**
+ * Binds the primary add-task modal button.
+ *
+ * @returns {boolean} True when the button exists and was bound.
+ */
+function bindPrimaryAddTaskButton() {
+  const btn = document.getElementById("openAddTaskModalBtn");
+  if (!btn) return false;
+  btn.addEventListener("click", () => openAddTaskModal(0));
+  return true;
+}
+
+/**
+ * Binds all status-specific add-task trigger buttons.
+ *
+ * @returns {void}
+ */
+function bindStatusAddTaskTriggers() {
+  const buttons = document.querySelectorAll(".add_task_trigger");
+  if (!buttons) return;
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const status = Number(button.dataset.status) || 0;
+      openAddTaskModal(status);
+    });
+  });
+}
+
+/**
+ * Handles delegated click events inside task sections.
+ *
+ * @param {MouseEvent} e - Click event.
+ * @param {Object} users - Users data object.
+ * @returns {void}
+ */
+function handleTaskSectionClick(e, users) {
+  if (e.target.tagName === "SELECT") return;
+  const card = e.target.closest(".t_task");
+  if (!card) return;
+  const taskId = card.dataset.taskId;
+  if (!taskId) return;
+  openTaskModal(taskId, users);
+}
+
+/**
+ * Binds click handling for all task sections.
+ *
+ * @param {Object} users - Users data object.
+ * @returns {void}
+ */
+function bindTaskSectionClickHandlers(users) {
+  const taskSect = document.querySelectorAll(".task_section");
+  if (taskSect.length === 0) return;
+
+  taskSect.forEach((section) => {
+    section.addEventListener("click", (e) => handleTaskSectionClick(e, users));
+  });
+}
+
+/**
  * Initializes event listeners for board interactions.
  *
  * Sets up click handlers for add task buttons and task card clicks.
@@ -38,31 +115,10 @@ function loadUsersFromSession() {
  * @param {Object} users - Users data object.
  */
 function initBoardEventList(users) {
-  const btn = document.getElementById("openAddTaskModalBtn");
-  if (!btn) return;
-  btn.addEventListener("click", () => openAddTaskModal(0));
-  const buttons = document.querySelectorAll(".add_task_trigger");
-  if (!buttons) return;
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const status = Number(button.dataset.status) || 0;
-      openAddTaskModal(status);
-    });
-});
-
-  const taskSect = document.querySelectorAll(".task_section");
-  if (taskSect.length === 0) return;
-
-  taskSect.forEach((section) => {
-    section.addEventListener("click", (e) => {
-      if (e.target.tagName === "SELECT") return;
-      const card = e.target.closest(".t_task");
-      if (!card) return;
-      const taskId = card.dataset.taskId;
-      if (!taskId) return;
-      openTaskModal(taskId, users);
-    });
-  });
+  const hasPrimaryButton = bindPrimaryAddTaskButton();
+  if (!hasPrimaryButton) return;
+  bindStatusAddTaskTriggers();
+  bindTaskSectionClickHandlers(users);
 }
 
 /**
@@ -114,8 +170,6 @@ function switchStatusContainer(taskId, newStatusNum) {
   
   const newStatus = Number(newStatusNum);
   const tasksInStatus = sortTasksInStatus(newStatus, tasks);
-  
-  // Insert at the beginning (position 0)
   const insertIndex = 0;
   deleteAndAddTaskInStatusPosition(tasksInStatus, insertIndex, tasks);
   reRenderTasksInOrder(tasksInStatus, tasks, users, newStatus);
@@ -150,7 +204,6 @@ function renderItems(items, containers, users) {
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
 
-  // Sortiere Tasks nach ihrer Reihenfolge innerhalb der Kategorie
   const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
   const isDraggable = window.innerWidth > 1260;
   sortedItems.forEach((task) => {
