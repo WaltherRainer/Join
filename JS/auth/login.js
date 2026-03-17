@@ -1,6 +1,29 @@
+/**
+ * Container element for the signup form panel.
+ *
+ * @type {HTMLElement|null}
+ */
 const signInContainer = document.getElementById("sign_up_form");
+
+/**
+ * Container element for the login form panel.
+ *
+ * @type {HTMLElement|null}
+ */
 const logInContainer = document.getElementById("login_wrapper");
+
+/**
+ * Header element on the index page used for login/signup transitions.
+ *
+ * @type {HTMLElement|null}
+ */
 const indexHeader = document.getElementById("index_header");
+
+/**
+ * Supported icon names for password-field UI states.
+ *
+ * @type {{LOCK: string, EYE_CLOSED: string, EYE_OPEN: string}}
+ */
 const ICON = Object.freeze({
   LOCK: "lock",
   EYE_CLOSED: "eye_closed",
@@ -336,6 +359,11 @@ function accessGranted(email, password) {
   return false;
 }
 
+/**
+ * Initial login form reference for wiring input error reset handlers.
+ *
+ * @type {HTMLFormElement|null}
+ */
 const loginForm = document.querySelector(".login_form form");
 enableFormErrorReset(loginForm);
 
@@ -367,6 +395,14 @@ function activateLogIn() {
   enableFormErrorReset(loginForm);
 }
 
+/**
+ * Runs the intro animation once the full page has loaded.
+ *
+ * Marks the body as loaded, moves the logo to its corner position,
+ * and reveals page content after a short delay.
+ *
+ * @returns {void}
+ */
 window.addEventListener("load", () => {
   const indexBody = document.getElementById("index_body");
   const logoContainer = document.getElementById("logo_container");
@@ -380,6 +416,14 @@ window.addEventListener("load", () => {
   }, 1000);
 });
 
+/**
+ * Initializes login page interactions after the DOM is ready.
+ *
+ * Wires submit and click handlers, renders shared icons,
+ * and initializes password toggles for all input boxes.
+ *
+ * @returns {void}
+ */
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("login_form")?.addEventListener("submit", userLogin);
   document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);

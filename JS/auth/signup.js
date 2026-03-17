@@ -1,6 +1,29 @@
+/**
+ * Root signup form element.
+ *
+ * @type {HTMLFormElement|null}
+ */
 const signupFormElement = document.getElementById("register_form");
+
+/**
+ * Submit button for user registration.
+ *
+ * @type {HTMLButtonElement|null}
+ */
 const registerBtn = document.getElementById("register_btn");
+
+/**
+ * Checkbox that confirms privacy/terms acceptance.
+ *
+ * @type {HTMLInputElement|null}
+ */
 const privacyCheckbox = document.getElementById("terms_accepted");
+
+/**
+ * All required non-checkbox signup inputs used for live form validation.
+ *
+ * @type {NodeListOf<HTMLInputElement>|Array<never>}
+ */
 const signupInputs = signupFormElement?.querySelectorAll("input[required]:not([type='checkbox'])") || [];
 
 /**
@@ -66,6 +89,58 @@ function completeSignup() {
 }
 
 /**
+ * Validates signup submission input values.
+ *
+ * Performs email format checks, password confirmation checks,
+ * and required-field validation.
+ *
+ * @param {string} email - The user email address.
+ * @param {string} password - The user password.
+ * @param {string} givenName - The user's given name.
+ * @returns {boolean} True when all signup validations pass.
+ */
+function validateSignupSubmission(email, password, givenName) {
+  if (!isValidEmail(email)) {
+    showEmailError();
+    return false;
+  }
+
+  if (!passwordsMatch()) {
+    showSignupPasswordError();
+    return false;
+  }
+
+  return Boolean(validateSignupInputs(email, password, givenName));
+}
+
+/**
+ * Checks whether the signup email can be used.
+ *
+ * Ensures users are loaded and returns whether the target
+ * email address is not already registered.
+ *
+ * @async
+ * @param {string} email - Email address to check.
+ * @returns {Promise<boolean>} True when the email is available.
+ */
+async function isSignupEmailAvailable(email) {
+  await initUsersLoading();
+  return !userExists(email);
+}
+
+/**
+ * Builds the user payload for registration.
+ *
+ * @param {string} email - The user email address.
+ * @param {string} password - The user password.
+ * @param {string} givenName - The user's given name.
+ * @returns {{email: string, givenName: string, password: string}} Registration payload.
+ */
+function buildSignupPayload(email, password, givenName) {
+  return { email, givenName, password };
+}
+
+/**
  * Handles the user signup process.
  *
  * Validates email format and password match, extracts form inputs, checks if user already exists,
@@ -78,27 +153,12 @@ function completeSignup() {
 async function addUser() {
   const { email, password, givenName } = extractSignupFormInputs();
 
-  if (!isValidEmail(email)) {
-    showEmailError();
-    return;
-  }
+  if (!validateSignupSubmission(email, password, givenName)) return;
 
-  if (!passwordsMatch()) {
-    showSignupPasswordError();
-    return;
-  }
+  const emailAvailable = await isSignupEmailAvailable(email);
+  if (!emailAvailable) return;
 
-  if (!validateSignupInputs(email, password, givenName)) {
-    return;
-  }
-
-  await initUsersLoading();
-
-  if (userExists(email)) {
-    return;
-  }
-
-  const dataObj = { email, givenName, password };
+  const dataObj = buildSignupPayload(email, password, givenName);
   await registerNewUser(dataObj);
   completeSignup();
 }
@@ -165,6 +225,64 @@ function showSignupPasswordError() {
 }
 
 /**
+ * Shows the signup success overlay in its visible/animating state.
+ *
+ * @param {HTMLElement} overlay - Signup success overlay element.
+ * @returns {void}
+ */
+function showSignupOverlay(overlay) {
+  overlay.classList.add("is_visible", "is_animating");
+  overlay.setAttribute("aria-hidden", "false");
+}
+
+/**
+ * Resolves configured signup success toast timing values from CSS custom properties.
+ *
+ * Falls back to default values when CSS variables are missing or invalid.
+ *
+ * @returns {{slideMs: number, holdMs: number}} Resolved slide and hold durations in milliseconds.
+ */
+function getSignupSuccessToastTimings() {
+  const slideMs =
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
+  const holdMs =
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
+
+  return { slideMs, holdMs };
+}
+
+/**
+ * Hides the signup success overlay and switches back to the login view.
+ *
+ * @param {HTMLElement} overlay - Signup success overlay element.
+ * @returns {void}
+ */
+function hideSignupOverlayAndActivateLogin(overlay) {
+  overlay.classList.remove("is_animating", "is_visible");
+  overlay.setAttribute("aria-hidden", "true");
+
+  if (typeof activateLogIn === "function") {
+    activateLogIn();
+  } else {
+    console.warn("activateLogIn() ist nicht definiert.");
+  }
+}
+
+/**
+ * Schedules hiding of the signup success overlay after slide and hold durations.
+ *
+ * @param {HTMLElement} overlay - Signup success overlay element.
+ * @param {number} slideMs - Slide animation duration in milliseconds.
+ * @param {number} holdMs - Visible hold duration in milliseconds.
+ * @returns {void}
+ */
+function scheduleSignupOverlayHide(overlay, slideMs, holdMs) {
+  window.setTimeout(() => {
+    hideSignupOverlayAndActivateLogin(overlay);
+  }, slideMs + holdMs);
+}
+
+/**
  * Displays a success toast notification for completed signup.
  *
  * Shows an animated overlay with configurable slide and hold durations from CSS variables.
@@ -176,23 +294,9 @@ function showSignupSuccessToast() {
   const overlay = document.getElementById("signup_success_overlay");
   if (!overlay) return;
 
-  overlay.classList.add("is_visible", "is_animating");
-  overlay.setAttribute("aria-hidden", "false");
-
-  const slideMs =
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_slide_duration"), 10) || 600;
-  const holdMs =
-    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--signup_success_hold_duration"), 10) || 1000;
-
-  window.setTimeout(() => {
-    overlay.classList.remove("is_animating", "is_visible");
-    overlay.setAttribute("aria-hidden", "true");
-    if (typeof activateLogIn === "function") {
-      activateLogIn();
-    } else {
-      console.warn("activateLogIn() ist nicht definiert.");
-    }
-  }, slideMs + holdMs);
+  showSignupOverlay(overlay);
+  const { slideMs, holdMs } = getSignupSuccessToastTimings();
+  scheduleSignupOverlayHide(overlay, slideMs, holdMs);
 }
 
 /**
@@ -260,7 +364,17 @@ function clearFieldError(event) {
   }
 }
 
-if (signupInputs.length && privacyCheckbox) {
+/**
+ * Initializes live signup form validation listeners.
+ *
+ * Wires input and checkbox events to keep the register button state
+ * and inline error visuals in sync while the user edits the form.
+ *
+ * @returns {void}
+ */
+function initializeSignupValidation() {
+  if (!signupInputs.length || !privacyCheckbox) return;
+
   signupInputs.forEach((input) => {
     input.addEventListener("input", checkForm);
     input.addEventListener("input", clearFieldError);
@@ -268,3 +382,5 @@ if (signupInputs.length && privacyCheckbox) {
   privacyCheckbox.addEventListener("change", checkForm);
   checkForm();
 }
+
+initializeSignupValidation();

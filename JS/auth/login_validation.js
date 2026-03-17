@@ -1,4 +1,20 @@
+/**
+ * Login validation utility module.
+ *
+ * Provides input validation and UI error helpers for the login form.
+ *
+ * @type {{
+ *   validate: (inputs: {emailInput: HTMLInputElement, passwordInput: HTMLInputElement, email: string, password: string, warningElement: HTMLElement|null}) => boolean,
+ *   showAuthError: (warningElement: HTMLElement|null) => void,
+ *   enableErrorReset: (formElement: HTMLFormElement|null) => void
+ * }}
+ */
 const loginValidation = (() => {
+  /**
+   * Immutable message set used by login validation feedback.
+   *
+   * @type {{REQUIRED: string, EMAIL_INVALID: string, AUTH_FAILED: string}}
+   */
   const LOGIN_MESSAGES = Object.freeze({
     REQUIRED: "Please enter email and password.",
     EMAIL_INVALID: "Please enter a valid email address.",
