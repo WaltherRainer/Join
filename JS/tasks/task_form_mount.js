@@ -1,4 +1,8 @@
-// Task form loading, validation and submission helpers
+/**
+ * Helpers for task form mounting, validation, and submission workflows.
+ *
+ * @type {Set<string>}
+ */
 
 const PROTECTED_PAGE_KEYS = new Set(["summary", "board", "add_task", "contacts"]);
 
@@ -166,7 +170,6 @@ function resetInputValidation(element) {
  */
 async function loadPartial(url) {
   const resolvedUrl = new URL(url, window.location.href);
-  // Some hosting setups expose user:pass in the page URL, which fetch rejects.
   resolvedUrl.username = "";
   resolvedUrl.password = "";
 
