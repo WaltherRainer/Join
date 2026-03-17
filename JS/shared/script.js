@@ -40,18 +40,6 @@ async function initializeAddTaskPage(usersDataObj) {
 }
 
 /**
- * Initializes the summary page.
- * Summary page requires data to be loaded but no additional initialization.
- *
- * @async
- * @function initializeSummaryPage
- * @returns {Promise<void>}
- */
-async function initializeSummaryPage() {
-  // Summary page is initialized by data loading
-}
-
-/**
  * Initializes the board page.
  * Renders the task board and sets up the add task modal.
  *
@@ -85,9 +73,6 @@ async function initializePageContent(page, usersDataObj, tasksDataObj) {
       break;
     case "add_task":
       await initializeAddTaskPage(usersDataObj);
-      break;
-    case "summary":
-      await initializeSummaryPage();
       break;
     case "board":
       await initializeBoardPage(tasksDataObj, usersDataObj);

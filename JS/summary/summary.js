@@ -39,7 +39,6 @@ function initSummary() {
   writeGreetingDay();
   writeGreetingName();
 
-  // Show and hide greeting only after fresh login
   if (sessionStorage.getItem("justLoggedIn")) {
     showAndHideGreeting();
     sessionStorage.removeItem("justLoggedIn");

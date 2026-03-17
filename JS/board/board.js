@@ -178,6 +178,8 @@ function switchStatusContainer(taskId, newStatusNum) {
 
 /**
  * Returns appropriate container for status.
+ * 
+ * Maps status codes to their corresponding container elements.
  *
  * @param {number} status - Status code.
  * @param {Object} containers - Board container references.
@@ -188,7 +190,7 @@ function statusContainerFor(status, containers) {
   if (status === 1) return containers.inProgressDiv;
   if (status === 2) return containers.awaitfeedbackdiv;
   if (status === 3) return containers.doneDiv;
-  return containers.toDoDiv; // fallback
+  return containers.toDoDiv; 
 }
 
 /**

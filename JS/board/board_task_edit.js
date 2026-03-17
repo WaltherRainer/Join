@@ -454,7 +454,6 @@ function renderEmptyAssignedState(valueBox, placeholder) {
  * @param {HTMLElement} avatarContainer - Container for avatars.
  */
 function renderPopulatedAssignedState(ids, valueBox, placeholder, usersObj, avatarContainer) {
-  // Keep placeholder visible on modal open, even when users are assigned.
   renderEmptyAssignedState(valueBox, placeholder);
   renderAssignedAvatars(ids, usersObj, avatarContainer);
 }

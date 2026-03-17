@@ -347,6 +347,7 @@ function checkForm() {
 
 /**
  * Clears error states when user starts typing in a field.
+ * Removes 'has_error' class from the input box and hides related warning messages.
  *
  * @param {Event} event - The input event.
  * @returns {void}
@@ -356,7 +357,6 @@ function clearFieldError(event) {
   const inputBox = input.closest(".input_box");
   inputBox?.classList.remove("has_error");
   
-  // Hide related warning message
   if (input.id === "email_sign_up") {
     document.getElementById("warning_email_invalid")?.classList.remove("visible");
   } else if (input.id === "new_user_password" || input.id === "confirm_user_password") {
