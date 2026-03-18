@@ -1,6 +1,6 @@
 /**
  * Synchronizes dropdown filter state.
- * 
+ *
  * @function syncDropdownFilterState
  * @param {Object} state - State object.
  * @param {boolean} isOpen - Whether dropdown is open.
@@ -9,7 +9,7 @@
 function syncDropdownFilterState(state, isOpen) {
   const { ui } = state;
   if (!ui.assignedToassignedToFilterInput) return;
-  
+
   ui.assignedToassignedToFilterInput.hidden = !isOpen;
   if (isOpen) {
     ui.assignedToassignedToFilterInput.focus();
@@ -23,7 +23,7 @@ function syncDropdownFilterState(state, isOpen) {
 
 /**
  * Synchronizes dropdown placeholder state.
- * 
+ *
  * @function syncDropdownPlaceholder
  * @param {Object} ui - UI elements object.
  * @param {boolean} isOpen - Whether dropdown is open.
@@ -40,7 +40,7 @@ function syncDropdownPlaceholder(ui, isOpen, selectedSize) {
 
 /**
  * Executes synchronization after toggle.
- * 
+ *
  * @function afterToggleSync
  * @param {Object} ui - UI elements object.
  * @param {Object} state - State object.
@@ -54,7 +54,7 @@ function afterToggleSync(ui, state) {
 
 /**
  * Adds toggle button click listener.
- * 
+ *
  * @function addToggleBtnListener
  * @param {Object} ui - UI elements object.
  * @param {Object} state - State object.
@@ -70,7 +70,7 @@ function addToggleBtnListener(ui, state) {
 
 /**
  * Adds control element click listener.
- * 
+ *
  * @function addControlClickListener
  * @param {Object} ui - UI elements object.
  * @param {Object} state - State object.
@@ -85,7 +85,7 @@ function addControlClickListener(ui, state) {
 }
 /**
  * Adds document click listener for closing dropdown.
- * 
+ *
  * @function addDocumentClickListener
  * @param {Object} ui - UI elements object.
  * @param {Object} state - State object.
@@ -101,7 +101,7 @@ function addDocumentClickListener(ui, state) {
 }
 /**
  * Adds document keydown listener for Escape key.
- * 
+ *
  * @function addDocumentKeydownListener
  * @param {Object} ui - UI elements object.
  * @param {Object} state - State object.
@@ -118,7 +118,7 @@ function addDocumentKeydownListener(ui, state) {
 
 /**
  * Wires all dropdown event handlers.
- * 
+ *
  * @function wireDropdownEvents
  * @param {Object} state - State object with UI elements and data.
  * @returns {void}
@@ -133,7 +133,7 @@ function wireDropdownEvents(state) {
 
 /**
  * Toggles dropdown open/closed state.
- * 
+ *
  * @function toggleDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -144,7 +144,7 @@ function toggleDropdown(ui) {
 
 /**
  * Opens the dropdown.
- * 
+ *
  * @function openDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -157,7 +157,7 @@ function openDropdown(ui) {
 
 /**
  * Closes the dropdown.
- * 
+ *
  * @function closeDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -170,7 +170,7 @@ function closeDropdown(ui) {
 
 /**
  * Escapes HTML special characters.
- * 
+ *
  * @function escapeHtml
  * @param {string} str - String to escape.
  * @returns {string} Escaped string.
@@ -186,7 +186,7 @@ function escapeHtml(str) {
 
 /**
  * Gets subtasks array from hidden input.
- * 
+ *
  * @function getSubtasksArray
  * @returns {Array<Object>} Array of subtask objects with title and done properties.
  */
@@ -197,9 +197,12 @@ function getSubtasksArray() {
     const arr = JSON.parse(hidden.value);
     if (!Array.isArray(arr)) return [];
     return arr
-      .filter(x => x && typeof x === "object")
-      .map(x => ({ title: String(x.title ?? "").trim(), done: Boolean(x.done) }))
-      .filter(x => x.title.length > 0);
+      .filter((x) => x && typeof x === "object")
+      .map((x) => ({
+        title: String(x.title ?? "").trim(),
+        done: Boolean(x.done),
+      }))
+      .filter((x) => x.title.length > 0);
   } catch {
     return [];
   }
@@ -207,7 +210,7 @@ function getSubtasksArray() {
 
 /**
  * Gets assigned user IDs from hidden input.
- * 
+ *
  * @function getAssignedToIds
  * @returns {Array<string>} Array of user IDs.
  */
@@ -224,7 +227,7 @@ function getAssignedToIds() {
 
 /**
  * Initializes task category dropdown.
- * 
+ *
  * @function initTaskTypeDropdown
  * @param {HTMLFormElement} form - Form containing the dropdown.
  * @param {Array<Object>} categories - Array of category objects.
@@ -240,7 +243,7 @@ function initTaskTypeDropdown(form, categories) {
 
 /**
  * Gets UI element references for task category dropdown.
- * 
+ *
  * @function getTaskCatUi
  * @param {HTMLElement} root - Root element.
  * @returns {Object} Object with UI element references.
@@ -260,7 +263,7 @@ function getTaskCatUi(root) {
 
 /**
  * Renders task category options in dropdown.
- * 
+ *
  * @function renderTaskCatOptions
  * @param {Object} ui - UI elements object.
  * @param {Array<Object>} categories - Array of category objects.
@@ -279,7 +282,7 @@ function renderTaskCatOptions(ui, categories) {
 
 /**
  * Selects a task category.
- * 
+ *
  * @function selectTaskCat
  * @param {Object} ui - UI elements object.
  * @param {Object} cat - Category object with value and label.
@@ -293,17 +296,16 @@ function selectTaskCat(ui, cat) {
   closeTaskCatDropdown(ui);
 
   const taskTypeDiv = ui.root.querySelector("#task_cat_control");
-  const taskTypeOuterDiv = ui.root; 
+  const taskTypeOuterDiv = ui.root;
   if (taskTypeDiv && taskTypeOuterDiv) {
     setInputValid(taskTypeDiv, taskTypeOuterDiv);
   }
   ui.root.closest("form")?._markDirty?.();
 }
 
-
 /**
  * Wires event handlers for task category dropdown.
- * 
+ *
  * @function wireTaskCatEvents
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -322,7 +324,7 @@ function wireTaskCatEvents(ui) {
 
 /**
  * Toggles task category dropdown open/closed state.
- * 
+ *
  * @function toggleTaskCatDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -333,7 +335,7 @@ function toggleTaskCatDropdown(ui) {
 
 /**
  * Opens task category dropdown.
- * 
+ *
  * @function openTaskCatDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -345,7 +347,7 @@ function openTaskCatDropdown(ui) {
 
 /**
  * Closes task category dropdown.
- * 
+ *
  * @function closeTaskCatDropdown
  * @param {Object} ui - UI elements object.
  * @returns {void}
@@ -357,7 +359,7 @@ function closeTaskCatDropdown(ui) {
 
 /**
  * Resets priority buttons to default state (medium selected).
- * 
+ *
  * @function resetPriorityButtons
  * @param {HTMLFormElement} form - Form containing priority buttons.
  * @returns {void}
@@ -372,10 +374,9 @@ function resetPriorityButtons(form) {
   if (low) low.checked = false;
 }
 
-
 /**
  * Resets task category dropdown UI to default state.
- * 
+ *
  * @function resetTaskCatDropdownUi
  * @param {HTMLFormElement} form - Form containing the dropdown.
  * @returns {void}
@@ -395,6 +396,5 @@ function resetTaskCatDropdownUi(form) {
   if (placeholder) placeholder.hidden = false;
   if (assignedToInput) assignedToInput.value = "";
 }
-
 
 window.initAssignedToDropdown = initAssignedToDropdown;

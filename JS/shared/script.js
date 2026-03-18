@@ -147,3 +147,4 @@ function initPrivacyPoliceOrLegalNotice() {
     document.querySelectorAll(".nav_link").forEach((el) => el.classList.toggle("d_none"));
   }
 }
+

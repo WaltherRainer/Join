@@ -13,7 +13,7 @@ async function deleteTask(taskId) {
   const users = modal?.__users;
   try {
     const tasks = await deleteTaskAndSyncLocalState(id);
-    closeTaskModal(modal);
+    closeTaskDialogOnly(modal);
     rerenderBoardAfterDelete(tasks, users);
   } catch (err) {
     handleDeleteTaskError(err);
@@ -42,7 +42,7 @@ async function deleteTaskAndSyncLocalState(id) {
  * @param {HTMLDialogElement|null} modal - Task details modal element.
  * @returns {void}
  */
-function closeTaskModal(modal) {
+function closeTaskDialogOnly(modal) {
   modal?.close?.();
 }
 

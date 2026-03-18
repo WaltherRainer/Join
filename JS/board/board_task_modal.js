@@ -118,15 +118,15 @@ function toggleSubtaskDone(index, taskId) {
  */
 async function closeTaskModal(modal, taskId) {
   const tasks = loadTasksFromSession();
-  if (dirtyTaskIds.has(taskId)) {
-    const task = tasks[taskId];
-    if (task) {
-      await saveTaskSubtasksToFirebase(taskId, task.subTasks);
-      dirtyTaskIds.delete(taskId);
-      updateTaskCard(taskId, tasks);
-    }
-  }
   modal.close?.();
+  if (!dirtyTaskIds.has(taskId)) return;
+
+  const task = tasks[taskId];
+  if (!task) return;
+
+  await saveTaskSubtasksToFirebase(taskId, task.subTasks);
+  dirtyTaskIds.delete(taskId);
+  updateTaskCard(taskId, tasks);
 }
 
 /**
