@@ -175,6 +175,39 @@ function setupModalEventHandlers(modal) {
 }
 
 /**
+ * Resolves required add-task modal elements.
+ *
+ * @function getAddTaskModalContext
+ * @returns {{modalHost: HTMLElement, modal: HTMLElement}|null} Modal context or null when missing.
+ */
+function getAddTaskModalContext() {
+  const modalHost = document.getElementById("addTaskModalHost");
+  const modal = document.getElementById("addTaskModal");
+  if (!modal || !modalHost) return null;
+  return { modalHost, modal };
+}
+
+/**
+ * Mounts the add-task form for modal usage.
+ *
+ * @async
+ * @function mountAddTaskModalForm
+ * @param {HTMLElement} modalHost - Modal host container.
+ * @param {number} taskStatus - Initial status for the new task.
+ * @returns {Promise<HTMLFormElement|null>} Mounted form.
+ */
+async function mountAddTaskModalForm(modalHost, taskStatus) {
+  return await mountTaskForm(modalHost, {
+    title: "Add Task",
+    preset: { titel: "", description: "", priority: "medium" },
+    mode: "modal",
+    toastId: "task_modal_success_overlay",
+    taskStatus,
+    afterSaved: afterTaskAddedInModal,
+  });
+}
+
+/**
  * Opens the add task modal window.
  * 
  * @async
@@ -183,20 +216,13 @@ function setupModalEventHandlers(modal) {
  * @returns {Promise<void>}
  */
 async function openAddTaskModal(taskStatus = 0) {
-  const modalHost = document.getElementById("addTaskModalHost");
-  const modal = document.getElementById("addTaskModal");
-  if (!modal || !modalHost) return;
+  const modalContext = getAddTaskModalContext();
+  if (!modalContext) return;
 
+  const { modalHost, modal } = modalContext;
   const usersDataObj = await ensureUsersLoaded();
-
-  const form = await mountTaskForm(modalHost, {
-    title: "Add Task",
-    preset: { titel: "", description: "", priority: "medium" },
-    mode: "modal",
-    toastId: "task_modal_success_overlay",
-    taskStatus: taskStatus,
-    afterSaved: afterTaskAddedInModal, 
-  });
+  const form = await mountAddTaskModalForm(modalHost, taskStatus);
+  if (!form) return;
 
   initTaskFormControls(form, usersDataObj);
   setupModalEventHandlers(modal);

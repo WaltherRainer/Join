@@ -9,11 +9,8 @@
  */
 function initialsFromGivenName(givenName, fallback = "?") {
   if (!givenName) return fallback;
-
   const parts = String(givenName).trim().split(/\s+/).filter(Boolean);
-
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
@@ -54,7 +51,6 @@ function colorVarFromUserId(userId) {
  */
 function userExists(email) {
   if (!window.users || typeof window.users !== "object") return false;
-
   return Object.values(window.users).some((user) => user?.email === email);
 }
 

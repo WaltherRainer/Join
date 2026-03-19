@@ -1,3 +1,5 @@
+const mqMobile = window.matchMedia("(max-width: 1100px)");
+
 /**
  * Reloads users, updates the contacts list, and optionally re-renders the active user's details.
  *
@@ -44,8 +46,6 @@ function renderEditContactAvatar(userId, givenName) {
   avatarEl.innerHTML = initials;
 }
 
-const mqMobile = window.matchMedia("(max-width: 1100px)");
-
 /**
  * Closes the mobile edit/delete popup menu.
  *
@@ -58,7 +58,6 @@ function closeMobileEditDeleteMenu() {
   const menu = document.getElementById("mobile_edit_delete_menu");
   const trigger = document.getElementById("open_edit_delete_menu");
   if (!menu || !trigger) return;
-
   menu.classList.remove("is-open");
   menu.setAttribute("aria-hidden", "true");
   trigger.setAttribute("aria-expanded", "false");
@@ -221,10 +220,8 @@ function bindMobileMenuActions(editAction, deleteAction) {
 function initMobileEditDeleteMenu() {
   const elements = getMobileEditDeleteMenuElements();
   if (!elements) return;
-
   const { trigger, menu, editAction, deleteAction } = elements;
   if (!bindOnce(trigger, "mobileMenuBound")) return;
-
   setMobileMenuTriggerA11y(trigger);
   bindMobileMenuTriggerToggle(trigger, menu);
   bindMobileMenuOutsideClose(menu, trigger);
@@ -302,19 +299,13 @@ initMobileEditDeleteMenu();
 function openEditContactModal(userId, givenName, email, userPhone) {
   const modal = document.getElementById("edit_contact_modal");
   if (!modal) return;
-
   if (modal.open) return;
-
   modal.showModal();
-
   preloadEditFormData(givenName, email, userPhone);
   renderEditContactAvatar(userId, givenName);
-
   bindEditContactFormSubmitOnce(userId);
-
   const removeEsc = listenEscapeFromModal(modal.id, (m) => closeEditContactModal(m));
   const close = () => closeAndCleanupEditModal(modal, removeEsc);
-
   bindEditModalHandlers(modal, userId, close, removeEsc);
 }
 

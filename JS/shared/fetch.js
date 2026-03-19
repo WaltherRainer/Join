@@ -45,14 +45,12 @@ async function loadData(path = "") {
 async function uploadData(path = "", dataObj) {
   const cleanPath = String(path || "").replace(/^\/+/, "");
   const url = `${BASE_URL}/${cleanPath}.json`;
-
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(dataObj),
     redirect: "follow",
   });
-
   if (!response.ok) {
     throw new Error(`HTTP Fehler! Status: ${response.status} bei URL: ${response.url}`);
   }

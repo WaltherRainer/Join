@@ -1,21 +1,34 @@
 let editFormSubmitHandler = null;
 
 /**
- * Binds one-time event handlers for closing and actions within the edit modal.
+ * Binds all one-time event handlers needed to close the edit-contact modal.
  *
- * Attaches listeners to the close button, delete button, and modal backdrop.
- * Ensures the modal closes appropriately and that the Escape key listener
- * is removed once the modal is closed.
+ * Wires up: close button, backdrop click, and modal close cleanup. Delegates
+ * delete-button wiring to {@link bindEditModalDeleteHandler}.
  *
  * @function bindEditModalHandlers
- * @param {HTMLElement} modal - The edit modal element.
- * @param {string} userId - The ID of the user associated with the modal.
+ * @param {HTMLDialogElement} modal - The edit contact modal element.
+ * @param {string} userId - ID of the user currently being edited.
  * @param {Function} close - Callback that closes the modal and performs cleanup.
- * @param {Function} [removeEsc] - Optional callback to remove the Escape listener.
+ * @param {Function} removeEsc - Cleanup function that removes the ESC listener.
  * @returns {void}
  */
 function bindEditModalHandlers(modal, userId, close, removeEsc) {
   document.getElementById("edit_modal_close")?.addEventListener("click", close, { once: true });
+  bindEditModalDeleteHandler(userId, close);
+  modal.addEventListener("click", (e) => e.target === modal && close(), { once: true });
+  modal.addEventListener("close", () => removeEsc?.(), { once: true });
+}
+
+/**
+ * Binds the delete button to delete the contact and closes the modal on success.
+ *
+ * @function bindEditModalDeleteHandler
+ * @param {string} userId - ID of the user to delete.
+ * @param {Function} close - Callback that closes the modal after successful deletion.
+ * @returns {void}
+ */
+function bindEditModalDeleteHandler(userId, close) {
   document.getElementById("delete_contact_btn")?.addEventListener(
     "click",
     async () => {
@@ -24,14 +37,6 @@ function bindEditModalHandlers(modal, userId, close, removeEsc) {
     },
     { once: true },
   );
-  modal.addEventListener(
-    "click",
-    (e) => {
-      if (e.target === modal) close();
-    },
-    { once: true },
-  );
-  modal.addEventListener("close", () => removeEsc?.(), { once: true });
 }
 
 /**
@@ -134,7 +139,6 @@ function bindContactFormSubmitOnce() {
   const form = document.getElementById("contact_form");
   if (!form) return;
   if (!bindOnce(form, "submitBound")) return;
-
   form.addEventListener("submit", onContactFormSubmit(form));
   window.contactFormValidation?.enableErrorReset(form);
 }
@@ -169,9 +173,7 @@ function bindOnce(el, flag) {
 function onContactFormSubmit(form) {
   return async (e) => {
     e.preventDefault();
-
     if (!window.contactFormValidation?.validateAddForm()) return;
-
     try {
       await addNewUser();
     } catch (err) {
@@ -181,26 +183,37 @@ function onContactFormSubmit(form) {
 }
 
 /**
- * Binds the submit handler for the edit-contact form exactly once.
+ * Binds the submit handler for the edit-contact form and ensures only one
+ * active handler is attached at any time.
  *
- * Uses a `data-submit-bound` flag on the form element to prevent multiple
- * event registrations when the edit modal is opened repeatedly. On submit,
- * the default form action is prevented and {@link editUser} is called with
- * the given user ID; errors are caught and logged.
+ * Removes a previously registered handler, enables error reset behavior,
+ * then attaches a fresh submit handler created by {@link createEditFormSubmitHandler}.
  *
  * @function bindEditContactFormSubmitOnce
- * @param {string} userId - The ID of the user whose data should be updated.
+ * @param {string} userId - ID of the user being edited.
  * @returns {void}
  */
 function bindEditContactFormSubmitOnce(userId) {
   const form = document.getElementById("edit_contact_form");
   if (!form) return;
-  if (editFormSubmitHandler) {
-    form.removeEventListener("submit", editFormSubmitHandler);
-  }
+
+  if (editFormSubmitHandler) form.removeEventListener("submit", editFormSubmitHandler);
   window.contactFormValidation?.enableErrorReset(form);
 
-  editFormSubmitHandler = async (e) => {
+  editFormSubmitHandler = createEditFormSubmitHandler(userId);
+  form.addEventListener("submit", editFormSubmitHandler);
+}
+
+/**
+ * Creates a submit event handler that validates the edit form and triggers the
+ * user update request for the given user ID.
+ *
+ * @function createEditFormSubmitHandler
+ * @param {string} userId - ID of the user being edited.
+ * @returns {(e: SubmitEvent) => Promise<void>} Async submit handler function.
+ */
+function createEditFormSubmitHandler(userId) {
+  return async (e) => {
     e.preventDefault();
     if (!window.contactFormValidation?.validateEditForm()) return;
     try {
@@ -209,7 +222,6 @@ function bindEditContactFormSubmitOnce(userId) {
       console.error("EditUser failed", err);
     }
   };
-  form.addEventListener("submit", editFormSubmitHandler);
 }
 
 /**

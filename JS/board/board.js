@@ -1,22 +1,5 @@
-/**
- * Tracks task IDs with unsaved local changes.
- *
- * @type {Set<string>}
- */
 const dirtyTaskIds = new Set();
-
-/**
- * ID of the task currently being dragged.
- *
- * @type {string|null|undefined}
- */
 let currentDraggedTaskId;
-
-/**
- * Indicates whether Escape-key handling for the task modal is already bound.
- *
- * @type {boolean}
- */
 let taskModalEscBound = false;
 
 /**
@@ -67,7 +50,6 @@ function bindPrimaryAddTaskButton() {
 function bindStatusAddTaskTriggers() {
   const buttons = document.querySelectorAll(".add_task_trigger");
   if (!buttons) return;
-
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       const status = Number(button.dataset.status) || 0;
@@ -101,7 +83,6 @@ function handleTaskSectionClick(e, users) {
 function bindTaskSectionClickHandlers(users) {
   const taskSect = document.querySelectorAll(".task_section");
   if (taskSect.length === 0) return;
-
   taskSect.forEach((section) => {
     section.addEventListener("click", (e) => handleTaskSectionClick(e, users));
   });
@@ -145,7 +126,7 @@ function getBoardContainers() {
  * @returns {string} Status name.
  */
 function findStatusName(status) {
-  if(statusTypes[status] == "In Progress"){
+  if (statusTypes[status] == "In Progress") {
     return "Progress";
   } else {
     return statusTypes[status] || "Unknown";
@@ -165,9 +146,7 @@ function switchStatusContainer(taskId, newStatusNum) {
   const tasks = loadTasksFromSession();
   const task = tasks[taskId];
   const users = loadUsersFromSession();
-  
   if (!task) return;
-  
   const newStatus = Number(newStatusNum);
   const tasksInStatus = sortTasksInStatus(newStatus, tasks);
   const insertIndex = 0;
@@ -178,7 +157,7 @@ function switchStatusContainer(taskId, newStatusNum) {
 
 /**
  * Returns appropriate container for status.
- * 
+ *
  * Maps status codes to their corresponding container elements.
  *
  * @param {number} status - Status code.
@@ -190,7 +169,7 @@ function statusContainerFor(status, containers) {
   if (status === 1) return containers.inProgressDiv;
   if (status === 2) return containers.awaitfeedbackdiv;
   if (status === 3) return containers.doneDiv;
-  return containers.toDoDiv; 
+  return containers.toDoDiv;
 }
 
 /**
@@ -205,7 +184,6 @@ function renderItems(items, containers, users) {
   containers.inProgressDiv.innerHTML = "";
   containers.awaitfeedbackdiv.innerHTML = "";
   containers.doneDiv.innerHTML = "";
-
   const sortedItems = items.sort((a, b) => (a.order || 0) - (b.order || 0));
   const isDraggable = window.innerWidth > 1260;
   sortedItems.forEach((task) => {
@@ -238,9 +216,7 @@ function renderEmptyStates(containers) {
 function loadTaskBoard(tasks, users) {
   const containers = getBoardContainers();
   if (!containers) return;
-
   const items = Array.isArray(tasks) ? tasks : returnArrayOfTasks(tasks);
-
   renderItems(items, containers, users);
   renderEmptyStates(containers);
   initBoardEventList(users);
@@ -294,7 +270,7 @@ function getUserDataFromString(userId, users) {
 
 /**
  * Retrieves user data from object.
-*
+ *
  * @param {Object} item - User data object.
  * @param {Object} users - Users data object.
  * @returns {Object|null} Object with initials and bgColor or null.
@@ -302,17 +278,14 @@ function getUserDataFromString(userId, users) {
 function getUserDataFromObject(item, users) {
   const userId = item.userId || item.id;
   const givenName = item.givenName || item.name;
-  
   if (givenName) {
     return { initials: initialsFromGivenName(givenName, ""), bgColor: colorIndexFromUserId(userId || "") };
   }
-  
   if (userId && users?.[userId]) {
     const user = users[userId];
     const name = user.givenName || user.name;
     if (name) return { initials: initialsFromGivenName(name, ""), bgColor: colorIndexFromUserId(userId) };
   }
-  
   return null;
 }
 
@@ -341,13 +314,11 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
   if (!assignedTo || !Array.isArray(assignedTo)) return "";
   const entries = assignedTo.map((item) => findUserDataNameAndColor(item, users)).filter(Boolean);
   if (entries.length === 0) return "";
-  
   const maxVisible = 3;
   const visible = entries
     .slice(0, maxVisible)
     .map(({ initials, bgColor }) => renderSingleAvatar(initials, bgColor))
     .join("");
-
   if (entries.length > maxVisible) {
     return visible + renderRemainingCount(entries.length - maxVisible);
   }
@@ -358,7 +329,7 @@ function mapAssignedTo(assignedTo, users = window.users || {}) {
  * Searches and filters board tasks by input.
  */
 function searchBoardTasks() {
-  const inputWord = document.getElementById("input_search_task").value.trim().replace(/\s+/g, ' ').toLowerCase();
+  const inputWord = document.getElementById("input_search_task").value.trim().replace(/\s+/g, " ").toLowerCase();
   const tasks = returnArrayOfTasks(loadTasksFromSession());
   const filteredTasks = filterTasksBySearch(tasks, inputWord);
   updateNoResultsMessage(filteredTasks);
@@ -374,9 +345,10 @@ function searchBoardTasks() {
  */
 function filterTasksBySearch(tasks, inputWord) {
   if (!inputWord) return tasks;
-  return tasks.filter(task =>
-    task.titel?.trim().replace(/\s+/g, ' ').toLowerCase().includes(inputWord) || 
-    (task.description?.trim().replace(/\s+/g, ' ').toLowerCase().includes(inputWord))
+  return tasks.filter(
+    (task) =>
+      task.titel?.trim().replace(/\s+/g, " ").toLowerCase().includes(inputWord) ||
+      task.description?.trim().replace(/\s+/g, " ").toLowerCase().includes(inputWord),
   );
 }
 

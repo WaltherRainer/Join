@@ -63,12 +63,10 @@ function calculateVisibleAvatars(idsArray, maxVisible = 5) {
 function createUserAvatar(userId, user) {
   const initials = initialsFromGivenName(user.givenName);
   const bgColor = colorVarFromUserId(userId);
-
   const avatar = document.createElement("span");
   avatar.className = "user__avatar avatar_wrap";
   avatar.style.background = bgColor;
   avatar.textContent = initials;
-
   return avatar;
 }
 
@@ -111,57 +109,86 @@ function appendAvatarToContainer(container, avatar) {
 }
 
 /**
- * Renders all assigned user avatars into a container.
- * Displays up to MAX_VISIBLE avatars and a "+N" indicator for extras.
- * Orchestrates all avatar creation and rendering functions.
+ * Renders assigned user avatars into the given container.
+ *
+ * Clears the container, renders up to the maximum visible avatars, and appends
+ * a "+N" avatar if more users are assigned than can be shown.
  *
  * @function renderAssignedAvatars
- * @param {Array|Set|Iterable} selectedUserIds - User IDs to render
- * @param {Object} usersData - Lookup object with user data keyed by ID
- * @param {HTMLElement} container - Container element to render into
+ * @param {Array<string>|Set<string>} selectedUserIds - Selected user IDs to render.
+ * @param {Object<string, Object>} usersData - Map of userId -> user data.
+ * @param {HTMLElement} container - Target container for avatar elements.
  * @returns {void}
  */
 function renderAssignedAvatars(selectedUserIds, usersData, container) {
   if (!container) return;
   clearAvatarContainer(container);
-  const idsArray = normalizeUserIds(selectedUserIds);
-  const { visibleUsers, extraCount } = calculateVisibleAvatars(idsArray);
-  visibleUsers.forEach((userId) => {
-    const user = usersData[userId];
-    if (!user) return;
-    const avatar = createUserAvatar(userId, user);
-    appendAvatarToContainer(container, avatar);
-  });
-  if (extraCount > 0) {
-    const moreAvatar = createMoreAvatar(extraCount);
-    appendAvatarToContainer(container, moreAvatar);
-  }
+
+  const { visibleUsers, extraCount } = calculateVisibleAvatars(normalizeUserIds(selectedUserIds));
+  renderVisibleUserAvatars(visibleUsers, usersData, container);
+
+  if (extraCount > 0) appendAvatarToContainer(container, createMoreAvatar(extraCount));
 }
 
 /**
- * Attaches a global escape-key handler for modals.
+ * Appends avatar elements for the provided user IDs to the container.
+ *
+ * Skips IDs that are missing in the users data map and uses {@link createUserAvatar}
+ * to create each avatar element before appending.
+ *
+ * @function renderVisibleUserAvatars
+ * @param {string[]} userIds - User IDs to render as avatars.
+ * @param {Object<string, Object>} usersData - Map of userId -> user data.
+ * @param {HTMLElement} container - Target container for avatar elements.
+ * @returns {void}
+ */
+function renderVisibleUserAvatars(userIds, usersData, container) {
+  userIds.forEach((userId) => {
+    const user = usersData?.[userId];
+    if (!user) return;
+    appendAvatarToContainer(container, createUserAvatar(userId, user));
+  });
+}
+
+/**
+ * Registers a global Escape-key listener that closes a modal when it is open.
+ *
+ * Creates a keydown handler via {@link createEscapeModalHandler}, attaches it to the document,
+ * and returns an unsubscribe function to remove the listener again.
  *
  * @function listenEscapeFromModal
- * @param {string} modalDOMId - ID of modal element
- * @param {Function} onClose - Callback to execute on close
- * @returns {Function} Cleanup function
+ * @param {string} modalDOMId - DOM id of the modal element to control.
+ * @param {(modal: HTMLElement) => (void|Promise<void>)} [onClose] - Optional custom close callback.
+ * @returns {() => void} Unsubscribe function that removes the keydown listener.
  */
 function listenEscapeFromModal(modalDOMId, onClose) {
-  const handler = async (event) => {
+  const handler = createEscapeModalHandler(modalDOMId, onClose);
+  document.addEventListener("keydown", handler);
+  return () => document.removeEventListener("keydown", handler);
+}
+
+/**
+ * Creates a keydown handler that closes the target modal when Escape is pressed.
+ *
+ * Only acts if the element exists and is considered open (`<dialog>.open` or `.active` class).
+ * If no custom onClose is provided, it falls back to `modal.close()` and removing `.active`.
+ *
+ * @function createEscapeModalHandler
+ * @param {string} modalDOMId - DOM id of the modal element to control.
+ * @param {(modal: HTMLElement) => (void|Promise<void>)} [onClose] - Optional custom close callback.
+ * @returns {(event: KeyboardEvent) => void} Keydown event handler.
+ */
+function createEscapeModalHandler(modalDOMId, onClose) {
+  return (event) => {
     if (event.key !== "Escape") return;
     const modal = document.getElementById(modalDOMId);
-    if (!modal) return;
-    const isOpen = modal.open === true || modal.classList.contains("active");
-    if (!isOpen) return;
-    if (typeof onClose === "function") {
-      await onClose(modal);
-    } else {
+    if (!modal || !(modal.open === true || modal.classList.contains("active"))) return;
+    if (typeof onClose === "function") Promise.resolve(onClose(modal));
+    else {
       modal.close?.();
       modal.classList.remove("active");
     }
   };
-  document.addEventListener("keydown", handler);
-  return () => document.removeEventListener("keydown", handler);
 }
 
 /**
@@ -176,7 +203,6 @@ function listenEscapeFromModal(modalDOMId, onClose) {
 function InitGlobalEventListener() {
   const ui = getUserDialogUI();
   if (!ui) return;
-
   bindUserDialogToggle(ui);
   bindUserDialogOutsideClose(ui);
   bindUserDialogEscapeClose();
@@ -276,7 +302,6 @@ function clickedOutside(event, ...els) {
 function openUserMenuDialog() {
   const menu = document.getElementById("user_dialog");
   menu.hidden = false;
-
   const firstLink = menu.querySelector("a, button");
   firstLink?.focus();
 }

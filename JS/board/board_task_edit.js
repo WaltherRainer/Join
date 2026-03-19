@@ -9,13 +9,11 @@
 async function deleteTask(taskId) {
   const id = String(taskId || "").trim();
   if (!id) return;
-
   const modal = document.getElementById("show_task_modal");
   const users = modal?.__users;
-
   try {
     const tasks = await deleteTaskAndSyncLocalState(id);
-    closeTaskModal(modal);
+    closeTaskDialogOnly(modal);
     rerenderBoardAfterDelete(tasks, users);
   } catch (err) {
     handleDeleteTaskError(err);
@@ -44,7 +42,7 @@ async function deleteTaskAndSyncLocalState(id) {
  * @param {HTMLDialogElement|null} modal - Task details modal element.
  * @returns {void}
  */
-function closeTaskModal(modal) {
+function closeTaskDialogOnly(modal) {
   modal?.close?.();
 }
 
@@ -182,29 +180,47 @@ function initializeEditFormControls(form, users) {
 }
 
 /**
- * Hydrates form with existing task values.
+ * Hydrates edit-form UI state from hidden preset values (e.g. assigned users).
  *
- * Restores assigned users and selection state from task data.
+ * Reads the JSON payload from `#assigned_to_input` and delegates parsing + UI
+ * application to {@link hydrateAssignedToFromHidden}.
  *
- * @param {HTMLFormElement} form - The form element.
- * @param {Object} task - The task data.
- * @param {Object} users - Users data object.
+ * @function hydrateEditFormValues
+ * @param {HTMLFormElement} form - The task edit form to hydrate.
+ * @param {Object} task - Task data (unused here but kept for API compatibility).
+ * @param {Object<string, Object>} users - Map of userId -> user data.
+ * @returns {void}
  */
 function hydrateEditFormValues(form, task, users) {
   const hidden = form.querySelector("#assigned_to_input");
-  if (hidden && hidden.value) {
-    try {
-      const ids = JSON.parse(hidden.value);
-      const ui = getAssignedToUi(form);
-      const state = ui.root?._assignedState;
-      if (state && Array.isArray(ids)) {
-        ids.forEach(id => state.selected.add(id));
-        renderUserList(state);
-        applySelectionUi(state.ui, ids.map(id => users[id]?.givenName).filter(Boolean), state.selected, users);
-      }
-    } catch (e) {
-      console.warn("hydrateEditFormValues: failed to parse assignedTo preset", e);
-    }
+  if (!hidden?.value) return;
+  hydrateAssignedToFromHidden(form, hidden.value, users);
+}
+
+/**
+ * Applies assigned-to preset IDs to the assigned-to dropdown state and UI.
+ *
+ * Parses the provided JSON string, updates the internal selected set, and
+ * re-renders the list and selection UI. Logs a warning if parsing fails.
+ *
+ * @function hydrateAssignedToFromHidden
+ * @param {HTMLElement} form - Form element hosting the assigned-to UI.
+ * @param {string} jsonValue - JSON string containing an array of user IDs.
+ * @param {Object<string, Object>} users - Map of userId -> user data.
+ * @returns {void}
+ */
+function hydrateAssignedToFromHidden(form, jsonValue, users) {
+  try {
+    const ids = JSON.parse(jsonValue);
+    const ui = getAssignedToUi(form);
+    const state = ui.root?._assignedState;
+    if (!state || !Array.isArray(ids)) return;
+    ids.forEach((id) => state.selected.add(id));
+    renderUserList(state);
+    const names = ids.map((id) => users?.[id]?.givenName).filter(Boolean);
+    applySelectionUi(state.ui, names, state.selected, users);
+  } catch (e) {
+    console.warn("hydrateEditFormValues: failed to parse assignedTo preset", e);
   }
 }
 
@@ -212,7 +228,7 @@ function hydrateEditFormValues(form, task, users) {
  * Synchronizes edit form display elements.
  *
  * Updates category and assigned users UI.
-*
+ *
  * @param {HTMLFormElement} form - The form element.
  * @param {Object} users - Users data object.
  */
@@ -262,12 +278,7 @@ function applyEditModeSubmitLabel(form) {
  * @returns {void}
  */
 function applyEditModeLayoutClasses(form) {
-  [
-    ".form_actions",
-    ".add_task_form_right",
-    ".add_task_form_left",
-    ".add_task_form_wrapper",
-  ].forEach((selector) => {
+  [".form_actions", ".add_task_form_right", ".add_task_form_left", ".add_task_form_wrapper"].forEach((selector) => {
     form.querySelector(selector)?.classList.add("edit_mode");
   });
 }
@@ -346,155 +357,4 @@ function installEditDirtyTracking(form) {
   form.addEventListener("input", mark, true);
   form.addEventListener("change", mark, true);
   form._markDirty = mark;
-}
-
-/**
- * Retrieves DOM elements for task category UI.
- *
- * @param {HTMLFormElement} form - The form element.
- * @returns {Object|null} Object with root, taskCat, valueEl, placeholder elements, or null if not found.
- */
-function getTaskCategoryElements(form) {
-  const root = form.querySelector("#task_cat_select");
-  if (!root) return null;
-
-  const taskCat = form.querySelector("#task_cat");
-  const valueEl = root.querySelector(".single_select__value");
-  const placeholder = root.querySelector(".single_select__placeholder");
-
-  if (!taskCat || !valueEl || !placeholder) return null;
-
-  return { taskCat, valueEl, placeholder };
-}
-
-/**
- * Hides the category value and shows placeholder.
- *
- * @param {HTMLElement} valueEl - The value element.
- * @param {HTMLElement} placeholder - The placeholder element.
- */
-function hideTaskCategory(valueEl, placeholder) {
-  valueEl.textContent = "";
-  valueEl.hidden = true;
-  placeholder.hidden = false;
-}
-
-/**
- * Displays the selected category label.
- *
- * @param {string} value - The category value.
- * @param {HTMLElement} valueEl - The value element.
- * @param {HTMLElement} placeholder - The placeholder element.
- */
-function renderTaskCategory(value, valueEl, placeholder) {
-  const cat = (Array.isArray(TASK_CATEGORIES) ? TASK_CATEGORIES : [])
-    .find(c => c.value === value);
-
-  valueEl.textContent = cat?.label || value;
-  valueEl.hidden = false;
-  placeholder.hidden = true;
-}
-
-/**
- * Synchronizes the task category UI with form data.
- *
- * Updates visibility and display of selected category or placeholder.
- *
- * @param {HTMLFormElement} form - The form element.
- */
-function syncTaskCatUI(form) {
-  if (!form) return;
-
-  const els = getTaskCategoryElements(form);
-  if (!els) return;
-
-  const val = String(els.taskCat.value || "").trim();
-  
-  if (!val) {
-    hideTaskCategory(els.valueEl, els.placeholder);
-  } else {
-    renderTaskCategory(val, els.valueEl, els.placeholder);
-  }
-}
-
-/**
- * Retrieves UI elements for assigned users.
- *
- * @param {HTMLFormElement} form - The form element.
- * @returns {Object} Object with placeholder, valueBox, avatarContainer elements.
- */
-function getAssignedToUIElements(form) {
-  const placeholder = form.querySelector("#assigned_to_placeholder");
-  const valueBox = form.querySelector("#assigned_to_value");
-  const avatarContainer = form.querySelector("#assigned_avatar_container");
-  return { placeholder, valueBox, avatarContainer };
-}
-
-/**
- * Renders empty state for assigned users.
- *
- * @param {HTMLElement} valueBox - The value display element.
- * @param {HTMLElement} placeholder - The placeholder element.
- */
-function renderEmptyAssignedState(valueBox, placeholder) {
-  placeholder.hidden = false;
-  valueBox.hidden = true;
-  valueBox.textContent = "";
-}
-
-/**
- * Renders populated state for assigned users.
- *
- * Displays user names and avatars.
- *
- * @param {Array<string>} ids - Array of user IDs.
- * @param {HTMLElement} valueBox - The value display element.
- * @param {HTMLElement} placeholder - The placeholder element.
- * @param {Object} usersObj - Users data object.
- * @param {HTMLElement} avatarContainer - Container for avatars.
- */
-function renderPopulatedAssignedState(ids, valueBox, placeholder, usersObj, avatarContainer) {
-  renderEmptyAssignedState(valueBox, placeholder);
-  renderAssignedAvatars(ids, usersObj, avatarContainer);
-}
-
-/**
- * Synchronizes assigned users UI with form data.
- *
- * @param {HTMLFormElement} form - The form element.
- * @param {Object} usersObj - Users data object.
- */
-function syncAssignedToUI(form, usersObj) {
-  const assignedToInput = form.elements.assigned_to_input;
-  const ids = safeParseArray(assignedToInput?.value);
-  const ui = getAssignedToUIElements(form);
-
-  if (!ui.placeholder || !ui.valueBox) return;
-
-  if (!ids.length) {
-    renderEmptyAssignedState(ui.valueBox, ui.placeholder);
-    return;
-  }
-
-  renderPopulatedAssignedState(ids, ui.valueBox, ui.placeholder, usersObj, ui.avatarContainer);
-}
-
-/**
- * Synchronizes subtasks UI with form data.
- *
- * @param {HTMLFormElement} form - The form element.
- */
-function syncSubtasksUI(form) {
-  const subTask = form.elements.subtasks_json;
-  const list = form.querySelector("#subtasks_list");
-  if (!subTask || !list) return;
-
-  const subTasks = safeParseArray(subTask.value);
-  list.innerHTML = "";
-
-  subTasks.forEach((st, idx) => {
-    const li = document.createElement("li");
-    li.textContent = st?.title ?? st?.name ?? `Subtask ${idx + 1}`;
-    list.appendChild(li);
-  });
 }

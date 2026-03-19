@@ -6,7 +6,6 @@
 function bindTaskModalEscapeOnce(modal) {
   if (taskModalEscBound) return;
   taskModalEscBound = true;
-
   document.addEventListener("keydown", async (event) => {
     if (event.key !== "Escape") return;
     if (modal.open) {
@@ -28,7 +27,6 @@ function initModalCloseHandlers(modal) {
     modal.querySelector("#task_dialog_content_wrapper")?.classList.remove("is-hidden");
     await closeTaskModal(modal, modal.dataset.taskId);
   });
-
   modal.addEventListener("click", async (e) => {
     if (e.target === modal) {
       modal.querySelector("#EditTaskModalHost")?.replaceChildren();
@@ -49,7 +47,6 @@ function initModalActionHandlers(modal) {
   modal.querySelector("#btn_edit_task").addEventListener("click", () => {
     enterTaskEditMode(modal.__users || {});
   });
-
   modal.querySelector("#btn_delete_task").addEventListener("click", async () => {
     await deleteTask(modal.dataset.taskId);
   });
@@ -66,13 +63,10 @@ function initSubtaskToggleHandler(modal) {
   modal.addEventListener("click", (event) => {
     const button = event.target.closest('button[data-action="toggle"]');
     if (!button) return;
-
     const ul = button.closest("#subtasks_check_list");
     if (!ul) return;
-
     const li = button.closest("li[data-index]");
     if (!li) return;
-
     const index = Number(li.dataset.index);
     toggleSubtaskDone(index, modal.dataset.taskId);
   });
@@ -103,18 +97,13 @@ function toggleSubtaskDone(index, taskId) {
   const tasks = loadTasksFromSession();
   const task = tasks[taskId];
   if (!task || !task.subTasks[index]) return;
-
   const done = !task.subTasks[index].done;
   task.subTasks[index].done = done;
-
   saveTasksToSessionStorage(tasks);
   dirtyTaskIds.add(taskId);
-
   const li = document.querySelector(`#subtasks_check_list li[data-index="${index}"]`);
-
   if (li) {
     li.classList.toggle("is-done", done);
-
     const btn = li.querySelector("button[data-action]");
     btn?.setAttribute("aria-pressed", String(done));
   }
@@ -129,15 +118,15 @@ function toggleSubtaskDone(index, taskId) {
  */
 async function closeTaskModal(modal, taskId) {
   const tasks = loadTasksFromSession();
-  if (dirtyTaskIds.has(taskId)) {
-    const task = tasks[taskId];
-    if (task) {
-      await saveTaskSubtasksToFirebase(taskId, task.subTasks);
-      dirtyTaskIds.delete(taskId);
-      updateTaskCard(taskId, tasks);
-    }
-  }
   modal.close?.();
+  if (!dirtyTaskIds.has(taskId)) return;
+
+  const task = tasks[taskId];
+  if (!task) return;
+
+  await saveTaskSubtasksToFirebase(taskId, task.subTasks);
+  dirtyTaskIds.delete(taskId);
+  updateTaskCard(taskId, tasks);
 }
 
 /**
@@ -173,27 +162,37 @@ async function openTaskModal(taskId, users) {
 }
 
 /**
- * Retrieves task modal UI element references.
+ * Collects and returns all DOM references needed for the task dialog UI.
  *
- * @returns {Object} Object with references to modal UI elements.
+ * This function is the public entry point and delegates element lookups to
+ * {@link getTaskUiElements}.
+ *
+ * @function getTaskUi
+ * @returns {{titel:HTMLElement|null, descr:HTMLElement|null, dueDate:HTMLElement|null, prio:HTMLElement|null,
+ * assignedTo:HTMLElement|null, subTaskDiv:HTMLElement|null, SubTaskList:HTMLElement|null}} Task UI references.
  */
 function getTaskUi() {
-  const titel = document.getElementById("tsk_dlg_h1");
-  const descr = document.getElementById("tsk_dlg_h2");
-  const dueDate = document.getElementById("tsk_dlg_due_date");
-  const prio = document.getElementById("tsk_dlg_prio_div");
-  const assignedTo = document.getElementById("tsk_dlg_assgnd_div");
-  const subTaskDiv = document.getElementById("tsk_dlg_sbtsk");
-  const SubTaskList = document.getElementById("subtasks_check_list");
-  return {
-    titel: titel,
-    descr: descr,
-    dueDate: dueDate,
-    prio: prio,
-    assignedTo: assignedTo,
-    subTaskDiv: subTaskDiv,
-    SubTaskList: SubTaskList,
+  return getTaskUiElements();
+}
+
+/**
+ * Looks up task dialog DOM elements by their IDs and returns them as a single object.
+ *
+ * @function getTaskUiElements
+ * @returns {{titel:HTMLElement|null, descr:HTMLElement|null, dueDate:HTMLElement|null, prio:HTMLElement|null,
+ * assignedTo:HTMLElement|null, subTaskDiv:HTMLElement|null, SubTaskList:HTMLElement|null}} Task UI references.
+ */
+function getTaskUiElements() {
+  const ids = {
+    titel: "tsk_dlg_h1",
+    descr: "tsk_dlg_h2",
+    dueDate: "tsk_dlg_due_date",
+    prio: "tsk_dlg_prio_div",
+    assignedTo: "tsk_dlg_assgnd_div",
+    subTaskDiv: "tsk_dlg_sbtsk",
+    SubTaskList: "subtasks_check_list",
   };
+  return Object.fromEntries(Object.entries(ids).map(([k, id]) => [k, document.getElementById(id)]));
 }
 
 /**
@@ -207,12 +206,10 @@ function getTaskUi() {
 function renderTaskModal(taskId, ui, tasks, users) {
   const id = String(taskId).trim();
   const task = tasks[id];
-
   if (!task) {
     console.warn("Task nicht gefunden:", id);
     return;
   }
-
   ui.titel.textContent = task.titel;
   ui.descr.textContent = task.description ?? "(without description)";
   ui.dueDate.textContent = task.finishDate;
@@ -232,7 +229,6 @@ function renderTaskModal(taskId, ui, tasks, users) {
 function renderAssignedTo(task, users) {
   let assTo = "";
   if (!task || !Array.isArray(task.assignedTo) || task.assignedTo.length === 0) return assTo;
-
   task.assignedTo.forEach((element) => {
     const user = users?.[element];
     if (user) {

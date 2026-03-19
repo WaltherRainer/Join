@@ -1,29 +1,6 @@
-/**
- * Container element for the signup form panel.
- *
- * @type {HTMLElement|null}
- */
 const signInContainer = document.getElementById("sign_up_form");
-
-/**
- * Container element for the login form panel.
- *
- * @type {HTMLElement|null}
- */
 const logInContainer = document.getElementById("login_wrapper");
-
-/**
- * Header element on the index page used for login/signup transitions.
- *
- * @type {HTMLElement|null}
- */
 const indexHeader = document.getElementById("index_header");
-
-/**
- * Supported icon names for password-field UI states.
- *
- * @type {{LOCK: string, EYE_CLOSED: string, EYE_OPEN: string}}
- */
 const ICON = Object.freeze({
   LOCK: "lock",
   EYE_CLOSED: "eye_closed",
@@ -105,14 +82,12 @@ function setClickable(state, clickable) {
  */
 function syncState(state) {
   const hasValue = state.input.value.length > 0;
-
   if (!hasValue) {
     state.input.type = "password";
     setClickable(state, false);
     renderIcon(state, ICON.LOCK);
     return;
   }
-
   setClickable(state, true);
   renderIcon(state, state.input.type === "password" ? ICON.EYE_CLOSED : ICON.EYE_OPEN);
 }
@@ -150,10 +125,8 @@ function keepCaret(state, pos) {
  */
 function toggleVisibility(state) {
   if (state.input.value.length === 0) return;
-
   const pos = state.input.selectionStart ?? state.input.value.length;
   const nowHidden = state.input.type === "password";
-
   state.input.type = nowHidden ? "text" : "password";
   renderIcon(state, nowHidden ? ICON.EYE_OPEN : ICON.EYE_CLOSED);
   keepCaret(state, pos);
@@ -234,9 +207,7 @@ function extractFormInputs(form) {
   const emailInput = form.querySelector("#email");
   const passwordInput = form.querySelector("input[data-password]");
   const warningLogin = form.querySelector("#warning_login_failed");
-
   if (!emailInput || !passwordInput) return null;
-
   return {
     emailInput,
     passwordInput,
@@ -322,14 +293,10 @@ async function userLogin(e) {
   e.preventDefault();
   const form = e.currentTarget;
   if (!form) return;
-
   const inputs = extractFormInputs(form);
   if (!inputs) return;
-
   if (!window.loginValidation?.validate(inputs)) return;
-
   await initUsersLoading();
-  
   if (accessGranted(inputs.email, inputs.password)) {
     handleLoginSuccess();
   } else {
@@ -345,14 +312,12 @@ async function userLogin(e) {
  */
 function accessGranted(email, password) {
   if (!window.users || typeof users !== "object") return false;
-
   for (const [id, u] of Object.entries(window.users)) {
     if (!u) continue;
     if (email === u.email && password === u.password) {
       window.activeUserId = id;
       window.activeUserName = u.givenName;
       saveUserToSessionStorage(id, u.givenName, window.users);
-
       return true;
     }
   }
@@ -379,6 +344,7 @@ function activateSignIn() {
   logInContainer.classList.add("disable");
   indexHeader.classList.add("disable");
 }
+
 /**
  * Displays the login form and hides the signup form.
  *
@@ -407,11 +373,9 @@ window.addEventListener("load", () => {
   const indexBody = document.getElementById("index_body");
   const logoContainer = document.getElementById("logo_container");
   const pageContent = document.querySelector(".page_content");
-
   setTimeout(() => {
     indexBody.classList.add("is_loaded");
     logoContainer.classList.add("is_in_corner");
-
     pageContent.classList.add("is_visible");
   }, 1000);
 });
@@ -428,7 +392,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("login_form")?.addEventListener("submit", userLogin);
   document.getElementById("btn_activate_sign_in")?.addEventListener("click", activateSignIn);
   if (window.renderIcons) window.renderIcons(document);
-
   document.querySelectorAll(".input_box").forEach((box) => {
     initPasswordToggle(box);
   });
