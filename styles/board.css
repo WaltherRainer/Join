@@ -938,7 +938,7 @@ select.task_status_select option {
     min-height: 24px;
   }
   .task_dialog_header {
-    margin-top: 16px;
+    margin-top: 0px;
   }
 }
 
@@ -955,9 +955,14 @@ select.task_status_select option {
 
   #show_task_modal .task_modal_shell {
     padding: 0 16px;
+    max-height: min(88vh, 900px);
   }
   .tsk_dlg_assgnd_div {
     max-height: 250px;
+  }
+
+  .icon_text_btn {
+    padding: 4px 0px 20px 0px;
   }
 }
 
@@ -999,7 +1004,7 @@ select.task_status_select option {
   }
 
   .add_task_form.edit_mode {
-    padding: 10px 0;
+    padding: 0px 0;
   }
 }
 
